@@ -1,2 +1,2 @@
 # B2B
-manufacture
+manufacture and reatiler busness web application
