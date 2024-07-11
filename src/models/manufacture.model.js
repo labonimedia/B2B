@@ -23,7 +23,6 @@ const manufactureSchema = mongoose.Schema(
     },
     password: {
       type: String,
-      required: true,
       trim: true,
       minlength: 8,
       validate(value) {
@@ -53,7 +52,6 @@ const manufactureSchema = mongoose.Schema(
     },
     email2: {
       type: String,
-      required: true,
       unique: true,
       trim: true,
       lowercase: true,

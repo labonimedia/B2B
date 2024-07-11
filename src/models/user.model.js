@@ -6,7 +6,7 @@ const { roles } = require('../config/roles');
 
 const userSchema = mongoose.Schema(
   {
-    fullname: {
+    fullName: {
       type: String,
       required: true,
       trim: true,
@@ -39,7 +39,7 @@ const userSchema = mongoose.Schema(
     },
     role: {
       type: String,
-      enum: roles,
+      enum: ['superadmin', 'manufacture'],
       default: 'user',
     },
     code: {
