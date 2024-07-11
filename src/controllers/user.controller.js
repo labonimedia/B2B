@@ -30,7 +30,7 @@ const updateUser = catchAsync(async (req, res) => {
 });
 
 const updateUserByEmail = catchAsync(async (req, res) => {
-  const user = await userService.updateUserByEmail(req.params.email, req.body);
+  const user = await userService.updateUserByEmail(req.query.email, req.body);
   res.send(user);
 });
 

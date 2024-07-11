@@ -11,15 +11,16 @@ router
   .post(auth('superadmin'), validate(userValidation.createUser), userController.createUser)
   .get(auth('superadmin'), validate(userValidation.getUsers), userController.getUsers);
 
+  router
+  .route('/update-pass')
+  .patch( validate(userValidation.updateUserByEmail), userController.updateUserByEmail)
 router
   .route('/:userId')
   .get(auth('superadmin'), validate(userValidation.getUser), userController.getUser)
   .patch(auth('superadmin'), validate(userValidation.updateUser), userController.updateUser)
   .delete(auth('superadmin'), validate(userValidation.deleteUser), userController.deleteUser);
 
-  router
-  .route('/update-pass/:email')
-  .patch(auth('superadmin'), validate(userValidation.updateUserByEmail), userController.updateUserByEmail)
+
 module.exports = router;
 
 /**

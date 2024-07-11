@@ -40,8 +40,8 @@ const updateUser = {
 };
 
 const updateUserByEmail = {
-  params: Joi.object().keys({
-    email: Joi.required(),
+  query: Joi.object().keys({
+    email: Joi.string(),
   }),
   body: Joi.object()
     .keys({
