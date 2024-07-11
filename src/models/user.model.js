@@ -6,10 +6,13 @@ const { roles } = require('../config/roles');
 
 const userSchema = mongoose.Schema(
   {
-    name: {
+    fullname: {
       type: String,
       required: true,
       trim: true,
+    },
+    companyName: {
+      type: String,
     },
     email: {
       type: String,
@@ -25,7 +28,6 @@ const userSchema = mongoose.Schema(
     },
     password: {
       type: String,
-      required: true,
       trim: true,
       minlength: 8,
       validate(value) {
@@ -39,6 +41,19 @@ const userSchema = mongoose.Schema(
       type: String,
       enum: roles,
       default: 'user',
+    },
+    code: {
+      type: String,
+    },
+    mobileNumber: {
+      type: String,
+      required: true,
+      unique: true,
+      validate(value) {
+        if (!validator.isMobilePhone(value, ['en-IN'])) {
+          throw new Error('Invalid mobile number');
+        }
+      },
     },
     isEmailVerified: {
       type: Boolean,
