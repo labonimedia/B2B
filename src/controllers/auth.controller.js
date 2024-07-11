@@ -37,14 +37,15 @@ const resetPassword = catchAsync(async (req, res) => {
 });
 
 const sendVerificationEmail = catchAsync(async (req, res) => {
-  const verifyEmailToken = await tokenService.generateVerifyEmailToken(req.user);
-  await emailService.sendVerificationEmail(req.user.email, verifyEmailToken);
-  res.status(httpStatus.NO_CONTENT).send();
+  // const verifyEmailToken = await tokenService.generateVerifyEmailToken(req.user);
+  await emailService.sendVerificationEmail(req.query.email);
+  res.status(httpStatus.OK).send({ message: 'Otp send successfully'});
 });
 
 const verifyEmail = catchAsync(async (req, res) => {
-  await authService.verifyEmail(req.query.token);
-  res.status(httpStatus.NO_CONTENT).send();
+  const { email, otp } = req.query;
+  await authService.verifyEmail(email, otp);
+  res.status(httpStatus.OK).send({ message: 'OTP verified successfully' });
 });
 
 module.exports = {
