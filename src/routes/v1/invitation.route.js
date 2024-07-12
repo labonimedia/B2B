@@ -1,8 +1,16 @@
 const express = require('express');
+const multer = require('multer');
+const path = require('path');
 const auth = require('../../middlewares/auth');
 const { invitationController } = require('../../controllers');
+const staticFolder = path.join(__dirname, '../../');
+const uploadsFolder = path.join(staticFolder, 'uploads');
 
 const router = express.Router();
+
+const upload = multer({ dest: uploadsFolder });
+
+router.post('/bulk-upload', upload.single('file'), invitationController.bulkUploadHandler);
 
 router
   .route('/')

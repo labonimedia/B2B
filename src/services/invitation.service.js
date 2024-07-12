@@ -3,10 +3,19 @@ const { Invitation } = require('../models');
 const ApiError = require('../utils/ApiError');
 const emailService = require('./email.service');
 /**
- * Create a Invitation
- * @param {Object} reqBody
- * @returns {Promise<Invitation>}
-
+ * Bulk Upload Invitations
+ * @param {Array<Object>} invitations
+ * @returns {Promise<Array<Invitation>>}
+ */
+const bulkUploadInvitations = async (invitations) => {
+    const results = await Promise.all(
+      invitations.map(async (invitation) => {
+        await emailService.sendInvitationToDistributer(invitation.email);
+        return Invitation.create(invitation);
+      })
+    );
+    return results;
+  };
 /**
  * Create a Invitation
  * @param {Object} reqBody
@@ -84,6 +93,7 @@ const deleteInvitationById = async (userId) => {
 
 module.exports = {
   createInvitation,
+  bulkUploadInvitations,
   queryInvitation,
   getInvitationById,
   getUserByEmail,

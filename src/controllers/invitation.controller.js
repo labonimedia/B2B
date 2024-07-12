@@ -6,30 +6,35 @@ const pick = require('../utils/pick');
 const ApiError = require('../utils/ApiError');
 const catchAsync = require('../utils/catchAsync');
 const { invitationService } = require('../services');
-
+const staticFolder = path.join(__dirname, '../');
+const uploadsFolder = path.join(staticFolder, 'uploads');
 
 const bulkUploadHandler = async (req, res) => {
-    const invitations = [];
-    const filePath = path.join(__dirname, '..', 'uploads', req.file.filename);
-  
-    try {
-      fs.createReadStream(filePath)
-        .pipe(csv())
-        .on('data', (row) => {
-          invitations.push(row);
-        })
-        .on('end', async () => {
-          try {
-            const result = await invitationService.bulkUploadInvitations(invitations);
-            res.status(httpStatus.CREATED).send(result);
-          } catch (error) {
-            throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, error.message);
-          }
-        });
-    } catch (error) {
-      res.status(httpStatus.INTERNAL_SERVER_ERROR).send({ message: error.message });
-    }
-  };
+  if (!req.file) {
+    return res.status(httpStatus.BAD_REQUEST).send({ message: 'No file uploaded' });
+  }
+
+  const invitations = [];
+  const filePath = path.join(uploadsFolder, req.file.filename);
+
+  try {
+    fs.createReadStream(filePath)
+      .pipe(csv())
+      .on('data', (row) => {
+        invitations.push(row);
+      })
+      .on('end', async () => {
+        try {
+          const result = await invitationService.bulkUploadInvitations(invitations);
+          res.status(httpStatus.CREATED).send(result);
+        } catch (error) {
+          throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, error.message);
+        }
+      });
+  } catch (error) {
+    res.status(httpStatus.INTERNAL_SERVER_ERROR).send({ message: error.message });
+  }
+};
 
 const createInvitation = catchAsync(async (req, res) => {
   const user = await invitationService.createInvitation(req.body);
