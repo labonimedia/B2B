@@ -17,7 +17,7 @@ const queryManufacture = catchAsync(async (req, res) => {
 });
 
 const getManufactureById = catchAsync(async (req, res) => {
-  const user = await manufactureService.getManufactureById(req.params.Id);
+  const user = await manufactureService.getUserByEmail(req.params.email);
   if (!user) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Manufaturer not found');
   }
@@ -25,12 +25,12 @@ const getManufactureById = catchAsync(async (req, res) => {
 });
 
 const updateManufactureById = catchAsync(async (req, res) => {
-  const user = await manufactureService.updateManufactureById(req.params.Id, req.body);
+  const user = await manufactureService.updateManufactureById(req.params.email, req.body);
   res.send(user);
 });
 
 const deleteManufactureById = catchAsync(async (req, res) => {
-  await manufactureService.deleteManufactureById(req.params.Id);
+  await manufactureService.deleteManufactureById(req.params.email);
   res.status(httpStatus.NO_CONTENT).send();
 });
 

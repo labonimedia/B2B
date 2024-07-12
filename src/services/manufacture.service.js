@@ -52,13 +52,10 @@ const getUserByEmail = async (email) => {
  * @param {Object} updateBody
  * @returns {Promise<Manufacture>}
  */
-const updateManufactureById = async (Id, updateBody) => {
-  const user = await getManufactureById(Id);
+const updateManufactureById = async (email, updateBody) => {
+  const user = await getUserByEmail(email);
   if (!user) {
     throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
-  }
-  if (updateBody.email && (await Manufacture.isEmailTaken(updateBody.email, Id))) {
-    throw new ApiError(httpStatus.BAD_REQUEST, 'Email already taken');
   }
   Object.assign(user, updateBody);
   await user.save();
@@ -70,8 +67,8 @@ const updateManufactureById = async (Id, updateBody) => {
  * @param {ObjectId} userId
  * @returns {Promise<Manufacture>}
  */
-const deleteManufactureById = async (userId) => {
-  const user = await getManufactureById(userId);
+const deleteManufactureById = async (email) => {
+  const user = await getUserByEmail(email);
   if (!user) {
     throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
   }

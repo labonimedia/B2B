@@ -10,7 +10,7 @@ router
   .get(auth('superadmin', 'manufacture'),  manufactureController.queryManufacture);
 
 router
-  .route('/:Id')
+  .route('/:email')
   .get(auth('superadmin', 'manufacture'), manufactureController.getManufactureById)
   .patch(auth('superadmin', 'manufacture'), manufactureController.updateManufactureById)
   .delete(auth('superadmin', 'manufacture'), manufactureController.deleteManufactureById);
