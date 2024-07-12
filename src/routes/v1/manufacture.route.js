@@ -11,7 +11,7 @@ router
 
 router
   .route('/:email')
-  .get(manufactureController.getManufactureById)
+  .get(auth('superadmin', 'manufacture'), manufactureController.getManufactureById)
   .patch(auth('superadmin', 'manufacture'), manufactureController.updateManufactureById)
   .delete(auth('superadmin', 'manufacture'), manufactureController.deleteManufactureById);
 

@@ -65,7 +65,7 @@ const getUserByEmail = async (email) => {
  * @returns {Promise<Invitation>}
  */
 const updateInvitationById = async (Id, updateBody) => {
-  const user = await getInvitationById(Id);
+  const user = await getUserByEmail(Id);
   if (!user) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Invitation not found');
   }
@@ -83,7 +83,7 @@ const updateInvitationById = async (Id, updateBody) => {
  * @returns {Promise<Invitation>}
  */
 const deleteInvitationById = async (userId) => {
-  const user = await getInvitationById(userId);
+  const user = await getUserByEmail(userId);
   if (!user) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Invitation not found');
   }

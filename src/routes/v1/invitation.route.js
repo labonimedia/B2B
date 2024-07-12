@@ -18,7 +18,7 @@ router
   .get(auth('superadmin', 'manufacture'),  invitationController.queryInvitation);
 
 router
-  .route('/:Id')
+  .route('/:email')
   .get(auth('superadmin', 'manufacture'), invitationController.getInvitationById)
   .patch(auth('superadmin', 'manufacture'), invitationController.updateInvitationById)
   .delete(auth('superadmin', 'manufacture'), invitationController.deleteInvitationById);

@@ -49,7 +49,7 @@ const queryInvitation = catchAsync(async (req, res) => {
 });
 
 const getInvitationById = catchAsync(async (req, res) => {
-  const user = await invitationService.getInvitationById(req.params.Id);
+  const user = await invitationService.getInvitationById(req.params.email);
   if (!user) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Invitation not found');
   }
@@ -57,12 +57,12 @@ const getInvitationById = catchAsync(async (req, res) => {
 });
 
 const updateInvitationById = catchAsync(async (req, res) => {
-  const user = await invitationService.updateInvitationById(req.params.Id, req.body);
+  const user = await invitationService.updateInvitationById(req.params.email, req.body);
   res.send(user);
 });
 
 const deleteInvitationById = catchAsync(async (req, res) => {
-  await invitationService.deleteInvitationById(req.params.Id);
+  await invitationService.deleteInvitationById(req.params.email);
   res.status(httpStatus.NO_CONTENT).send();
 });
 
