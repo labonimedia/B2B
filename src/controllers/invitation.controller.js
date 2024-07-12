@@ -49,7 +49,7 @@ const queryInvitation = catchAsync(async (req, res) => {
 });
 
 const getInvitationById = catchAsync(async (req, res) => {
-  const user = await invitationService.getInvitationById(req.params.email);
+  const user = await invitationService.getUserByEmail(req.params.email);
   if (!user) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Invitation not found');
   }
