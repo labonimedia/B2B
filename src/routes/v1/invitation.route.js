@@ -19,7 +19,7 @@ router
 
 router
   .route('/:email')
-  .get(auth('superadmin', 'manufacture'), invitationController.getInvitationById)
+  .get( invitationController.getInvitationById)
   .patch(auth('superadmin', 'manufacture'), invitationController.updateInvitationById)
   .delete(auth('superadmin', 'manufacture'), invitationController.deleteInvitationById);
 
