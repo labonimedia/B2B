@@ -58,9 +58,27 @@ If you did not create an account, then ignore this email.`;
   await sendEmail(to, subject, text);
 };
 
+
+
+/**
+ * Send verification email
+ * @param {string} to
+ * @param {string} token
+ * @returns {Promise}
+ */
+const sendInvitationToDistributer = async (to) => {
+  const subject = 'Invitation';
+  // replace this url with the link to the email verification page of your front-end app
+  const text = `Dear user,
+To Jion our Fashions Trading Hub for your business
+Click here to get started
+https://165.22.211.140/#/authentication/signup/${to}`;
+  await sendEmail(to, subject, text);
+};
 module.exports = {
   transport,
   sendEmail,
   sendResetPasswordEmail,
   sendVerificationEmail,
+  sendInvitationToDistributer,
 };
