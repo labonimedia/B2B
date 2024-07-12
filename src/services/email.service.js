@@ -72,7 +72,7 @@ const sendInvitationToDistributer = async (to) => {
   const text = `Dear user,
 To Jion our Fashions Trading Hub for your business
 Click here to get started
-http://165.22.211.140/#/authentication/signup/${to}`;
+localhost:4203/#/authentication/signup/${to}`;
   await sendEmail(to, subject, text);
 };
 module.exports = {
