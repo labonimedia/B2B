@@ -34,11 +34,11 @@ const userSchema = mongoose.Schema(
           throw new Error('Password must contain at least one letter and one number');
         }
       },
-      private: true, // used by the toJSON plugin
+      private: true,
     },
     role: {
       type: String,
-      enum: ['superadmin', 'manufacture', 'wholesaler'],
+      enum: ['superadmin', 'manufacture', 'wholesaler','ditributer'],
       default: 'user',
     },
     code: {
