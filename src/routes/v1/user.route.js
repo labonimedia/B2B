@@ -22,7 +22,7 @@ router
 
   router
   .route('/registered-user/:email')
-  .get(auth('superadmin'), userController.getUserByEmail)
+  .get(auth('superadmin','manufacture'), userController.getUserByEmail)
 
 module.exports = router;
 
