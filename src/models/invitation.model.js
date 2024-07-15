@@ -31,13 +31,15 @@ const invitationSchema = mongoose.Schema(
     },
     status: {
         type: String,
-        enum: ['unread', 'read',],
-        default: 'unread',
+        enum: ['pending', 'acepted',],
+        default: 'pending',
     },
     invitedBy: {
       type: String,
     },
-    
+    role: {
+      type: String,
+    }
   },
   {
     timestamps: true,

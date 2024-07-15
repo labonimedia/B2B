@@ -58,6 +58,9 @@ const userSchema = mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    refByEmail: {
+      type: String,
+    },
   },
   {
     timestamps: true,

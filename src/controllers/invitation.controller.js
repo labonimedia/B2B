@@ -53,12 +53,12 @@ res.status(httpStatus.CREATED).send(invitations);
 })
 
 const createInvitation = catchAsync(async (req, res) => {
-  const user = await invitationService.createInvitation(req.body);
+  const user = await invitationService.createInvitation(req.body, req.user);
   res.status(httpStatus.CREATED).send(user);
 });
 
 const queryInvitation = catchAsync(async (req, res) => {
-  const filter = pick(req.query, ['name', 'role']);
+  const filter = pick(req.query, ['name', 'role', 'status']);
   const options = pick(req.query, ['sortBy', 'limit', 'page']);
   const result = await invitationService.queryInvitation(filter, options);
   res.send(result);

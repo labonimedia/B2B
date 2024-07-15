@@ -40,8 +40,9 @@ const bulkUploadInvitations = async (invitations, user) => {
  * @param {Object} reqBody
  * @returns {Promise<Invitation>}
  */
-const createInvitation = async (reqBody) => {
+const createInvitation = async (reqBody, user) => {
    await emailService.sendInvitationToDistributer(reqBody.email)
+   reqBody.invitedBy = user.email;
   return Invitation.create(reqBody);
 };
 
@@ -83,13 +84,10 @@ const getUserByEmail = async (email) => {
  * @param {Object} updateBody
  * @returns {Promise<Invitation>}
  */
-const updateInvitationById = async (Id, updateBody) => {
-  const user = await getUserByEmail(Id);
+const updateInvitationById = async (email, updateBody) => {
+  const user = await getUserByEmail(email);
   if (!user) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Invitation not found');
-  }
-  if (updateBody.email && (await Invitation.isEmailTaken(updateBody.email, Id))) {
-    throw new ApiError(httpStatus.BAD_REQUEST, 'Email already taken');
   }
   Object.assign(user, updateBody);
   await user.save();
