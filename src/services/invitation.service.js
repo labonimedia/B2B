@@ -10,9 +10,9 @@ const emailService = require('./email.service');
 const bulkUploadInvitations = async (invitations, user) => {
     const results = await Promise.all(
       invitations.map(async (invitation) => {
-        invitation.invitedBy = user.email;
+        const invitedBy = user.email;
         await emailService.sendInvitationToDistributer(invitation.email);
-        return Invitation.create(invitation);
+        return Invitation.create({...invitation, invitedBy});
       })
     );
     return results;
@@ -25,15 +25,14 @@ const bulkUploadInvitations = async (invitations, user) => {
     }
     if (!modifiedInvitationsArray.invitations || !modifiedInvitationsArray.invitations.length)
       return { error: true, message: 'missing array' };
-    await Promise.all(
+   const result =  await Promise.all(
       modifiedInvitationsArray.invitations.map(async (invitation) => {
     invitation.invitedBy = user.email;
-          let record = new Invitation(invitation);
           await emailService.sendInvitationToDistributer(invitation.email);
-          record = await record.save();
+        await Invitation.create(invitation);
       })
     );
-    return ;
+    return result;
   };
   
 /**
