@@ -7,7 +7,7 @@ const emailService = require('./email.service');
  * @param {Array<Object>} invitations
  * @returns {Promise<Array<Invitation>>}
  */
-const bulkUploadInvitations = async (invitations) => {
+const bulkUploadInvitations = async (invitations, user) => {
     const results = await Promise.all(
       invitations.map(async (invitation) => {
         invitation.invitedBy = user.email;

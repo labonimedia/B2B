@@ -48,7 +48,7 @@ const bulkUploadFile = catchAsync(async (req, res) => {
 // };
 
 const arrayInvitations = catchAsync( async (req, res) => {
-const invitations = await invitationService.bulkUploadInvitations(req.body, req.user)
+const invitations = await invitationService.bulkUploadInvitations(req.body.invitations, req.user)
 res.status(httpStatus.CREATED).send(invitations);
 })
 
