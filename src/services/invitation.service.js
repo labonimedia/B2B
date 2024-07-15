@@ -7,15 +7,31 @@ const emailService = require('./email.service');
  * @param {Array<Object>} invitations
  * @returns {Promise<Array<Invitation>>}
  */
+// const bulkUploadInvitations = async (invitations) => {
+//     const results = await Promise.all(
+//       invitations.map(async (invitation) => {
+//         await emailService.sendInvitationToDistributer(invitation.email);
+//         return Invitation.create(invitation);
+//       })
+//     );
+//     return results;
+//   };
+
 const bulkUploadInvitations = async (invitations) => {
     const results = await Promise.all(
       invitations.map(async (invitation) => {
-        await emailService.sendInvitationToDistributer(invitation.email);
-        return Invitation.create(invitation);
+        try {
+          await emailService.sendInvitationToDistributer(invitation.email);
+          const createdInvitation = await Invitation.create(invitation);
+          return { success: true, data: createdInvitation };
+        } catch (error) {
+          return { success: false, error: error.message, invitation };
+        }
       })
     );
     return results;
   };
+  
 /**
  * Create a Invitation
  * @param {Object} reqBody

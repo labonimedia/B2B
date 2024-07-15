@@ -36,6 +36,11 @@ const invitationSchema = mongoose.Schema(
         }
       },
     },
+    role: {
+      type: String,
+      required: true,
+      enum: ['superadmin', 'manufacture', 'retailer', 'wholesaler'],
+    },
     status: {
         type: String,
         enum: ['unread', 'read',],

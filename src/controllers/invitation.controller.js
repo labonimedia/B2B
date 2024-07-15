@@ -36,6 +36,11 @@ const bulkUploadHandler = async (req, res) => {
   }
 };
 
+const arrayInvitations = catchAsync( async (req, res) => {
+const invitations = await invitationService.bulkUploadInvitations(req.body)
+res.status(httpStatus.CREATED).send(invitations);
+})
+
 const createInvitation = catchAsync(async (req, res) => {
   const user = await invitationService.createInvitation(req.body);
   res.status(httpStatus.CREATED).send(user);
@@ -73,4 +78,5 @@ module.exports = {
   updateInvitationById,
   deleteInvitationById,
   bulkUploadHandler,
+  arrayInvitations,
 };

@@ -12,6 +12,9 @@ const upload = multer({ dest: uploadsFolder });
 
 router.post('/bulk-upload', upload.single('file'), invitationController.bulkUploadHandler);
 
+
+router.post('/array-upload',  invitationController.arrayInvitations);
+
 router
   .route('/')
   .post(auth('superadmin', 'manufacture'),  invitationController.createInvitation)
