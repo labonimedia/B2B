@@ -5,6 +5,7 @@ const docsRoute = require('./docs.route');
 const config = require('../../config/config');
 const manufactureRoute = require('./manufacture.route');
 const invitationsRoute = require('./invitation.route');
+const wholesalerRoute = require('./wholesaler.route');
 
 const router = express.Router();
 
@@ -24,6 +25,10 @@ const defaultRoutes = [
   {
     path: '/invitations',
     route: invitationsRoute,
+  },
+  {
+    path: '/wholesaler',
+    route: wholesalerRoute,
   },
 ];
 

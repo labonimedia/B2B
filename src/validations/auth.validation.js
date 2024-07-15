@@ -10,6 +10,7 @@ const register = {
     role: Joi.string().required(),
     code: Joi.string().optional(),
     mobileNumber: Joi.string().optional(),
+    refByEmail: Joi.string().optional(),
   }),
 };
 
