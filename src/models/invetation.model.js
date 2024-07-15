@@ -29,11 +29,6 @@ const invitationSchema = mongoose.Schema(
     mobileNumber: {
       type: String,
       required: true,
-      validate(value) {
-        if (!validator.isMobilePhone(value, ['en-IN'])) {
-          throw new Error('Invalid mobile number');
-        }
-      },
     },
     role: {
       type: String,
@@ -44,8 +39,10 @@ const invitationSchema = mongoose.Schema(
         type: String,
         enum: ['unread', 'read',],
         default: 'unread',
-    }
-    
+    },
+    invitedBy: {
+      type: String,
+    },
   },
   {
     timestamps: true,
