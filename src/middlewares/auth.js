@@ -4,12 +4,10 @@ const httpStatus = require('http-status');
 const ApiError = require('../utils/ApiError');
 
 const verifyCallback = (req, resolve, reject, requiredRights) => async (err, user, info) => {
-console.log(err, user, info)
   if (err || info || !user) {
     return reject(new ApiError(httpStatus.UNAUTHORIZED, 'Please authenticate'));
   }
   req.user = user;
-  console.log(req.user);
   if (requiredRights.length) {
     const userRights = req.user.role;
     // const hasRequiredRights = requiredRights[0].includes(userRights);

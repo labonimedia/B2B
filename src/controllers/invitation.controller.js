@@ -58,7 +58,7 @@ const createInvitation = catchAsync(async (req, res) => {
 });
 
 const queryInvitation = catchAsync(async (req, res) => {
-  const filter = pick(req.query, ['name', 'role', 'status']);
+  const filter = pick(req.query, ['name', 'role', 'status', 'invitedBy']);
   const options = pick(req.query, ['sortBy', 'limit', 'page']);
   const result = await invitationService.queryInvitation(filter, options);
   res.send(result);

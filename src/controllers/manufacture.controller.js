@@ -10,7 +10,7 @@ const createManufacture = catchAsync(async (req, res) => {
 });
 
 const queryManufacture = catchAsync(async (req, res) => {
-  const filter = pick(req.query, ['name', 'role', 'status',]);
+  const filter = pick(req.query, ['name', 'role', 'status']);
   const options = pick(req.query, ['sortBy', 'limit', 'page']);
   const result = await manufactureService.queryManufacture(filter, options);
   res.send(result);
