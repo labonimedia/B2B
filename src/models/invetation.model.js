@@ -29,7 +29,6 @@ const invitationSchema = mongoose.Schema(
     mobileNumber: {
       type: String,
       required: true,
-      unique: true,
       validate(value) {
         if (!validator.isMobilePhone(value, ['en-IN'])) {
           throw new Error('Invalid mobile number');

@@ -10,7 +10,7 @@ const router = express.Router();
 
 const upload = multer({ dest: uploadsFolder });
 
-router.post('/bulk-upload', upload.single('file'), invitationController.bulkUploadHandler);
+router.post('/bulk-upload', upload.single('file'), invitationController.bulkUploadFile);
 
 
 router.post('/array-upload',  invitationController.arrayInvitations);

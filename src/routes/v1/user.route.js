@@ -20,6 +20,9 @@ router
   .patch(auth('superadmin'), validate(userValidation.updateUser), userController.updateUser)
   .delete(auth('superadmin'), validate(userValidation.deleteUser), userController.deleteUser);
 
+  router
+  .route('/registered-user/:email')
+  .get(auth('superadmin'), userController.getUserByEmail)
 
 module.exports = router;
 
