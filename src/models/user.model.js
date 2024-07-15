@@ -38,7 +38,7 @@ const userSchema = mongoose.Schema(
     },
     role: {
       type: String,
-      enum: ['superadmin', 'manufacture'],
+      enum: ['superadmin', 'manufacture', 'wholesaler'],
       default: 'user',
     },
     code: {
