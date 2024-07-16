@@ -6,3 +6,7 @@ module.exports.manufactureService = require('./manufacture.service');
 module.exports.otpService = require('./otp.service');
 module.exports.invitationService = require('./invitation.service');
 module.exports.wholesalerService = require('./wholesaler.service');
+module.exports.clothingMensService = require('./clothing.mens.service');
+module.exports.materialService = require('./material.sevice');
+module.exports.patternService = require('./pattern.service');
+module.exports.fitTypeService = require('./fit.type.service');

@@ -6,6 +6,9 @@ const config = require('../../config/config');
 const manufactureRoute = require('./manufacture.route');
 const invitationsRoute = require('./invitation.route');
 const wholesalerRoute = require('./wholesaler.route');
+const clothingMensRoute = require('./clothing.mens.route');
+const materialRoute = require('./material.route');
+const patternRoute = require('./pattern.route');
 
 const router = express.Router();
 
@@ -30,6 +33,18 @@ const defaultRoutes = [
     path: '/wholesaler',
     route: wholesalerRoute,
   },
+  {
+    path: '/clothing-mens',
+    route: clothingMensRoute,
+  },
+  {
+    path: '/material',
+    route: materialRoute,
+  },
+  {
+    path: '/pattern',
+    route: patternRoute,
+  }
 ];
 
 const devRoutes = [

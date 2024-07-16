@@ -4,3 +4,7 @@ module.exports.Manufacture = require('./manufacture.model');
 module.exports.Otp = require('./otp.model');
 module.exports.Invitation = require('./invitation.model');
 module.exports.Wholesaler = require('./wholesaler.model');
+module.exports.ClothingMens = require('./clothing.mens.model');
+module.exports.Material = require('./material.model');
+module.exports.Pattern = require('./pattern.model');
+module.exports.FitType = require('./fit.type.model');
