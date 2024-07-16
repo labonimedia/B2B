@@ -9,6 +9,7 @@ const wholesalerRoute = require('./wholesaler.route');
 const clothingMensRoute = require('./clothing.mens.route');
 const materialRoute = require('./material.route');
 const patternRoute = require('./pattern.route');
+const fitTypeRoute = require('./fit.type.route');
 
 const router = express.Router();
 
@@ -44,7 +45,11 @@ const defaultRoutes = [
   {
     path: '/pattern',
     route: patternRoute,
-  }
+  },
+  {
+    path: '/fit-type',
+    route: fitTypeRoute,
+  },
 ];
 
 const devRoutes = [

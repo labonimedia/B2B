@@ -8,17 +8,17 @@ const router = express.Router();
 
 router
   .route('/')
-  .post(auth('superadmin'), validate(userValidation.createUser), userController.createUser)
-  .get(auth('superadmin'), validate(userValidation.getUsers), userController.getUsers);
+  .post(auth('superadmin', 'manufacture'), validate(userValidation.createUser), userController.createUser)
+  .get(auth('superadmin', 'manufacture'), validate(userValidation.getUsers), userController.getUsers);
 
   router
   .route('/update-pass')
   .patch( validate(userValidation.updateUserByEmail), userController.updateUserByEmail)
 router
   .route('/:userId')
-  .get(auth('superadmin'), validate(userValidation.getUser), userController.getUser)
-  .patch(auth('superadmin'), validate(userValidation.updateUser), userController.updateUser)
-  .delete(auth('superadmin'), validate(userValidation.deleteUser), userController.deleteUser);
+  .get(auth('superadmin', 'manufacture'), validate(userValidation.getUser), userController.getUser)
+  .patch(auth('superadmin', 'manufacture'), validate(userValidation.updateUser), userController.updateUser)
+  .delete(auth('superadmin', 'manufacture'), validate(userValidation.deleteUser), userController.deleteUser);
 
   router
   .route('/registered-user/:email')

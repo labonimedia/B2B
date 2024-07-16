@@ -6,3 +6,4 @@ module.exports.wholesalerController = require('./wholesaler.controller');
 module.exports.clothingMensController = require('./clothing.mens.controller');
 module.exports.materialController = require('./material.controller');
 module.exports.patternController = require('./pattern.controller');
+module.exports.fitTypeController = require('./fit.type.controller');
