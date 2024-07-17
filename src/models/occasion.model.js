@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const { toJSON, paginate } = require('./plugins');
 
-const clothingMensSchema = mongoose.Schema(
+const occasionSchema = mongoose.Schema(
   {
     name: {
       type: String,
@@ -15,9 +15,9 @@ const clothingMensSchema = mongoose.Schema(
 );
 
 // add plugin that converts mongoose to json
-clothingMensSchema.plugin(toJSON);
-clothingMensSchema.plugin(paginate);
+occasionSchema.plugin(toJSON);
+occasionSchema.plugin(paginate);
 
-const ClothingMens = mongoose.model('ClothingMens', clothingMensSchema);
+const Occasion = mongoose.model('Occasion', occasionSchema);
 
-module.exports = ClothingMens;
+module.exports = Occasion;

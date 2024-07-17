@@ -6,14 +6,14 @@ const router = express.Router();
 
 router
   .route('/')
-  .post(auth('superadmin', 'manufacture'),  wholesalerController.createWholesaler)
-  .get(auth('superadmin', 'manufacture'),  wholesalerController.queryWholesaler);
+  .post(auth('superadmin', 'manufacture' , 'wholesaler'),  wholesalerController.createWholesaler)
+  .get(auth('superadmin', 'manufacture', 'wholesaler'),  wholesalerController.queryWholesaler);
 
 router
   .route('/:email')
-  .get(auth('superadmin', 'manufacture'), wholesalerController.getWholesalerById)
-  .patch(auth('superadmin', 'manufacture'), wholesalerController.updateWholesalerById)
-  .delete(auth('superadmin', 'manufacture'), wholesalerController.deleteWholesalerById);
+  .get(auth('superadmin', 'manufacture', 'wholesaler'), wholesalerController.getWholesalerById)
+  .patch(auth('superadmin', 'manufacture', 'wholesaler'), wholesalerController.updateWholesalerById)
+  .delete(auth('superadmin', 'manufacture', 'wholesaler'), wholesalerController.deleteWholesalerById);
 
 module.exports = router;
 

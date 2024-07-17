@@ -10,6 +10,13 @@ const clothingMensRoute = require('./clothing.mens.route');
 const materialRoute = require('./material.route');
 const patternRoute = require('./pattern.route');
 const fitTypeRoute = require('./fit.type.route');
+const sleeveCutStyleRoute = require('./sleev.cut.style.route');
+const pocketDiscriptionRoute = require('./pocket.discription.route');
+const sleeveLengthRoute = require('./sleeve.length.route');
+const careInstructionRoute = require('./care.instruction.route');
+const specialFeatureRoute = require('./special.feature.route');
+const occasionRoute = require('./occasion.route');
+const menStandardSizeRoute = require('./men.standard.size.route');
 
 const router = express.Router();
 
@@ -50,6 +57,34 @@ const defaultRoutes = [
     path: '/fit-type',
     route: fitTypeRoute,
   },
+  {
+    path: '/sleev-cut-style',
+    route: sleeveCutStyleRoute,
+  },
+  {
+    path: '/pocket-discription',
+    route: pocketDiscriptionRoute,
+  },
+  {
+    path: '/sleeve-length',
+    route: sleeveLengthRoute,
+  },
+  {
+    path: '/care-instruction',
+    route: careInstructionRoute,
+  },
+  {
+    path: '/special-feature',
+    route: specialFeatureRoute,
+  },
+  {
+    path: '/occasion',
+    route: occasionRoute,
+  },
+  {
+    path: '/men-standard-size',
+    route: menStandardSizeRoute,
+  }
 ];
 
 const devRoutes = [

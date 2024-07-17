@@ -1,3 +1,5 @@
+const { sleeveCutStyleService } = require('../services');
+
 module.exports.authController = require('./auth.controller');
 module.exports.userController = require('./user.controller');
 module.exports.manufactureController = require('./manufacture.controller');
@@ -7,3 +9,14 @@ module.exports.clothingMensController = require('./clothing.mens.controller');
 module.exports.materialController = require('./material.controller');
 module.exports.patternController = require('./pattern.controller');
 module.exports.fitTypeController = require('./fit.type.controller');
+module.exports.sleeveCutStyleController = require('./sleev.cut.style.controller');
+module.exports.neckStyleController = require('./neck.style.controller');
+module.exports.pocketDiscriptionController = require('./pocket.discreption.controller'); 
+module.exports.closureTypeController = require('./closure.type.controller');
+module.exports.sleeveLengthController = require('./sleeve.length.controller');
+module.exports.careInstructionController = require('./care.instruction.controller');
+module.exports.specialFeatureController = require('./special.feature.controller');
+module.exports.occasionController = require('./occasion.controller');
+module.exports.lifestyleController = require('./lifestyle.controller');
+module.exports.menStandardSizeController = require('./men.standard.size.controller');
+module.exports.socksSizeController = require('./socks.size.controller');
