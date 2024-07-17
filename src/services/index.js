@@ -21,3 +21,4 @@ module.exports.occasionService = require('./occasion.service');
 module.exports.lifestyleService = require('./lifestyle.service');
 module.exports.menStandardSizeService = require('./men.standard.size.service');
 module.exports.socksSizeService = require('./socks.size.service');
+module.exports.socksStyleService = require('./socks.style.service');
