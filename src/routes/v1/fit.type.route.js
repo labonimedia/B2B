@@ -6,8 +6,8 @@ const router = express.Router();
 
 router
   .route('/')
-  .post(auth('superadmin', 'manufacture'),  fitTypeController.createFitType)
-  .get(auth('superadmin', 'manufacture'),  fitTypeController.queryFitType);
+  .post(auth('superadmin', 'manufacture'), fitTypeController.createFitType)
+  .get(auth('superadmin', 'manufacture'), fitTypeController.queryFitType);
 
 router
   .route('/:id')
@@ -16,4 +16,3 @@ router
   .delete(auth('superadmin', 'manufacture'), fitTypeController.deleteFitTypeById);
 
 module.exports = router;
-

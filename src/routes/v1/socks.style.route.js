@@ -6,8 +6,8 @@ const router = express.Router();
 
 router
   .route('/')
-  .post(auth('superadmin', 'manufacture'),  socksStyleController.createSocksStyle)
-  .get(auth('superadmin', 'manufacture'),  socksStyleController.querySocksStyle);
+  .post(auth('superadmin', 'manufacture'), socksStyleController.createSocksStyle)
+  .get(auth('superadmin', 'manufacture'), socksStyleController.querySocksStyle);
 
 router
   .route('/:id')
@@ -16,4 +16,3 @@ router
   .delete(auth('superadmin', 'manufacture'), socksStyleController.deleteSocksStyleById);
 
 module.exports = router;
-

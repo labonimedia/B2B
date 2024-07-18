@@ -6,8 +6,8 @@ const router = express.Router();
 
 router
   .route('/')
-  .post(auth('superadmin', 'manufacture'),  neckStyleController.createNeckStyle)
-  .get(auth('superadmin', 'manufacture'),  neckStyleController.queryNeckStyle);
+  .post(auth('superadmin', 'manufacture'), neckStyleController.createNeckStyle)
+  .get(auth('superadmin', 'manufacture'), neckStyleController.queryNeckStyle);
 
 router
   .route('/:id')
@@ -16,4 +16,3 @@ router
   .delete(auth('superadmin', 'manufacture'), neckStyleController.deleteNeckStyleById);
 
 module.exports = router;
-

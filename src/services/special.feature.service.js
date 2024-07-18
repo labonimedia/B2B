@@ -34,7 +34,6 @@ const getSpecialFeatureById = async (id) => {
   return SpecialFeature.findById(id);
 };
 
-
 /**
  * Update SpecialFeature by id
  * @param {ObjectId} Id

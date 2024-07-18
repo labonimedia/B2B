@@ -6,8 +6,8 @@ const router = express.Router();
 
 router
   .route('/')
-  .post(auth('superadmin', 'manufacture'),  elasticController.createElastic)
-  .get(auth('superadmin', 'manufacture'),  elasticController.queryElastic);
+  .post(auth('superadmin', 'manufacture'), elasticController.createElastic)
+  .get(auth('superadmin', 'manufacture'), elasticController.queryElastic);
 
 router
   .route('/:id')
@@ -16,4 +16,3 @@ router
   .delete(auth('superadmin', 'manufacture'), elasticController.deleteElasticById);
 
 module.exports = router;
-

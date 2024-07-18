@@ -34,7 +34,6 @@ const getPatternById = async (id) => {
   return Pattern.findById(id);
 };
 
-
 /**
  * Update Pattern by id
  * @param {ObjectId} Id

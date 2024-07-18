@@ -28,3 +28,4 @@ module.exports.womenDressStyleService = require('./women.dress.style.service');
 module.exports.elasticService = require('./elastic.service');
 module.exports.includeComponentService = require('./include.component.service');
 module.exports.collarStyleService = require('./collar.style.service');
+module.exports.productService = require('./product.service');

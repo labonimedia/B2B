@@ -34,7 +34,6 @@ const getFitTypeById = async (id) => {
   return FitType.findById(id);
 };
 
-
 /**
  * Update FitType by id
  * @param {ObjectId} Id

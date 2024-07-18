@@ -34,7 +34,6 @@ const getClosureTypeById = async (id) => {
   return ClosureType.findById(id);
 };
 
-
 /**
  * Update ClosureType by id
  * @param {ObjectId} Id

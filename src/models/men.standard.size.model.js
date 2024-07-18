@@ -9,9 +9,9 @@ const menStandardSizeSchema = mongoose.Schema(
       trim: true,
     },
     size: {
-        type: Number,
-        // required: true,
-      }
+      type: Number,
+      // required: true,
+    },
   },
   {
     timestamps: true,

@@ -34,7 +34,6 @@ const getMaterialById = async (id) => {
   return Material.findById(id);
 };
 
-
 /**
  * Update Material by id
  * @param {ObjectId} Id

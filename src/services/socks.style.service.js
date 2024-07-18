@@ -34,7 +34,6 @@ const getSocksStyleById = async (id) => {
   return SocksStyle.findById(id);
 };
 
-
 /**
  * Update SocksStyle by id
  * @param {ObjectId} Id

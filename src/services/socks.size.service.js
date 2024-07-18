@@ -34,7 +34,6 @@ const getSocksSizeById = async (id) => {
   return SocksSize.findById(id);
 };
 
-
 /**
  * Update SocksSize by id
  * @param {ObjectId} Id

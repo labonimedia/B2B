@@ -6,8 +6,8 @@ const router = express.Router();
 
 router
   .route('/')
-  .post(auth('superadmin', 'manufacture'),  seasonController.createSeason)
-  .get(auth('superadmin', 'manufacture'),  seasonController.querySeason);
+  .post(auth('superadmin', 'manufacture'), seasonController.createSeason)
+  .get(auth('superadmin', 'manufacture'), seasonController.querySeason);
 
 router
   .route('/:id')
@@ -16,4 +16,3 @@ router
   .delete(auth('superadmin', 'manufacture'), seasonController.deleteSeasonById);
 
 module.exports = router;
-

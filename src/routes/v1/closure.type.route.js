@@ -6,8 +6,8 @@ const router = express.Router();
 
 router
   .route('/')
-  .post(auth('superadmin', 'manufacture'),  closureTypeController.createClosureType)
-  .get(auth('superadmin', 'manufacture'),  closureTypeController.queryClosureType);
+  .post(auth('superadmin', 'manufacture'), closureTypeController.createClosureType)
+  .get(auth('superadmin', 'manufacture'), closureTypeController.queryClosureType);
 
 router
   .route('/:id')
@@ -16,4 +16,3 @@ router
   .delete(auth('superadmin', 'manufacture'), closureTypeController.deleteClosureTypeById);
 
 module.exports = router;
-

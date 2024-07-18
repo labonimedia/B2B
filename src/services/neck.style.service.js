@@ -34,7 +34,6 @@ const getNeckStyleById = async (id) => {
   return NeckStyle.findById(id);
 };
 
-
 /**
  * Update NeckStyle by id
  * @param {ObjectId} Id

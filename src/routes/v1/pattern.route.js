@@ -6,8 +6,8 @@ const router = express.Router();
 
 router
   .route('/')
-  .post(auth('superadmin', 'manufacture'),  patternController.createPattern)
-  .get(auth('superadmin', 'manufacture'),  patternController.queryPattern);
+  .post(auth('superadmin', 'manufacture'), patternController.createPattern)
+  .get(auth('superadmin', 'manufacture'), patternController.queryPattern);
 
 router
   .route('/:id')
@@ -16,4 +16,3 @@ router
   .delete(auth('superadmin', 'manufacture'), patternController.deletePatternById);
 
 module.exports = router;
-

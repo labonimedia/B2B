@@ -34,7 +34,6 @@ const getLifestyleById = async (id) => {
   return Lifestyle.findById(id);
 };
 
-
 /**
  * Update Lifestyle by id
  * @param {ObjectId} Id

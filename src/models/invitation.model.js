@@ -30,16 +30,16 @@ const invitationSchema = mongoose.Schema(
       required: true,
     },
     status: {
-        type: String,
-        enum: ['pending', 'accepted',],
-        default: 'pending',
+      type: String,
+      enum: ['pending', 'accepted'],
+      default: 'pending',
     },
     invitedBy: {
       type: String,
     },
     role: {
       type: String,
-    }
+    },
   },
   {
     timestamps: true,
@@ -49,7 +49,6 @@ const invitationSchema = mongoose.Schema(
 // add plugin that converts mongoose to json
 invitationSchema.plugin(toJSON);
 invitationSchema.plugin(paginate);
-
 
 /**
  * @typedef Invitation

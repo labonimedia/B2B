@@ -34,7 +34,6 @@ const getOccasionById = async (id) => {
   return Occasion.findById(id);
 };
 
-
 /**
  * Update Occasion by id
  * @param {ObjectId} Id

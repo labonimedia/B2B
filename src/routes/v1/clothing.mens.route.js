@@ -6,8 +6,8 @@ const router = express.Router();
 
 router
   .route('/')
-  .post(auth('superadmin', 'manufacture'),  clothingMensController.createClothingMens)
-  .get(auth('superadmin', 'manufacture'),  clothingMensController.queryClothingMens);
+  .post(auth('superadmin', 'manufacture'), clothingMensController.createClothingMens)
+  .get(auth('superadmin', 'manufacture'), clothingMensController.queryClothingMens);
 
 router
   .route('/:id')
@@ -16,4 +16,3 @@ router
   .delete(auth('superadmin', 'manufacture'), clothingMensController.deleteClothingMensById);
 
 module.exports = router;
-

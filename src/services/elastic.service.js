@@ -34,7 +34,6 @@ const getElasticById = async (id) => {
   return Elastic.findById(id);
 };
 
-
 /**
  * Update Elastic by id
  * @param {ObjectId} Id

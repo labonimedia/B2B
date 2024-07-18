@@ -34,7 +34,6 @@ const getMenStandardSizeById = async (id) => {
   return MenStandardSize.findById(id);
 };
 
-
 /**
  * Update MenStandardSize by id
  * @param {ObjectId} Id

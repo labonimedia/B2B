@@ -34,7 +34,6 @@ const getCareInstructionById = async (id) => {
   return CareInstruction.findById(id);
 };
 
-
 /**
  * Update CareInstruction by id
  * @param {ObjectId} Id

@@ -6,8 +6,8 @@ const router = express.Router();
 
 router
   .route('/')
-  .post(auth('superadmin', 'manufacture'),  pocketDiscriptionController.createPocketDiscription)
-  .get(auth('superadmin', 'manufacture'),  pocketDiscriptionController.queryPocketDiscription);
+  .post(auth('superadmin', 'manufacture'), pocketDiscriptionController.createPocketDiscription)
+  .get(auth('superadmin', 'manufacture'), pocketDiscriptionController.queryPocketDiscription);
 
 router
   .route('/:id')
@@ -16,4 +16,3 @@ router
   .delete(auth('superadmin', 'manufacture'), pocketDiscriptionController.deletePocketDiscriptionById);
 
 module.exports = router;
-

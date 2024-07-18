@@ -6,8 +6,8 @@ const router = express.Router();
 
 router
   .route('/')
-  .post(auth('superadmin', 'manufacture'),  menStandardSizeController.createMenStandardSize)
-  .get(auth('superadmin', 'manufacture'),  menStandardSizeController.queryMenStandardSize);
+  .post(auth('superadmin', 'manufacture'), menStandardSizeController.createMenStandardSize)
+  .get(auth('superadmin', 'manufacture'), menStandardSizeController.queryMenStandardSize);
 
 router
   .route('/:id')
@@ -16,4 +16,3 @@ router
   .delete(auth('superadmin', 'manufacture'), menStandardSizeController.deleteMenStandardSizeById);
 
 module.exports = router;
-

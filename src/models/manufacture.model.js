@@ -92,7 +92,7 @@ const manufactureSchema = mongoose.Schema(
     isActive: {
       type: Boolean,
       default: true,
-  }
+    },
   },
   {
     timestamps: true,

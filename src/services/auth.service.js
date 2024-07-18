@@ -80,9 +80,9 @@ const resetPassword = async (resetPasswordToken, newPassword) => {
 const verifyEmail = async (email, otp) => {
   try {
     // const verifyEmailTokenDoc = await tokenService.verifyToken(verifyEmailToken, tokenTypes.VERIFY_EMAIL);
-   
-   await otpService.verifyOtp(email, otp)
-   const user = await userService.getUserByEmail(email);
+
+    await otpService.verifyOtp(email, otp);
+    const user = await userService.getUserByEmail(email);
     if (!user) {
       throw new Error();
     }

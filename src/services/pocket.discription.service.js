@@ -34,7 +34,6 @@ const getPocketDiscriptionById = async (id) => {
   return PocketDiscription.findById(id);
 };
 
-
 /**
  * Update PocketDiscription by id
  * @param {ObjectId} Id

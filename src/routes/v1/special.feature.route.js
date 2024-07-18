@@ -6,8 +6,8 @@ const router = express.Router();
 
 router
   .route('/')
-  .post(auth('superadmin', 'manufacture'),  specialFeatureController.createSpecialFeature)
-  .get(auth('superadmin', 'manufacture'),  specialFeatureController.querySpecialFeature);
+  .post(auth('superadmin', 'manufacture'), specialFeatureController.createSpecialFeature)
+  .get(auth('superadmin', 'manufacture'), specialFeatureController.querySpecialFeature);
 
 router
   .route('/:id')
@@ -16,4 +16,3 @@ router
   .delete(auth('superadmin', 'manufacture'), specialFeatureController.deleteSpecialFeatureById);
 
 module.exports = router;
-

@@ -6,8 +6,8 @@ const router = express.Router();
 
 router
   .route('/')
-  .post(auth('superadmin', 'manufacture'),  occasionController.createOccasion)
-  .get(auth('superadmin', 'manufacture'),  occasionController.queryOccasion);
+  .post(auth('superadmin', 'manufacture'), occasionController.createOccasion)
+  .get(auth('superadmin', 'manufacture'), occasionController.queryOccasion);
 
 router
   .route('/:id')
@@ -16,4 +16,3 @@ router
   .delete(auth('superadmin', 'manufacture'), occasionController.deleteOccasionById);
 
 module.exports = router;
-

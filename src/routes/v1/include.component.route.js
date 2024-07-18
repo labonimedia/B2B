@@ -6,8 +6,8 @@ const router = express.Router();
 
 router
   .route('/')
-  .post(auth('superadmin', 'manufacture'),  includeComponentController.createIncludeComponent)
-  .get(auth('superadmin', 'manufacture'),  includeComponentController.queryIncludeComponent);
+  .post(auth('superadmin', 'manufacture'), includeComponentController.createIncludeComponent)
+  .get(auth('superadmin', 'manufacture'), includeComponentController.queryIncludeComponent);
 
 router
   .route('/:id')
@@ -16,4 +16,3 @@ router
   .delete(auth('superadmin', 'manufacture'), includeComponentController.deleteIncludeComponentById);
 
 module.exports = router;
-

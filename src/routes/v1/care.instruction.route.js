@@ -6,8 +6,8 @@ const router = express.Router();
 
 router
   .route('/')
-  .post(auth('superadmin', 'manufacture'),  careInstructionController.createCareInstruction)
-  .get(auth('superadmin', 'manufacture'),  careInstructionController.queryCareInstruction);
+  .post(auth('superadmin', 'manufacture'), careInstructionController.createCareInstruction)
+  .get(auth('superadmin', 'manufacture'), careInstructionController.queryCareInstruction);
 
 router
   .route('/:id')
@@ -16,4 +16,3 @@ router
   .delete(auth('superadmin', 'manufacture'), careInstructionController.deleteCareInstructionById);
 
 module.exports = router;
-

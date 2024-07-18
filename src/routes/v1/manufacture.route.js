@@ -6,8 +6,8 @@ const router = express.Router();
 
 router
   .route('/')
-  .post(auth('superadmin', 'manufacture'),  manufactureController.createManufacture)
-  .get(auth('superadmin', 'manufacture'),  manufactureController.queryManufacture);
+  .post(auth('superadmin', 'manufacture'), manufactureController.createManufacture)
+  .get(auth('superadmin', 'manufacture'), manufactureController.queryManufacture);
 
 router
   .route('/:email')
@@ -16,4 +16,3 @@ router
   .delete(auth('superadmin', 'manufacture'), manufactureController.deleteManufactureById);
 
 module.exports = router;
-

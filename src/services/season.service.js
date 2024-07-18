@@ -34,7 +34,6 @@ const getSeasonById = async (id) => {
   return Season.findById(id);
 };
 
-
 /**
  * Update Season by id
  * @param {ObjectId} Id

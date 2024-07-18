@@ -6,8 +6,8 @@ const router = express.Router();
 
 router
   .route('/')
-  .post(auth('superadmin', 'manufacture'),  collarStyleController.createCollarStyle)
-  .get(auth('superadmin', 'manufacture'),  collarStyleController.queryCollarStyle);
+  .post(auth('superadmin', 'manufacture'), collarStyleController.createCollarStyle)
+  .get(auth('superadmin', 'manufacture'), collarStyleController.queryCollarStyle);
 
 router
   .route('/:id')
@@ -16,4 +16,3 @@ router
   .delete(auth('superadmin', 'manufacture'), collarStyleController.deleteCollarStyleById);
 
 module.exports = router;
-

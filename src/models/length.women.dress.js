@@ -7,7 +7,7 @@ const lengthWomenDresSchema = mongoose.Schema(
       type: String,
       required: true,
       trim: true,
-    }
+    },
   },
   {
     timestamps: true,

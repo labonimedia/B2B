@@ -3,7 +3,6 @@ const { Otp } = require('../models');
 // const config = require('../config/config');
 // const ApiError = require('../utils/ApiError');
 
-
 const createOtp = async (email, otp) => {
   const otpDoc = {
     email,
@@ -13,9 +12,9 @@ const createOtp = async (email, otp) => {
 };
 
 const generateOTP = () => {
-    const otp = Math.floor(Math.random() * 1000000); // generates a 6-digit random number
-    return otp.toString().padStart(6, '0'); // pads with zeros to ensure 6 digits
-  }
+  const otp = Math.floor(Math.random() * 1000000); // generates a 6-digit random number
+  return otp.toString().padStart(6, '0'); // pads with zeros to ensure 6 digits
+};
 
 const verifyOtp = async (email, otp) => {
   const otpDoc = await Otp.find({ email, otp });

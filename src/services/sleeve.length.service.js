@@ -34,7 +34,6 @@ const getSleeveLengthById = async (id) => {
   return SleeveLength.findById(id);
 };
 
-
 /**
  * Update SleeveLength by id
  * @param {ObjectId} Id

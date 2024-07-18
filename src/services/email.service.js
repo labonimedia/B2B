@@ -40,7 +40,6 @@ If you did not request any password resets, then ignore this email.`;
   await sendEmail(to, subject, text);
 };
 
-
 /**
  * Send verification email
  * @param {string} to
@@ -49,7 +48,7 @@ If you did not request any password resets, then ignore this email.`;
  */
 const sendVerificationEmail = async (to) => {
   const otpCode = otpService.generateOTP();
-  await otpService.createOtp(to, otpCode)
+  await otpService.createOtp(to, otpCode);
   const subject = 'Email Verification';
   // replace this url with the link to the email verification page of your front-end app
   const text = `Dear user,
@@ -57,8 +56,6 @@ To verify your email, otp ${otpCode}
 If you did not create an account, then ignore this email.`;
   await sendEmail(to, subject, text);
 };
-
-
 
 /**
  * Send verification email

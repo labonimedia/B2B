@@ -6,8 +6,8 @@ const router = express.Router();
 
 router
   .route('/')
-  .post(auth('superadmin', 'manufacture'),  sleeveLengthController.createSleeveLength)
-  .get(auth('superadmin', 'manufacture'),  sleeveLengthController.querySleeveLength);
+  .post(auth('superadmin', 'manufacture'), sleeveLengthController.createSleeveLength)
+  .get(auth('superadmin', 'manufacture'), sleeveLengthController.querySleeveLength);
 
 router
   .route('/:id')
@@ -16,4 +16,3 @@ router
   .delete(auth('superadmin', 'manufacture'), sleeveLengthController.deleteSleeveLengthById);
 
 module.exports = router;
-

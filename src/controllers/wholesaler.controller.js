@@ -10,7 +10,7 @@ const createWholesaler = catchAsync(async (req, res) => {
 });
 
 const queryWholesaler = catchAsync(async (req, res) => {
-  const filter = pick(req.query, ['name', 'role', 'status',]);
+  const filter = pick(req.query, ['name', 'role', 'status']);
   const options = pick(req.query, ['sortBy', 'limit', 'page']);
   const result = await wholesalerService.queryWholesaler(filter, options);
   res.send(result);

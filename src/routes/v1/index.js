@@ -139,7 +139,7 @@ const defaultRoutes = [
   {
     path: '/lifestyle',
     route: lifestyleRoute,
-  }
+  },
 ];
 
 const devRoutes = [

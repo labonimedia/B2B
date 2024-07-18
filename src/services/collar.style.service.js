@@ -34,7 +34,6 @@ const getCollarStyleById = async (id) => {
   return CollarStyle.findById(id);
 };
 
-
 /**
  * Update CollarStyle by id
  * @param {ObjectId} Id

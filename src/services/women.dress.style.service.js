@@ -34,7 +34,6 @@ const getWomenDressStyleById = async (id) => {
   return WomenDressStyle.findById(id);
 };
 
-
 /**
  * Update WomenDressStyle by id
  * @param {ObjectId} Id

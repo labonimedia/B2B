@@ -6,8 +6,8 @@ const router = express.Router();
 
 router
   .route('/')
-  .post(auth('superadmin', 'manufacture'),  materialController.createMaterial)
-  .get(auth('superadmin', 'manufacture'),  materialController.queryMaterial);
+  .post(auth('superadmin', 'manufacture'), materialController.createMaterial)
+  .get(auth('superadmin', 'manufacture'), materialController.queryMaterial);
 
 router
   .route('/:id')
@@ -16,4 +16,3 @@ router
   .delete(auth('superadmin', 'manufacture'), materialController.deleteMaterialById);
 
 module.exports = router;
-

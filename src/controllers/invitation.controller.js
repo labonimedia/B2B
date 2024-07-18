@@ -1,25 +1,25 @@
 const httpStatus = require('http-status');
 const path = require('path');
 const csv = require('csvtojson');
-const pick = require('../utils/pick');
 const { join } = require('path');
+const pick = require('../utils/pick');
 const ApiError = require('../utils/ApiError');
 const catchAsync = require('../utils/catchAsync');
 const { invitationService } = require('../services');
+
 const staticFolder = path.join(__dirname, '../');
 const uploadsFolder = path.join(staticFolder, 'uploads');
 
-
 const bulkUploadFile = catchAsync(async (req, res) => {
-    if (req.file) {
-      const csvFilePath = join(uploadsFolder, req.file.filename);
-      const csvJsonArray = await csv().fromFile(csvFilePath);
-      const staff = await invitationService.bulkUpload(null, csvJsonArray, req.user);
-      res.status(httpStatus.CREATED).send(staff);
-    } else {
-      throw new ApiError(httpStatus.NOT_FOUND, 'Missing file');
-    }
-  });
+  if (req.file) {
+    const csvFilePath = join(uploadsFolder, req.file.filename);
+    const csvJsonArray = await csv().fromFile(csvFilePath);
+    const staff = await invitationService.bulkUpload(null, csvJsonArray, req.user);
+    res.status(httpStatus.CREATED).send(staff);
+  } else {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Missing file');
+  }
+});
 // const bulkUploadHandler = async (req, res) => {
 //   if (!req.file) {
 //     return res.status(httpStatus.BAD_REQUEST).send({ message: 'No file uploaded' });
@@ -47,10 +47,10 @@ const bulkUploadFile = catchAsync(async (req, res) => {
 //   }
 // };
 
-const arrayInvitations = catchAsync( async (req, res) => {
-const invitations = await invitationService.bulkUploadInvitations(req.body.invitations, req.user)
-res.status(httpStatus.CREATED).send(invitations);
-})
+const arrayInvitations = catchAsync(async (req, res) => {
+  const invitations = await invitationService.bulkUploadInvitations(req.body.invitations, req.user);
+  res.status(httpStatus.CREATED).send(invitations);
+});
 
 const createInvitation = catchAsync(async (req, res) => {
   const user = await invitationService.createInvitation(req.body, req.user);

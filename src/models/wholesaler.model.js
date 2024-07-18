@@ -4,6 +4,11 @@ const { toJSON, paginate } = require('./plugins');
 
 const wholesalerSchema = mongoose.Schema(
   {
+    fullName: {
+      type: String,
+      required: true,
+      trim: true,
+    },
     companyName: {
       type: String,
     },
@@ -83,9 +88,9 @@ const wholesalerSchema = mongoose.Schema(
       },
     },
     isActive: {
-        type: Boolean,
-        default: true,
-    }
+      type: Boolean,
+      default: true,
+    },
   },
   {
     timestamps: true,
@@ -95,7 +100,6 @@ const wholesalerSchema = mongoose.Schema(
 // add plugin that converts mongoose to json
 wholesalerSchema.plugin(toJSON);
 wholesalerSchema.plugin(paginate);
-
 
 /**
  * @typedef Wholesaler

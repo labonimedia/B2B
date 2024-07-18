@@ -34,7 +34,6 @@ const getSleevCutStyleById = async (id) => {
   return SleevCutStyle.findById(id);
 };
 
-
 /**
  * Update SleevCutStyle by id
  * @param {ObjectId} Id
