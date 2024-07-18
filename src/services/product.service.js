@@ -13,12 +13,12 @@ const fileupload = async(req, productId) => {
     const product = await Product.findById(productId);
 
     if (!product) {
-        throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+        throw new ApiError(httpStatus.NOT_FOUND, 'Product not found');
     }
     const { colour, colourName } = req.body;
-    const colourImage = req.files['colourImage'] ? req.files['colourImage'][0].location : null;
-    const productImages = req.files['productImages'] ? req.files['productImages'].map(file => file.location) : [];
-    const productVideo = req.files['productVideo'] ? req.files['productVideo'][0].location : null;
+    const colourImage = req.uploadedFiles.shift();
+    const productImages = req.uploadedFiles.splice(0, req.files['productImages'] ? req.files['productImages'].length : 0);
+    const productVideo = req.uploadedFiles.pop();
 
     const newColourCollection = {
       colour,
@@ -29,7 +29,7 @@ const fileupload = async(req, productId) => {
     };
 
     product.colourCollections.push(newColourCollection);
-    await product.save();
+    return await product.save();
 
 }
 /**

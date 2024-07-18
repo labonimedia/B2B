@@ -26,3 +26,4 @@ module.exports.WomenDressStyle = require('./women.dress.style');
 module.exports.Elastic = require('./elastic.model');
 module.exports.IncludeComponent = require('./include.component.model');
 module.exports.CollarStyle = require('./collar.style.model');
+module.exports.Product = require('./product.model');

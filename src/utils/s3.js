@@ -1,13 +1,13 @@
-const aws = require('aws-sdk');
-const { config } = require('../config/config');
+const { S3Client } = require("@aws-sdk/client-s3");
 
-aws.config.update({
-  accessKeyId: config.cdn.accessKeyId,
-  secretAccessKey: config.cdn.secretAccessKey,
-  region: 'blr1',
-  endpoint: 'https://b2bproject.blr1.digitaloceanspaces.com',
+const s3Client = new S3Client({
+  region: "blr1",
+  endpoint: "https://lmscontent-cdn.blr1.digitaloceanspaces.com",
+  credentials: {
+    accessKeyId: "DO00DZCVAHQ9YVMP7D8C",
+    secretAccessKey: "m3eBoCCD9ie4P87E74LO8fVsDQ+K7ZK0B5U1CXrk2Oc"
+  },
+  forcePathStyle: true,  // Ensure path style is used
 });
 
-const s3 = new aws.S3();
-
-module.exports = s3;
+module.exports = s3Client;
