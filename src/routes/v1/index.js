@@ -17,6 +17,17 @@ const careInstructionRoute = require('./care.instruction.route');
 const specialFeatureRoute = require('./special.feature.route');
 const occasionRoute = require('./occasion.route');
 const menStandardSizeRoute = require('./men.standard.size.route');
+const socksSizeRoute = require('./socks.size.route');
+const socksStyleRoute = require('./socks.style.route');
+const seasonRoute = require('./season.route');
+const lengthWomenDressRoute = require('./length.women.dress.route');
+const womenDressStyleRoute = require('./women.dress.style.route');
+const elasticRoute = require('./elastic.route');
+const includeComponentRoute = require('./include.component.route');
+const collarStyleRoute = require('./collar.style.route');
+const neckStyleRoute = require('./neck.style.route');
+const closureTypeRoute = require('./closure.type.route');
+const lifestyleRoute = require('./lifestyle.route');
 
 const router = express.Router();
 
@@ -84,6 +95,50 @@ const defaultRoutes = [
   {
     path: '/men-standard-size',
     route: menStandardSizeRoute,
+  },
+  {
+    path: '/socks-size',
+    route: socksSizeRoute,
+  },
+  {
+    path: '/socks-style',
+    route: socksStyleRoute,
+  },
+  {
+    path: '/season',
+    route: seasonRoute,
+  },
+  {
+    path: '/length-women-dress',
+    route: lengthWomenDressRoute,
+  },
+  {
+    path: '/women-dress-style',
+    route: womenDressStyleRoute,
+  },
+  {
+    path: '/elastic',
+    route: elasticRoute,
+  },
+  {
+    path: '/include-componenet',
+    route: includeComponentRoute,
+  },
+  {
+    path: '/collar-style',
+    route: collarStyleRoute,
+  },
+  {
+    path: '/neck-style',
+    route: neckStyleRoute,
+  },
+  {
+    path: '/closure-type',
+    route: closureTypeRoute,
+  },
+  {
+    path: '/lifestyle',
+    route: lifestyleRoute,
   }
 ];
 

@@ -19,7 +19,7 @@ const queryWholesaler = catchAsync(async (req, res) => {
 const getWholesalerById = catchAsync(async (req, res) => {
   const user = await wholesalerService.getUserByEmail(req.params.email);
   if (!user) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Manufaturer not found');
+    throw new ApiError(httpStatus.NOT_FOUND, 'Wholesaler not found');
   }
   res.send(user);
 });
