@@ -8,8 +8,10 @@ const createBrand = catchAsync(async (req, res) => {
     if (!req.body.brandLogo || req.body.brandLogo.length === 0) {
         throw new ApiError(httpStatus.BAD_REQUEST, 'No brand logo provided');
       }
-      
-      req.body.brandLogo = req.body.brandLogo[0]; 
+      const brandLogoUrl = req.body.brandLogo[0];
+  const brandLogoPath = new URL(brandLogoUrl).pathname;
+
+      req.body.brandLogo = brandLogoPath; 
   const user = await brandService.createBrand(req.body);
   res.status(httpStatus.CREATED).send(user);
 });

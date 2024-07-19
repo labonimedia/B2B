@@ -8,6 +8,31 @@ const ApiError = require('../utils/ApiError');
  * @param {Object} reqBody
  * @returns {Promise<Product>}
  */
+// const fileupload = async (req, productId) => {
+//   const product = await Product.findById(productId);
+
+//   if (!product) {
+//     throw new ApiError(httpStatus.NOT_FOUND, 'Product not found');
+//   }
+
+//   const { colour, colourName } = req.body;
+
+//   // Extract file paths from req.body
+//   const colourImage = req.body.colourImage ? req.body.colourImage[0] : null;
+//   const productImages = req.body.productImages || [];
+//   const productVideo = req.body.productVideo ? req.body.productVideo[0] : null;
+
+//   const newColourCollection = {
+//     colour,
+//     colourName,
+//     colourImage,
+//     productImages,
+//     productVideo
+//   };
+
+//   product.colourCollections.push(newColourCollection);
+//   return await product.save();
+// };
 const fileupload = async (req, productId) => {
   const product = await Product.findById(productId);
 
@@ -17,10 +42,13 @@ const fileupload = async (req, productId) => {
 
   const { colour, colourName } = req.body;
 
-  // Extract file paths from req.body
-  const colourImage = req.body.colourImage ? req.body.colourImage[0] : null;
-  const productImages = req.body.productImages || [];
-  const productVideo = req.body.productVideo ? req.body.productVideo[0] : null;
+  // Helper function to extract path from URL
+  const extractPath = (url) => new URL(url).pathname;
+
+  // Extract and trim file paths from req.body
+  const colourImage = req.body.colourImage ? extractPath(req.body.colourImage[0]) : null;
+  const productImages = req.body.productImages ? req.body.productImages.map(extractPath) : [];
+  const productVideo = req.body.productVideo ? extractPath(req.body.productVideo[0]) : null;
 
   const newColourCollection = {
     colour,
@@ -33,29 +61,7 @@ const fileupload = async (req, productId) => {
   product.colourCollections.push(newColourCollection);
   return await product.save();
 };
-// const fileupload = async(req, productId) => {
-//     const product = await Product.findById(productId);
 
-//     if (!product) {
-//         throw new ApiError(httpStatus.NOT_FOUND, 'Product not found');
-//     }
-//     const { colour, colourName } = req.body;
-//     const colourImage = req.uploadedFiles.shift();
-//     const productImages = req.uploadedFiles.splice(0, req.files['productImages'] ? req.files['productImages'].length : 0);
-//     const productVideo = req.uploadedFiles.pop();
-
-//     const newColourCollection = {
-//       colour,
-//       colourName,
-//       colourImage,
-//       productImages,
-//       productVideo
-//     };
-
-//     product.colourCollections.push(newColourCollection);
-//     return await product.save();
-
-// }
 /**
  * Create a Product
  * @param {Object} reqBody
