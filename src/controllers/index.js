@@ -28,4 +28,5 @@ module.exports.elasticController = require('./elastic.controller');
 module.exports.includeComponentController = require('./include.Component.controller');
 module.exports.collarStyleController = require('./collar.style.controller');
 module.exports.productController = require('./product.controller');
+module.exports.brandController = require('./brand.controller');
 

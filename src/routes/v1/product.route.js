@@ -1,13 +1,17 @@
 const express = require('express');
 const auth = require('../../middlewares/auth');
 const { productController } = require('../../controllers');
-const uploadMiddleware = require('../../utils/upload');
+const { commonUploadMiddleware } = require('../../utils/upload');
 
 const router = express.Router();
 
 router
   .route('/upload/colour-collection/:id')
-  .post(auth('superadmin', 'manufacture'),  uploadMiddleware, productController.fileupload)
+  .post(auth('superadmin', 'manufacture'),  commonUploadMiddleware([
+    { name: 'colourImage', maxCount: 1 },
+    { name: 'productImages', maxCount: 10 },
+    { name: 'productVideo', maxCount: 1 }
+  ]), productController.fileupload)
 router
   .route('/')
   .post(auth('superadmin', 'manufacture'), productController.createProduct)

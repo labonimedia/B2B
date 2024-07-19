@@ -29,6 +29,7 @@ const neckStyleRoute = require('./neck.style.route');
 const closureTypeRoute = require('./closure.type.route');
 const lifestyleRoute = require('./lifestyle.route');
 const productRoute = require('./product.route');
+const brandRoute = require('./brand.route');
 
 const router = express.Router();
 
@@ -141,6 +142,10 @@ const defaultRoutes = [
     path: '/lifestyle',
     route: lifestyleRoute,
   },
+  {
+    path: '/brand',
+    route: brandRoute,
+  }
 ];
 
 const devRoutes = [
