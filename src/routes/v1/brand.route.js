@@ -15,7 +15,8 @@ router
 router
   .route('/:id')
   .get(auth('superadmin', 'manufacture'), brandController.getBrandById)
-  .patch(auth('superadmin', 'manufacture'), brandController.updateBrandById)
+  .patch(auth('superadmin', 'manufacture'), commonUploadMiddleware([
+    { name: 'brandLogo', maxCount: 1 }]), brandController.updateBrandById)
   .delete(auth('superadmin', 'manufacture'), brandController.deleteBrandById);
 
 module.exports = router;

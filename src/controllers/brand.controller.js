@@ -3,6 +3,7 @@ const pick = require('../utils/pick');
 const ApiError = require('../utils/ApiError');
 const catchAsync = require('../utils/catchAsync');
 const { brandService } = require('../services');
+const { deleteFile } = require('../utils/upload')
 
 const createBrand = catchAsync(async (req, res) => {
     if (!req.body.brandLogo || req.body.brandLogo.length === 0) {
@@ -32,8 +33,19 @@ const getBrandById = catchAsync(async (req, res) => {
 });
 
 const updateBrandById = catchAsync(async (req, res) => {
+  const brand = await brandService.getBrandById(req.params.id);
+  if (!brand) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Brand not found');
+  }
+
   if (req.body.brandLogo && req.body.brandLogo.length > 0) {
+    // Delete old brand logo
+    if (brand.brandLogo) {
+      await deleteFile(brand.brandLogo);
+    }
+    // Upload new brand logo
     const brandLogoUrl = req.body.brandLogo[0];
+    console.log(brandLogoUrl)
     const brandLogoPath = new URL(brandLogoUrl).pathname;
     req.body.brandLogo = brandLogoPath;
   }
