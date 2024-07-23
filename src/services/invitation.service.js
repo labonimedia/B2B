@@ -46,6 +46,10 @@ const createInvitation = async (reqBody, user) => {
   return Invitation.create(reqBody);
 };
 
+const sendReInvitation = async (email) => {
+  const result = await emailService.sendInvitationToDistributer(email);
+  return result;
+ }
 /**
  * Query for Invitation
  * @param {Object} filter - Mongo filter
@@ -110,6 +114,7 @@ const deleteInvitationById = async (userId) => {
 
 module.exports = {
   createInvitation,
+  sendReInvitation,
   bulkUploadInvitations,
   queryInvitation,
   getInvitationById,

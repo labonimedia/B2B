@@ -30,3 +30,4 @@ module.exports.includeComponentService = require('./include.component.service');
 module.exports.collarStyleService = require('./collar.style.service');
 module.exports.productService = require('./product.service');
 module.exports.brandService = require('./brand.service');
+module.exports.subCategoryService = require('./sub.category.service');

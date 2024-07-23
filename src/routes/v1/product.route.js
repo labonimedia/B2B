@@ -17,6 +17,9 @@ router
   .post(auth('superadmin', 'manufacture'), productController.createProduct)
   .get(auth('superadmin', 'manufacture'), productController.queryProduct);
 
+  router
+  .route('/filter-products')
+  .get(auth('superadmin', 'manufacture'), productController.searchProducts);
 router
   .route('/:id')
   .get(auth('superadmin', 'manufacture'), productController.getProductById)

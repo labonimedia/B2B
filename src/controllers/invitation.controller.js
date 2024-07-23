@@ -57,6 +57,11 @@ const createInvitation = catchAsync(async (req, res) => {
   res.status(httpStatus.CREATED).send(user);
 });
 
+const sendReInvitation = catchAsync(async (req, res) => {
+  const user = await invitationService.sendReInvitation(req.params.email);
+  res.status(httpStatus.CREATED).send(user);
+});
+
 const queryInvitation = catchAsync(async (req, res) => {
   const filter = pick(req.query, ['name', 'role', 'status', 'invitedBy']);
   const options = pick(req.query, ['sortBy', 'limit', 'page']);
@@ -84,6 +89,7 @@ const deleteInvitationById = catchAsync(async (req, res) => {
 
 module.exports = {
   createInvitation,
+  sendReInvitation,
   queryInvitation,
   getInvitationById,
   updateInvitationById,

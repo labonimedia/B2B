@@ -61,6 +61,7 @@ const userSchema = mongoose.Schema(
     refByEmail: {
       type: String,
     },
+    blackListed: [{type: String,}]
   },
   {
     timestamps: true,

@@ -5,8 +5,8 @@ const productSchema = mongoose.Schema(
   {
     designNumber: {
       type: String,
-      unique: true,
     },
+    quantity: {type: Number},
     brand: { type: String },
     productType: { type: String },
     gender: { type: String },
@@ -72,7 +72,29 @@ const productSchema = mongoose.Schema(
     timestamps: true,
   }
 );
-
+// Add text index to searchable fields
+productSchema.index({
+  brand: 'text',
+  productType: 'text',
+  gender: 'text',
+  clothing: 'text',
+  subCategory: 'text',
+  productTitle: 'text',
+  productDescription: 'text',
+  material: 'text',
+  materialvariety: 'text',
+  fabricPattern: 'text',
+  selectedOccasion: 'text',
+  selectedlifeStyle: 'text',
+  specialFeature: 'text',
+  fitStyle: 'text',
+  neckStyle: 'text',
+  closureType: 'text',
+  pocketDescription: 'text',
+  sleeveCuffStyle: 'text',
+  sleeveLength: 'text',
+  careInstructions: 'text',
+});
 // add plugin that converts mongoose to json
 productSchema.plugin(toJSON);
 productSchema.plugin(paginate);

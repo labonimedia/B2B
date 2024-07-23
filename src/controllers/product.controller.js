@@ -14,12 +14,27 @@ const createProduct = catchAsync(async (req, res) => {
   res.status(httpStatus.CREATED).send(user);
 });
 
+const searchProducts = catchAsync(async (req, res) => {
+  const filter = {};
+  const options = {};
+
+  // Build the filter object based on the query parameters
+  Object.keys(req.query).forEach((key) => {
+    if (req.query[key]) {
+      filter[key] = req.query[key];
+    }
+  });
+
+  const products = await productService.searchProducts(filter, options);
+  res.status(httpStatus.OK).send(products);
+});
 const queryProduct = catchAsync(async (req, res) => {
   const filter = pick(req.query, ['name', 'role', 'status']);
   const options = pick(req.query, ['sortBy', 'limit', 'page']);
   const result = await productService.queryProduct(filter, options);
   res.send(result);
 });
+
 
 const getProductById = catchAsync(async (req, res) => {
   const user = await productService.getProductById(req.params.id);
@@ -43,6 +58,7 @@ module.exports = {
     fileupload,
   createProduct,
   queryProduct,
+  searchProducts,
   getProductById,
   updateProductById,
   deleteProductById,

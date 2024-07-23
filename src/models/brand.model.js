@@ -13,7 +13,10 @@ const brandSchema = mongoose.Schema(
     brandLogo: {
         type: String,
     },
-  },
+    brandOwner: {
+        type: String,
+    },
+    },
   {
     timestamps: true,
   }

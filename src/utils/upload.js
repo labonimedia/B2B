@@ -97,7 +97,7 @@
 
 // module.exports = uploadMiddleware;
 const multer = require('multer');
-const { PutObjectCommand } = require("@aws-sdk/client-s3");
+const { PutObjectCommand, DeleteObjectCommand } = require("@aws-sdk/client-s3");
 const s3Client = require('./s3');
 const ffmpegPath = require('ffmpeg-static');
 const ffmpeg = require('fluent-ffmpeg');
@@ -184,7 +184,31 @@ const commonUploadMiddleware = (fields) => [
   uploadFiles
 ];
 
-module.exports = { commonUploadMiddleware };
+
+/**
+ * Delete a file from S3 bucket
+ * @param {string} filePath - The path of the file to delete
+ * @returns {Promise<void>}
+ */
+const deleteFile = async (filePath) => {
+  const bucketKey = filePath.replace('https://lmscontent-cdn.blr1.digitaloceanspaces.com', '');
+
+  const params = {
+    Bucket: 'b2b',
+    Key: bucketKey,
+  };
+
+  const command = new DeleteObjectCommand(params);
+  try {
+    await s3Client.send(command);
+    console.log(`File deleted: ${filePath}`);
+  } catch (err) {
+    console.error("Error deleting file:", err);
+    throw err;  // Rethrow the error after logging it
+  }
+};
+
+module.exports = { commonUploadMiddleware, deleteFile };
 
 // const multer = require('multer');
 // const { PutObjectCommand } = require("@aws-sdk/client-s3");

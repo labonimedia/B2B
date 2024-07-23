@@ -68,6 +68,7 @@ const fileupload = async (req, productId) => {
  * @returns {Promise<Product>}
  */
 const createProduct = async (reqBody) => {
+  const product = await Product.find()
   return Product.create(reqBody);
 };
 
@@ -85,6 +86,23 @@ const queryProduct = async (filter, options) => {
   return Products;
 };
 
+
+/**
+ * Query for products
+ * @param {Object} filter - MongoDB filter
+ * @param {Object} options - Query options (e.g., pagination)
+ * @returns {Promise<QueryResult>}
+ */
+const searchProducts = async (filter, options) => {
+  // If there's a search term, add a text search condition
+  if (filter.search) {
+    filter.$text = { $search: filter.search };
+    delete filter.search;
+  }
+
+  const products = await Product.paginate(filter, options);
+  return products;
+};
 /**
  * Get Product by id
  * @param {ObjectId} id
@@ -103,7 +121,7 @@ const getProductById = async (id) => {
 const updateProductById = async (id, updateBody) => {
   const user = await getProductById(id);
   if (!user) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+    throw new ApiError(httpStatus.NOT_FOUND, 'Product not found');
   }
   Object.assign(user, updateBody);
   await user.save();
@@ -118,7 +136,7 @@ const updateProductById = async (id, updateBody) => {
 const deleteProductById = async (id) => {
   const user = await getProductById(id);
   if (!user) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+    throw new ApiError(httpStatus.NOT_FOUND, 'Product not found');
   }
   await user.remove();
   return user;
@@ -128,6 +146,7 @@ module.exports = {
     fileupload,
   createProduct,
   queryProduct,
+  searchProducts,
   getProductById,
   updateProductById,
   deleteProductById,

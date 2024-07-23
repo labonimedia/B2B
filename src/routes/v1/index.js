@@ -30,6 +30,7 @@ const closureTypeRoute = require('./closure.type.route');
 const lifestyleRoute = require('./lifestyle.route');
 const productRoute = require('./product.route');
 const brandRoute = require('./brand.route');
+const subCategoryRoute = require('./sub.category.route');
 
 const router = express.Router();
 
@@ -107,6 +108,10 @@ const defaultRoutes = [
     route: socksStyleRoute,
   },
   {
+    path: '/products',
+    route: productRoute,
+  },
+  {
     path: '/season',
     route: seasonRoute,
   },
@@ -145,6 +150,10 @@ const defaultRoutes = [
   {
     path: '/brand',
     route: brandRoute,
+  },
+  {
+    path: '/sub-category',
+    route: subCategoryRoute,
   }
 ];
 
@@ -154,10 +163,6 @@ const devRoutes = [
     path: '/docs',
     route: docsRoute,
   },
-  {
-    path: '/products',
-    route: productRoute,
-  }
 ];
 
 defaultRoutes.forEach((route) => {

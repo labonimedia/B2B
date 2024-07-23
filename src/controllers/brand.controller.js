@@ -32,6 +32,11 @@ const getBrandById = catchAsync(async (req, res) => {
 });
 
 const updateBrandById = catchAsync(async (req, res) => {
+  if (req.body.brandLogo && req.body.brandLogo.length > 0) {
+    const brandLogoUrl = req.body.brandLogo[0];
+    const brandLogoPath = new URL(brandLogoUrl).pathname;
+    req.body.brandLogo = brandLogoPath;
+  }
   const user = await brandService.updateBrandById(req.params.id, req.body);
   res.send(user);
 });
