@@ -57,6 +57,7 @@ const updateBrandById = async (id, updateBody) => {
  */
 const deleteBrandById = async (id) => {
   const user = await getBrandById(id);
+  
   if (!user) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Brand not found');
   }

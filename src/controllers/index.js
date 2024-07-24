@@ -30,4 +30,5 @@ module.exports.collarStyleController = require('./collar.style.controller');
 module.exports.productController = require('./product.controller');
 module.exports.brandController = require('./brand.controller');
 module.exports.subCategoryController = require('./sub.category.controller');
+module.exports.retailerController = require('./retailer.controller');
 

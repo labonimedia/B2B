@@ -1,18 +1,18 @@
 const httpStatus = require('http-status');
-const { Manufacture } = require('../models'); 
+const { Retailer } = require('../models');
 const ApiError = require('../utils/ApiError');
 
 /**
- * Create a manufacture
+ * Create a Retailer
  * @param {Object} reqBody
- * @returns {Promise<Manufacture>}
+ * @returns {Promise<Retailer>}
  */
-const createManufacture = async (reqBody) => {
-  return Manufacture.create(reqBody);
+const createRetailer = async (reqBody) => {
+  return Retailer.create(reqBody);
 };
 
 /**
- * Query for manufacture
+ * Query for Retailer
  * @param {Object} filter - Mongo filter
  * @param {Object} options - Query options
  * @param {string} [options.sortBy] - Sort option in the format: sortField:(desc|asc)
@@ -20,39 +20,39 @@ const createManufacture = async (reqBody) => {
  * @param {number} [options.page] - Current page (default = 1)
  * @returns {Promise<QueryResult>}
  */
-const queryManufacture = async (filter, options) => {
-  const manufacture = await Manufacture.paginate(filter, options);
-  return manufacture;
+const queryRetailer = async (filter, options) => {
+  const Retailers = await Retailer.paginate(filter, options);
+  return Retailers;
 };
 
 /**
- * Get manufacture by id
+ * Get Retailer by id
  * @param {ObjectId} id
- * @returns {Promise<Manufacture>}
+ * @returns {Promise<Retailer>}
  */
-const getManufactureById = async (id) => {
-  return Manufacture.findById(id);
+const getRetailerById = async (id) => {
+  return Retailer.findById(id);
 };
 
 /**
  * Get user by email
  * @param {string} email
- * @returns {Promise<Manufacture>}
+ * @returns {Promise<Retailer>}
  */
 const getUserByEmail = async (email) => {
-  return Manufacture.findOne({ email });
+  return Retailer.findOne({ email });
 };
 
 /**
- * Update manufacture by id
+ * Update Retailer by id
  * @param {ObjectId} Id
  * @param {Object} updateBody
- * @returns {Promise<Manufacture>}
+ * @returns {Promise<Retailer>}
  */
-const updateManufactureById = async (email, updateBody) => {
+const updateRetailerById = async (email, updateBody) => {
   const user = await getUserByEmail(email);
   if (!user) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+    throw new ApiError(httpStatus.NOT_FOUND, 'Retailer not found');
   }
   Object.assign(user, updateBody);
   await user.save();
@@ -62,22 +62,22 @@ const updateManufactureById = async (email, updateBody) => {
 /**
  * Delete user by id
  * @param {ObjectId} userId
- * @returns {Promise<Manufacture>}
+ * @returns {Promise<Retailer>}
  */
-const deleteManufactureById = async (email) => {
+const deleteRetailerById = async (email) => {
   const user = await getUserByEmail(email);
   if (!user) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+    throw new ApiError(httpStatus.NOT_FOUND, 'Retailer not found');
   }
   await user.remove();
   return user;
 };
 
 module.exports = {
-  createManufacture,
-  queryManufacture,
-  getManufactureById,
+  createRetailer,
+  queryRetailer,
+  getRetailerById,
   getUserByEmail,
-  updateManufactureById,
-  deleteManufactureById,
+  updateRetailerById,
+  deleteRetailerById,
 };
