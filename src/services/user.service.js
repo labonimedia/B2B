@@ -21,6 +21,7 @@ const data = {
     email: userBody.email ,
       // enum: ['superadmin', 'manufacture', 'wholesaler', 'distributer'],
       mobNumber: userBody.mobileNumber,
+      category: userBody.category,
   }
  await createManufacture(data)
 }
@@ -31,6 +32,7 @@ if(userBody.role === 'wholesaler'){
     email: userBody.email ,
       // enum: ['superadmin', 'manufacture', 'wholesaler', 'retailer'],
       mobNumber: userBody.mobileNumber,
+      category: userBody.category,
   }
  await createWholesaler(data)
 }
@@ -41,6 +43,7 @@ if(userBody.role === 'retailer'){
     email: userBody.email ,
       // enum: ['superadmin', 'manufacture', 'wholesaler', 'distributer'],
       mobNumber: userBody.mobileNumber,
+      category: userBody.category,
   }
  await createRetailer(data)
 }

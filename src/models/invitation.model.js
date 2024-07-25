@@ -40,6 +40,9 @@ const invitationSchema = mongoose.Schema(
     role: {
       type: String,
     },
+    category: {
+      type: String,
+    }
   },
   {
     timestamps: true,
