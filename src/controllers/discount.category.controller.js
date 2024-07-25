@@ -10,7 +10,7 @@ const createDiscountCategory = catchAsync(async (req, res) => {
 });
 
 const queryDiscountCategory = catchAsync(async (req, res) => {
-  const filter = pick(req.query, ['name']);
+  const filter = pick(req.query, ['category', 'categoryBy']);
   const options = pick(req.query, ['sortBy', 'limit', 'page']);
   const result = await discountCategoryService.queryDiscountCategory(filter, options);
   res.send(result);
