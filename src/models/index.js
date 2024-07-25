@@ -30,3 +30,4 @@ module.exports.Product = require('./product.model');
 module.exports.Brand = require('./brand.model');
 module.exports.SubCategory = require('./sub.category.model');
 module.exports.Retailer = require('./retailer.model');
+module.exports.DiscountCategory = require('./discount.category.model');

@@ -31,6 +31,8 @@ const lifestyleRoute = require('./lifestyle.route');
 const productRoute = require('./product.route');
 const brandRoute = require('./brand.route');
 const subCategoryRoute = require('./sub.category.route');
+const retailersRoute = require('./retailer.route');
+const discountCategoryRoute = require('./discount.category.route');
 
 const router = express.Router();
 
@@ -154,6 +156,14 @@ const defaultRoutes = [
   {
     path: '/sub-category',
     route: subCategoryRoute,
+  },
+  {
+    path: '/retailer',
+    route: retailersRoute,
+  },
+  {
+    path: '/discount-category',
+    route: discountCategoryRoute,
   }
 ];
 
