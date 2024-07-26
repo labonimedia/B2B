@@ -2,6 +2,52 @@ const httpStatus = require('http-status');
 const { Invitation } = require('../models');
 const ApiError = require('../utils/ApiError');
 const emailService = require('./email.service');
+// /**
+//  * Bulk Upload Invitations
+//  * @param {Array<Object>} invitations
+//  * @returns {Promise<Array<Invitation>>}
+//  */
+// const bulkUploadInvitations = async (invitations, user) => {
+//   const results = await Promise.all(
+//     invitations.map(async (invitation) => {
+//       const invitedBy = user.email;
+//       await emailService.sendInvitationToDistributer(invitation.email);
+//       return Invitation.create({ ...invitation, invitedBy });
+//     })
+//   );
+//   return results;
+// };
+
+// const bulkUpload = async (invitationArray, csvFilePath = null, user) => {
+//   let modifiedInvitationsArray = invitationArray;
+//   if (csvFilePath) {
+//     modifiedInvitationsArray = { invitations: csvFilePath };
+//   }
+//   if (!modifiedInvitationsArray.invitations || !modifiedInvitationsArray.invitations.length)
+//     return { error: true, message: 'missing array' };
+//   const result = await Promise.all(
+//     modifiedInvitationsArray.invitations.map(async (invitation) => {
+//       invitation.invitedBy = user.email;
+//       await emailService.sendInvitationToDistributer(invitation.email);
+//       await Invitation.create(invitation);
+//     })
+//   );
+//   return result;
+// };
+
+// /**
+//  * Create a Invitation
+//  * @param {Object} reqBody
+//  * @returns {Promise<Invitation>}
+//  */
+// const createInvitation = async (reqBody, user) => {
+//   await emailService.sendInvitationToDistributer(reqBody.email);
+//   reqBody.invitedBy = user.email;
+//   const invitation = await Invitation.findOne({email:reqBody.email})
+//   if(invitation) 
+//   return Invitation.create(reqBody);
+// };
+
 /**
  * Bulk Upload Invitations
  * @param {Array<Object>} invitations
@@ -12,7 +58,12 @@ const bulkUploadInvitations = async (invitations, user) => {
     invitations.map(async (invitation) => {
       const invitedBy = user.email;
       await emailService.sendInvitationToDistributer(invitation.email);
-      return Invitation.create({ ...invitation, invitedBy });
+      const existingInvitation = await Invitation.findOne({ email: invitation.email });
+      if (existingInvitation) {
+        existingInvitation.invitedBy.push(invitedBy);
+        return existingInvitation.save();
+      }
+      return Invitation.create({ ...invitation, invitedBy: [invitedBy] });
     })
   );
   return results;
@@ -25,27 +76,43 @@ const bulkUpload = async (invitationArray, csvFilePath = null, user) => {
   }
   if (!modifiedInvitationsArray.invitations || !modifiedInvitationsArray.invitations.length)
     return { error: true, message: 'missing array' };
-  const result = await Promise.all(
+
+  const results = await Promise.all(
     modifiedInvitationsArray.invitations.map(async (invitation) => {
       invitation.invitedBy = user.email;
       await emailService.sendInvitationToDistributer(invitation.email);
-      await Invitation.create(invitation);
+
+      const existingInvitation = await Invitation.findOne({ email: invitation.email });
+      if (existingInvitation) {
+        existingInvitation.invitedBy.push(invitation.invitedBy);
+        return existingInvitation.save();
+      }
+
+      return Invitation.create(invitation);
     })
   );
-  return result;
+
+  return results;
 };
 
 /**
- * Create a Invitation
+ * Create an Invitation
  * @param {Object} reqBody
  * @returns {Promise<Invitation>}
  */
 const createInvitation = async (reqBody, user) => {
   await emailService.sendInvitationToDistributer(reqBody.email);
   reqBody.invitedBy = user.email;
+  
+  const existingInvitation = await Invitation.findOne({ email: reqBody.email });
+  if (existingInvitation) {
+    existingInvitation.invitedBy.push(reqBody.invitedBy);
+    return existingInvitation.save();
+  }
+
+  reqBody.invitedBy = [reqBody.invitedBy];
   return Invitation.create(reqBody);
 };
-
 const sendReInvitation = async (email) => {
   const result = await emailService.sendInvitationToDistributer(email);
   return result;

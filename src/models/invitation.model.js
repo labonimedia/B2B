@@ -31,12 +31,12 @@ const invitationSchema = mongoose.Schema(
     },
     status: {
       type: String,
-      enum: ['pending', 'accepted'],
-      default: 'pending',
+      // enum: ['pending', 'accepted'],
+      // default: 'pending',
     },
-    invitedBy: {
+    invitedBy: [{
       type: String,
-    },
+    }],
     role: {
       type: String,
     },
