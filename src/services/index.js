@@ -32,4 +32,5 @@ module.exports.productService = require('./product.service');
 module.exports.brandService = require('./brand.service');
 module.exports.subCategoryService = require('./sub.category.service');
 module.exports.retailerService = require('./retailer.service');
-module.exports.discountCategoryService = require('./discount.category.service');
+module.exports.wholesalerCategoryService = require('./wholesaler.category.service');
+module.exports.retailerCategoryService = require('./retailer.catgory.service');
