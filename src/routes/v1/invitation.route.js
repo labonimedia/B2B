@@ -10,7 +10,12 @@ const uploadsFolder = path.join(staticFolder, 'uploads');
 const router = express.Router();
 
 const upload = multer({ dest: uploadsFolder });
-router.post('/bulk-upload', auth('superadmin', 'manufacture', 'wholesaler' ), upload.single('file'), invitationController.bulkUploadFile);
+router.post(
+  '/bulk-upload',
+  auth('superadmin', 'manufacture', 'wholesaler'),
+  upload.single('file'),
+  invitationController.bulkUploadFile
+);
 router.post('/array-upload', auth('superadmin', 'manufacture', 'wholesaler'), invitationController.arrayInvitations);
 
 router
@@ -24,7 +29,7 @@ router
   .patch(auth('superadmin', 'manufacture', 'wholesaler'), invitationController.updateInvitationById)
   .delete(auth('superadmin', 'manufacture', 'wholesaler'), invitationController.deleteInvitationById);
 
-  router
+router
   .route('/re-invitation/:email')
-  .get(auth('superadmin', 'manufacture', 'wholesaler'),invitationController.sendReInvitation)
+  .get(auth('superadmin', 'manufacture', 'wholesaler'), invitationController.sendReInvitation);
 module.exports = router;

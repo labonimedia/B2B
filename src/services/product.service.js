@@ -1,4 +1,3 @@
-
 const httpStatus = require('http-status');
 const { Product } = require('../models');
 const ApiError = require('../utils/ApiError');
@@ -55,7 +54,7 @@ const fileupload = async (req, productId) => {
     colourName,
     colourImage,
     productImages,
-    productVideo
+    productVideo,
   };
 
   product.colourCollections.push(newColourCollection);
@@ -68,7 +67,7 @@ const fileupload = async (req, productId) => {
  * @returns {Promise<Product>}
  */
 const createProduct = async (reqBody) => {
-  const product = await Product.find()
+  const product = await Product.find();
   return Product.create(reqBody);
 };
 
@@ -85,7 +84,6 @@ const queryProduct = async (filter, options) => {
   const Products = await Product.paginate(filter, options);
   return Products;
 };
-
 
 /**
  * Query for products
@@ -143,7 +141,7 @@ const deleteProductById = async (id) => {
 };
 
 module.exports = {
-    fileupload,
+  fileupload,
   createProduct,
   queryProduct,
   searchProducts,

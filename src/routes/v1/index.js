@@ -164,7 +164,7 @@ const defaultRoutes = [
   {
     path: '/discount-category',
     route: discountCategoryRoute,
-  }
+  },
 ];
 
 const devRoutes = [

@@ -1,5 +1,3 @@
-const { sleeveCutStyleService } = require('../services');
-
 module.exports.authController = require('./auth.controller');
 module.exports.userController = require('./user.controller');
 module.exports.manufactureController = require('./manufacture.controller');
@@ -32,4 +30,3 @@ module.exports.brandController = require('./brand.controller');
 module.exports.subCategoryController = require('./sub.category.controller');
 module.exports.retailerController = require('./retailer.controller');
 module.exports.discountCategoryController = require('./discount.category.controller');
-

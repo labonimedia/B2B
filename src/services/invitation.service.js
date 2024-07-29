@@ -49,7 +49,7 @@ const createInvitation = async (reqBody, user) => {
 const sendReInvitation = async (email) => {
   const result = await emailService.sendInvitationToDistributer(email);
   return result;
- }
+};
 /**
  * Query for Invitation
  * @param {Object} filter - Mongo filter

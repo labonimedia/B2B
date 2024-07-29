@@ -6,7 +6,7 @@ const productSchema = mongoose.Schema(
     designNumber: {
       type: String,
     },
-    quantity: {type: Number},
+    quantity: { type: Number },
     brand: { type: String },
     productType: { type: String },
     gender: { type: String },

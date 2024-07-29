@@ -42,7 +42,7 @@ const invitationSchema = mongoose.Schema(
     },
     category: {
       type: String,
-    }
+    },
   },
   {
     timestamps: true,
@@ -56,6 +56,7 @@ invitationSchema.plugin(paginate);
 /**
  * @typedef Invitation
  */
+
 const Invitation = mongoose.model('Invitation', invitationSchema);
 
 module.exports = Invitation;

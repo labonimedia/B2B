@@ -5,9 +5,9 @@ const catchAsync = require('../utils/catchAsync');
 const { productService } = require('../services');
 
 const fileupload = catchAsync(async (req, res) => {
-    const user = await productService.fileupload(req, req.params.id);
-    res.status(httpStatus.CREATED).send(user);
-  });
+  const user = await productService.fileupload(req, req.params.id);
+  res.status(httpStatus.CREATED).send(user);
+});
 
 const createProduct = catchAsync(async (req, res) => {
   const user = await productService.createProduct(req.body);
@@ -35,7 +35,6 @@ const queryProduct = catchAsync(async (req, res) => {
   res.send(result);
 });
 
-
 const getProductById = catchAsync(async (req, res) => {
   const user = await productService.getProductById(req.params.id);
   if (!user) {
@@ -55,7 +54,7 @@ const deleteProductById = catchAsync(async (req, res) => {
 });
 
 module.exports = {
-    fileupload,
+  fileupload,
   createProduct,
   queryProduct,
   searchProducts,

@@ -35,7 +35,7 @@ const deleteDiscountCategoryById = catchAsync(async (req, res) => {
 });
 
 module.exports = {
-    createDiscountCategory,
+  createDiscountCategory,
   queryDiscountCategory,
   getDiscountCategoryById,
   updateDiscountCategoryById,
