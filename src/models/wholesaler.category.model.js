@@ -9,9 +9,12 @@ const wholesalerCategorySchema = mongoose.Schema(
     categoryBy: {
       type: String,
     },
-    discount: {
+    shippingDiscount: {
       type: String,
     },
+    productDiscount: {
+      type: String,
+    }
   },
   {
     timestamps: true,
