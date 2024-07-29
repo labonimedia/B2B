@@ -5,14 +5,13 @@ const retailerCategorySchema = mongoose.Schema(
   {
     category: {
       type: String,
-
     },
     categoryBy: {
-        type: String,
-      },
-      discount: {
-        type: String,
-      }
+      type: String,
+    },
+    discount: {
+      type: String,
+    },
   },
   {
     timestamps: true,

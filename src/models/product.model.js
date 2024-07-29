@@ -9,10 +9,11 @@ const productSchema = mongoose.Schema(
     designNumber: {
       type: String,
     },
+    quantity: { type: Number },
     discount: {
       type: String,
     },
-    quantity: {type: Number},
+    quantity: { type: Number },
     brand: { type: String },
     productType: { type: String },
     gender: { type: String },
@@ -73,7 +74,6 @@ const productSchema = mongoose.Schema(
         productVideo: { type: String },
       },
     ],
-
   },
   {
     timestamps: true,

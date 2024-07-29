@@ -12,12 +12,12 @@ const subCategorySchema = mongoose.Schema(
       trim: true,
     },
     category: {
-        type: String,
-        trim: true,
+      type: String,
+      trim: true,
     },
     subCategory: {
-        type: String,
-        trim: true,
+      type: String,
+      trim: true,
     },
   },
   {

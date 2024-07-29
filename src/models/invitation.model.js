@@ -34,15 +34,17 @@ const invitationSchema = mongoose.Schema(
       // enum: ['pending', 'accepted'],
       // default: 'pending',
     },
-    invitedBy: [{
-      type: String,
-    }],
+    invitedBy: [
+      {
+        type: String,
+      },
+    ],
     role: {
       type: String,
     },
     category: {
       type: String,
-    }
+    },
   },
   {
     timestamps: true,
@@ -56,6 +58,7 @@ invitationSchema.plugin(paginate);
 /**
  * @typedef Invitation
  */
+
 const Invitation = mongoose.model('Invitation', invitationSchema);
 
 module.exports = Invitation;

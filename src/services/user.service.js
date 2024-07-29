@@ -1,7 +1,7 @@
 const httpStatus = require('http-status');
 const { User } = require('../models');
 const ApiError = require('../utils/ApiError');
-const { createManufacture } =  require('./manufacture.service')
+const { createManufacture } = require('./manufacture.service');
 const { createWholesaler } = require('./wholesaler.service');
 const { createRetailer } = require('./retailer.service');
 
@@ -14,39 +14,39 @@ const createUser = async (userBody) => {
   if (await User.isEmailTaken(userBody.email)) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Email already taken');
   }
-  if(userBody.role === 'manufacture'){
-const data = {
-    fullName: userBody.fullName,
-    companyName: userBody.companyName,
-    email: userBody.email ,
+  if (userBody.role === 'manufacture') {
+    const data = {
+      fullName: userBody.fullName,
+      companyName: userBody.companyName,
+      email: userBody.email,
       // enum: ['superadmin', 'manufacture', 'wholesaler', 'distributer'],
       mobNumber: userBody.mobileNumber,
       category: userBody.category,
+    };
+    await createManufacture(data);
   }
- await createManufacture(data)
-}
-if(userBody.role === 'wholesaler'){
-  const data = {
-    fullName: userBody.fullName,
-    companyName: userBody.companyName,
-    email: userBody.email ,
+  if (userBody.role === 'wholesaler') {
+    const data = {
+      fullName: userBody.fullName,
+      companyName: userBody.companyName,
+      email: userBody.email,
       // enum: ['superadmin', 'manufacture', 'wholesaler', 'retailer'],
       mobNumber: userBody.mobileNumber,
       category: userBody.category,
+    };
+    await createWholesaler(data);
   }
- await createWholesaler(data)
-}
-if(userBody.role === 'retailer'){
-  const data = {
-    fullName: userBody.fullName,
-    companyName: userBody.companyName,
-    email: userBody.email ,
+  if (userBody.role === 'retailer') {
+    const data = {
+      fullName: userBody.fullName,
+      companyName: userBody.companyName,
+      email: userBody.email,
       // enum: ['superadmin', 'manufacture', 'wholesaler', 'distributer'],
       mobNumber: userBody.mobileNumber,
       category: userBody.category,
+    };
+    await createRetailer(data);
   }
- await createRetailer(data)
-}
   return User.create(userBody);
 };
 
