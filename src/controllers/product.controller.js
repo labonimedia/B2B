@@ -29,7 +29,7 @@ const searchProducts = catchAsync(async (req, res) => {
   res.status(httpStatus.OK).send(products);
 });
 const queryProduct = catchAsync(async (req, res) => {
-  const filter = pick(req.query, ['name', 'role', 'status']);
+  const filter = pick(req.query, ['name', 'status', 'productBy']);
   const options = pick(req.query, ['sortBy', 'limit', 'page']);
   const result = await productService.queryProduct(filter, options);
   res.send(result);

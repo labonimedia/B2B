@@ -3,6 +3,9 @@ const { paginate, toJSON } = require('./plugins');
 
 const productSchema = mongoose.Schema(
   {
+    productBy: {
+      type: String,
+    },
     designNumber: {
       type: String,
     },
@@ -70,6 +73,7 @@ const productSchema = mongoose.Schema(
         productVideo: { type: String },
       },
     ],
+
   },
   {
     timestamps: true,
