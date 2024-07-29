@@ -1,5 +1,5 @@
 const httpStatus = require('http-status');
-const { Manufacture } = require('../models'); 
+const { Manufacture } = require('../models');
 const ApiError = require('../utils/ApiError');
 
 /**

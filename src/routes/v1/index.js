@@ -169,7 +169,7 @@ const defaultRoutes = [
   {
     path: '/retailer-category',
     route: retailerCategoryRoute,
-  }
+  },
 ];
 
 const devRoutes = [

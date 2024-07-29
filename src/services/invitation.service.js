@@ -44,7 +44,7 @@ const emailService = require('./email.service');
 //   await emailService.sendInvitationToDistributer(reqBody.email);
 //   reqBody.invitedBy = user.email;
 //   const invitation = await Invitation.findOne({email:reqBody.email})
-//   if(invitation) 
+//   if(invitation)
 //   return Invitation.create(reqBody);
 // };
 
@@ -103,7 +103,7 @@ const bulkUpload = async (invitationArray, csvFilePath = null, user) => {
 const createInvitation = async (reqBody, user) => {
   await emailService.sendInvitationToDistributer(reqBody.email);
   reqBody.invitedBy = user.email;
-  
+
   const existingInvitation = await Invitation.findOne({ email: reqBody.email });
   if (existingInvitation) {
     existingInvitation.invitedBy.push(reqBody.invitedBy);
@@ -116,7 +116,7 @@ const createInvitation = async (reqBody, user) => {
 const sendReInvitation = async (email) => {
   const result = await emailService.sendInvitationToDistributer(email);
   return result;
- }
+};
 /**
  * Query for Invitation
  * @param {Object} filter - Mongo filter

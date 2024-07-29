@@ -8,15 +8,15 @@ const brandSchema = mongoose.Schema(
       trim: true,
     },
     brandDescription: {
-        type: String,
-      },
+      type: String,
+    },
     brandLogo: {
-        type: String,
+      type: String,
     },
     brandOwner: {
-        type: String,
+      type: String,
     },
-    },
+  },
   {
     timestamps: true,
   }

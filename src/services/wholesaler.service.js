@@ -1,5 +1,5 @@
 const httpStatus = require('http-status');
-const { Wholesaler } = require('../models');
+const { Wholesaler, User } = require('../models');
 const ApiError = require('../utils/ApiError');
 
 /**
@@ -72,6 +72,23 @@ const deleteWholesalerById = async (email) => {
   await user.remove();
   return user;
 };
+/**
+ * Get user by email
+ * @param {ObjectId} email
+ * @returns {Promise<User>}
+ */
+
+const getUser = async (email) => {
+  return User.findOne({ email });
+};
+/**
+ * Get users by email
+ * @param {ObjectId} email
+ * @returns {Promise<User>}
+ */
+const getUsersByEmails = async (emails) => {
+  return User.find({ email: { $in: emails } });
+};
 
 module.exports = {
   createWholesaler,
@@ -80,4 +97,6 @@ module.exports = {
   getUserByEmail,
   updateWholesalerById,
   deleteWholesalerById,
+  getUser,
+  getUsersByEmails,
 };

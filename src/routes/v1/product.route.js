@@ -5,21 +5,21 @@ const { commonUploadMiddleware } = require('../../utils/upload');
 
 const router = express.Router();
 
-router
-  .route('/upload/colour-collection/:id')
-  .post(auth('superadmin', 'manufacture'),  commonUploadMiddleware([
+router.route('/upload/colour-collection/:id').post(
+  auth('superadmin', 'manufacture'),
+  commonUploadMiddleware([
     { name: 'colourImage', maxCount: 1 },
     { name: 'productImages', maxCount: 10 },
-    { name: 'productVideo', maxCount: 1 }
-  ]), productController.fileupload)
+    { name: 'productVideo', maxCount: 1 },
+  ]),
+  productController.fileupload
+);
 router
   .route('/')
   .post(auth('superadmin', 'manufacture'), productController.createProduct)
   .get(auth('superadmin', 'manufacture'), productController.queryProduct);
 
-  router
-  .route('/filter-products')
-  .get(auth('superadmin', 'manufacture'), productController.searchProducts);
+router.route('/filter-products').get(auth('superadmin', 'manufacture'), productController.searchProducts);
 router
   .route('/:id')
   .get(auth('superadmin', 'manufacture'), productController.getProductById)

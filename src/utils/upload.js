@@ -1,18 +1,18 @@
 const multer = require('multer');
-const { PutObjectCommand, DeleteObjectCommand } = require("@aws-sdk/client-s3");
-const s3Client = require('./s3');
+const { PutObjectCommand, DeleteObjectCommand } = require('@aws-sdk/client-s3');
 const ffmpegPath = require('ffmpeg-static');
 const ffmpeg = require('fluent-ffmpeg');
 const fs = require('fs');
 const httpStatus = require('http-status');
-const ApiError = require('./ApiError');
 const path = require('path');
 const { v4: uuidv4 } = require('uuid');
+const ApiError = require('./ApiError');
+const s3Client = require('./s3');
 
 ffmpeg.setFfmpegPath(ffmpegPath);
 
 const storage = multer.memoryStorage();
-const upload = multer({ storage: storage });
+const upload = multer({ storage });
 
 const compressVideo = async (fileBuffer) => {
   const inputFileName = `${uuidv4()}-input.mp4`;
@@ -43,7 +43,7 @@ const compressVideo = async (fileBuffer) => {
 const uploadFile = async (file) => {
   const params = {
     Bucket: 'b2b',
-    Key: Date.now().toString() + '-' + file.originalname,
+    Key: `${Date.now().toString()}-${file.originalname}`,
     Body: file.buffer,
     ACL: 'public-read',
   };
@@ -57,6 +57,8 @@ const uploadFile = async (file) => {
     const data = await s3Client.send(command);
     return `https://lmscontent-cdn.blr1.digitaloceanspaces.com/b2b/${params.Key}`;
   } catch (err) {
+    console.error('Error uploading file:', err);
+    throw err; // Rethrow the error after logging it
     throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'Failed to upload files');
     // res.status(500).send({ error: 'Failed to upload files', details: err.message });
   }
@@ -65,12 +67,14 @@ const uploadFile = async (file) => {
 const uploadFiles = async (req, res, next) => {
   const uploadPromises = [];
 
-  Object.keys(req.files).forEach(field => {
-    req.files[field].forEach(file => {
-      uploadPromises.push(uploadFile(file).then(url => {
-        req.body[field] = req.body[field] || [];
-        req.body[field].push(url);
-      }));
+  Object.keys(req.files).forEach((field) => {
+    req.files[field].forEach((file) => {
+      uploadPromises.push(
+        uploadFile(file).then((url) => {
+          req.body[field] = req.body[field] || [];
+          req.body[field].push(url);
+        })
+      );
     });
   });
 
@@ -78,15 +82,13 @@ const uploadFiles = async (req, res, next) => {
     await Promise.all(uploadPromises);
     next();
   } catch (err) {
+    console.error('Error in uploadFiles middleware:', err);
+    res.status(500).send({ error: 'Failed to upload files', details: err.message });
     throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'Failed to upload files');
   }
 };
 
-const commonUploadMiddleware = (fields) => [
-  upload.fields(fields),
-  uploadFiles
-];
-
+const commonUploadMiddleware = (fields) => [upload.fields(fields), uploadFiles];
 
 /**
  * Delete a file from S3 bucket
@@ -105,7 +107,9 @@ const deleteFile = async (filePath) => {
   try {
     await s3Client.send(command);
   } catch (err) {
-    throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'Failed to upload files');// Rethrow the error after logging it
+    console.error('Error deleting file:', err);
+    throw err; // Rethrow the error after logging it
+    throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'Failed to upload files'); // Rethrow the error after logging it
   }
 };
 
