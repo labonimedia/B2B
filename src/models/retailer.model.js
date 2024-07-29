@@ -43,7 +43,6 @@ const retailerSchema = mongoose.Schema(
     },
     email2: {
       type: String,
-      unique: true,
       trim: true,
       lowercase: true,
       validate(value) {

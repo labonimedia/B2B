@@ -58,10 +58,10 @@ const userSchema = mongoose.Schema(
       type: Boolean,
       default: false,
     },
-    refByEmail: {
+    refByEmail: [{
       type: String,
-    },
-    blackListed: [{ type: String }],
+    }],
+    blackListed: [{type: String,}]
   },
   {
     timestamps: true,

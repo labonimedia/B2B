@@ -7,6 +7,10 @@ const productSchema = mongoose.Schema(
       type: String,
     },
     quantity: { type: Number },
+    discount: {
+      type: String,
+    },
+    quantity: {type: Number},
     brand: { type: String },
     productType: { type: String },
     gender: { type: String },
