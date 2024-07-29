@@ -35,7 +35,7 @@ const deleteWholesalerById = catchAsync(async (req, res) => {
 });
 
 const getManufactureList = catchAsync(async (req, res) => {
-  const { email } = req.body;
+  const { email } = req.params;
   const user = await wholesalerService.getUser(email);
   if (!user) {
     return res.status(httpStatus.NOT_FOUND).send({ message: 'User not found' });

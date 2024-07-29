@@ -15,7 +15,7 @@ router
   .patch(auth('superadmin', 'manufacture', 'wholesaler'), wholesalerController.updateWholesalerById)
   .delete(auth('superadmin', 'manufacture', 'wholesaler'), wholesalerController.deleteWholesalerById);
 router
-  .route('/manufactureList')
-  .post(auth('superadmin', 'manufacture', 'wholesaler'), wholesalerController.getManufactureList);
+  .route('/manufactureList/:email')
+  .get(auth('superadmin', 'manufacture', 'wholesaler'), wholesalerController.getManufactureList);
 
 module.exports = router;
