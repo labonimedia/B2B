@@ -6,6 +6,12 @@ const productSchema = mongoose.Schema(
     productBy: {
       type: String,
     },
+    dateOfManufacture:{
+      type: Date,
+    },
+    dateOfListing: {
+      type: Date,
+    },
     designNumber: {
       type: String,
     },

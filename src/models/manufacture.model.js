@@ -5,6 +5,9 @@ const { toJSON, paginate } = require('./plugins');
 
 const manufactureSchema = mongoose.Schema(
   {
+    leagalStatusOfFirm: {
+      type: String,
+    },
     fullName: {
       type: String,
       required: true,
@@ -88,6 +91,15 @@ const manufactureSchema = mongoose.Schema(
       IFSCcode: {
         type: String,
       },
+      country: {
+        type: String,
+      },
+      city: {
+        type: String,
+      },
+      branch: {
+        type: String,
+      }
     },
     isActive: {
       type: Boolean,
