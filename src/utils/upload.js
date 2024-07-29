@@ -4,9 +4,9 @@ const ffmpegPath = require('ffmpeg-static');
 const ffmpeg = require('fluent-ffmpeg');
 const fs = require('fs');
 const httpStatus = require('http-status');
-const ApiError = require('./ApiError');
 const path = require('path');
 const { v4: uuidv4 } = require('uuid');
+const ApiError = require('./ApiError');
 const s3Client = require('./s3');
 
 ffmpeg.setFfmpegPath(ffmpegPath);
@@ -109,7 +109,7 @@ const deleteFile = async (filePath) => {
   } catch (err) {
     console.error('Error deleting file:', err);
     throw err; // Rethrow the error after logging it
-    throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'Failed to upload files');// Rethrow the error after logging it
+    throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'Failed to upload files'); // Rethrow the error after logging it
   }
 };
 

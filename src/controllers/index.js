@@ -29,7 +29,5 @@ module.exports.productController = require('./product.controller');
 module.exports.brandController = require('./brand.controller');
 module.exports.subCategoryController = require('./sub.category.controller');
 module.exports.retailerController = require('./retailer.controller');
-module.exports.discountCategoryController = require('./discount.category.controller');
 module.exports.wholesalerCategoryController = require('./wholesaler.category.controller');
 module.exports.retailerCategoryController = require('./retailer.category.controlle');
-

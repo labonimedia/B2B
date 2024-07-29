@@ -34,9 +34,11 @@ const invitationSchema = mongoose.Schema(
       // enum: ['pending', 'accepted'],
       // default: 'pending',
     },
-    invitedBy: [{
-      type: String,
-    }],
+    invitedBy: [
+      {
+        type: String,
+      },
+    ],
     role: {
       type: String,
     },

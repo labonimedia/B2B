@@ -13,7 +13,7 @@ const productSchema = mongoose.Schema(
     discount: {
       type: String,
     },
-    quantity: {type: Number},
+    quantity: { type: Number },
     brand: { type: String },
     productType: { type: String },
     gender: { type: String },
@@ -74,7 +74,6 @@ const productSchema = mongoose.Schema(
         productVideo: { type: String },
       },
     ],
-
   },
   {
     timestamps: true,
