@@ -53,6 +53,16 @@ const deleteProductById = catchAsync(async (req, res) => {
   res.status(httpStatus.NO_CONTENT).send();
 });
 
+const updateColorCollection = catchAsync(async (req, res) => {
+  const product = await productService.updateColorCollection(req.params.productId, req.params.colorCollectionId, req.body);
+  res.status(httpStatus.OK).send(product);
+});
+
+const deleteColorCollection = catchAsync(async (req, res) => {
+  const product = await productService.deleteColorCollection(req.params.productId, req.params.colorCollectionId);
+  res.status(httpStatus.OK).send(product);
+});
+
 module.exports = {
   fileupload,
   createProduct,
@@ -61,4 +71,6 @@ module.exports = {
   getProductById,
   updateProductById,
   deleteProductById,
+  updateColorCollection,
+  deleteColorCollection,
 };

@@ -19,12 +19,17 @@ router
   .post(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), productController.createProduct)
   .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), productController.queryProduct);
 
-router.route('/filter-products').get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), productController.searchProducts);
+router
+  .route('/filter-products')
+  .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), productController.searchProducts);
 router
   .route('/:id')
   .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), productController.getProductById)
   .patch(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), productController.updateProductById)
   .delete(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), productController.deleteProductById);
+router
+  .route('/:productId/colourcollections/:colorCollectionId')
+  .patch(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), productController.updateColorCollection)
+  .delete(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), productController.deleteColorCollection);
 
 module.exports = router;
- 

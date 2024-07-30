@@ -11,8 +11,8 @@ router
 
 router
   .route('/:email')
-  .get(auth('superadmin', 'manufacture', 'wholesaler'), retailerController.getRetailerById)
-  .patch(auth('superadmin', 'manufacture', 'wholesaler'), retailerController.queryRetailer)
-  .delete(auth('superadmin', 'manufacture', 'wholesaler'), retailerController.deleteRetailerById);
+  .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), retailerController.getRetailerById)
+  .patch(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), retailerController.queryRetailer)
+  .delete(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), retailerController.deleteRetailerById);
 
 module.exports = router;

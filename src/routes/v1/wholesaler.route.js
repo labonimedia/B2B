@@ -6,16 +6,16 @@ const router = express.Router();
 
 router
   .route('/')
-  .post(auth('superadmin', 'manufacture', 'wholesaler'), wholesalerController.createWholesaler)
-  .get(auth('superadmin', 'manufacture', 'wholesaler'), wholesalerController.queryWholesaler);
+  .post(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), wholesalerController.createWholesaler)
+  .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), wholesalerController.queryWholesaler);
 
 router
   .route('/:email')
-  .get(auth('superadmin', 'manufacture', 'wholesaler'), wholesalerController.getWholesalerById)
-  .patch(auth('superadmin', 'manufacture', 'wholesaler'), wholesalerController.updateWholesalerById)
-  .delete(auth('superadmin', 'manufacture', 'wholesaler'), wholesalerController.deleteWholesalerById);
+  .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), wholesalerController.getWholesalerById)
+  .patch(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), wholesalerController.updateWholesalerById)
+  .delete(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), wholesalerController.deleteWholesalerById);
 router
   .route('/manufactureList/:email')
-  .get(auth('superadmin', 'manufacture', 'wholesaler'), wholesalerController.getManufactureList);
+  .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), wholesalerController.getManufactureList);
 
 module.exports = router;

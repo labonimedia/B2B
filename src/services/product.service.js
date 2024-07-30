@@ -140,6 +140,47 @@ const deleteProductById = async (id) => {
   return user;
 };
 
+/**
+ * Update a specific color collection in a product
+ * @param {ObjectId} productId - The id of the product
+ * @param {ObjectId} colorCollectionId - The id of the color collection to update
+ * @param {Object} updateBody - The update body
+ * @returns {Promise<Product>}
+ */
+const updateColorCollection = async (productId, colorCollectionId, updateBody) => {
+  const product = await Product.findById(productId);
+  if (!product) {
+    throw new Error('Product not found');
+  }
+  const colorCollection = product.colourCollections.id(colorCollectionId);
+  if (!colorCollection) {
+    throw new Error('Color collection not found');
+  }
+  Object.assign(colorCollection, updateBody);
+  await product.save();
+  return product;
+};
+
+/**
+ * Delete a specific color collection from a product
+ * @param {ObjectId} productId - The id of the product
+ * @param {ObjectId} colorCollectionId - The id of the color collection to delete
+ * @returns {Promise<Product>}
+ */
+const deleteColorCollection = async (productId, colorCollectionId) => {
+  const product = await Product.findById(productId);
+  if (!product) {
+    throw new Error('Product not found');
+  }
+  const colorCollection = product.colourCollections.id(colorCollectionId);
+  if (!colorCollection) {
+    throw new Error('Color collection not found');
+  }
+  await colorCollection.remove();
+  await product.save();
+  return product;
+};
+
 module.exports = {
   fileupload,
   createProduct,
@@ -148,4 +189,6 @@ module.exports = {
   getProductById,
   updateProductById,
   deleteProductById,
+  deleteColorCollection,
+  updateColorCollection,
 };
