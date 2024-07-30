@@ -12,7 +12,7 @@ router
 router
   .route('/:email')
   .get(auth('superadmin', 'manufacture', 'wholesaler'), retailerController.getRetailerById)
-  .patch(auth('superadmin', 'manufacture', 'wholesaler'), retailerController.queryRetailer)
+  .patch(auth('superadmin', 'manufacture', 'wholesaler'), retailerController.updateRetailerById)
   .delete(auth('superadmin', 'manufacture', 'wholesaler'), retailerController.deleteRetailerById);
 
 module.exports = router;
