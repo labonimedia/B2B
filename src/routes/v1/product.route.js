@@ -16,14 +16,15 @@ router.route('/upload/colour-collection/:id').post(
 );
 router
   .route('/')
-  .post(auth('superadmin', 'manufacture'), productController.createProduct)
-  .get(auth('superadmin', 'manufacture'), productController.queryProduct);
+  .post(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), productController.createProduct)
+  .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), productController.queryProduct);
 
-router.route('/filter-products').get(auth('superadmin', 'manufacture'), productController.searchProducts);
+router.route('/filter-products').get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), productController.searchProducts);
 router
   .route('/:id')
-  .get(auth('superadmin', 'manufacture'), productController.getProductById)
-  .patch(auth('superadmin', 'manufacture'), productController.updateProductById)
-  .delete(auth('superadmin', 'manufacture'), productController.deleteProductById);
+  .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), productController.getProductById)
+  .patch(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), productController.updateProductById)
+  .delete(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), productController.deleteProductById);
 
 module.exports = router;
+ 
