@@ -1,6 +1,7 @@
 const httpStatus = require('http-status');
 const { Product } = require('../models');
 const ApiError = require('../utils/ApiError');
+const { deleteFile} = require('../utils/upload');
 
 /**
  * fileupload
@@ -141,45 +142,76 @@ const deleteProductById = async (id) => {
 };
 
 /**
- * Update a specific color collection in a product
- * @param {ObjectId} productId - The id of the product
- * @param {ObjectId} colorCollectionId - The id of the color collection to update
- * @param {Object} updateBody - The update body
+ * Update Product by id
+ * @param {ObjectId} Id
+ * @param {Object} updateBody
  * @returns {Promise<Product>}
  */
-const updateColorCollection = async (productId, colorCollectionId, updateBody) => {
+const updateColorCollection = async (req, productId) => {
   const product = await Product.findById(productId);
+
   if (!product) {
-    throw new Error('Product not found');
+    throw new ApiError(httpStatus.NOT_FOUND, 'Product not found');
   }
-  const colorCollection = product.colourCollections.id(colorCollectionId);
-  if (!colorCollection) {
-    throw new Error('Color collection not found');
+
+  const { colour, colourName } = req.body;
+  const extractPath = (url) => new URL(url).pathname;
+  // Extract and trim file paths from req.body
+  const colourImage = req.body.colourImage ? extractPath(req.body.colourImage[0]) : null;
+  const productImages = req.body.productImages ? req.body.productImages.map(extractPath) : [];
+  const productVideo = req.body.productVideo ? extractPath(req.body.productVideo[0]) : null;
+
+  const newColourCollection = {
+    colour,
+    colourName,
+    colourImage,
+    productImages,
+    productVideo,
+  };
+console.log(req.query.collectionId)
+  // Find the existing collection and update it
+  const collectionIndex = product.colourCollections.findIndex((c) => c._id.toString() === req.query.collectionId);
+  if (collectionIndex === -1) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Colour collection not found');
   }
-  Object.assign(colorCollection, updateBody);
+
+  product.colourCollections[collectionIndex] = newColourCollection;
+  return await product.save();
+};
+/**
+ * Delete user by id
+ * @param {ObjectId} Id
+ * @returns {Promise<Product>}
+ */
+const deleteColorCollection = async (productId, collectionId) => {
+  const product = await Product.findById(productId);
+
+  if (!product) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Product not found');
+  }
+
+  const collectionIndex = product.colourCollections.findIndex((c) => c._id.toString() === collectionId);
+  if (collectionIndex === -1) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Colour collection not found');
+  }
+
+  const collection = product.colourCollections[collectionIndex];
+
+  // Delete files from S3
+  if (collection.colourImage) {
+    await deleteFile(collection.colourImage);
+  }
+  if (collection.productImages && collection.productImages.length > 0) {
+    await Promise.all(collection.productImages.map((image) => deleteFile(image)));
+  }
+  if (collection.productVideo) {
+    await deleteFile(collection.productVideo);
+  }
+
+  product.colourCollections.splice(collectionIndex, 1);
   await product.save();
-  return product;
 };
 
-/**
- * Delete a specific color collection from a product
- * @param {ObjectId} productId - The id of the product
- * @param {ObjectId} colorCollectionId - The id of the color collection to delete
- * @returns {Promise<Product>}
- */
-const deleteColorCollection = async (productId, colorCollectionId) => {
-  const product = await Product.findById(productId);
-  if (!product) {
-    throw new Error('Product not found');
-  }
-  const colorCollection = product.colourCollections.id(colorCollectionId);
-  if (!colorCollection) {
-    throw new Error('Color collection not found');
-  }
-  await colorCollection.remove();
-  await product.save();
-  return product;
-};
 
 module.exports = {
   fileupload,

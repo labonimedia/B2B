@@ -53,14 +53,16 @@ const deleteProductById = catchAsync(async (req, res) => {
   res.status(httpStatus.NO_CONTENT).send();
 });
 
+// Update
 const updateColorCollection = catchAsync(async (req, res) => {
-  const product = await productService.updateColorCollection(req.params.productId, req.params.colorCollectionId, req.body);
-  res.status(httpStatus.OK).send(product);
+  const user = await productService.updateColorCollection(req, req.query.id);
+  res.status(httpStatus.OK).send(user);
 });
 
+// Delete
 const deleteColorCollection = catchAsync(async (req, res) => {
-  const product = await productService.deleteColorCollection(req.params.productId, req.params.colorCollectionId);
-  res.status(httpStatus.OK).send(product);
+  await productService.deleteColorCollection(req.query.id, req.query.collectionId);
+  res.status(httpStatus.NO_CONTENT).send();
 });
 
 module.exports = {
