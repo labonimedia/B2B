@@ -14,20 +14,50 @@ const createProduct = catchAsync(async (req, res) => {
   res.status(httpStatus.CREATED).send(user);
 });
 
+// const searchProducts = catchAsync(async (req, res) => {
+//   const filter = {};
+//   const options = {};
+
+//   // Build the filter object based on the query parameters
+//   Object.keys(req.query).forEach((key) => {
+//     if (req.query[key]) {
+//       filter[key] = req.query[key];
+//     }
+//   });
+
+//   const products = await productService.searchProducts(filter, options);
+//   res.status(httpStatus.OK).send(products);
+// });
+
 const searchProducts = catchAsync(async (req, res) => {
   const filter = {};
   const options = {};
 
   // Build the filter object based on the query parameters
   Object.keys(req.query).forEach((key) => {
-    if (req.query[key]) {
+    if (req.query[key] && !['sortBy', 'populate', 'limit', 'page'].includes(key)) {
       filter[key] = req.query[key];
     }
   });
 
+  // Extract pagination options
+  if (req.query.sortBy) {
+    options.sortBy = req.query.sortBy;
+  }
+  if (req.query.populate) {
+    options.populate = req.query.populate;
+  }
+  if (req.query.limit) {
+    options.limit = parseInt(req.query.limit, 10);
+  }
+  if (req.query.page) {
+    options.page = parseInt(req.query.page, 10);
+  }
+
   const products = await productService.searchProducts(filter, options);
   res.status(httpStatus.OK).send(products);
 });
+
 const queryProduct = catchAsync(async (req, res) => {
   const filter = pick(req.query, ['name', 'status', 'productBy']);
   const options = pick(req.query, ['sortBy', 'limit', 'page']);
