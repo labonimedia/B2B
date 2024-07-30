@@ -27,3 +27,4 @@ router
   .delete(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), productController.deleteProductById);
 
 module.exports = router;
+ 

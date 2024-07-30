@@ -87,6 +87,7 @@ const productSchema = mongoose.Schema(
 );
 // Add text index to searchable fields
 productSchema.index({
+  productBy: 'text',
   brand: 'text',
   productType: 'text',
   gender: 'text',
