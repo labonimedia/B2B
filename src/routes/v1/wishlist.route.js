@@ -18,4 +18,8 @@ router
   .patch(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), wishlistController.updateWishlistById)
   .delete(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), wishlistController.deleteWishlistById);
 
+
+  router
+  .route('/get/wishlist/:email')
+  .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), wishlistController.getWishlistByEmail)
 module.exports = router;

@@ -32,6 +32,12 @@ const checkWishlistById = catchAsync(async (req, res) => {
     res.send(user);
   });
 
+  const getWishlistByEmail = catchAsync(async (req, res) => {
+    const { email } = req.params;
+    const products = await wishlistService.getWishlistByEmail(email);
+    res.status(httpStatus.OK).send(products);
+  });
+
 const updateWishlistById = catchAsync(async (req, res) => {
   const user = await wishlistService.updateWishlistById(req.params.id, req.body);
   res.send(user);
@@ -46,6 +52,7 @@ module.exports = {
   createWishlist,
   queryWishlist,
   getWishlistById,
+  getWishlistByEmail,
   checkWishlistById,
   updateWishlistById,
   deleteWishlistById,
