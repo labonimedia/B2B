@@ -35,3 +35,4 @@ module.exports.retailerService = require('./retailer.service');
 module.exports.wholesalerCategoryService = require('./wholesaler.category.service');
 module.exports.retailerCategoryService = require('./retailer.catgory.service');
 module.exports.currencyService = require('./currency.service');
+module.exports.wishlistService = require('./wishlist.service');

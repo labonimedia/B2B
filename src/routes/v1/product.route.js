@@ -27,9 +27,20 @@ router
   .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), productController.getProductById)
   .patch(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), productController.updateProductById)
   .delete(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), productController.deleteProductById);
-router
-  .route('/:productId/colourcollections/:colorCollectionId')
-  .patch(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), productController.updateColorCollection)
-  .delete(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), productController.deleteColorCollection);
-
+  
+  router.route('/update/colour-collection').patch(
+    auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
+    commonUploadMiddleware([
+      { name: 'colourImage', maxCount: 1 },
+      { name: 'productImages', maxCount: 10 },
+      { name: 'productVideo', maxCount: 1 },
+    ]),
+    productController.updateColorCollection
+  );
+  
+  // Delete route
+  router.route('/delete/colour-collection').delete(
+    auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
+    productController.deleteColorCollection
+  );
 module.exports = router;
