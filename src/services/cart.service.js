@@ -2,7 +2,7 @@ const { Product,Cart } = require('../models');
 const ApiError = require('../utils/ApiError');
 const httpStatus = require('http-status');
 
-const addToCart = async (productBy, productId, quantity) => {
+const addToCart = async (email, productBy, productId, quantity) => {
   const product = await Product.findById(productId);
   if (!product) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Product not found');
