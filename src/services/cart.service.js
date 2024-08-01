@@ -1,5 +1,4 @@
-const Cart = require('../models/cart');
-const Product = require('../models/product');
+const { Product,Cart } = require('../models');
 const ApiError = require('../utils/ApiError');
 const httpStatus = require('http-status');
 
