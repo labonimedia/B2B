@@ -34,6 +34,7 @@ const subCategoryRoute = require('./sub.category.route');
 const retailersRoute = require('./retailer.route');
 const discountCategoryRoute = require('./wholesaler.category.route');
 const retailerCategoryRoute = require('./retailer.category.route');
+const currencyRoute = require('./currency.route');
 const wishlistRoute = require('./wishlist.route');
 
 const router = express.Router();
@@ -118,6 +119,10 @@ const defaultRoutes = [
   {
     path: '/season',
     route: seasonRoute,
+  },
+  {
+    path: '/currency',
+    route: currencyRoute,
   },
   {
     path: '/length-women-dress',
