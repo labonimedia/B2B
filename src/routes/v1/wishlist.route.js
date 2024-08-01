@@ -6,16 +6,16 @@ const router = express.Router();
 
 router
   .route('/')
-  .post(auth('superadmin', 'manufacture'), wishlistController.createWishlist)
-  .get(auth('superadmin', 'manufacture'), wishlistController.queryWishlist);
+  .post(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), wishlistController.createWishlist)
+  .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), wishlistController.queryWishlist);
 
   router
   .route('/checkout/wishlist')
-  .get(auth('superadmin', 'manufacture'), wishlistController.checkWishlistById)
+  .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), wishlistController.checkWishlistById)
 router
   .route('/:id')
-  .get(auth('superadmin', 'manufacture'), wishlistController.getWishlistById)
-  .patch(auth('superadmin', 'manufacture'), wishlistController.updateWishlistById)
-  .delete(auth('superadmin', 'manufacture'), wishlistController.deleteWishlistById);
+  .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), wishlistController.getWishlistById)
+  .patch(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), wishlistController.updateWishlistById)
+  .delete(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), wishlistController.deleteWishlistById);
 
 module.exports = router;
