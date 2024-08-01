@@ -35,6 +35,15 @@ const getWishlistById = async (id) => {
 };
 
 /**
+ * Get Wishlist by id
+ * @param {ObjectId} productId
+ * @param {ObjectId} email
+ * @returns {Promise<Wishlist>}
+ */
+const checkWishlistById = async (productId,email) => {
+    return Wishlist.findOne({productId , email });
+  };
+/**
  * Update Wishlist by id
  * @param {ObjectId} Id
  * @param {Object} updateBody
@@ -68,6 +77,7 @@ module.exports = {
   createWishlist,
   queryWishlist,
   getWishlistById,
+  checkWishlistById,
   updateWishlistById,
   deleteWishlistById,
 };

@@ -23,6 +23,14 @@ const getWishlistById = catchAsync(async (req, res) => {
   }
   res.send(user);
 });
+const checkWishlistById = catchAsync(async (req, res) => {
+    const {productId, email} = req.query;
+    const user = await wishlistService.checkWishlistById(productId, email);
+    if (!user) {
+      throw new ApiError(httpStatus.NOT_FOUND, 'Wishlist not found');
+    }
+    res.send(user);
+  });
 
 const updateWishlistById = catchAsync(async (req, res) => {
   const user = await wishlistService.updateWishlistById(req.params.id, req.body);
@@ -38,6 +46,7 @@ module.exports = {
   createWishlist,
   queryWishlist,
   getWishlistById,
+  checkWishlistById,
   updateWishlistById,
   deleteWishlistById,
 };

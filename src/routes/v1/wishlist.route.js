@@ -9,6 +9,9 @@ router
   .post(auth('superadmin', 'manufacture'), wishlistController.createWishlist)
   .get(auth('superadmin', 'manufacture'), wishlistController.queryWishlist);
 
+  router
+  .route('/checkout/wishlist')
+  .get(auth('superadmin', 'manufacture'), wishlistController.checkWishlistById)
 router
   .route('/:id')
   .get(auth('superadmin', 'manufacture'), wishlistController.getWishlistById)
