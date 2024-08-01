@@ -3,25 +3,27 @@ const ApiError = require('../utils/ApiError');
 const httpStatus = require('http-status');
 
 const addToCart = async (email, productBy, productId, quantity) => {
-  const product = await Product.findById(productId);
-  if (!product) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Product not found');
-  }
+    const product = await Product.findById(productId);
+    if (!product) {
+      throw new ApiError(httpStatus.NOT_FOUND, 'Product not found');
+    }
+  
+    let cart = await Cart.findOne({ email, productBy });
+    if (!cart) {
+      cart = new Cart({ email, productBy, products: [] });
+    }
+  
+    const existingProductIndex = cart.products.findIndex((p) => p.productId.toString() === productId);
+    if (existingProductIndex >= 0) {
+      cart.products[existingProductIndex].quantity += quantity;
+    } else {
+      cart.products.push({ productId, quantity });
+    }
+  
+    return await cart.save();
+  };
+  
 
-  let cart = await Cart.findOne({ productBy });
-  if (!cart) {
-    cart = new Cart({ productBy, products: [] });
-  }
-
-  const existingProductIndex = cart.products.findIndex((p) => p.productId.toString() === productId);
-  if (existingProductIndex >= 0) {
-    cart.products[existingProductIndex].quantity += quantity;
-  } else {
-    cart.products.push({ productId, quantity });
-  }
-
-  return await cart.save();
-};
 
 const getCartByEmail = async (email) => {
     const cart = await Cart.findOne({ email }).populate('products.productId');
