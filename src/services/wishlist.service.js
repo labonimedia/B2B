@@ -1,5 +1,5 @@
 const httpStatus = require('http-status');
-const { Wishlist } = require('../models');
+const { Wishlist, Product } = require('../models');
 const ApiError = require('../utils/ApiError');
 
 /**
