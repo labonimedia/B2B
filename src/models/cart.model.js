@@ -7,10 +7,15 @@ const cartSchema = mongoose.Schema(
       type: String,
       required: true,
     },
+    email: {
+      type: String,
+      required: true,
+    },
     products: [
       {
         productId: {
-          type: String,
+          type: mongoose.Schema.Types.ObjectId,
+          ref: 'Product',
           required: true,
         },
         quantity: {

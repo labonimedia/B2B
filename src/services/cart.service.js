@@ -23,16 +23,27 @@ const addToCart = async (productBy, productId, quantity) => {
   return await cart.save();
 };
 
-const getCartByProductBy = async (productBy) => {
-    const cart = await Cart.findOne({ productBy }).populate('products.productId');
+const getCartByEmail = async (email) => {
+    const cart = await Cart.findOne({ email }).populate('products.productId');
     if (!cart) {
       throw new ApiError(httpStatus.NOT_FOUND, 'Cart not found');
     }
-    return cart;
+  
+    // Group products by productBy
+    const groupedCart = cart.products.reduce((acc, item) => {
+      const productBy = item.productId.productBy;
+      if (!acc[productBy]) {
+        acc[productBy] = [];
+      }
+      acc[productBy].push(item);
+      return acc;
+    }, {});
+  
+    return groupedCart;
   };
   
   module.exports = {
     addToCart,
-    getCartByProductBy,
+    getCartByEmail,
   };
   
