@@ -36,6 +36,7 @@ const discountCategoryRoute = require('./wholesaler.category.route');
 const retailerCategoryRoute = require('./retailer.category.route');
 const currencyRoute = require('./currency.route');
 const wishlistRoute = require('./wishlist.route');
+const cartRoute = require('./cart.route');
 
 const router = express.Router();
 
@@ -180,6 +181,10 @@ const defaultRoutes = [
     path: '/wishlist',
     route: wishlistRoute,
   },
+  {
+    path: '/cart',
+    route: cartRoute,
+  }
 ];
 
 const devRoutes = [
