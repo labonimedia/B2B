@@ -24,6 +24,6 @@ router
   .delete(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), cartController.deleteCartById);
 
   router
-  .route('/:email')
+  .route('/cart-products/:email')
   .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), cartController.getCartByEmail)
 module.exports = router;
