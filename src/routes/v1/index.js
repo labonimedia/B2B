@@ -184,7 +184,7 @@ const defaultRoutes = [
   {
     path: '/cart',
     route: cartRoute,
-  }
+  },
 ];
 
 const devRoutes = [

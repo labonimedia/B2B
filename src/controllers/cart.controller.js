@@ -5,18 +5,17 @@ const catchAsync = require('../utils/catchAsync');
 const { cartService } = require('../services');
 
 const addToCart = catchAsync(async (req, res) => {
-    const {email, productBy, productId, quantity } = req.body
+  const { email, productBy, productId, quantity } = req.body;
   const product = await cartService.addToCart(email, productBy, productId, quantity);
   res.status(httpStatus.CREATED).send(product);
 });
 
-
 const getCartByEmail = catchAsync(async (req, res) => {
-    const { email } = req.params;
-    const cart = await cartService.getCartByEmail(email);
-    res.status(httpStatus.OK).send(cart);
-  });
-  
+  const { email } = req.params;
+  const cart = await cartService.getCartByEmail(email);
+  res.status(httpStatus.OK).send(cart);
+});
+
 // const queryCollarStyle = catchAsync(async (req, res) => {
 //   const filter = pick(req.query, ['name']);
 //   const options = pick(req.query, ['sortBy', 'limit', 'page']);
@@ -43,6 +42,12 @@ const deleteCartById = catchAsync(async (req, res) => {
 });
 
 module.exports = {
+  addToCart,
+  getCartByEmail,
+  //   queryCollarStyle,
+  //   getCollarStyleById,
+  //   updateCollarStyleById,
+  //   deleteCollarStyleById,
     addToCart,
     getCartByEmail,
 //   queryCollarStyle,

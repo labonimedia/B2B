@@ -37,7 +37,7 @@ const getWishlistById = async (id) => {
 // const getWishlistByEmail = async (email) => {
 //     const wishlistItems = await Wishlist.find({ email }).select('productId');
 //     const productIds = wishlistItems.map((item) => item.productId);
-  
+
 //     const products = await Product.find({ _id: { $in: productIds } });
 //     return products;
 //   };
@@ -45,14 +45,15 @@ const getWishlistByEmail = async (email) => {
   const wishlistItems = await Wishlist.find({ email }).select('productId');
   const productIds = wishlistItems.map((item) => item.productId);
   const products = await Product.find({ _id: { $in: productIds } });
-  const userEmails = [...new Set(products.map(product => product.productBy))];
+  const userEmails = [...new Set(products.map((product) => product.productBy))];
   const users = await User.find({ email: { $in: userEmails } });
-  const userMap = new Map(users.map(user => [user.email, user.name]));
-  const productsWithManufactureName = products.map(product => {
+  const userMap = new Map(users.map((user) => [user.email, user.fullName]));
+  const productsWithManufactureName = products.map((product) => {
     const manufactureName = userMap.get(product.productBy) || 'Unknown';
+    // const manufactureName = users.fullName || 'Unknown';
     return {
       ...product.toObject(),
-      manufactureName
+      manufactureName,
     };
   });
   return productsWithManufactureName;
@@ -64,9 +65,9 @@ const getWishlistByEmail = async (email) => {
  * @param {ObjectId} email
  * @returns {Promise<Wishlist>}
  */
-const checkWishlistById = async (productId,email) => {
-    return Wishlist.findOne({productId , email });
-  };
+const checkWishlistById = async (productId, email) => {
+  return Wishlist.findOne({ productId, email });
+};
 /**
  * Update Wishlist by id
  * @param {ObjectId} Id
