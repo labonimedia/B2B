@@ -49,7 +49,7 @@ const getWishlistByEmail = async (email) => {
   const users = await User.find({ email: { $in: userEmails } });
   const userMap = new Map(users.map((user) => [user.email, user.fullName]));
   const productsWithManufactureName = products.map((product) => {
-    const manufactureName = users.get(product.productBy) || 'Unknown';
+    const manufactureName = userMap.get(product.productBy) || 'Unknown';
     // const manufactureName = users.fullName || 'Unknown';
     return {
       ...product.toObject(),
