@@ -24,22 +24,72 @@ const addToCart = async (email, productBy, productId, quantity) => {
 };
 
 const getCartByEmail = async (email) => {
-  const cart = await Cart.findOne({ email }).populate('products.productId');
-  if (!cart) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Cart not found');
-  }  
-    // Group products by productBy
+    const cart = await Cart.findOne({ email }).populate('products.productId');
+    if (!cart) {
+      throw new ApiError(httpStatus.NOT_FOUND, 'Cart not found');
+    }
     const groupedCart = cart.products.reduce((acc, item) => {
       const productBy = item.productId.productBy;
       if (!acc[productBy]) {
-        acc[productBy] = [];
+        acc[productBy] = { email: productBy, products: [] };
       }
-      acc[productBy].push(item);
+      acc[productBy].products.push({
+        quantity: item.quantity,
+        _id: item._id,
+        productId: {
+          selectedOccasion: item.productId.selectedOccasion,
+          selectedlifeStyle: item.productId.selectedlifeStyle,
+          specialFeature: item.productId.specialFeature,
+          designNumber: item.productId.designNumber,
+          brand: item.productId.brand,
+          productType: item.productId.productType,
+          gender: item.productId.gender,
+          clothing: item.productId.clothing,
+          subCategory: item.productId.subCategory,
+          productTitle: item.productId.productTitle,
+          productDescription: item.productId.productDescription,
+          material: item.productId.material,
+          materialvariety: item.productId.materialvariety,
+          fabricPattern: item.productId.fabricPattern,
+          fitStyle: item.productId.fitStyle,
+          neckStyle: item.productId.neckStyle,
+          closureType: item.productId.closureType,
+          pocketDescription: item.productId.pocketDescription,
+          sleeveCuffStyle: item.productId.sleeveCuffStyle,
+          sleeveLength: item.productId.sleeveLength,
+          careInstructions: item.productId.careInstructions,
+          sizes: item.productId.sizes,
+          ProductDeimension: item.productId.ProductDeimension,
+          netWeight: item.productId.netWeight,
+          MRP: item.productId.MRP,
+          quantity: item.productId.quantity,
+          dateOfManufacture: item.productId.dateOfManufacture,
+          dateOfListing: item.productId.dateOfListing,
+          productBy: item.productId.productBy,
+          colourCollections: item.productId.colourCollections,
+          id: item.productId._id,
+        },
+      });
       return acc;
     }, {});
   
-    return groupedCart;
+    // Convert the object to an array of objects
+    const formattedCart = Object.values(groupedCart);
+  
+    return formattedCart;
   };
+  //   // Group products by productBy
+  //   const groupedCart = cart.products.reduce((acc, item) => {
+  //     const productBy = item.productId.productBy;
+  //     if (!acc[productBy]) {
+  //       acc[productBy] = [];
+  //     }
+  //     acc[productBy].push(item);
+  //     return acc;
+  //   }, {});
+  
+  //   return groupedCart;
+  // };
   
 
 /**
