@@ -1,5 +1,5 @@
 const httpStatus = require('http-status');
-const { Wishlist, Product } = require('../models');
+const { Wishlist, Product, User } = require('../models');
 const ApiError = require('../utils/ApiError');
 
 /**
@@ -34,13 +34,30 @@ const getWishlistById = async (id) => {
   return Wishlist.findById(id);
 };
 
-const getWishlistByEmail = async (email) => {
-    const wishlistItems = await Wishlist.find({ email }).select('productId');
-    const productIds = wishlistItems.map((item) => item.productId);
+// const getWishlistByEmail = async (email) => {
+//     const wishlistItems = await Wishlist.find({ email }).select('productId');
+//     const productIds = wishlistItems.map((item) => item.productId);
   
-    const products = await Product.find({ _id: { $in: productIds } });
-    return products;
-  };
+//     const products = await Product.find({ _id: { $in: productIds } });
+//     return products;
+//   };
+const getWishlistByEmail = async (email) => {
+  const wishlistItems = await Wishlist.find({ email }).select('productId');
+  const productIds = wishlistItems.map((item) => item.productId);
+  const products = await Product.find({ _id: { $in: productIds } });
+  const userEmails = [...new Set(products.map(product => product.productBy))];
+  const users = await User.find({ email: { $in: userEmails } });
+  const userMap = new Map(users.map(user => [user.email, user.name]));
+  const productsWithManufactureName = products.map(product => {
+    const manufactureName = userMap.get(product.productBy) || 'Unknown';
+    return {
+      ...product.toObject(),
+      manufactureName
+    };
+  });
+  return productsWithManufactureName;
+};
+
 /**
  * Get Wishlist by id
  * @param {ObjectId} productId
