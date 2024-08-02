@@ -68,7 +68,7 @@ const getWishlistById = async (id) => {
 // };
 
 const getWishlistByEmail = async (email) => {
-  const wishlistItems = await Wishlist.find({ email }).select('productId', '_id');
+  const wishlistItems = await Wishlist.find({ email }).select('productId _id');
   const productIds = wishlistItems.map((item) => item.productId);
   const products = await Product.find({ _id: { $in: productIds } });
   const userEmails = [...new Set(products.map((product) => product.productBy))];
