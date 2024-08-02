@@ -80,7 +80,7 @@ const getWishlistByEmail = async (email) => {
     return {
       ...product.toObject(),
       manufactureName,
-      // wishlistId: wishlistItems.find((item) => item.productId.toString() === product._id.toString())._id,
+      wishlistId: wishlistItems.find((item) => item.productId.toString() === product._id.toString())._id,
     };
   });
   return productsWithManufactureName;
