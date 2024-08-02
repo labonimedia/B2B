@@ -12,12 +12,11 @@ router
 //   router
 //   .route('/checkout/wishlist')
 //   .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), cartController.checkWishlistById)
-// router
-//   .route('/:id')
-//   .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), cartController.getWishlistById)
-//   .patch(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), cartController.updateWishlistById)
-//   .delete(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), cartController.deleteWishlistById);
-
+router
+  .route('/:id')
+  .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), cartController.getCartById)
+  .patch(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), cartController.updateCartById)
+  .delete(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), cartController.deleteCartById);
 
   router
   .route('/:email')

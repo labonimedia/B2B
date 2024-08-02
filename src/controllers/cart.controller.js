@@ -24,29 +24,29 @@ const getCartByEmail = catchAsync(async (req, res) => {
 //   res.send(result);
 // });
 
-// const getCollarStyleById = catchAsync(async (req, res) => {
-//   const user = await cartService.getCollarStyleById(req.params.id);
-//   if (!user) {
-//     throw new ApiError(httpStatus.NOT_FOUND, 'CollarStyle not found');
-//   }
-//   res.send(user);
-// });
+const getCartById = catchAsync(async (req, res) => {
+  const user = await cartService.getCartById(req.params.id);
+  if (!user) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Cart not found');
+  }
+  res.send(user);
+});
 
-// const updateCollarStyleById = catchAsync(async (req, res) => {
-//   const user = await cartService.updateCollarStyleById(req.params.id, req.body);
-//   res.send(user);
-// });
+const updateCartById = catchAsync(async (req, res) => {
+  const user = await cartService.updateCartById(req.params.id, req.body);
+  res.send(user);
+});
 
-// const deleteCollarStyleById = catchAsync(async (req, res) => {
-//   await cartService.deleteCollarStyleById(req.params.id);
-//   res.status(httpStatus.NO_CONTENT).send();
-// });
+const deleteCartById = catchAsync(async (req, res) => {
+  await cartService.deleteCartById(req.params.id);
+  res.status(httpStatus.NO_CONTENT).send();
+});
 
 module.exports = {
     addToCart,
     getCartByEmail,
 //   queryCollarStyle,
-//   getCollarStyleById,
-//   updateCollarStyleById,
-//   deleteCollarStyleById,
+  getCartById,
+  updateCartById,
+  deleteCartById,
 };

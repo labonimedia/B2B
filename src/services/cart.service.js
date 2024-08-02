@@ -44,8 +44,50 @@ const getCartByEmail = async (email) => {
     return groupedCart;
   };
   
+
+/**
+ * Get Cart by id
+ * @param {ObjectId} id
+ * @returns {Promise<Cart>}
+ */
+const getCartById = async (id) => {
+  return Cart.findById(id);
+};
+
+/**
+ * Update Cart by id
+ * @param {ObjectId} Id
+ * @param {Object} updateBody
+ * @returns {Promise<Cart>}
+ */
+const updateCartById = async (id, updateBody) => {
+  const user = await getCartById(id);
+  if (!user) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Cart not found');
+  }
+  Object.assign(user, updateBody);
+  await user.save();
+  return user;
+};
+
+/**
+ * Delete user by id
+ * @param {ObjectId} userId
+ * @returns {Promise<ClosureType>}
+ */
+const deleteCartById = async (id) => {
+  const user = await getCartById(id);
+  if (!user) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Cart not found');
+  }
+  await user.remove();
+  return user;
+};
   module.exports = {
     addToCart,
     getCartByEmail,
+    getCartById,
+    updateCartById,
+    deleteCartById,
   };
   
