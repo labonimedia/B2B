@@ -12,16 +12,25 @@ router
     commonUploadMiddleware([{ name: 'brandLogo', maxCount: 1 }]),
     brandController.createBrand
   )
-  .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer', 'wholesaler', 'retailer', 'wholesaler', 'retailer'), brandController.queryBrand);
+  .get(
+    auth('superadmin', 'manufacture', 'wholesaler', 'retailer', 'wholesaler', 'retailer', 'wholesaler', 'retailer'),
+    brandController.queryBrand
+  );
 
 router
   .route('/:id')
-  .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer', 'wholesaler', 'retailer', 'wholesaler', 'retailer'), brandController.getBrandById)
+  .get(
+    auth('superadmin', 'manufacture', 'wholesaler', 'retailer', 'wholesaler', 'retailer', 'wholesaler', 'retailer'),
+    brandController.getBrandById
+  )
   .patch(
     auth('superadmin', 'manufacture', 'wholesaler', 'retailer', 'wholesaler', 'retailer', 'wholesaler', 'retailer'),
     commonUploadMiddleware([{ name: 'brandLogo', maxCount: 1 }]),
     brandController.updateBrandById
   )
-  .delete(auth('superadmin', 'manufacture', 'wholesaler', 'retailer', 'wholesaler', 'retailer'), brandController.deleteBrandById);
+  .delete(
+    auth('superadmin', 'manufacture', 'wholesaler', 'retailer', 'wholesaler', 'retailer'),
+    brandController.deleteBrandById
+  );
 
 module.exports = router;

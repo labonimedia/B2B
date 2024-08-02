@@ -7,7 +7,7 @@ const router = express.Router();
 router
   .route('/')
   .post(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), fitTypeController.createFitType)
-  .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer' ), fitTypeController.queryFitType);
+  .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), fitTypeController.queryFitType);
 
 router
   .route('/:id')
