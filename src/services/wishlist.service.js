@@ -42,22 +42,49 @@ const getWishlistById = async (id) => {
 //     return products;
 //   };
 const getWishlistByEmail = async (email) => {
-  const wishlistItems = await Wishlist.find({ email }).select('productId');
+  const wishlistItems = await Wishlist.find({ email }).select('productId _id');
   const productIds = wishlistItems.map((item) => item.productId);
   const products = await Product.find({ _id: { $in: productIds } });
   const userEmails = [...new Set(products.map((product) => product.productBy))];
   const users = await User.find({ email: { $in: userEmails } });
   const userMap = new Map(users.map((user) => [user.email, user.fullName]));
+
   const productsWithManufactureName = products.map((product) => {
     const manufactureName = userMap.get(product.productBy) || 'Unknown';
-    // const manufactureName = users.fullName || 'Unknown';
+    const wishlistItem = wishlistItems.find((item) => item.productId.toString() === product._id.toString());
+    const colourCollectionsWithWishlistId = product.colourCollections.map((colourCollection) => ({
+      ...colourCollection.toObject(),
+      wishlistId: wishlistItem ? wishlistItem._id : null,
+    }));
+
     return {
       ...product.toObject(),
       manufactureName,
+      colourCollections: colourCollectionsWithWishlistId,
     };
   });
+
   return productsWithManufactureName;
 };
+
+// const getWishlistByEmail = async (email) => {
+//   const wishlistItems = await Wishlist.find({ email }).select('productId', '_id');
+//   const productIds = wishlistItems.map((item) => item.productId);
+//   const products = await Product.find({ _id: { $in: productIds } });
+//   const userEmails = [...new Set(products.map((product) => product.productBy))];
+//   const users = await User.find({ email: { $in: userEmails } });
+//   const userMap = new Map(users.map((user) => [user.email, user.fullName]));
+//   const productsWithManufactureName = products.map((product) => {
+//     const manufactureName = userMap.get(product.productBy) || 'Unknown';
+//     // const manufactureName = users.fullName || 'Unknown';
+//     return {
+//       ...product.toObject(),
+//       manufactureName,
+//       // wishlistId: wishlistItems.find((item) => item.productId.toString() === product._id.toString())._id,
+//     };
+//   });
+//   return productsWithManufactureName;
+// };
 
 /**
  * Get Wishlist by id
