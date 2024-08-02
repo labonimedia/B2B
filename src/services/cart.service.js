@@ -27,22 +27,64 @@ const getCartByEmail = async (email) => {
   const cart = await Cart.findOne({ email }).populate('products.productId');
   if (!cart) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Cart not found');
+  }  
+    // Group products by productBy
+    const groupedCart = cart.products.reduce((acc, item) => {
+      const productBy = item.productId.productBy;
+      if (!acc[productBy]) {
+        acc[productBy] = [];
+      }
+      acc[productBy].push(item);
+      return acc;
+    }, {});
+  
+    return groupedCart;
+  };
+  
+
+/**
+ * Get Cart by id
+ * @param {ObjectId} id
+ * @returns {Promise<Cart>}
+ */
+const getCartById = async (id) => {
+  return Cart.findById(id);
+};
+
+/**
+ * Update Cart by id
+ * @param {ObjectId} Id
+ * @param {Object} updateBody
+ * @returns {Promise<Cart>}
+ */
+const updateCartById = async (id, updateBody) => {
+  const user = await getCartById(id);
+  if (!user) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Cart not found');
   }
-
-  // Group products by productBy
-  const groupedCart = cart.products.reduce((acc, item) => {
-    const { productBy } = item.productId;
-    if (!acc[productBy]) {
-      acc[productBy] = [];
-    }
-    acc[productBy].push(item);
-    return acc;
-  }, {});
-
-  return groupedCart;
+  Object.assign(user, updateBody);
+  await user.save();
+  return user;
 };
 
-module.exports = {
-  addToCart,
-  getCartByEmail,
+/**
+ * Delete user by id
+ * @param {ObjectId} userId
+ * @returns {Promise<ClosureType>}
+ */
+const deleteCartById = async (id) => {
+  const user = await getCartById(id);
+  if (!user) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Cart not found');
+  }
+  await user.remove();
+  return user;
 };
+  module.exports = {
+    addToCart,
+    getCartByEmail,
+    getCartById,
+    updateCartById,
+    deleteCartById,
+  };
+  

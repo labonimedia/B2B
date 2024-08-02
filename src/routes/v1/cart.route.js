@@ -17,4 +17,13 @@ router.route('/').post(auth('superadmin', 'manufacture', 'wholesaler', 'retailer
 //   .delete(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), cartController.deleteWishlistById);
 
 router.route('/:email').get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), cartController.getCartByEmail);
+router
+  .route('/:id')
+  .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), cartController.getCartById)
+  .patch(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), cartController.updateCartById)
+  .delete(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), cartController.deleteCartById);
+
+  router
+  .route('/:email')
+  .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), cartController.getCartByEmail)
 module.exports = router;
