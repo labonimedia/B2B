@@ -6,7 +6,7 @@ const productSchema = mongoose.Schema(
     productBy: {
       type: String,
     },
-    dateOfManufacture:{
+    dateOfManufacture: {
       type: Date,
     },
     dateOfListing: {

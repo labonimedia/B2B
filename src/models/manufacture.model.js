@@ -99,7 +99,7 @@ const manufactureSchema = mongoose.Schema(
       },
       branch: {
         type: String,
-      }
+      },
     },
     isActive: {
       type: Boolean,

@@ -14,7 +14,7 @@ const wholesalerCategorySchema = mongoose.Schema(
     },
     productDiscount: {
       type: String,
-    }
+    },
   },
   {
     timestamps: true,

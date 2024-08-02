@@ -1,7 +1,7 @@
 const httpStatus = require('http-status');
 const { Product } = require('../models');
 const ApiError = require('../utils/ApiError');
-const { deleteFile} = require('../utils/upload');
+const { deleteFile } = require('../utils/upload');
 
 /**
  * fileupload
@@ -168,7 +168,7 @@ const updateColorCollection = async (req, productId) => {
     productImages,
     productVideo,
   };
-console.log(req.query.collectionId)
+  console.log(req.query.collectionId);
   // Find the existing collection and update it
   const collectionIndex = product.colourCollections.findIndex((c) => c._id.toString() === req.query.collectionId);
   if (collectionIndex === -1) {
@@ -211,7 +211,6 @@ const deleteColorCollection = async (productId, collectionId) => {
   product.colourCollections.splice(collectionIndex, 1);
   await product.save();
 };
-
 
 module.exports = {
   fileupload,

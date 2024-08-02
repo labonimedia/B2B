@@ -14,7 +14,7 @@ const retailerCategorySchema = mongoose.Schema(
     },
     productDiscount: {
       type: String,
-    }
+    },
   },
   {
     timestamps: true,
