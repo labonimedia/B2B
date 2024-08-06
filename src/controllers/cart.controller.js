@@ -38,7 +38,8 @@ const updateCartById = catchAsync(async (req, res) => {
 });
 
 const deleteCartById = catchAsync(async (req, res) => {
-  await cartService.deleteCartById(req.params.id);
+  const { email, productId } = req.query;
+  await cartService.deleteCartItemByEmail(email, productId);
   res.status(httpStatus.NO_CONTENT).send();
 });
 
