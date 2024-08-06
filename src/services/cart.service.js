@@ -103,38 +103,81 @@ const getCartById = async (id) => {
 
 /**
  * Update Cart by id
- * @param {ObjectId} Id
+ * @param {Parameters} email
+ * @param {Parameters} productId
+ * @param {Parameters} quantity
  * @param {Object} updateBody
  * @returns {Promise<Cart>}
  */
-const updateCartById = async (id, updateBody) => {
-  const user = await getCartById(id);
-  if (!user) {
+const updateCartByEmail = async (email, productId, quantity) => {
+  const cart = await Cart.findOne({ email });
+  if (!cart) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Cart not found');
   }
-  Object.assign(user, updateBody);
-  await user.save();
-  return user;
+
+  const productIndex = cart.products.findIndex(
+    (item) => item.productId.toString() === productId
+  );
+
+  if (productIndex === -1) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Product not found in cart');
+  }
+
+  if (quantity <= 0) {
+    cart.products.splice(productIndex, 1);
+  } else {
+    cart.products[productIndex].quantity = quantity;
+  }
+
+  await cart.save();
+  return cart;
 };
+// const updateCartById = async (id, updateBody) => {
+//   const user = await getCartById(id);
+//   if (!user) {
+//     throw new ApiError(httpStatus.NOT_FOUND, 'Cart not found');
+//   }
+//   Object.assign(user, updateBody);
+//   await user.save();
+//   return user;
+// };
 
 /**
  * Delete user by id
- * @param {ObjectId} userId
+ * @param {ObjectId} productId
  * @returns {Promise<ClosureType>}
  */
-const deleteCartById = async (id) => {
-  const user = await getCartById(id);
-  if (!user) {
+const deleteCartItemByEmail = async (email, productId) => {
+  const cart = await Cart.findOne({ email });
+  if (!cart) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Cart not found');
   }
-  await user.remove();
-  return user;
+
+  const productIndex = cart.products.findIndex(
+    (item) => item.productId.toString() === productId
+  );
+
+  if (productIndex === -1) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Product not found in cart');
+  }
+
+  cart.products.splice(productIndex, 1);
+  await cart.save();
+  return cart;
 };
+// const deleteCartById = async (id) => {
+//   const user = await getCartById(id);
+//   if (!user) {
+//     throw new ApiError(httpStatus.NOT_FOUND, 'Cart not found');
+//   }
+//   await user.remove();
+//   return user;
+// };
   module.exports = {
     addToCart,
     getCartByEmail,
     getCartById,
-    updateCartById,
-    deleteCartById,
+    updateCartByEmail,
+    deleteCartItemByEmail,
   };
   

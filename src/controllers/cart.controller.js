@@ -32,7 +32,8 @@ const getCartById = catchAsync(async (req, res) => {
 });
 
 const updateCartById = catchAsync(async (req, res) => {
-  const user = await cartService.updateCartById(req.params.id, req.body);
+  const { email, productId, quantity } = req.query;
+  const user = await cartService.updateCartByEmail(email, productId, quantity);
   res.send(user);
 });
 
