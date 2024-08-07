@@ -2,9 +2,13 @@ const mongoose = require('mongoose');
 const validator = require('validator');
 const bcrypt = require('bcryptjs');
 const { toJSON, paginate } = require('./plugins');
+const { Currency } = require('.');
 
 const manufactureSchema = mongoose.Schema(
   {
+    // currency: {
+    //   type: String,
+    // },
     leagalStatusOfFirm: {
       type: String,
     },

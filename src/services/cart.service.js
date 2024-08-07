@@ -24,73 +24,76 @@ const addToCart = async (email, productBy, productId, quantity) => {
 };
 
 const getCartByEmail = async (email) => {
-    const cart = await Cart.findOne({ email }).populate('products.productId');
-    if (!cart) {
-      throw new ApiError(httpStatus.NOT_FOUND, 'Cart not found');
+  const cart = await Cart.findOne({ email }).populate('products.productId');
+  if (!cart) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Cart not found');
+  }
+  const groupedCart = cart.products.reduce((acc, item) => {
+    const { productBy } = item.productId;
+    if (!acc[productBy]) {
+      acc[productBy] = { email: productBy, products: [] };
     }
-    const groupedCart = cart.products.reduce((acc, item) => {
-      const productBy = item.productId.productBy;
-      if (!acc[productBy]) {
-        acc[productBy] = { email: productBy, products: [] };
-      }
-      acc[productBy].products.push({
-        quantity: item.quantity,
-        _id: item._id,
-        productId: {
-          selectedOccasion: item.productId.selectedOccasion,
-          selectedlifeStyle: item.productId.selectedlifeStyle,
-          specialFeature: item.productId.specialFeature,
-          designNumber: item.productId.designNumber,
-          brand: item.productId.brand,
-          productType: item.productId.productType,
-          gender: item.productId.gender,
-          clothing: item.productId.clothing,
-          subCategory: item.productId.subCategory,
-          productTitle: item.productId.productTitle,
-          productDescription: item.productId.productDescription,
-          material: item.productId.material,
-          materialvariety: item.productId.materialvariety,
-          fabricPattern: item.productId.fabricPattern,
-          fitStyle: item.productId.fitStyle,
-          neckStyle: item.productId.neckStyle,
-          closureType: item.productId.closureType,
-          pocketDescription: item.productId.pocketDescription,
-          sleeveCuffStyle: item.productId.sleeveCuffStyle,
-          sleeveLength: item.productId.sleeveLength,
-          careInstructions: item.productId.careInstructions,
-          sizes: item.productId.sizes,
-          ProductDeimension: item.productId.ProductDeimension,
-          netWeight: item.productId.netWeight,
-          MRP: item.productId.MRP,
-          quantity: item.productId.quantity,
-          dateOfManufacture: item.productId.dateOfManufacture,
-          dateOfListing: item.productId.dateOfListing,
-          productBy: item.productId.productBy,
-          colourCollections: item.productId.colourCollections,
-          id: item.productId._id,
-        },
-      });
-      return acc;
-    }, {});
-  
-    // Convert the object to an array of objects
-    const formattedCart = Object.values(groupedCart);
-  
-    return formattedCart;
-  };
-  //   // Group products by productBy
-  //   const groupedCart = cart.products.reduce((acc, item) => {
-  //     const productBy = item.productId.productBy;
-  //     if (!acc[productBy]) {
-  //       acc[productBy] = [];
-  //     }
-  //     acc[productBy].push(item);
-  //     return acc;
-  //   }, {});
-  
-  //   return groupedCart;
-  // };
-  
+    acc[productBy].products.push({
+      quantity: item.quantity,
+      _id: item._id,
+      productId: {
+        selectedOccasion: item.productId.selectedOccasion,
+        selectedlifeStyle: item.productId.selectedlifeStyle,
+        specialFeature: item.productId.specialFeature,
+        designNumber: item.productId.designNumber,
+        brand: item.productId.brand,
+        productType: item.productId.productType,
+        gender: item.productId.gender,
+        clothing: item.productId.clothing,
+        subCategory: item.productId.subCategory,
+        productTitle: item.productId.productTitle,
+        productDescription: item.productId.productDescription,
+        material: item.productId.material,
+        materialvariety: item.productId.materialvariety,
+        fabricPattern: item.productId.fabricPattern,
+        fitStyle: item.productId.fitStyle,
+        neckStyle: item.productId.neckStyle,
+        closureType: item.productId.closureType,
+        pocketDescription: item.productId.pocketDescription,
+        sleeveCuffStyle: item.productId.sleeveCuffStyle,
+        sleeveLength: item.productId.sleeveLength,
+        careInstructions: item.productId.careInstructions,
+        sizes: item.productId.sizes,
+        ProductDeimension: item.productId.ProductDeimension,
+        netWeight: item.productId.netWeight,
+        setOFnetWeight: item.setOFnetWeight,
+        setOfMRP: item.setOfMRP,
+        setOfManPrice: item.setOfManPrice,
+        currency: item.currency,
+        quantity: item.productId.quantity,
+        dateOfManufacture: item.productId.dateOfManufacture,
+        dateOfListing: item.productId.dateOfListing,
+        productBy: item.productId.productBy,
+        colourCollections: item.productId.colourCollections,
+        id: item.productId._id,
+
+      },
+    });
+    return acc;
+  }, {});
+
+  // Convert the object to an array of objects
+  const formattedCart = Object.values(groupedCart);
+
+  return formattedCart;
+};
+//   // Group products by productBy
+//   const groupedCart = cart.products.reduce((acc, item) => {
+//     const productBy = item.productId.productBy;
+//     if (!acc[productBy]) {
+//       acc[productBy] = [];
+//     }
+//     acc[productBy].push(item);
+//     return acc;
+//   }, {});
+
+//   return groupedCart;
+// };
 
 /**
  * Get Cart by id
@@ -115,9 +118,7 @@ const updateCartByEmail = async (email, productId, quantity) => {
     throw new ApiError(httpStatus.NOT_FOUND, 'Cart not found');
   }
 
-  const productIndex = cart.products.findIndex(
-    (item) => item.productId.toString() === productId
-  );
+  const productIndex = cart.products.findIndex((item) => item.productId.toString() === productId);
 
   if (productIndex === -1) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Product not found in cart');
@@ -153,9 +154,7 @@ const deleteCartItemByEmail = async (email, productId) => {
     throw new ApiError(httpStatus.NOT_FOUND, 'Cart not found');
   }
 
-  const productIndex = cart.products.findIndex(
-    (item) => item.productId.toString() === productId
-  );
+  const productIndex = cart.products.findIndex((item) => item.productId.toString() === productId);
 
   if (productIndex === -1) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Product not found in cart');
@@ -173,11 +172,10 @@ const deleteCartItemByEmail = async (email, productId) => {
 //   await user.remove();
 //   return user;
 // };
-  module.exports = {
-    addToCart,
-    getCartByEmail,
-    getCartById,
-    updateCartByEmail,
-    deleteCartItemByEmail,
-  };
-  
+module.exports = {
+  addToCart,
+  getCartByEmail,
+  getCartById,
+  updateCartByEmail,
+  deleteCartItemByEmail,
+};
