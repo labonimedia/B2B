@@ -3,6 +3,9 @@ const { paginate, toJSON } = require('./plugins');
 
 const productSchema = mongoose.Schema(
   {
+    currency: {
+      type: String,
+    },
     productBy: {
       type: String,
     },
