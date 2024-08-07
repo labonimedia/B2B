@@ -8,6 +8,7 @@ const addToCart = async (email, productBy, productId, quantity) => {
     throw new ApiError(httpStatus.NOT_FOUND, 'Product not found');
   }
 
+
   let cart = await Cart.findOne({ email, productBy });
   if (!cart) {
     cart = new Cart({ email, productBy, products: [] });
@@ -23,16 +24,86 @@ const addToCart = async (email, productBy, productId, quantity) => {
   return await cart.save();
 };
 
+// const getCartByEmail = async (email) => {
+//   const cart = await Cart.findOne({ email }).populate('products.productId');
+//   if (!cart) {
+//     throw new ApiError(httpStatus.NOT_FOUND, 'Cart not found');
+//   }
+//   const groupedCart = cart.products.reduce((acc, item) => {
+//     const { productBy } = item.productId;
+//     if (!acc[productBy]) {
+//       acc[productBy] = { email: productBy, products: []  };
+//     }
+//     acc[productBy].products.push({
+//       quantity: item.quantity,
+//       _id: item._id,
+//       productId: {
+//         selectedOccasion: item.productId.selectedOccasion,
+//         selectedlifeStyle: item.productId.selectedlifeStyle,
+//         specialFeature: item.productId.specialFeature,
+//         designNumber: item.productId.designNumber,
+//         brand: item.productId.brand,
+//         productType: item.productId.productType,
+//         gender: item.productId.gender,
+//         clothing: item.productId.clothing,
+//         subCategory: item.productId.subCategory,
+//         productTitle: item.productId.productTitle,
+//         productDescription: item.productId.productDescription,
+//         material: item.productId.material,
+//         materialvariety: item.productId.materialvariety,
+//         fabricPattern: item.productId.fabricPattern,
+//         fitStyle: item.productId.fitStyle,
+//         neckStyle: item.productId.neckStyle,
+//         closureType: item.productId.closureType,
+//         pocketDescription: item.productId.pocketDescription,
+//         sleeveCuffStyle: item.productId.sleeveCuffStyle,
+//         sleeveLength: item.productId.sleeveLength,
+//         careInstructions: item.productId.careInstructions,
+//         sizes: item.productId.sizes,
+//         ProductDeimension: item.productId.ProductDeimension,
+//         // netWeight: item.productId.netWeight,
+//         setOFnetWeight: item.productId.setOFnetWeight,
+//         setOfMRP: item.productId.setOfMRP,
+//         setOfManPrice: item.productId.setOfManPrice,
+//         currency: item.productId.currency,
+//         quantity: item.productId.quantity,
+//         dateOfManufacture: item.productId.dateOfManufacture,
+//         dateOfListing: item.productId.dateOfListing,
+//         productBy: item.productId.productBy,
+//         colourCollections: item.productId.colourCollections,
+//         id: item.productId._id,
+
+//       },
+//     });
+//     return acc;
+//   }, {});
+
+//   // Convert the object to an array of objects
+//   const formattedCart = Object.values(groupedCart);
+
+//   return formattedCart;
+// };
 const getCartByEmail = async (email) => {
   const cart = await Cart.findOne({ email }).populate('products.productId');
   if (!cart) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Cart not found');
   }
+
+  // Get unique productBy emails from the cart products
+  const productByEmails = [...new Set(cart.products.map(item => item.productId.productBy))];
+
+  // Query to get manufacturers' names
+  const manufacturers = await User.find({ email: { $in: productByEmails } }).select('email fullName');
+  const manufacturerMap = new Map(manufacturers.map(manufacturer => [manufacturer.email, manufacturer.fullName]));
+
   const groupedCart = cart.products.reduce((acc, item) => {
     const { productBy } = item.productId;
+    const manufactureName = manufacturerMap.get(productBy) || 'Unknown';
+
     if (!acc[productBy]) {
-      acc[productBy] = { email: productBy, products: [] };
+      acc[productBy] = { email: productBy, manufactureName, products: [] };
     }
+
     acc[productBy].products.push({
       quantity: item.quantity,
       _id: item._id,
@@ -60,7 +131,6 @@ const getCartByEmail = async (email) => {
         careInstructions: item.productId.careInstructions,
         sizes: item.productId.sizes,
         ProductDeimension: item.productId.ProductDeimension,
-        // netWeight: item.productId.netWeight,
         setOFnetWeight: item.productId.setOFnetWeight,
         setOfMRP: item.productId.setOfMRP,
         setOfManPrice: item.productId.setOfManPrice,
@@ -71,7 +141,6 @@ const getCartByEmail = async (email) => {
         productBy: item.productId.productBy,
         colourCollections: item.productId.colourCollections,
         id: item.productId._id,
-
       },
     });
     return acc;
@@ -82,6 +151,7 @@ const getCartByEmail = async (email) => {
 
   return formattedCart;
 };
+
 //   // Group products by productBy
 //   const groupedCart = cart.products.reduce((acc, item) => {
 //     const productBy = item.productId.productBy;
