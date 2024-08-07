@@ -63,7 +63,7 @@ const getCartByEmail = async (email) => {
         // netWeight: item.productId.netWeight,
         setOFnetWeight: item.productId.setOFnetWeight,
         setOfMRP: item.productId.setOfMRP,
-        setOfManPrice: item.setOfManPrice,
+        setOfManPrice: item.productId.setOfManPrice,
         currency: item.productId.currency,
         quantity: item.productId.quantity,
         dateOfManufacture: item.productId.dateOfManufacture,
