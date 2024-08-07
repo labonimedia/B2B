@@ -53,7 +53,7 @@ const productSchema = mongoose.Schema(
     ],
     setOFnetWeight: { type: String },
     setOfMRP: { type: String },
-    setOfManPrice: {type: String },
+    setOfManPrice: { type: String },
     sizes: [
       {
         standardSize: {
@@ -75,7 +75,7 @@ const productSchema = mongoose.Schema(
         width: { type: String },
         height: { type: String },
         weight: { type: String },
-        manufacturerPrice: {type: String },
+        manufacturerPrice: { type: String },
         singleMRP: { type: String },
       },
     ],
