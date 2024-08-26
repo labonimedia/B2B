@@ -62,6 +62,18 @@ const sendReInvitation = catchAsync(async (req, res) => {
   res.status(httpStatus.CREATED).send(user);
 });
 
+const sendReInvitationBulk = catchAsync(async (req, res) => {
+  const emails = req.body.emails; // Expecting an array of emails in the request body
+  // console.log(emails);
+  if (!Array.isArray(emails) || emails.length === 0) {
+    return res.status(httpStatus.BAD_REQUEST).send({ message: 'Emails are required and should be an array.' });
+  }
+
+  const results = await invitationService.sendReInvitation(emails);
+  res.status(httpStatus.CREATED).send({ message: 'Invitations sent successfully', results });
+});
+
+
 const queryInvitation = catchAsync(async (req, res) => {
   const filter = pick(req.query, ['name', 'role', 'status', 'invitedBy']);
   const options = pick(req.query, ['sortBy', 'limit', 'page']);
@@ -92,6 +104,7 @@ module.exports = {
   sendReInvitation,
   queryInvitation,
   getInvitationById,
+  sendReInvitationBulk,
   updateInvitationById,
   deleteInvitationById,
   bulkUploadFile,

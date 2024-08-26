@@ -117,6 +117,16 @@ const sendReInvitation = async (email) => {
   const result = await emailService.sendInvitationToDistributer(email);
   return result;
 };
+
+const sendReInvitationBulk = async (emails) => {
+  const results = [];
+  for (const email of emails) {
+    const result = await emailService.sendInvitationToDistributer(email);
+    results.push(result);
+  }
+  return results;
+};
+
 /**
  * Query for Invitation
  * @param {Object} filter - Mongo filter
@@ -181,6 +191,7 @@ const deleteInvitationById = async (userId) => {
 
 module.exports = {
   createInvitation,
+  sendReInvitationBulk,
   sendReInvitation,
   bulkUploadInvitations,
   queryInvitation,
