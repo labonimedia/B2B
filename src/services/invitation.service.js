@@ -88,9 +88,20 @@ const bulkUpload = async (invitationArray, csvFilePath = null, user) => {
         return existingInvitation.save();
       }
 
-      return Invitation.create(invitation);
+      return Invitation.create({
+        fullName: invitation.Full_Name,
+        companyName: invitation.Company_Name,
+        email: invitation.Email,
+        mobileNumber: invitation.Mobile_Number,
+        invitedBy: [invitedBy],
+        status: 'pending', // or other default status
+        role: invitation.Role || null,
+        category: invitation.Category || null,
+        code: invitation.Code || null,
+      });
     })
   );
+ 
 
   return results;
 };
