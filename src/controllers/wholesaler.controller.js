@@ -57,10 +57,21 @@ const getManufactureList = catchAsync(async (req, res) => {
   res.status(httpStatus.OK).send(refUsers);
 });
 
+
+const getRetailerByEmail = catchAsync(async (req, res) => {
+  const filter = pick(req.query, ['fullName', 'companyName', 'address', 'city']);
+  const options = pick(req.query, ['sortBy', 'limit', 'page']);
+  const user = await wholesalerService.getRetailerByEmail(req.query.refByEmail, filter, options);
+  if (!user) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Manufaturer not found');
+  }
+  res.send(user);
+});
 module.exports = {
   createWholesaler,
   queryWholesaler,
   getWholesalerById,
+  getRetailerByEmail,
   updateWholesalerById,
   deleteWholesalerById,
   getManufactureList,

@@ -18,4 +18,8 @@ router
   .route('/manufactureList/:email')
   .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), wholesalerController.getManufactureList);
 
+  router
+  .route('/get-referred/retailer')
+  .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), wholesalerController.getRetailerByEmail);
+
 module.exports = router;
