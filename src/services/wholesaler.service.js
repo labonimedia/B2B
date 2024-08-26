@@ -116,25 +116,57 @@ const getUsersByEmails = async (emails, options) => {
   };
 };
 
-const getRetailerByEmail = async (refByEmail, filter = {}, options = {}) => {
+const getRetailerByEmail = async (refByEmail, searchKeywords = '', options = {}) => {
   // Step 1: Find users with the specified email in their refByEmail field
   const users = await User.find({ refByEmail });
   if (!users || users.length === 0) {
     throw new Error('No users found with the specified refByEmail');
   }
+  
   // Step 2: Extract the emails of the referred users
   const referredEmails = users.map(user => user.email);
   if (referredEmails.length === 0) {
     throw new Error('No referred emails found');
   }
-  // Step 3: Create a filter for the Manufacture records
+
+  // Step 3: Build the search filter
+  const searchRegex = new RegExp(searchKeywords, 'i'); // Case-insensitive search
+
   const manufactureFilter = {
     email: { $in: referredEmails },
-    ...filter,
+    $or: [
+      { fullName: { $regex: searchRegex } },
+      { companyName: { $regex: searchRegex } },
+      { country: { $regex: searchRegex } },
+      { city: { $regex: searchRegex } }
+    ]
   };
+
+  // Use pagination options if provided
   const manufactures = await Retailer.paginate(manufactureFilter, options);
+
   return manufactures;
 };
+
+// const getRetailerByEmail = async (refByEmail, filter = {}, options = {}) => {
+//   // Step 1: Find users with the specified email in their refByEmail field
+//   const users = await User.find({ refByEmail });
+//   if (!users || users.length === 0) {
+//     throw new Error('No users found with the specified refByEmail');
+//   }
+//   // Step 2: Extract the emails of the referred users
+//   const referredEmails = users.map(user => user.email);
+//   if (referredEmails.length === 0) {
+//     throw new Error('No referred emails found');
+//   }
+//   // Step 3: Create a filter for the Manufacture records
+//   const manufactureFilter = {
+//     email: { $in: referredEmails },
+//     ...filter,
+//   };
+//   const manufactures = await Retailer.paginate(manufactureFilter, options);
+//   return manufactures;
+// };
 module.exports = {
   createWholesaler,
   queryWholesaler,

@@ -25,9 +25,9 @@ const getManufactureById = catchAsync(async (req, res) => {
 });
 
 const getManufactureByEmail = catchAsync(async (req, res) => {
-  const filter = pick(req.query, ['fullName', 'companyName', 'address', 'city']);
+  const { refByEmail, searchKeywords } = req.query;
   const options = pick(req.query, ['sortBy', 'limit', 'page']);
-  const user = await manufactureService.getManufactureByEmail(req.query.refByEmail, filter, options);
+  const user = await manufactureService.getManufactureByEmail(refByEmail, searchKeywords, options);
   if (!user) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Manufaturer not found');
   }
