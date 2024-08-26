@@ -15,4 +15,8 @@ router
   .patch(auth('superadmin', 'manufacture'), manufactureController.updateManufactureById)
   .delete(auth('superadmin', 'manufacture'), manufactureController.deleteManufactureById);
 
+  router
+  .route('/get-referred/manufactures')
+  .get(auth('superadmin', 'manufacture'), manufactureController.getManufactureByEmail);
+
 module.exports = router;

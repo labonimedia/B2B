@@ -1,5 +1,5 @@
 const httpStatus = require('http-status');
-const { Manufacture } = require('../models');
+const { Manufacture, User } = require('../models');
 const ApiError = require('../utils/ApiError');
 
 /**
@@ -33,6 +33,69 @@ const queryManufacture = async (filter, options) => {
 const getManufactureById = async (id) => {
   return Manufacture.findById(id);
 };
+
+/**
+ * Get manufacture by id
+ * @param {ObjectId} id
+ * @returns {Promise<Manufacture>}
+ */
+// const getManufactureByEmail = async (refByEmail) => {
+//     // Step 1: Find users with the specified email in their refByEmail field
+//     const users = await User.find({ refByEmail: refByEmail });
+
+//     if (!users || users.length === 0) {
+//       throw new Error('No users found with the specified refByEmail');
+//     }
+
+//     // Step 2: Extract the emails of the referred users
+//     const referredEmails = users.map(user => user.email);
+
+//     if (referredEmails.length === 0) {
+//       throw new Error('No referred emails found');
+//     }
+
+//     // Step 3: Find manufacture records by these emails
+//     const manufactures = await Manufacture.find({ email: { $in: referredEmails } });
+
+//     // Step 4: Return the results
+//     return manufactures;
+// };
+
+const getManufactureByEmail = async (refByEmail, filter = {}, options = {}) => {
+  // Step 1: Find users with the specified email in their refByEmail field
+  const users = await User.find({ refByEmail });
+  if (!users || users.length === 0) {
+    throw new Error('No users found with the specified refByEmail');
+  }
+  // Step 2: Extract the emails of the referred users
+  const referredEmails = users.map(user => user.email);
+  if (referredEmails.length === 0) {
+    throw new Error('No referred emails found');
+  }
+  // Step 3: Create a filter for the Manufacture records
+  const manufactureFilter = {
+    email: { $in: referredEmails },
+    ...filter,
+  };
+  const manufactures = await Manufacture.paginate(manufactureFilter, options);
+  return manufactures;
+};
+
+// // Example usage:
+// (async () => {
+//   try {
+//     const filter = { isActive: true }; // Example filter
+//     const options = {
+//       page: 1,
+//       limit: 10,
+//       sort: { createdAt: -1 }, // Sort by creation date in descending order
+//     };
+//     const result = await getManufactureByEmail('sjha@gmail.com', filter, options);
+//     console.log(result);
+//   } catch (error) {
+//     console.error(error.message);
+//   }
+// })();
 
 /**
  * Get user by email
@@ -77,6 +140,7 @@ module.exports = {
   createManufacture,
   queryManufacture,
   getManufactureById,
+  getManufactureByEmail,
   getUserByEmail,
   updateManufactureById,
   deleteManufactureById,
