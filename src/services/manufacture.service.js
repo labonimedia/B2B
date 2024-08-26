@@ -1,5 +1,5 @@
 const httpStatus = require('http-status');
-const { Manufacture, User } = require('../models');
+const { Manufacture, User, Wholesaler } = require('../models');
 const ApiError = require('../utils/ApiError');
 
 /**
@@ -77,7 +77,7 @@ const getManufactureByEmail = async (refByEmail, filter = {}, options = {}) => {
     email: { $in: referredEmails },
     ...filter,
   };
-  const manufactures = await Manufacture.paginate(manufactureFilter, options);
+  const manufactures = await Wholesaler.paginate(manufactureFilter, options);
   return manufactures;
 };
 
