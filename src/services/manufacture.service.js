@@ -73,6 +73,7 @@ const getManufactureByEmail = async (refByEmail, filter = {}, options = {}) => {
   if (referredEmails.length === 0) {
     throw new Error('No referred emails found');
   }
+  console.log(referredEmails)
   // Step 3: Create a filter for the Manufacture records
   const manufactureFilter = {
     email: { $in: referredEmails },
