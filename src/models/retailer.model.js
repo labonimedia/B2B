@@ -26,6 +26,9 @@ const retailerSchema = mongoose.Schema(
     address: {
       type: String,
     },
+    country: {
+      types: String
+    },
     state: {
       type: String,
     },
