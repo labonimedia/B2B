@@ -8,7 +8,7 @@ const addToCart = async (email, productBy, productId, quantity) => {
     throw new ApiError(httpStatus.NOT_FOUND, 'Product not found');
   }
 
-  
+
   let cart = await Cart.findOne({ email, productBy });
   if (!cart) {
     cart = new Cart({ email, productBy, products: [] });
@@ -20,7 +20,6 @@ const addToCart = async (email, productBy, productId, quantity) => {
   } else {
     cart.products.push({ productId, quantity });
   }
-
   return await cart.save();
 };
 
