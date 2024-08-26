@@ -3,12 +3,15 @@ const path = require('path');
 const csv = require('csvtojson');
 const { join } = require('path');
 const pick = require('../utils/pick');
+const fs = require('fs');
 const ApiError = require('../utils/ApiError');
 const catchAsync = require('../utils/catchAsync');
 const { invitationService } = require('../services');
 
 const staticFolder = path.join(__dirname, '../');
 const uploadsFolder = path.join(staticFolder, 'uploads');
+
+
 
 const bulkUploadFile = catchAsync(async (req, res) => {
   if (req.file) {

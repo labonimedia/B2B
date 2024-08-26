@@ -53,71 +53,11 @@ const emailService = require('./email.service');
  * @param {Array<Object>} invitations
  * @returns {Promise<Array<Invitation>>}
  */
-// const bulkUploadInvitations = async (invitations, user) => {
-//   const results = await Promise.all(
-//     invitations.map(async (invitation) => {
-//       const invitedBy = user.email;
-//       await emailService.sendInvitationToDistributer(invitation.email);
-//       const existingInvitation = await Invitation.findOne({ email: invitation.email });
-//       if (existingInvitation) {
-//         existingInvitation.invitedBy.push(invitedBy);
-//         return existingInvitation.save();
-//       }
-//       return Invitation.create({ ...invitation, invitedBy: [invitedBy] });
-//     })
-//   );
-//   return results;
-// };
-
-// const bulkUpload = async (invitationArray, csvFilePath = null, user) => {
-//   let modifiedInvitationsArray = invitationArray;
-//   if (csvFilePath) {
-//     modifiedInvitationsArray = { invitations: csvFilePath };
-//   }
-//   if (!modifiedInvitationsArray.invitations || !modifiedInvitationsArray.invitations.length)
-//     return { error: true, message: 'missing array' };
-
-//   const results = await Promise.all(
-//     modifiedInvitationsArray.invitations.map(async (invitation) => {
-//       invitation.invitedBy = user.email;
-//       await emailService.sendInvitationToDistributer(invitation.email);
-
-//       const existingInvitation = await Invitation.findOne({ email: invitation.email });
-//       if (existingInvitation) {
-//         existingInvitation.invitedBy.push(invitation.invitedBy);
-//         return existingInvitation.save();
-//       }
-
-//       return Invitation.create({
-//         fullName: invitation.Full_Name,
-//         companyName: invitation.Company_Name,
-//         email: invitation.Email,
-//         mobileNumber: invitation.Mobile_Number,
-//         invitedBy: [invitedBy],
-//         status: 'pending', // or other default status
-//         role: invitation.Role || null,
-//         category: invitation.Category || null,
-//         code: invitation.Code || null,
-//       });
-//     })
-//   );
- 
-
-//   return results;
-// };
-
 const bulkUploadInvitations = async (invitations, user) => {
   const results = await Promise.all(
     invitations.map(async (invitation) => {
       const invitedBy = user.email;
-
-      // Validate invitation email
-      if (!invitation.email) {
-        throw new Error(`No email provided for invitation: ${JSON.stringify(invitation)}`);
-      }
-
       await emailService.sendInvitationToDistributer(invitation.email);
-
       const existingInvitation = await Invitation.findOne({ email: invitation.email });
       if (existingInvitation) {
         existingInvitation.invitedBy.push(invitedBy);
@@ -131,24 +71,15 @@ const bulkUploadInvitations = async (invitations, user) => {
 
 const bulkUpload = async (invitationArray, csvFilePath = null, user) => {
   let modifiedInvitationsArray = invitationArray;
-
   if (csvFilePath) {
-    // Assume that you have a CSV parsing function
-    modifiedInvitationsArray = await parseCSVFile(csvFilePath); // Replace with your CSV parsing function
+    modifiedInvitationsArray = { invitations: csvFilePath };
   }
-
-  if (!modifiedInvitationsArray.invitations || !modifiedInvitationsArray.invitations.length) {
-    return { error: true, message: 'Missing or empty invitations array' };
-  }
+  if (!modifiedInvitationsArray.invitations || !modifiedInvitationsArray.invitations.length)
+    return { error: true, message: 'missing array' };
 
   const results = await Promise.all(
     modifiedInvitationsArray.invitations.map(async (invitation) => {
-      if (!invitation.email) {
-        throw new Error(`Missing email for invitation: ${JSON.stringify(invitation)}`);
-      }
-
       invitation.invitedBy = user.email;
-
       await emailService.sendInvitationToDistributer(invitation.email);
 
       const existingInvitation = await Invitation.findOne({ email: invitation.email });
@@ -162,7 +93,7 @@ const bulkUpload = async (invitationArray, csvFilePath = null, user) => {
         companyName: invitation.Company_Name,
         email: invitation.Email,
         mobileNumber: invitation.Mobile_Number,
-        invitedBy: [invitation.invitedBy],
+        invitedBy: [invitedBy],
         status: 'pending', // or other default status
         role: invitation.Role || null,
         category: invitation.Category || null,
@@ -170,10 +101,10 @@ const bulkUpload = async (invitationArray, csvFilePath = null, user) => {
       });
     })
   );
+ 
 
   return results;
 };
-
 
 /**
  * Create an Invitation
