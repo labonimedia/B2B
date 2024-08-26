@@ -58,7 +58,12 @@ const wholesalerSchema = mongoose.Schema(
     pan: {
       type: String,
     },
-
+    establishDate: {
+      type: Date,
+    },
+    turnover: {
+      type: String,
+    },
     socialMedia: {
       facebook: {
         type: String,
