@@ -21,15 +21,15 @@ const manufactureSchema = mongoose.Schema(
     },
     email: {
       type: String,
-      required: true,
-      unique: true,
-      trim: true,
-      lowercase: true,
-      validate(value) {
-        if (!validator.isEmail(value)) {
-          throw new Error('Invalid email');
-        }
-      },
+      // required: true,
+      // unique: true,
+      // trim: true,
+      // lowercase: true,
+      // validate(value) {
+      //   if (!validator.isEmail(value)) {
+      //     throw new Error('Invalid email');
+      //   }
+      // },
     },
     address: {
       type: String,
