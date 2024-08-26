@@ -46,17 +46,21 @@ const getManufactureByEmail = async (refByEmail, filter = {}, options = {}) => {
   if (!users || users.length === 0) {
     throw new Error('No users found with the specified refByEmail');
   }
-  console.log(users)
   // Step 2: Extract the emails of the referred users
   const referredEmails = users.map(user => user.email);
   if (referredEmails.length === 0) {
     throw new Error('No referred emails found');
   }
-  console.log(referredEmails)
+
   // Step 3: Create a filter for the Manufacture records
   const manufactureFilter = {
     email: { $in: referredEmails },
-    ...filter,
+    $or: [
+      { fullName: { $regex: searchRegex } },
+      { companyName: { $regex: searchRegex } },
+      { country: { $regex: searchRegex } },
+      { city: { $regex: searchRegex } }
+    ]
   };
   const manufactures = await Wholesaler.paginate(manufactureFilter, options);
   return manufactures;
