@@ -1,5 +1,5 @@
 const httpStatus = require('http-status');
-const { Wholesaler, User } = require('../models');
+const { Wholesaler, User, Retailer } = require('../models');
 const ApiError = require('../utils/ApiError');
 
 /**
