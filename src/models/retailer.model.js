@@ -27,7 +27,7 @@ const retailerSchema = mongoose.Schema(
       type: String,
     },
     country: {
-      types: String
+      types: String,
     },
     state: {
       type: String,
