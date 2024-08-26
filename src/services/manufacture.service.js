@@ -67,6 +67,7 @@ const getManufactureByEmail = async (refByEmail, filter = {}, options = {}) => {
   if (!users || users.length === 0) {
     throw new Error('No users found with the specified refByEmail');
   }
+  console.log(users)
   // Step 2: Extract the emails of the referred users
   const referredEmails = users.map(user => user.email);
   if (referredEmails.length === 0) {

@@ -116,7 +116,6 @@ const getUsersByEmails = async (emails, options) => {
   };
 };
 
-
 const getRetailerByEmail = async (refByEmail, filter = {}, options = {}) => {
   // Step 1: Find users with the specified email in their refByEmail field
   const users = await User.find({ refByEmail });
