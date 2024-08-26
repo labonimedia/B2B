@@ -40,7 +40,7 @@ const getManufactureById = async (id) => {
  * @returns {Promise<Manufacture>}
  */
 
-const getManufactureByEmail = async (refByEmail, filter = {}, options = {}) => {
+const getManufactureByEmail = async (refByEmail, searchKeywords = '', options = {}) => {
   // Step 1: Find users with the specified email in their refByEmail field
   const users = await User.find({ refByEmail });
   if (!users || users.length === 0) {
@@ -51,7 +51,7 @@ const getManufactureByEmail = async (refByEmail, filter = {}, options = {}) => {
   if (referredEmails.length === 0) {
     throw new Error('No referred emails found');
   }
-
+  const searchRegex = new RegExp(searchKeywords, 'i'); 
   // Step 3: Create a filter for the Manufacture records
   const manufactureFilter = {
     email: { $in: referredEmails },
