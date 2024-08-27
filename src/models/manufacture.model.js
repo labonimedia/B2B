@@ -66,6 +66,9 @@ const manufactureSchema = mongoose.Schema(
     pan: {
       type: String,
     },
+    code: {
+      type: String,
+    },
     establishDate: {
       type: Date,
     },
