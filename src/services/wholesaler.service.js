@@ -117,7 +117,6 @@ const getUsersByEmails = async (emails, options) => {
 };
 
 const getRetailerByEmail = async (refByEmail, searchKeywords = '', options = {}) => {
-  // Step 1: Find users with the specified email in their refByEmail field
   const users = await User.find({ refByEmail });
   if (!users || users.length === 0) {
     throw new Error('No users found with the specified refByEmail');
@@ -129,8 +128,7 @@ const getRetailerByEmail = async (refByEmail, searchKeywords = '', options = {})
     throw new Error('No referred emails found');
   }
 
-  // Step 3: Build the search filter
-  const searchRegex = new RegExp(searchKeywords, 'i'); // Case-insensitive search
+  const searchRegex = new RegExp(searchKeywords, 'i');
 
   const manufactureFilter = {
     email: { $in: referredEmails },
@@ -144,7 +142,6 @@ const getRetailerByEmail = async (refByEmail, searchKeywords = '', options = {})
 
   // Use pagination options if provided
   const manufactures = await Retailer.paginate(manufactureFilter, options);
-
   return manufactures;
 };
 

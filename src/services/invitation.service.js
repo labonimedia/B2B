@@ -2,38 +2,38 @@ const httpStatus = require('http-status');
 const { Invitation } = require('../models');
 const ApiError = require('../utils/ApiError');
 const emailService = require('./email.service');
-// /**
-//  * Bulk Upload Invitations
-//  * @param {Array<Object>} invitations
-//  * @returns {Promise<Array<Invitation>>}
-//  */
-// const bulkUploadInvitations = async (invitations, user) => {
-//   const results = await Promise.all(
-//     invitations.map(async (invitation) => {
-//       const invitedBy = user.email;
-//       await emailService.sendInvitationToDistributer(invitation.email);
-//       return Invitation.create({ ...invitation, invitedBy });
-//     })
-//   );
-//   return results;
-// };
+/**
+ * Bulk Upload Invitations
+ * @param {Array<Object>} invitations
+ * @returns {Promise<Array<Invitation>>}
+ */
+const bulkUploadInvitations = async (invitations, user) => {
+  const results = await Promise.all(
+    invitations.map(async (invitation) => {
+      const invitedBy = user.email;
+      await emailService.sendInvitationToDistributer(invitation.email);
+      return Invitation.create({ ...invitation, invitedBy });
+    })
+  );
+  return results;
+};
 
-// const bulkUpload = async (invitationArray, csvFilePath = null, user) => {
-//   let modifiedInvitationsArray = invitationArray;
-//   if (csvFilePath) {
-//     modifiedInvitationsArray = { invitations: csvFilePath };
-//   }
-//   if (!modifiedInvitationsArray.invitations || !modifiedInvitationsArray.invitations.length)
-//     return { error: true, message: 'missing array' };
-//   const result = await Promise.all(
-//     modifiedInvitationsArray.invitations.map(async (invitation) => {
-//       invitation.invitedBy = user.email;
-//       await emailService.sendInvitationToDistributer(invitation.email);
-//       await Invitation.create(invitation);
-//     })
-//   );
-//   return result;
-// };
+const bulkUpload = async (invitationArray, csvFilePath = null, user) => {
+  let modifiedInvitationsArray = invitationArray;
+  if (csvFilePath) {
+    modifiedInvitationsArray = { invitations: csvFilePath };
+  }
+  if (!modifiedInvitationsArray.invitations || !modifiedInvitationsArray.invitations.length)
+    return { error: true, message: 'missing array' };
+  const result = await Promise.all(
+    modifiedInvitationsArray.invitations.map(async (invitation) => {
+      invitation.invitedBy = user.email;
+      await emailService.sendInvitationToDistributer(invitation.email);
+      await Invitation.create(invitation);
+    })
+  );
+  return result;
+};
 
 // /**
 //  * Create a Invitation
@@ -48,63 +48,63 @@ const emailService = require('./email.service');
 //   return Invitation.create(reqBody);
 // };
 
-/**
- * Bulk Upload Invitations
- * @param {Array<Object>} invitations
- * @returns {Promise<Array<Invitation>>}
- */
-const bulkUploadInvitations = async (invitations, user) => {
-  const results = await Promise.all(
-    invitations.map(async (invitation) => {
-      const invitedBy = user.email;
-      await emailService.sendInvitationToDistributer(invitation.email);
-      const existingInvitation = await Invitation.findOne({ email: invitation.email });
-      if (existingInvitation) {
-        existingInvitation.invitedBy.push(invitedBy);
-        return existingInvitation.save();
-      }
-      return Invitation.create({ ...invitation, invitedBy: [invitedBy] });
-    })
-  );
-  return results;
-};
+// /**
+//  * Bulk Upload Invitations
+//  * @param {Array<Object>} invitations
+//  * @returns {Promise<Array<Invitation>>}
+//  */
+// const bulkUploadInvitations = async (invitations, user) => {
+//   const results = await Promise.all(
+//     invitations.map(async (invitation) => {
+//       const invitedBy = user.email;
+//       await emailService.sendInvitationToDistributer(invitation.email);
+//       const existingInvitation = await Invitation.findOne({ email: invitation.email });
+//       if (existingInvitation) {
+//         existingInvitation.invitedBy.push(invitedBy);
+//         return existingInvitation.save();
+//       }
+//       return Invitation.create({ ...invitation, invitedBy: [invitedBy] });
+//     })
+//   );
+//   return results;
+// };
 
-const bulkUpload = async (invitationArray, csvFilePath = null, user) => {
-  let modifiedInvitationsArray = invitationArray;
-  if (csvFilePath) {
-    modifiedInvitationsArray = { invitations: csvFilePath };
-  }
-  if (!modifiedInvitationsArray.invitations || !modifiedInvitationsArray.invitations.length)
-    return { error: true, message: 'missing array' };
+// const bulkUpload = async (invitationArray, csvFilePath = null, user) => {
+//   let modifiedInvitationsArray = invitationArray;
+//   if (csvFilePath) {
+//     modifiedInvitationsArray = { invitations: csvFilePath };
+//   }
+//   if (!modifiedInvitationsArray.invitations || !modifiedInvitationsArray.invitations.length)
+//     return { error: true, message: 'missing array' };
 
-  const results = await Promise.all(
-    modifiedInvitationsArray.invitations.map(async (invitation) => {
-      invitation.invitedBy = user.email;
-      await emailService.sendInvitationToDistributer(invitation.email);
+//   const results = await Promise.all(
+//     modifiedInvitationsArray.invitations.map(async (invitation) => {
+//       invitation.invitedBy = user.email;
+//       await emailService.sendInvitationToDistributer(invitation.email);
 
-      const existingInvitation = await Invitation.findOne({ email: invitation.email });
-      if (existingInvitation) {
-        existingInvitation.invitedBy.push(invitation.invitedBy);
-        return existingInvitation.save();
-      }
+//       const existingInvitation = await Invitation.findOne({ email: invitation.email });
+//       if (existingInvitation) {
+//         existingInvitation.invitedBy.push(invitation.invitedBy);
+//         return existingInvitation.save();
+//       }
 
-      return Invitation.create({
-        fullName: invitation.Full_Name,
-        companyName: invitation.Company_Name,
-        email: invitation.Email,
-        mobileNumber: invitation.Mobile_Number,
-        invitedBy: [invitedBy],
-        status: 'pending', // or other default status
-        role: invitation.Role || null,
-        category: invitation.Category || null,
-        code: invitation.Code || null,
-      });
-    })
-  );
+//       return Invitation.create({
+//         fullName: invitation.Full_Name,
+//         companyName: invitation.Company_Name,
+//         email: invitation.Email,
+//         mobileNumber: invitation.Mobile_Number,
+//         invitedBy: [invitedBy],
+//         status: 'pending', // or other default status
+//         role: invitation.Role || null,
+//         category: invitation.Category || null,
+//         code: invitation.Code || null,
+//       });
+//     })
+//   );
  
 
-  return results;
-};
+//   return results;
+// };
 
 /**
  * Create an Invitation
