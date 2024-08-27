@@ -1,5 +1,5 @@
 const httpStatus = require('http-status');
-const { Brand } = require('../models');
+const { Brand, Manufacture } = require('../models');
 const ApiError = require('../utils/ApiError');
 
 /**
@@ -65,10 +65,30 @@ const deleteBrandById = async (id) => {
   return user;
 };
 
+const searchBrandAndOwnerDetails = async (brandName) => {
+  // Search for brands by brandName
+  const brands = await Brand.find({ brandName: { $regex: brandName, $options: 'i' } });
+
+  if (brands.length === 0) {
+    return { brands: [], owners: [] }; // No brands found
+  }
+
+  // Extract brandOwner values
+  const brandOwners = brands.map(brand => brand.brandOwner);
+
+  // Fetch details of the manufacturers who own these brands
+  const ownersDetails = await Manufacture.find({
+    fullName: { $in: brandOwners }
+  });
+
+  return { brands, ownersDetails };
+};
+
 module.exports = {
   createBrand,
   queryBrand,
   getBrandById,
   updateBrandById,
   deleteBrandById,
+  searchBrandAndOwnerDetails
 };

@@ -18,7 +18,9 @@ router
   .patch(auth('superadmin', 'manufacture', 'wholesaler'), validate(userValidation.updateUser), userController.updateUser)
   .delete(auth('superadmin', 'manufacture', 'wholesaler'), validate(userValidation.deleteUser), userController.deleteUser);
 
-router.route('/registered-user/:email').get(auth('superadmin', 'manufacture', 'wholesaler'), userController.getUserByEmail);
+router.route('/registered-user/:email').get(
+  // auth('superadmin', 'manufacture', 'wholesaler'),
+ userController.getUserByEmail);
 
 module.exports = router;
 
