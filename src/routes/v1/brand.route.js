@@ -32,7 +32,7 @@ router
     auth('superadmin', 'manufacture', 'wholesaler', 'retailer', 'wholesaler', 'retailer'),
     brandController.deleteBrandById
   );
-router.get(
+router.post(
     '/searchmanufacturelist',
     auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), // Adjust roles as necessary
     brandController.searchBrandAndOwnerDetails
