@@ -8,6 +8,7 @@ const ApiError = require('../utils/ApiError');
  * @returns {Promise<Retailer>}
  */
 const createRetailer = async (reqBody) => {
+  console.log(reqBody)
   return Retailer.create(reqBody);
 };
 
