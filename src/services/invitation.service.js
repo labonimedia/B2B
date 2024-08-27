@@ -69,25 +69,31 @@ const bulkUploadInvitations = async (invitations, user) => {
   return results;
 };
 
-const bulkUpload = async (invitationArray, csvFilePath = null, user) => {
-  let modifiedInvitationsArray = invitationArray;
-  if (csvFilePath) {
-    modifiedInvitationsArray = { invitations: csvFilePath };
+/**
+ * Bulk Upload Invitations from CSV
+ * @param {Array<Object>} invitationArray
+ * @param {String} csvFilePath
+ * @param {Object} user
+ * @returns {Promise<Array<Invitation>>}
+ */
+const bulkUpload = async (invitationArray = [], csvFilePath = null, user) => {
+  let modifiedInvitationsArray = csvFilePath;
+  if (!modifiedInvitationsArray || !modifiedInvitationsArray.length) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Missing or empty array');
   }
-  if (!modifiedInvitationsArray.invitations || !modifiedInvitationsArray.invitations.length)
-    return { error: true, message: 'missing array' };
 
   const results = await Promise.all(
-    modifiedInvitationsArray.invitations.map(async (invitation) => {
-      invitation.invitedBy = user.email;
-      await emailService.sendInvitationToDistributer(invitation.email);
+    modifiedInvitationsArray.map(async (invitation) => {
+      const invitedBy = user.email;
 
-      const existingInvitation = await Invitation.findOne({ email: invitation.email });
+      // Check if invitation already exists
+      const existingInvitation = await Invitation.findOne({ email: invitation.Email });
       if (existingInvitation) {
-        existingInvitation.invitedBy.push(invitation.invitedBy);
+        existingInvitation.invitedBy.push(invitedBy);
         return existingInvitation.save();
       }
 
+      // Create new invitation
       return Invitation.create({
         fullName: invitation.Full_Name,
         companyName: invitation.Company_Name,
@@ -101,7 +107,6 @@ const bulkUpload = async (invitationArray, csvFilePath = null, user) => {
       });
     })
   );
- 
 
   return results;
 };
