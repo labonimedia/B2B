@@ -27,7 +27,7 @@ const retailerSchema = mongoose.Schema(
       type: String,
     },
     country: {
-      types: String,
+      type: String,
     },
     state: {
       type: String,
@@ -102,7 +102,7 @@ const retailerSchema = mongoose.Schema(
       IFSCcode: {
         type: String,
       },
-      countryB: {
+      country: {
         type: String,
       },
       city: {
