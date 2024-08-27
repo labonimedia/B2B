@@ -12,7 +12,7 @@ const router = express.Router();
 const upload = multer({ dest: uploadsFolder });
 router.post(
   '/bulk-upload',
-  // auth('superadmin', 'manufacture', 'wholesaler'),
+  auth('superadmin', 'manufacture', 'wholesaler'),
   upload.single('file'),
   invitationController.bulkUploadFile
 );
