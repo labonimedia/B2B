@@ -9,11 +9,15 @@ const createRequest = catchAsync(async (req, res) => {
   res.status(httpStatus.CREATED).send(request);
 });
 
+// const acceptRequest = catchAsync(async (req, res) => {
+//   const request = await requestService.acceptRequest(req.params.id, req.user);
+//   res.status(httpStatus.OK).send(request);
+// });
 const acceptRequest = catchAsync(async (req, res) => {
-  const request = await requestService.acceptRequest(req.params.id, req.user);
-  res.status(httpStatus.OK).send(request);
-});
-
+    const { id, requestbyemail, requesttoemail } = req.params;
+    const request = await requestService.acceptRequest(id, requestbyemail, requesttoemail);
+    res.status(httpStatus.OK).send(request);
+  });
 const getRequestById = catchAsync(async (req, res) => {
   const request = await requestService.getRequestById(req.params.id);
   if (!request) {
@@ -23,7 +27,28 @@ const getRequestById = catchAsync(async (req, res) => {
 });
 
 const queryRequests = catchAsync(async (req, res) => {
-  const filter = pick(req.query, ['status', 'requestBy', 'email']);
+  //   const filter = pick(req.query, ['status', 'requestByCompanyName', 'email','requestByFullName','requestByEmail','']);
+  const filter = pick(req.query, [
+    'fullName',
+    'companyName',
+    'email',
+    'code',
+    'mobileNumber',
+    'status',
+    'requestByFullName',
+    'requestByCompanyName',
+    'requestByEmail',
+    'requestByCountry',
+    'requestByCity',
+    'requestByState',
+    'requestByMobileNumber',
+    'requestByRole',
+    'role',
+    'state',
+    'city',
+    'country',
+  ]);
+
   const options = pick(req.query, ['sortBy', 'limit', 'page']);
   const result = await requestService.queryRequests(filter, options);
   res.send(result);

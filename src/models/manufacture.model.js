@@ -46,6 +46,9 @@ const manufactureSchema = mongoose.Schema(
     city: {
       type: String,
     },
+    country: {
+      type: String,
+    },
     pinCode: {
       type: String,
     },
