@@ -1,8 +1,15 @@
 const express = require('express');
 const auth = require('../../middlewares/auth');
 const { manufactureController } = require('../../controllers');
+const { commonUploadMiddleware } = require('../../utils/upload');
 
 const router = express.Router();
+
+router.route('/upload/doc/:id').post(
+  auth('superadmin', 'manufacture'),
+  commonUploadMiddleware([{ name: 'file', maxCount: 1 }]),
+  manufactureController.fileupload
+);
 
 router
   .route('/')

@@ -37,6 +37,7 @@ const retailerCategoryRoute = require('./retailer.category.route');
 const currencyRoute = require('./currency.route');
 const wishlistRoute = require('./wishlist.route');
 const cartRoute = require('./cart.route');
+const dockRoute = require('./doc.route');
 
 const router = express.Router();
 
@@ -185,6 +186,10 @@ const defaultRoutes = [
     path: '/cart',
     route: cartRoute,
   },
+  {
+    path: '/doc',
+    route: dockRoute,
+  }
 ];
 
 const devRoutes = [

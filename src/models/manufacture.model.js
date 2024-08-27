@@ -5,6 +5,12 @@ const { toJSON, paginate } = require('./plugins');
 
 const manufactureSchema = mongoose.Schema(
   {
+    file: {
+      type: String,
+    },
+    fileName: {
+      type: String,
+    },
     currency: {
       type: String,
     },
@@ -13,7 +19,7 @@ const manufactureSchema = mongoose.Schema(
     },
     fullName: {
       type: String,
-      required: true,
+      // required: true,
       trim: true,
     },
     companyName: {

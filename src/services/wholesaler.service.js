@@ -2,6 +2,26 @@ const httpStatus = require('http-status');
 const { Wholesaler, User, Retailer } = require('../models');
 const ApiError = require('../utils/ApiError');
 
+
+
+const fileupload = async (req, id) => {
+  // Find the document by ID
+  const wholesaler = await Wholesaler.findById(id);
+
+  if (!wholesaler) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Wholesaler not found');
+  }
+ 
+  const extractPath = (url) => new URL(url).pathname;
+  const file = req.body.file ? extractPath(req.body.file[0]) : null;
+  const fileName = req.body.fileName || '';
+
+  wholesaler.file = file;
+  wholesaler.fileName = fileName;
+
+  await wholesaler.save();
+  return wholesaler;
+};
 /**
  * Create a Wholesaler
  * @param {Object} reqBody
@@ -173,5 +193,6 @@ module.exports = {
   updateWholesalerById,
   deleteWholesalerById,
   getUser,
+  fileupload,
   getUsersByEmails,
 };
