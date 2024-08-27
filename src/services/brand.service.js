@@ -78,7 +78,7 @@ const searchBrandAndOwnerDetails = async (brandName) => {
 
   // Fetch details of the manufacturers who own these brands
   const ownersDetails = await Manufacture.find({
-    fullName: { $in: brandOwners }
+    email: { $in: brandOwners }
   });
 
   return { brands, ownersDetails };
