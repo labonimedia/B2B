@@ -46,13 +46,13 @@ const retailerSchema = mongoose.Schema(
     },
     email2: {
       type: String,
-      trim: true,
-      lowercase: true,
-      validate(value) {
-        if (!validator.isEmail(value)) {
-          throw new Error('Invalid email');
-        }
-      },
+      // trim: true,
+      // lowercase: true,
+      // validate(value) {
+      //   if (!validator.isEmail(value)) {
+      //     throw new Error('Invalid email');
+      //   }
+      // },
     },
     GSTIN: {
       type: String,
@@ -68,6 +68,12 @@ const retailerSchema = mongoose.Schema(
     },
     registerOnFTH : {
       type: Date,
+    },
+    code: {
+      type: String,
+    },
+    leagalStatusOfFirm: {
+      type: String,
     },
     socialMedia: {
       facebook: {
