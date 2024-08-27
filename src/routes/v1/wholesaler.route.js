@@ -1,9 +1,15 @@
 const express = require('express');
 const auth = require('../../middlewares/auth');
 const { wholesalerController } = require('../../controllers');
+const { commonUploadMiddleware } = require('../../utils/upload');
 
 const router = express.Router();
 
+router.route('/upload/doc/:id').post(
+  auth('superadmin', 'manufacture','wholesaler',),
+  commonUploadMiddleware([{ name: 'file', maxCount: 1 }]),
+  wholesalerController.fileupload
+);
 router
   .route('/')
   .post(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), wholesalerController.createWholesaler)

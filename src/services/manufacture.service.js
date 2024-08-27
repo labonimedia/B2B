@@ -11,6 +11,26 @@ const createManufacture = async (reqBody) => {
   return Manufacture.create(reqBody);
 };
 
+const fileupload = async (req, id) => {
+  // Find the document by ID
+  const manufacture = await Manufacture.findById(id);
+
+  if (!manufacture) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Manufacture not found');
+  }
+ 
+  const extractPath = (url) => new URL(url).pathname;
+  const file = req.body.file ? extractPath(req.body.file[0]) : null;
+  const fileName = req.body.fileName || '';
+
+  manufacture.file = file;
+  manufacture.fileName = fileName;
+
+  await manufacture.save();
+  return manufacture;
+};
+
+
 /**
  * Query for manufacture
  * @param {Object} filter - Mongo filter
@@ -112,6 +132,7 @@ module.exports = {
   getManufactureById,
   getManufactureByEmail,
   getUserByEmail,
+  fileupload,
   updateManufactureById,
   deleteManufactureById,
 };

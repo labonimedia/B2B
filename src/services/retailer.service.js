@@ -2,13 +2,31 @@ const httpStatus = require('http-status');
 const { Retailer } = require('../models');
 const ApiError = require('../utils/ApiError');
 
+
+const fileupload = async (req, id) => {
+  // Find the document by ID
+  const retailer = await Retailer.findById(id);
+
+  if (!retailer) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Retailer not found');
+  }
+ 
+  const extractPath = (url) => new URL(url).pathname;
+  const file = req.body.file ? extractPath(req.body.file[0]) : null;
+  const fileName = req.body.fileName || '';
+
+  retailer.file = file;
+  retailer.fileName = fileName;
+
+  await retailer.save();
+  return retailer;
+};
 /**
  * Create a Retailer
  * @param {Object} reqBody
  * @returns {Promise<Retailer>}
  */
 const createRetailer = async (reqBody) => {
-  console.log(reqBody)
   return Retailer.create(reqBody);
 };
 
@@ -79,6 +97,7 @@ module.exports = {
   createRetailer,
   queryRetailer,
   getRetailerById,
+  fileupload,
   getUserByEmail,
   updateRetailerById,
   deleteRetailerById,
