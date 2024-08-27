@@ -103,6 +103,15 @@ const wholesalerSchema = mongoose.Schema(
       IFSCcode: {
         type: String,
       },
+      country: {
+        type: String,
+      },
+      city: {
+        type: String,
+      },
+      branch: {
+        type: String,
+      },
     },
     isActive: {
       type: Boolean,

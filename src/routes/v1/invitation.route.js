@@ -35,5 +35,5 @@ router
 
   router
   .route('/bulk/re-invitation/array')
-  .get(auth('superadmin', 'manufacture', 'wholesaler'), invitationController.sendReInvitationBulk);
+  .post(auth('superadmin', 'manufacture', 'wholesaler'), invitationController.sendReInvitationBulk);
 module.exports = router;

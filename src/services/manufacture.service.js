@@ -40,23 +40,27 @@ const getManufactureById = async (id) => {
  * @returns {Promise<Manufacture>}
  */
 
-const getManufactureByEmail = async (refByEmail, filter = {}, options = {}) => {
+const getManufactureByEmail = async (refByEmail, searchKeywords = '', options = {}) => {
   // Step 1: Find users with the specified email in their refByEmail field
   const users = await User.find({ refByEmail });
   if (!users || users.length === 0) {
     throw new Error('No users found with the specified refByEmail');
   }
-  console.log(users)
   // Step 2: Extract the emails of the referred users
   const referredEmails = users.map(user => user.email);
   if (referredEmails.length === 0) {
     throw new Error('No referred emails found');
   }
-  console.log(referredEmails)
+  const searchRegex = new RegExp(searchKeywords, 'i'); 
   // Step 3: Create a filter for the Manufacture records
   const manufactureFilter = {
     email: { $in: referredEmails },
-    ...filter,
+    $or: [
+      { fullName: { $regex: searchRegex } },
+      { companyName: { $regex: searchRegex } },
+      { country: { $regex: searchRegex } },
+      { city: { $regex: searchRegex } }
+    ]
   };
   const manufactures = await Wholesaler.paginate(manufactureFilter, options);
   return manufactures;
