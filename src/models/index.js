@@ -35,4 +35,5 @@ module.exports.RetailerCategory = require('./retailer.category.model');
 module.exports.Currency = require('./currency.model');
 module.exports.Wishlist = require('./wishlist.model');
 module.exports.Cart = require('./cart.model');
+module.exports.Request = require('./request.model');
 module.exports.Doc = require('./doc.model');

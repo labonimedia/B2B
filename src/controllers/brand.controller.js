@@ -57,10 +57,19 @@ const deleteBrandById = catchAsync(async (req, res) => {
   res.status(httpStatus.NO_CONTENT).send();
 });
 
+const searchBrandAndOwnerDetails = catchAsync(async (req, res) => {
+  const { brandName } = req.query;
+  if (!brandName) {
+    return res.status(httpStatus.BAD_REQUEST).send({ message: 'Brand name is required' });
+  }
+  const { brands, ownersDetails } = await brandService.searchBrandAndOwnerDetails(brandName);
+  res.status(httpStatus.OK).send({ brands, ownersDetails });
+});
 module.exports = {
   createBrand,
   queryBrand,
   getBrandById,
   updateBrandById,
   deleteBrandById,
+  searchBrandAndOwnerDetails,
 };
