@@ -35,3 +35,4 @@ module.exports.currencyControlller = require('./currency.controller');
 module.exports.wishlistController = require('./wishlist.controller');
 module.exports.cartController = require('./cart.controller');
 module.exports.requestController = require('./request.controller');
+module.exports.docController = require('./doc.controller');

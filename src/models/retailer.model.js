@@ -4,6 +4,12 @@ const { toJSON, paginate } = require('./plugins');
 
 const retailerSchema = mongoose.Schema(
   {
+    file: {
+      type: String,
+    },
+    fileName: {
+      type: String,
+    },
     fullName: {
       type: String,
       required: true,
@@ -27,7 +33,7 @@ const retailerSchema = mongoose.Schema(
       type: String,
     },
     country: {
-      types: String,
+      type: String,
     },
     state: {
       type: String,

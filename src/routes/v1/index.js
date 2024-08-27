@@ -38,6 +38,7 @@ const currencyRoute = require('./currency.route');
 const wishlistRoute = require('./wishlist.route');
 const cartRoute = require('./cart.route');
 const requestRoute = require('./request.route');
+const dockRoute = require('./doc.route');
 
 const router = express.Router();
 
@@ -190,7 +191,10 @@ const defaultRoutes = [
     path: '/request',
     route: requestRoute,
   },
-  
+  {
+    path: '/doc',
+    route: dockRoute,
+  }
 ];
 
 const devRoutes = [

@@ -4,6 +4,11 @@ const ApiError = require('../utils/ApiError');
 const catchAsync = require('../utils/catchAsync');
 const { wholesalerService } = require('../services');
 
+const fileupload = catchAsync(async (req, res) => {
+  const user = await wholesalerService.fileupload(req, req.params.id);
+  res.status(httpStatus.CREATED).send(user);
+});
+
 const createWholesaler = catchAsync(async (req, res) => {
   const user = await wholesalerService.createWholesaler(req.body);
   res.status(httpStatus.CREATED).send(user);
@@ -77,6 +82,7 @@ module.exports = {
   queryWholesaler,
   getWholesalerById,
   getRetailerByEmail,
+  fileupload,
   updateWholesalerById,
   deleteWholesalerById,
   getManufactureList,

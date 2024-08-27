@@ -4,6 +4,12 @@ const ApiError = require('../utils/ApiError');
 const catchAsync = require('../utils/catchAsync');
 const { manufactureService } = require('../services');
 
+const fileupload = catchAsync(async (req, res) => {
+  const user = await manufactureService.fileupload(req, req.params.id);
+  res.status(httpStatus.CREATED).send(user);
+});
+
+
 const createManufacture = catchAsync(async (req, res) => {
   const user = await manufactureService.createManufacture(req.body);
   res.status(httpStatus.CREATED).send(user);
@@ -49,6 +55,7 @@ module.exports = {
   queryManufacture,
   getManufactureById,
   getManufactureByEmail,
+  fileupload,
   updateManufactureById,
   deleteManufactureById,
 };
