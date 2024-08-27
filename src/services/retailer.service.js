@@ -51,6 +51,7 @@ const getUserByEmail = async (email) => {
  * @returns {Promise<Retailer>}
  */
 const updateRetailerById = async (email, updateBody) => {
+  console.log('updateBody',updateBody)
   const user = await getUserByEmail(email);
   if (!user) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Retailer not found');
