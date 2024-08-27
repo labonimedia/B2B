@@ -70,6 +70,12 @@ const wholesalerSchema = mongoose.Schema(
     registerOnFTH : {
       type: Date,
     },
+    code: {
+      type: String,
+    },
+    leagalStatusOfFirm: {
+      type: String,
+    },
     socialMedia: {
       facebook: {
         type: String,

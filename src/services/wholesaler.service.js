@@ -135,6 +135,7 @@ const getRetailerByEmail = async (refByEmail, filter = {}, options = {}) => {
   const manufactures = await Retailer.paginate(manufactureFilter, options);
   return manufactures;
 };
+
 module.exports = {
   createWholesaler,
   queryWholesaler,
