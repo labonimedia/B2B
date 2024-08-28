@@ -39,6 +39,7 @@ const wishlistRoute = require('./wishlist.route');
 const cartRoute = require('./cart.route');
 const requestRoute = require('./request.route');
 const dockRoute = require('./doc.route');
+const productTypeRoute = require('./product.type.route');
 
 const router = express.Router();
 
@@ -127,6 +128,11 @@ const defaultRoutes = [
     path: '/currency',
     route: currencyRoute,
   },
+  {
+    path: '/producttype',
+    route: productTypeRoute,
+  },
+  
   {
     path: '/length-women-dress',
     route: lengthWomenDressRoute,

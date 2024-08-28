@@ -39,3 +39,4 @@ module.exports.wishlistService = require('./wishlist.service');
 module.exports.cartService = require('./cart.service');
 module.exports.requestService = require('./request.service');
 module.exports.docService = require('./doc.service');
+module.exports.productTypeService = require('./product.type.service');

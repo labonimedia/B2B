@@ -36,3 +36,4 @@ module.exports.wishlistController = require('./wishlist.controller');
 module.exports.cartController = require('./cart.controller');
 module.exports.requestController = require('./request.controller');
 module.exports.docController = require('./doc.controller');
+module.exports.productTypeController = require('./product.type.controller');
