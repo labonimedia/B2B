@@ -33,14 +33,11 @@ const searchProducts = catchAsync(async (req, res) => {
   const filter = {};
   const options = {};
 
-  // Build the filter object based on the query parameters
   Object.keys(req.query).forEach((key) => {
     if (req.query[key] && !['sortBy', 'populate', 'limit', 'page'].includes(key)) {
       filter[key] = req.query[key];
     }
   });
-
-  // Extract pagination options
   if (req.query.sortBy) {
     options.sortBy = req.query.sortBy;
   }
@@ -53,7 +50,6 @@ const searchProducts = catchAsync(async (req, res) => {
   if (req.query.page) {
     options.page = parseInt(req.query.page, 10);
   }
-
   const products = await productService.searchProducts(filter, options);
   res.status(httpStatus.OK).send(products);
 });
@@ -95,6 +91,12 @@ const deleteColorCollection = catchAsync(async (req, res) => {
   res.status(httpStatus.NO_CONTENT).send();
 });
 
+const getFilteredProducts = catchAsync(async (req, res) => {
+  const filters = req.body;
+  const result = await productService.filterProductsAndFetchManufactureDetails(filters);
+  res.status(httpStatus.OK).json(result);
+});
+
 module.exports = {
   fileupload,
   createProduct,
@@ -105,4 +107,5 @@ module.exports = {
   deleteProductById,
   updateColorCollection,
   deleteColorCollection,
+  getFilteredProducts,
 };
