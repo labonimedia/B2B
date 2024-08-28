@@ -21,8 +21,8 @@ const createProductType = async (reqBody) => {
  * @returns {Promise<QueryResult>}
  */
 const queryProductType = async (filter, options) => {
-  const ProductType = await ProductType.paginate(filter, options);
-  return ProductType;
+  const productType = await ProductType.paginate(filter, options);
+  return productType;
 };
 
 /**
