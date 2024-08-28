@@ -4,6 +4,12 @@ const { toJSON, paginate } = require('./plugins');
 
 const wholesalerSchema = mongoose.Schema(
   {
+    file: {
+      type: String,
+    },
+    fileName: {
+      type: String,
+    },
     fullName: {
       type: String,
       required: true,
