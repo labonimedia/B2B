@@ -62,8 +62,8 @@ const searchBrandAndOwnerDetails = catchAsync(async (req, res) => {
   if (!brandName) {
     return res.status(httpStatus.BAD_REQUEST).send({ message: 'Brand name is required' });
   }
-  const { brands, ownersDetails } = await brandService.searchBrandAndOwnerDetails(brandName);
-  res.status(httpStatus.OK).send({ brands, ownersDetails });
+  const data = await brandService.searchBrandAndOwnerDetails(brandName);
+  res.status(httpStatus.OK).send(data);
 });
 module.exports = {
   createBrand,

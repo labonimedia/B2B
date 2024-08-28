@@ -42,4 +42,6 @@ router.route('/update/colour-collection').patch(
 router
   .route('/delete/colour-collection')
   .delete(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), productController.deleteColorCollection);
+
+router.post('/manufracturelist/byproduct', productController.getFilteredProducts);
 module.exports = router;

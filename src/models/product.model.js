@@ -43,6 +43,9 @@ const productSchema = mongoose.Schema(
     sleeveCuffStyle: { type: String },
     sleeveLength: { type: String },
     careInstructions: { type: String },
+    country: { type: String },
+    city: { type: String },
+    state: { type: String },
     sizes: { type: [String], default: [] },
     ProductDeimension: [
       {

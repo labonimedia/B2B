@@ -1,5 +1,5 @@
 const httpStatus = require('http-status');
-const { Product } = require('../models');
+const { Product, Manufacture} = require('../models');
 const ApiError = require('../utils/ApiError');
 const { deleteFile } = require('../utils/upload');
 
@@ -212,6 +212,46 @@ const deleteColorCollection = async (productId, collectionId) => {
   await product.save();
 };
 
+const filterProductsAndFetchManufactureDetails = async (filters) => {
+  const query = {};
+  if (filters.productType) {
+    query.productType = filters.productType;
+  }
+  if (filters.gender) {
+    query.gender = filters.gender;
+  }
+  if (filters.clothing) {
+    query.clothing = filters.clothing;
+  }
+  if (filters.subCategory) {
+    query.subCategory = filters.subCategory;
+  }
+  if (filters.productTitle) {
+    query.productTitle = { $regex: filters.productTitle, $options: 'i' };
+  }
+  if (filters.country) {
+    query.country = filters.country;
+  }
+  if (filters.city) {
+    query.city = filters.city;
+  }
+  if (filters.state) {
+    query.state = filters.state;
+  }
+  const products = await Product.find(query);
+  
+  if (products.length === 0) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'No products found');
+  }
+  const manufacturerEmails = products.map((product) => product.productBy);
+  const manufacturers = await Manufacture.find({ email: { $in: manufacturerEmails } });
+
+  if (manufacturers.length === 0) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'No manufacturer details found');
+  }
+  return { manufacturers };
+};
+
 module.exports = {
   fileupload,
   createProduct,
@@ -222,4 +262,5 @@ module.exports = {
   deleteProductById,
   deleteColorCollection,
   updateColorCollection,
+  filterProductsAndFetchManufactureDetails
 };

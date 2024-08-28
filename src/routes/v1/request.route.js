@@ -17,8 +17,6 @@ router
 
 router
   .route('/accept/:id/:requestbyemail/:requesttoemail')
-  .post(
-    // auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), 
-  requestController.acceptRequest);
+  .post(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), requestController.acceptRequest);
 
 module.exports = router;
