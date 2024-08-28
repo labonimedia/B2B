@@ -37,3 +37,4 @@ module.exports.Wishlist = require('./wishlist.model');
 module.exports.Cart = require('./cart.model');
 module.exports.Request = require('./request.model');
 module.exports.Doc = require('./doc.model');
+module.exports.ProductType = require('./product.type.model');
