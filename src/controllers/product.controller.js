@@ -91,22 +91,22 @@ const deleteColorCollection = catchAsync(async (req, res) => {
   res.status(httpStatus.NO_CONTENT).send();
 });
 
-// const getFilteredProducts = catchAsync(async (req, res) => {
-//   const filters = req.body;
-//   const result = await productService.filterProductsAndFetchManufactureDetails(filters);
-//   res.status(httpStatus.OK).json(result);
-// });
 const getFilteredProducts = catchAsync(async (req, res) => {
   const filters = req.body;
-
-  if (!filters || Object.keys(filters).length === 0) {
-    // No filters provided, respond with an error or empty array
-    return res.status(httpStatus.BAD_REQUEST).json({ message: 'No filters provided' });
-  }
-
   const result = await productService.filterProductsAndFetchManufactureDetails(filters);
   res.status(httpStatus.OK).json(result);
 });
+// const getFilteredProducts = catchAsync(async (req, res) => {
+//   const filters = req.body;
+
+//   if (!filters || Object.keys(filters).length === 0) {
+//     // No filters provided, respond with an error or empty array
+//     return res.status(httpStatus.BAD_REQUEST).json({ message: 'No filters provided' });
+//   }
+
+//   const result = await productService.filterProductsAndFetchManufactureDetails(filters);
+//   res.status(httpStatus.OK).json(result);
+// });
 
 module.exports = {
   fileupload,
