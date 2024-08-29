@@ -38,7 +38,7 @@ router.post(
     brandController.searchBrandAndOwnerDetails
   );
   router
-  .route('/:email')
+  .route('/brandlist/:email')
   .get(
     auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
     brandController.getBrandByEmail
