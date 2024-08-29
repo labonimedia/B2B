@@ -392,6 +392,80 @@ const deleteColorCollection = async (productId, collectionId) => {
 
 //   return combinedDetails;
 // };
+
+// const filterProductsAndFetchManufactureDetails = async (filters) => {
+//   const query = {};
+
+//   // Build the query based on the filters provided
+//   if (filters.productType) {
+//     query.productType = filters.productType;
+//   }
+//   if (filters.gender) {
+//     query.gender = filters.gender;
+//   }
+//   if (filters.clothing) {
+//     query.clothing = filters.clothing;
+//   }
+//   if (filters.subCategory) {
+//     query.subCategory = filters.subCategory;
+//   }
+//   if (filters.productTitle) {
+//     query.productTitle = { $regex: filters.productTitle, $options: 'i' };
+//   }
+//   if (filters.country) {
+//     query.country = filters.country;
+//   }
+//   if (filters.city) {
+//     query.city = filters.city;
+//   }
+//   if (filters.state) {
+//     query.state = filters.state;
+//   }
+
+//   // Find the products based on the query
+//   const products = await Product.find(query);
+
+//   if (products.length === 0) {
+//     throw new ApiError(httpStatus.NOT_FOUND, 'No products found with the given filters');
+//   }
+
+//   // Extract brand values from the products
+//   const productBrands = products.map((product) => product.brand);
+
+//   // Find corresponding brand details based on the brand value from the products
+//   const brands = await Brand.find({ brandName: { $in: productBrands } });
+
+//   if (brands.length === 0) {
+//     throw new ApiError(httpStatus.NOT_FOUND, 'No brand details found for the products');
+//   }
+
+//   // Extract brandOwner emails from the brands
+//   const brandOwners = brands.map((brand) => brand.brandOwner);
+
+//   // Find manufacturer details based on brandOwner emails
+//   const manufacturers = await Manufacture.find({ email: { $in: brandOwners } });
+
+//   if (manufacturers.length === 0) {
+//     throw new ApiError(httpStatus.NOT_FOUND, 'No manufacturer details found for the brand owners');
+//   }
+
+//   // Create a map to easily associate each brandOwner email with its corresponding manufacturer details
+//   const manufacturerMap = new Map(manufacturers.map(manufacturer => [manufacturer.email, manufacturer]));
+
+//   // Combine the products with their corresponding brand and manufacturer details
+//   const combinedDetails = products.map((product) => {
+//     const brand = brands.find((b) => b.brandName === product.brand);
+//     const manufacturer = manufacturerMap.get(brand.brandOwner) || {};
+
+//     return {
+//       ...product.toObject(),
+//       brand: brand.toObject ? brand.toObject() : brand,
+//       ownerDetails: manufacturer.toObject ? manufacturer.toObject() : manufacturer,
+//     };
+//   });
+
+//   return combinedDetails;
+// };
 const filterProductsAndFetchManufactureDetails = async (filters) => {
   const query = {};
 
@@ -453,7 +527,15 @@ const filterProductsAndFetchManufactureDetails = async (filters) => {
 
   // Combine the products with their corresponding brand and manufacturer details
   const combinedDetails = products.map((product) => {
+    // Find the brand corresponding to this product
     const brand = brands.find((b) => b.brandName === product.brand);
+
+    // If the brand is not found, skip this product
+    if (!brand) {
+      return null;
+    }
+
+    // Find the manufacturer corresponding to this brand's owner
     const manufacturer = manufacturerMap.get(brand.brandOwner) || {};
 
     return {
@@ -461,7 +543,7 @@ const filterProductsAndFetchManufactureDetails = async (filters) => {
       brand: brand.toObject ? brand.toObject() : brand,
       ownerDetails: manufacturer.toObject ? manufacturer.toObject() : manufacturer,
     };
-  });
+  }).filter(detail => detail !== null); // Filter out any null entries
 
   return combinedDetails;
 };
