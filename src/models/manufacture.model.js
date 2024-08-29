@@ -43,6 +43,9 @@ const manufactureSchema = mongoose.Schema(
     state: {
       type: String,
     },
+    introduction: {
+      type: String,
+    },
     city: {
       type: String,
     },
