@@ -1,5 +1,5 @@
 const httpStatus = require('http-status');
-const { Product, Cart, Manufacture} = require('../models');
+const { Product, Cart, Manufacture, User} = require('../models');
 const ApiError = require('../utils/ApiError');
 
 const addToCart = async (email, productBy, productId, quantity) => {
@@ -96,18 +96,20 @@ const getCartByEmail = async (email) => {
   const productByEmails = [...new Set(cart.products.map(item => item.productId.productBy))];
 
   // Find manufacturer details based on the productBy emails
-  const manufacturers = await Manufacture.find({ email: { $in: productByEmails } });
+  const manufacturers = await User.find({ email: { $in: productByEmails } }).select('fullName');
 
   // Create a map of manufacturer emails to their details
   const manufacturerMap = new Map(manufacturers.map(manufacturer => [manufacturer.email, manufacturer]));
 
   // Group products by manufacturer and include the manufacturer's details
-  const groupedCart = cart.products.reduce((acc, item) => {
+  const groupedCart = cart.products.reduce(async(acc, item) => {
     const { productBy } = item.productId;
+    const user = await User.findOne({email: productBy})
+    console.log(user, productBy)
     if (!acc[productBy]) {
       acc[productBy] = {
-        email: productBy,
-        manufacturer: manufacturerMap.get(productBy) || { fullName: 'Unknown Manufacturer', otherFields: '...' },
+        email: user.fullName,
+        // manufacturer: manufacturerMap.get(productBy) || { fullName: 'Unknown Manufacturer', otherFields: '...' },
         products: []
       };
     }
