@@ -35,6 +35,15 @@ const getBrandById = async (id) => {
 };
 
 /**
+ * Get Brand by id
+ * @param {ObjectId} email
+ * @returns {Promise<Brand>}
+ */
+const getBrandByEmail = async (email) => {
+  return Brand.find(email);
+};
+
+/**
  * Update Brand by id
  * @param {ObjectId} Id
  * @param {Object} updateBody
@@ -120,5 +129,6 @@ module.exports = {
   getBrandById,
   updateBrandById,
   deleteBrandById,
-  searchBrandAndOwnerDetails
+  searchBrandAndOwnerDetails,
+  getBrandByEmail
 };

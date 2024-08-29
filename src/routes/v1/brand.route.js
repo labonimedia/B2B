@@ -37,4 +37,10 @@ router.post(
     auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), // Adjust roles as necessary
     brandController.searchBrandAndOwnerDetails
   );
+  router
+  .route('/:email')
+  .get(
+    auth('superadmin', 'manufacture', 'wholesaler', 'retailer', 'wholesaler', 'retailer', 'wholesaler', 'retailer'),
+    brandController.getBrandByEmail
+  );
 module.exports = router;
