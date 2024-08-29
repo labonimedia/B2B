@@ -40,7 +40,7 @@ const getBrandById = async (id) => {
  * @returns {Promise<Brand>}
  */
 const getBrandByEmail = async (email) => {
-  return Brand.find(email);
+  return Brand.find({brandOwner:email});
 };
 
 /**
