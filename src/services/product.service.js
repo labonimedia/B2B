@@ -1,5 +1,5 @@
 const httpStatus = require('http-status');
-const { Product, Manufacture} = require('../models');
+const { Product, Manufacture, Brand} = require('../models');
 const ApiError = require('../utils/ApiError');
 const { deleteFile } = require('../utils/upload');
 
@@ -212,8 +212,49 @@ const deleteColorCollection = async (productId, collectionId) => {
   await product.save();
 };
 
+// const filterProductsAndFetchManufactureDetails = async (filters) => {
+//   const query = {};
+//   if (filters.productType) {
+//     query.productType = filters.productType;
+//   }
+//   if (filters.gender) {
+//     query.gender = filters.gender;
+//   }
+//   if (filters.clothing) {
+//     query.clothing = filters.clothing;
+//   }
+//   if (filters.subCategory) {
+//     query.subCategory = filters.subCategory;
+//   }
+//   if (filters.productTitle) {
+//     query.productTitle = { $regex: filters.productTitle, $options: 'i' };
+//   }
+//   if (filters.country) {
+//     query.country = filters.country;
+//   }
+//   if (filters.city) {
+//     query.city = filters.city;
+//   }
+//   if (filters.state) {
+//     query.state = filters.state;
+//   }
+//   const products = await Product.find(query);
+  
+//   if (products.length === 0) {
+//     throw new ApiError(httpStatus.NOT_FOUND, 'No products found');
+//   }
+//   const manufacturerEmails = products.map((product) => product.productBy);
+//   const manufacturers = await Manufacture.find({ email: { $in: manufacturerEmails } });
+
+//   if (manufacturers.length === 0) {
+//     throw new ApiError(httpStatus.NOT_FOUND, 'No manufacturer details found');
+//   }
+//   return { manufacturers };
+// };
 const filterProductsAndFetchManufactureDetails = async (filters) => {
   const query = {};
+
+  // Build the query based on the filters provided
   if (filters.productType) {
     query.productType = filters.productType;
   }
@@ -238,18 +279,43 @@ const filterProductsAndFetchManufactureDetails = async (filters) => {
   if (filters.state) {
     query.state = filters.state;
   }
+
+  // Find the products based on the query
   const products = await Product.find(query);
-  
+
   if (products.length === 0) {
     throw new ApiError(httpStatus.NOT_FOUND, 'No products found');
   }
+
+  // Extract manufacturer emails from the products
   const manufacturerEmails = products.map((product) => product.productBy);
+
+  // Find manufacturer details based on emails
   const manufacturers = await Manufacture.find({ email: { $in: manufacturerEmails } });
 
   if (manufacturers.length === 0) {
     throw new ApiError(httpStatus.NOT_FOUND, 'No manufacturer details found');
   }
-  return { manufacturers };
+
+  // Find corresponding brand details based on brandOwner
+  const brands = await Brand.find({ brandOwner: { $in: manufacturerEmails } });
+
+  if (brands.length === 0) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'No brand details found');
+  }
+
+  // Combine the products with their corresponding manufacturer and brand details
+  const combinedData = products.map((product) => {
+    const manufacturer = manufacturers.find((m) => m.email === product.productBy);
+    const brand = brands.find((b) => b.brandOwner === product.productBy);
+    return {
+      product,
+      manufacturer,
+      brand,
+    };
+  });
+
+  return { manufacturers: combinedData };
 };
 
 module.exports = {
