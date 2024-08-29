@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const { paginate, toJSON } = require('./plugins');
+const { number } = require('joi');
 
 const productSchema = mongoose.Schema(
   {
@@ -38,6 +39,7 @@ const productSchema = mongoose.Schema(
     specialFeature: { type: [String] },
     fitStyle: { type: String },
     neckStyle: { type: String },
+    minimumOrderQty: { type: Number },
     closureType: { type: String },
     pocketDescription: { type: String },
     sleeveCuffStyle: { type: String },
