@@ -8,6 +8,9 @@ router
   .route('/')
   .post(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), requestController.createRequest)
   .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), requestController.queryRequests);
+router
+  .route('/multiplerequests')
+  .post(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), requestController.createMultipleRequests);
 
 router
   .route('/:id')

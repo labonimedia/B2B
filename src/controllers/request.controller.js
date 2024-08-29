@@ -9,6 +9,10 @@ const createRequest = catchAsync(async (req, res) => {
   res.status(httpStatus.CREATED).send(request);
 });
 
+const createMultipleRequests = catchAsync(async (req, res) => {
+  const requests = await requestService.createMultipleRequests(req.body.requests, req.user);
+  res.status(httpStatus.CREATED).send(requests);
+});
 // const acceptRequest = catchAsync(async (req, res) => {
 //   const request = await requestService.acceptRequest(req.params.id, req.user);
 //   res.status(httpStatus.OK).send(request);
@@ -71,4 +75,5 @@ module.exports = {
   queryRequests,
   updateRequestById,
   deleteRequestById,
+  createMultipleRequests
 };

@@ -13,6 +13,15 @@ const createRequest = async (requestBody, user) => {
   return request;
 };
 
+const createMultipleRequests = async (requestsBody, user) => {
+  const requests = await Promise.all(
+    requestsBody.map(async (requestBody) => {
+      return Request.create(requestBody);
+    })
+  );
+  return requests;
+};
+
 // /**
 //  * Accept a request
 //  * @param {ObjectId} requestId
@@ -120,4 +129,5 @@ module.exports = {
   queryRequests,
   updateRequestById,
   deleteRequestById,
+  createMultipleRequests
 };
