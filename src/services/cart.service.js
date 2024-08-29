@@ -98,16 +98,15 @@ const getCartByEmail = async (email) => {
   // Find manufacturer details based on the productBy emails
   const manufacturers = await Manufacture.find({ email: { $in: productByEmails } });
 
-  // Create a map of manufacturer emails to their details
-  const manufacturerMap = new Map(manufacturers.map(manufacturer => [manufacturer.email, manufacturer]));
+  // Create a map of manufacturer emails to their full names
+  const manufacturerMap = new Map(manufacturers.map(manufacturer => [manufacturer.email, manufacturer.fullName]));
 
-  // Group products by manufacturer and include the manufacturer's details
+  // Group products by manufacturer and include the manufacturer's full name
   const groupedCart = cart.products.reduce((acc, item) => {
     const { productBy } = item.productId;
     if (!acc[productBy]) {
       acc[productBy] = {
-        email: productBy,
-        manufacturer: manufacturerMap.get(productBy) || { fullName: 'Unknown Manufacturer', otherFields: '...' },
+        fullName: manufacturerMap.get(productBy) || 'Unknown Manufacturer',
         products: []
       };
     }
@@ -158,6 +157,7 @@ const getCartByEmail = async (email) => {
 
   return formattedCart;
 };
+
 
 //   // Group products by productBy
 //   const groupedCart = cart.products.reduce((acc, item) => {
