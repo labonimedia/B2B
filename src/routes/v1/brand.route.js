@@ -40,7 +40,7 @@ router.post(
   router
   .route('/:email')
   .get(
-    auth('superadmin', 'manufacture', 'wholesaler', 'retailer', 'wholesaler', 'retailer', 'wholesaler', 'retailer'),
+    auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
     brandController.getBrandByEmail
   );
 module.exports = router;
