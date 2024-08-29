@@ -32,6 +32,14 @@ const getBrandById = catchAsync(async (req, res) => {
   res.send(user);
 });
 
+const getBrandByEmail = catchAsync(async (req, res) => {
+  const user = await brandService.getBrandByEmail(req.params.email);
+  if (!user) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Care Instruction not found');
+  }
+  res.send(user);
+});
+
 const updateBrandById = catchAsync(async (req, res) => {
   const brand = await brandService.getBrandById(req.params.id);
   if (!brand) {
@@ -72,4 +80,5 @@ module.exports = {
   updateBrandById,
   deleteBrandById,
   searchBrandAndOwnerDetails,
+  getBrandByEmail
 };
