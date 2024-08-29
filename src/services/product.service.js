@@ -251,6 +251,73 @@ const deleteColorCollection = async (productId, collectionId) => {
 //   }
 //   return { manufacturers };
 // };
+
+// const filterProductsAndFetchManufactureDetails = async (filters) => {
+//   const query = {};
+
+//   // Build the query based on the filters provided
+//   if (filters.productType) {
+//     query.productType = filters.productType;
+//   }
+//   if (filters.gender) {
+//     query.gender = filters.gender;
+//   }
+//   if (filters.clothing) {
+//     query.clothing = filters.clothing;
+//   }
+//   if (filters.subCategory) {
+//     query.subCategory = filters.subCategory;
+//   }
+//   if (filters.productTitle) {
+//     query.productTitle = { $regex: filters.productTitle, $options: 'i' };
+//   }
+//   if (filters.country) {
+//     query.country = filters.country;
+//   }
+//   if (filters.city) {
+//     query.city = filters.city;
+//   }
+//   if (filters.state) {
+//     query.state = filters.state;
+//   }
+
+//   // Find the products based on the query
+//   const products = await Product.find(query);
+
+//   if (products.length === 0) {
+//     throw new ApiError(httpStatus.NOT_FOUND, 'No products found');
+//   }
+
+//   // Extract manufacturer emails from the products
+//   const manufacturerEmails = products.map((product) => product.productBy);
+//   const productBrand = products.map((product) => product.brand);
+//   // Find manufacturer details based on emails
+//   const manufacturers = await Manufacture.find({ email: { $in: manufacturerEmails } });
+
+//   if (manufacturers.length === 0) {
+//     throw new ApiError(httpStatus.NOT_FOUND, 'No manufacturer details found');
+//   }
+
+//   // Find corresponding brand details based on brandOwner
+//   const brands = await Brand.find({ brandName: { $in: productBrand } });
+
+//   if (brands.length === 0) {
+//     throw new ApiError(httpStatus.NOT_FOUND, 'No brand details found');
+//   }
+
+//   // Combine the products with their corresponding manufacturer and brand details
+//   const combinedData = products.map((product) => {
+//     const manufacturer = manufacturers.find((m) => m.email === product.productBy);
+//     const brand = brands.find((b) => b.brandOwner === product.productBy);
+//     return {
+//       product,
+//       manufacturer,
+//       brand,
+//     };
+//   });
+
+//   return { manufacturers: combinedData };
+// };
 const filterProductsAndFetchManufactureDetails = async (filters) => {
   const query = {};
 
@@ -287,35 +354,38 @@ const filterProductsAndFetchManufactureDetails = async (filters) => {
     throw new ApiError(httpStatus.NOT_FOUND, 'No products found');
   }
 
-  // Extract manufacturer emails from the products
-  const manufacturerEmails = products.map((product) => product.productBy);
+  // Extract brand values from the products
+  const productBrands = products.map((product) => product.brand);
 
-  // Find manufacturer details based on emails
-  const manufacturers = await Manufacture.find({ email: { $in: manufacturerEmails } });
-
-  if (manufacturers.length === 0) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'No manufacturer details found');
-  }
-
-  // Find corresponding brand details based on brandOwner
-  const brands = await Brand.find({ brandOwner: { $in: manufacturerEmails } });
+  // Find corresponding brand details based on the brand value from the products
+  const brands = await Brand.find({ brandName: { $in: productBrands } });
 
   if (brands.length === 0) {
     throw new ApiError(httpStatus.NOT_FOUND, 'No brand details found');
   }
 
-  // Combine the products with their corresponding manufacturer and brand details
+  // Extract brandOwner emails from the brands
+  const brandOwners = brands.map((brand) => brand.brandOwner);
+
+  // Find manufacturer details based on brandOwner emails
+  const manufacturers = await Manufacture.find({ email: { $in: brandOwners } });
+
+  if (manufacturers.length === 0) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'No manufacturer details found');
+  }
+
+  // Combine the products with their corresponding brand and manufacturer details
   const combinedData = products.map((product) => {
-    const manufacturer = manufacturers.find((m) => m.email === product.productBy);
-    const brand = brands.find((b) => b.brandOwner === product.productBy);
+    const brand = brands.find((b) => b.brandName === product.brand);
+    const manufacturer = manufacturers.find((m) => m.email === brand.brandOwner);
     return {
       product,
-      manufacturer,
       brand,
+      manufacturer,
     };
   });
 
-  return { manufacturers: combinedData };
+  return { combinedData };
 };
 
 module.exports = {
