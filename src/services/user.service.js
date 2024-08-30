@@ -1,5 +1,5 @@
 const httpStatus = require('http-status');
-const { User, Wholesaler, Manufacture, Retailer } = require('../models');
+const { User, Wholesaler, Manufacture, Retailer, Counter } = require('../models');
 const ApiError = require('../utils/ApiError');
 const { createManufacture } = require('./manufacture.service');
 const { createWholesaler } = require('./wholesaler.service');
@@ -10,43 +10,106 @@ const { createRetailer } = require('./retailer.service');
  * @param {Object} userBody
  * @returns {Promise<User>}
  */
+// const createUser = async (userBody) => {
+//   if (await User.isEmailTaken(userBody.email)) {
+//     throw new ApiError(httpStatus.BAD_REQUEST, 'Email already taken');
+//   }
+//   if (userBody.role === 'manufacture') {
+//     const data = {
+//       fullName: userBody.fullName,
+//       companyName: userBody.companyName,
+//       email: userBody.email,
+//       // enum: ['superadmin', 'manufacture', 'wholesaler', 'distributer'],
+//       mobNumber: userBody.mobileNumber,
+//       category: userBody.category,
+//     };
+//     await createManufacture(data);
+//   }
+//   if (userBody.role === 'wholesaler') {
+//     const data = {
+//       fullName: userBody.fullName,
+//       companyName: userBody.companyName,
+//       email: userBody.email,
+//       // enum: ['superadmin', 'manufacture', 'wholesaler', 'retailer'],
+//       mobNumber: userBody.mobileNumber,
+//       category: userBody.category,
+//     };
+//     await createWholesaler(data);
+//   }
+//   if (userBody.role === 'retailer') {
+//     const data = {
+//       fullName: userBody.fullName,
+//       companyName: userBody.companyName,
+//       email: userBody.email,
+//       // enum: ['superadmin', 'manufacture', 'wholesaler', 'distributer'],
+//       mobNumber: userBody.mobileNumber,
+//       category: userBody.category,
+//     };
+//     await createRetailer(data);
+//   }
+//   return User.create(userBody);
+// };
+
 const createUser = async (userBody) => {
+  // Check if the email is already taken
   if (await User.isEmailTaken(userBody.email)) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Email already taken');
   }
+
+  // Generate unique ID based on the user's role
+  let prefix;
+  if (userBody.role === 'manufacture') {
+    prefix = 'MAN';
+  } else if (userBody.role === 'wholesaler') {
+    prefix = 'WHO';
+  } else if (userBody.role === 'retailer') {
+    prefix = 'RET';
+  }
+
+  // Increment the sequence for the corresponding role
+  const counter = await Counter.findOneAndUpdate(
+    { role: userBody.role },
+    { $inc: { seq: 1 } },
+    { new: true, upsert: true }
+  );
+
+  // Assign the generated code to the userBody
+  userBody.code = `${prefix}${String(counter.seq).padStart(4, '0')}`;
+
+  // Create additional data based on role and create corresponding record
   if (userBody.role === 'manufacture') {
     const data = {
       fullName: userBody.fullName,
       companyName: userBody.companyName,
       email: userBody.email,
-      // enum: ['superadmin', 'manufacture', 'wholesaler', 'distributer'],
       mobNumber: userBody.mobileNumber,
       category: userBody.category,
+      code: userBody.code, // Pass the generated code
     };
     await createManufacture(data);
-  }
-  if (userBody.role === 'wholesaler') {
+  } else if (userBody.role === 'wholesaler') {
     const data = {
       fullName: userBody.fullName,
       companyName: userBody.companyName,
       email: userBody.email,
-      // enum: ['superadmin', 'manufacture', 'wholesaler', 'retailer'],
       mobNumber: userBody.mobileNumber,
       category: userBody.category,
+      code: userBody.code, // Pass the generated code
     };
     await createWholesaler(data);
-  }
-  if (userBody.role === 'retailer') {
+  } else if (userBody.role === 'retailer') {
     const data = {
       fullName: userBody.fullName,
       companyName: userBody.companyName,
       email: userBody.email,
-      // enum: ['superadmin', 'manufacture', 'wholesaler', 'distributer'],
       mobNumber: userBody.mobileNumber,
       category: userBody.category,
+      code: userBody.code, // Pass the generated code
     };
     await createRetailer(data);
   }
+
+  // Finally, create the user in the User collection
   return User.create(userBody);
 };
 
@@ -70,22 +133,17 @@ const queryUsers = async (filter, options) => {
  * @returns {Promise<User>}
  */
 const getUserById = async (id) => {
-  // Fetch the user and handle if not found
   const user = await User.findById(id);
   if (!user) {
     throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
   }
-
-  // Initialize profile variable
   let profile;
-
-  // Depending on the user's role, fetch the profile image from the appropriate collection
   switch (user.role) {
     case 'wholesaler':
       const wholesaler = await Wholesaler.findOne({ email: user.email });
       profile = wholesaler ? wholesaler.profileImg : null;
       break;
-    case 'manufacturer': // Fixed typo from 'manufacture' to 'manufacturer'
+    case 'manufacturer':
       const manufacturer = await Manufacture.findOne({ email: user.email });
       profile = manufacturer ? manufacturer.profileImg : null;
       break;
@@ -94,11 +152,10 @@ const getUserById = async (id) => {
       profile = retailer ? retailer.profileImg : null;
       break;
     default:
-      profile = null; // Default case if the role does not match any expected values
+      profile = null;
   }
 
-  // Return the user object with the profile image
-  return { ...user.toObject(), profile }; // `user.toObject()` to ensure a plain JavaScript object
+  return { ...user.toObject(), profile };
 };
 
 /**

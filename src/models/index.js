@@ -38,3 +38,4 @@ module.exports.Cart = require('./cart.model');
 module.exports.Request = require('./request.model');
 module.exports.Doc = require('./doc.model');
 module.exports.ProductType = require('./product.type.model');
+module.exports.Counter = require('./counter.model');
