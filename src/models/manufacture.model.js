@@ -70,14 +70,13 @@ const manufactureSchema = mongoose.Schema(
     },
     email2: {
       type: String,
-      unique: true,
-      trim: true,
-      lowercase: true,
-      validate(value) {
-        if (!validator.isEmail(value)) {
-          throw new Error('Invalid email');
-        }
-      },
+      // trim: true,
+      // lowercase: true,
+      // validate(value) {
+      //   if (!validator.isEmail(value)) {
+      //     throw new Error('Invalid email');
+      //   }
+      // },
     },
     GSTIN: {
       type: String,
