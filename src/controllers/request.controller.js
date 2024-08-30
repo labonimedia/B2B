@@ -17,11 +17,16 @@ const createMultipleRequests = catchAsync(async (req, res) => {
 //   const request = await requestService.acceptRequest(req.params.id, req.user);
 //   res.status(httpStatus.OK).send(request);
 // });
+// const acceptRequest = catchAsync(async (req, res) => {
+//     const { id, requestbyemail, requesttoemail, status } = req.params;
+//     const request = await requestService.acceptRequest(id, requestbyemail, requesttoemail, status);
+//     res.status(httpStatus.OK).send(request);
+//   });
 const acceptRequest = catchAsync(async (req, res) => {
-    const { id, requestbyemail, requesttoemail } = req.params;
-    const request = await requestService.acceptRequest(id, requestbyemail, requesttoemail);
-    res.status(httpStatus.OK).send(request);
-  });
+  const { id, requestbyemail, requesttoemail, status } = req.params;
+  const request = await requestService.acceptRequest(id, requestbyemail, requesttoemail, status);
+  res.status(httpStatus.OK).send(request);
+});
 const getRequestById = catchAsync(async (req, res) => {
   const request = await requestService.getRequestById(req.params.id);
   if (!request) {
