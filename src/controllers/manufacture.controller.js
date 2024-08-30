@@ -40,6 +40,16 @@ const getManufactureByEmail = catchAsync(async (req, res) => {
   res.send(user);
 });
 
+const getRetailersByEmail = catchAsync(async (req, res) => {
+  const { refByEmail, searchKeywords } = req.query;
+  const options = pick(req.query, ['sortBy', 'limit', 'page']);
+  const user = await manufactureService.getRetailersByEmail(refByEmail, searchKeywords, options);
+  if (!user) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Manufaturer not found');
+  }
+  res.send(user);
+});
+
 const updateManufactureById = catchAsync(async (req, res) => {
   const user = await manufactureService.updateManufactureById(req.params.email, req.body);
   res.send(user);
@@ -58,4 +68,5 @@ module.exports = {
   fileupload,
   updateManufactureById,
   deleteManufactureById,
+  getRetailersByEmail
 };
