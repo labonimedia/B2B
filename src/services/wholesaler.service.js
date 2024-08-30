@@ -14,10 +14,12 @@ const fileupload = async (req, id) => {
  
   const extractPath = (url) => new URL(url).pathname;
   const file = req.body.file ? extractPath(req.body.file[0]) : null;
+  const profileImg = req.body.profileImg ? extractPath(req.body.profileImg[0]) : null;
   const fileName = req.body.fileName || '';
 
   wholesaler.file = file;
   wholesaler.fileName = fileName;
+  wholesaler.profileImg = profileImg;
 
   await wholesaler.save();
   return wholesaler;

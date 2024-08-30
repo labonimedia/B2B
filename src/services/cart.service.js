@@ -8,7 +8,6 @@ const addToCart = async (email, productBy, productId, quantity) => {
     throw new ApiError(httpStatus.NOT_FOUND, 'Product not found');
   }
 
-
   let cart = await Cart.findOne({ email, productBy });
   if (!cart) {
     cart = new Cart({ email, productBy, products: [] });
@@ -92,15 +91,9 @@ const getCartByEmail = async (email) => {
     throw new ApiError(httpStatus.NOT_FOUND, 'Cart not found');
   }
 
-  // Extract the unique productBy emails from the products
   const productByEmails = [...new Set(cart.products.map(item => item.productId.productBy))];
-
-  // Find manufacturer details based on the productBy emails
   const manufacturers = await Manufacture.find({ email: { $in: productByEmails } });
-
-  // Create a map of manufacturer emails to their full names
   const manufacturerMap = new Map(manufacturers.map(manufacturer => [manufacturer.email, manufacturer.fullName]));
-
   // Group products by manufacturer and include the manufacturer's full name
   const groupedCart = cart.products.reduce((acc, item) => {
     const { productBy } = item.productId;
