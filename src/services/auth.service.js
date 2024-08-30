@@ -83,6 +83,7 @@ const verifyEmail = async (email, otp) => {
 
     await otpService.verifyOtp(email, otp);
     const user = await userService.getUserByEmail(email);
+    console.log(user);
     if (!user) {
       throw new Error();
     }
