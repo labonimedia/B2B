@@ -26,4 +26,8 @@ router
   .route('/get-referred/manufactures')
   .get(auth('superadmin', 'manufacture'), manufactureController.getManufactureByEmail);
 
+  router
+  .route('/get-referred/retailers')
+  .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), manufactureController.getRetailersByEmail);
+  
 module.exports = router;

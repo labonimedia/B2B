@@ -1,5 +1,5 @@
 const httpStatus = require('http-status');
-const { Manufacture, User, Wholesaler } = require('../models');
+const { Manufacture, User, Wholesaler, Retailer } = require('../models');
 const ApiError = require('../utils/ApiError');
 
 /**
@@ -69,7 +69,7 @@ const getManufactureById = async (id) => {
 
 const getManufactureByEmail = async (refByEmail, searchKeywords = '', options = {}) => {
   // Step 1: Find users with the specified email in their refByEmail field
-  const users = await User.find({ refByEmail });
+  const users = await User.find({ refByEmail: refByEmail });
   if (!users || users.length === 0) {
     throw new Error('No users found with the specified refByEmail');
   }
@@ -93,6 +93,38 @@ const getManufactureByEmail = async (refByEmail, searchKeywords = '', options = 
   return manufactures;
 };
 
+
+/**
+ * Get manufacture by id
+ * @param {variable} refByEmail
+ * @returns {Promise<Manufacture>}
+ */
+
+const getRetailersByEmail = async (refByEmail, searchKeywords = '', options = {}) => {
+  // Step 1: Find users with the specified email in their refByEmail field
+  const users = await User.find({ refByEmail: refByEmail });
+  if (!users || users.length === 0) {
+    throw new Error('No users found with the specified refByEmail');
+  }
+  // Step 2: Extract the emails of the referred users
+  const referredEmails = users.map(user => user.email);
+  if (referredEmails.length === 0) {
+    throw new Error('No referred emails found');
+  }
+  const searchRegex = new RegExp(searchKeywords, 'i'); 
+  // Step 3: Create a filter for the Manufacture records
+  const manufactureFilter = {
+    email: { $in: referredEmails },
+    $or: [
+      { fullName: { $regex: searchRegex } },
+      { companyName: { $regex: searchRegex } },
+      { country: { $regex: searchRegex } },
+      { city: { $regex: searchRegex } }
+    ]
+  };
+  const manufactures = await Retailer.paginate(manufactureFilter, options);
+  return manufactures;
+};
 
 /**
  * Get user by email
@@ -142,4 +174,5 @@ module.exports = {
   fileupload,
   updateManufactureById,
   deleteManufactureById,
+  getRetailersByEmail
 };
