@@ -70,27 +70,37 @@ const queryUsers = async (filter, options) => {
  * @returns {Promise<User>}
  */
 const getUserById = async (id) => {
-  const user =  User.findById(id);
+  // Fetch the user and handle if not found
+  const user = await User.findById(id);
   if (!user) {
     throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
-  };
+  }
+
+  // Initialize profile variable
   let profile;
-  if(user.role === 'wholesaler') {
-    const wholesaler = await Wholesaler.findOne({email:user.email});
-    profile = wholesaler.profileImg;
-};
-if(user.role === 'manufacture') {
-  const manufacture = await Manufacture.findOne({email:user.email});
-  profile = manufacture.profileImg;
-};
-if(user.role === 'retailer') {
-  const manufacture = await Retailer.findOne({email:user.email});
-  profile = manufacture.profileImg;
+
+  // Depending on the user's role, fetch the profile image from the appropriate collection
+  switch (user.role) {
+    case 'wholesaler':
+      const wholesaler = await Wholesaler.findOne({ email: user.email });
+      profile = wholesaler ? wholesaler.profileImg : null;
+      break;
+    case 'manufacturer': // Fixed typo from 'manufacture' to 'manufacturer'
+      const manufacturer = await Manufacture.findOne({ email: user.email });
+      profile = manufacturer ? manufacturer.profileImg : null;
+      break;
+    case 'retailer':
+      const retailer = await Retailer.findOne({ email: user.email });
+      profile = retailer ? retailer.profileImg : null;
+      break;
+    default:
+      profile = null; // Default case if the role does not match any expected values
+  }
+
+  // Return the user object with the profile image
+  return { ...user.toObject(), profile }; // `user.toObject()` to ensure a plain JavaScript object
 };
 
-
-return {...user, profile}
-}
 /**
  * Get user by email
  * @param {string} email
