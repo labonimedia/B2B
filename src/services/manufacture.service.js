@@ -20,13 +20,18 @@ const fileupload = async (req, id) => {
   }
  
   const extractPath = (url) => new URL(url).pathname;
-  const file = req.body.file ? extractPath(req.body.file[0]) : null;
-  const profileImg = req.body.profileImg ? extractPath(req.body.profileImg[0]) : null;
-  const fileName = req.body.fileName || '';
-
-  manufacture.file = file;
-  manufacture.fileName = fileName;
-  manufacture.profileImg = profileImg;
+  if(req.body.file){
+    const file = req.body.file ? extractPath(req.body.file[0]) : null;
+    manufacture.file = file
+  }
+  if (req.body.profileImg){
+    const profileImg = req.body.profileImg ? extractPath(req.body.profileImg[0]) : null;
+    manufacture.profileImg = profileImg;
+  }
+  if (req.body.fileName){
+    const fileName = req.body.fileName || '';
+    manufacture.fileName = fileName;
+  }
 
   await manufacture.save();
   return manufacture;
