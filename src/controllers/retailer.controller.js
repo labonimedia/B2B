@@ -10,13 +10,6 @@ const fileupload = catchAsync(async (req, res) => {
 });
 
 const createRetailer = catchAsync(async (req, res) => {
-  if (!req.body.logo || req.body.logo.length === 0) {
-    throw new ApiError(httpStatus.BAD_REQUEST, 'Retailer logo not provided');
-  }
-  const brandLogoUrl = req.body.logo[0];
-  const brandLogoPath = new URL(brandLogoUrl).pathname;
-
-  req.body.logo = brandLogoPath;
   const user = await retailerService.createRetailer(req.body);
   res.status(httpStatus.CREATED).send(user);
 });
