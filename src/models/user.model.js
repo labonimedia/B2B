@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const validator = require('validator');
 const bcrypt = require('bcryptjs');
 const { toJSON, paginate } = require('./plugins');
+const Counter = require('./counter.model');
 
 const userSchema = mongoose.Schema(
   {
@@ -43,6 +44,10 @@ const userSchema = mongoose.Schema(
     },
     code: {
       type: String,
+    },
+    userId: {
+      type: String,
+      unique: true, // Ensure that codes are unique
     },
     mobileNumber: {
       type: String,
@@ -102,7 +107,33 @@ userSchema.pre('save', async function (next) {
   }
   next();
 });
+userSchema.pre('save', async function (next) {
+  const user = this;
+  
+  if (user.isNew) {
+    let prefix;
+    if (user.role === 'manufacturer') {
+      prefix = 'MAN';
+    } else if (user.role === 'wholesaler') {
+      prefix = 'WHO';
+    } else if (user.role === 'retailer') {
+      prefix = 'RET';
+    } else {
+      next(new Error('Invalid role for generating ID'));
+      return;
+    }
 
+    const counter = await Counter.findOneAndUpdate(
+      { role: user.role },
+      { $inc: { seq: 1 } },
+      { new: true, upsert: true }
+    );
+
+    user.userId = `${prefix}${String(counter.seq).padStart(4, '0')}`;
+  }
+
+  next();
+});
 /**
  * @typedef User
  */

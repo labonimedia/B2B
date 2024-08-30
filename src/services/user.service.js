@@ -1,5 +1,5 @@
 const httpStatus = require('http-status');
-const { User } = require('../models');
+const { User, Wholesaler, Manufacture, Retailer } = require('../models');
 const ApiError = require('../utils/ApiError');
 const { createManufacture } = require('./manufacture.service');
 const { createWholesaler } = require('./wholesaler.service');
@@ -70,9 +70,27 @@ const queryUsers = async (filter, options) => {
  * @returns {Promise<User>}
  */
 const getUserById = async (id) => {
-  return User.findById(id);
+  const user =  User.findById(id);
+  if (!user) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+  };
+  let profile;
+  if(role === 'wholesaler') {
+    const wholesaler = await Wholesaler.findOne({email:user.email});
+    profile = wholesaler.profileImg;
+};
+if(role === 'manufacture') {
+  const manufacture = await Manufacture.findOne({email:user.email});
+  profile = manufacture.profileImg;
+};
+if(role === 'retailer') {
+  const manufacture = await Retailer.findOne({email:user.email});
+  profile = manufacture.profileImg;
 };
 
+
+return {...user, profile}
+}
 /**
  * Get user by email
  * @param {string} email
