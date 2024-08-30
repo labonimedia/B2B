@@ -4,6 +4,19 @@ const { toJSON, paginate } = require('./plugins');
 
 const retailerSchema = mongoose.Schema(
   {
+    discountGiven: [
+      {
+        discountGivenBy: {
+          type: String,
+        },
+        discountPercentage: {
+          type: Number,
+        },
+      },
+    ],
+    logo: {
+      type: String,
+    },
     file: {
       type: String,
     },
@@ -55,13 +68,6 @@ const retailerSchema = mongoose.Schema(
     },
     email2: {
       type: String,
-      // trim: true,
-      // lowercase: true,
-      // validate(value) {
-      //   if (!validator.isEmail(value)) {
-      //     throw new Error('Invalid email');
-      //   }
-      // },
     },
     GSTIN: {
       type: String,
