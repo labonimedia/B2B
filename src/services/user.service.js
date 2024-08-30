@@ -143,7 +143,7 @@ const getUserById = async (id) => {
       const wholesaler = await Wholesaler.findOne({ email: user.email });
       profile = wholesaler ? wholesaler.profileImg : null;
       break;
-    case 'manufacturer':
+    case 'manufacture':
       const manufacturer = await Manufacture.findOne({ email: user.email });
       profile = manufacturer ? manufacturer.profileImg : null;
       break;
