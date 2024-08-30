@@ -94,7 +94,7 @@ const requestSchema = mongoose.Schema(
     },
     status: {
       type: String,
-      enum: ['pending', 'accepted'],
+      enum: ['pending', 'accepted','rejected'],
       default: 'pending',
     },
     // Updated requestBy fields
@@ -128,6 +128,9 @@ const requestSchema = mongoose.Schema(
     requestByMobileNumber: {
       type: String,
       required: true,
+    },
+    requestByCountryCode: {
+      type: String,
     },
     requestByRole: {
       type: String,
