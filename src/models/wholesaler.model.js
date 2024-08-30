@@ -32,6 +32,9 @@ const wholesalerSchema = mongoose.Schema(
         }
       },
     },
+    introduction: {
+      type: String,
+    },
     address: {
       type: String,
     },
