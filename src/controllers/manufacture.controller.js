@@ -11,12 +11,19 @@ const fileupload = catchAsync(async (req, res) => {
 
 
 const createManufacture = catchAsync(async (req, res) => {
+  if (!req.body.logo || req.body.logo.length === 0) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Manufracture logo not provided');
+  }
+  const brandLogoUrl = req.body.logo[0];
+  const brandLogoPath = new URL(brandLogoUrl).pathname;
+
+  req.body.logo = brandLogoPath;
   const user = await manufactureService.createManufacture(req.body);
   res.status(httpStatus.CREATED).send(user);
 });
 
 const queryManufacture = catchAsync(async (req, res) => {
-  const filter = pick(req.query, ['name', 'role', 'status']);
+  const filter = pick(req.query, ['name', 'role', 'status','fullName','companyName','email']);
   const options = pick(req.query, ['sortBy', 'limit', 'page']);
   const result = await manufactureService.queryManufacture(filter, options);
   res.send(result);

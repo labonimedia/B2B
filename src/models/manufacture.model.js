@@ -5,6 +5,10 @@ const { toJSON, paginate } = require('./plugins');
 
 const manufactureSchema = mongoose.Schema(
   {
+  
+    logo: {
+      type: String,
+    },
     file: {
       type: String,
     },
