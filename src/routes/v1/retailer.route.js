@@ -12,7 +12,7 @@ router.route('/upload/doc/:id').post(
 );
 router
   .route('/')
-  .post(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),commonUploadMiddleware([{ name: 'logo', maxCount: 1 }]), retailerController.createRetailer)
+  .post(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), retailerController.createRetailer)
   .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), retailerController.queryRetailer);
 
 router
