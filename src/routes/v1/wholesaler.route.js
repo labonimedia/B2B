@@ -28,4 +28,13 @@ router
   .route('/get-referred/retailer')
   .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), wholesalerController.getRetailerByEmail);
 
+
+  router
+  .route('/assigndiscount/:wholesalerId')
+  .post(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), wholesalerController.assignDiscount);
+
+  router
+  .route('/getdiscount/:wholesalerId/:discountGivenBy')
+  .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), wholesalerController.getDiscountByGivenBy);
+
 module.exports = router;

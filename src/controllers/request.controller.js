@@ -23,7 +23,8 @@ const createMultipleRequests = catchAsync(async (req, res) => {
 //     res.status(httpStatus.OK).send(request);
 //   });
 const acceptRequest = catchAsync(async (req, res) => {
-  const { id, requestbyemail, requesttoemail, status } = req.params;
+  const { id, requestbyemail, requesttoemail} = req.params;
+  const { status } = req.body;
   const request = await requestService.acceptRequest(id, requestbyemail, requesttoemail, status);
   res.status(httpStatus.OK).send(request);
 });

@@ -2,8 +2,6 @@ const httpStatus = require('http-status');
 const { Wholesaler, User, Retailer } = require('../models');
 const ApiError = require('../utils/ApiError');
 
-
-
 const fileupload = async (req, id) => {
   // Find the document by ID
   const wholesaler = await Wholesaler.findById(id);
@@ -11,7 +9,7 @@ const fileupload = async (req, id) => {
   if (!wholesaler) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Wholesaler not found');
   }
- 
+
   const extractPath = (url) => new URL(url).pathname;
   const file = req.body.file ? extractPath(req.body.file[0]) : null;
   const fileName = req.body.fileName || '';
@@ -141,9 +139,9 @@ const getRetailerByEmail = async (refByEmail, searchKeywords = '', options = {})
   if (!users || users.length === 0) {
     throw new Error('No users found with the specified refByEmail');
   }
-  
+
   // Step 2: Extract the emails of the referred users
-  const referredEmails = users.map(user => user.email);
+  const referredEmails = users.map((user) => user.email);
   if (referredEmails.length === 0) {
     throw new Error('No referred emails found');
   }
@@ -156,8 +154,8 @@ const getRetailerByEmail = async (refByEmail, searchKeywords = '', options = {})
       { fullName: { $regex: searchRegex } },
       { companyName: { $regex: searchRegex } },
       { country: { $regex: searchRegex } },
-      { city: { $regex: searchRegex } }
-    ]
+      { city: { $regex: searchRegex } },
+    ],
   };
 
   // Use pagination options if provided
@@ -184,6 +182,38 @@ const getRetailerByEmail = async (refByEmail, searchKeywords = '', options = {})
 //   const manufactures = await Retailer.paginate(manufactureFilter, options);
 //   return manufactures;
 // };
+
+const assignOrUpdateDiscount = async (wholesalerId, discountGivenBy, discountPercentage) => {
+  const wholesaler = await Wholesaler.findById(wholesalerId);
+  if (!wholesaler) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Wholesaler not found');
+  }
+  const existingDiscountIndex = wholesaler.discountGiven.findIndex(
+    (discount) => discount.discountGivenBy === discountGivenBy
+  );
+  if (existingDiscountIndex !== -1) {
+    // Update the existing discount
+    wholesaler.discountGiven[existingDiscountIndex].discountPercentage = discountPercentage;
+  } else {
+    // Add new discount entry
+    wholesaler.discountGiven.push({ discountGivenBy, discountPercentage });
+  }
+  await wholesaler.save();
+  return wholesaler;
+};
+
+const getDiscountByGivenBy = async (wholesalerId, discountGivenBy) => {
+  const wholesaler = await Wholesaler.findById(wholesalerId);
+  if (!wholesaler) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Wholesaler not found');
+  }
+  const discount = wholesaler.discountGiven.find((discount) => discount.discountGivenBy === discountGivenBy);
+  if (!discount) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Discount not found');
+  }
+  return discount;
+};
+
 module.exports = {
   createWholesaler,
   queryWholesaler,
@@ -195,4 +225,6 @@ module.exports = {
   getUser,
   fileupload,
   getUsersByEmails,
+  assignOrUpdateDiscount,
+  getDiscountByGivenBy,
 };
