@@ -15,6 +15,9 @@ const manufactureSchema = mongoose.Schema(
     fileName: {
       type: String,
     },
+    profileImg: {
+      type: String,
+    },
     currency: {
       type: String,
     },
