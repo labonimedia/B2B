@@ -13,7 +13,7 @@ router.route('/upload/doc/:id').post(
 
 router
   .route('/')
-  .post(auth('superadmin', 'manufacture'), manufactureController.createManufacture)
+  .post(auth('superadmin', 'manufacture'), commonUploadMiddleware([{ name: 'logo', maxCount: 1 }]), manufactureController.createManufacture)
   .get(auth('superadmin', 'manufacture'), manufactureController.queryManufacture);
 
 router

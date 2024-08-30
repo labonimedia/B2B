@@ -4,6 +4,19 @@ const { toJSON, paginate } = require('./plugins');
 
 const wholesalerSchema = mongoose.Schema(
   {
+    discountGiven: [
+      {
+        discountGivenBy: {
+          type: String,
+        },
+        discountPercentage: {
+          type: Number,
+        },
+      },
+    ],
+    logo: {
+      type: String,
+    },
     file: {
       type: String,
     },
@@ -79,7 +92,7 @@ const wholesalerSchema = mongoose.Schema(
     turnover: {
       type: String,
     },
-    registerOnFTH : {
+    registerOnFTH: {
       type: Date,
     },
     code: {
