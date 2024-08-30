@@ -83,6 +83,18 @@ const getRetailerByEmail = catchAsync(async (req, res) => {
   res.send(user);
 });
 
+const assignDiscount = catchAsync(async (req, res) => {
+  const { wholesalerId } = req.params;
+  const { discountGivenBy, discountPercentage } = req.body;
+  const wholesaler = await wholesalerService.assignOrUpdateDiscount(wholesalerId, discountGivenBy, discountPercentage);
+  res.status(httpStatus.OK).send(wholesaler);
+});
+
+const getDiscountByGivenBy = catchAsync(async (req, res) => {
+  const { wholesalerId, discountGivenBy } = req.params;
+  const discount = await wholesalerService.getDiscountByGivenBy(wholesalerId, discountGivenBy);
+  res.status(httpStatus.OK).send(discount);
+})
 module.exports = {
   createWholesaler,
   queryWholesaler,
@@ -92,4 +104,6 @@ module.exports = {
   updateWholesalerById,
   deleteWholesalerById,
   getManufactureList,
+  assignDiscount,
+  getDiscountByGivenBy
 };
