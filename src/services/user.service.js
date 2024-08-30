@@ -75,15 +75,15 @@ const getUserById = async (id) => {
     throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
   };
   let profile;
-  if(role === 'wholesaler') {
+  if(user.role === 'wholesaler') {
     const wholesaler = await Wholesaler.findOne({email:user.email});
     profile = wholesaler.profileImg;
 };
-if(role === 'manufacture') {
+if(user.role === 'manufacture') {
   const manufacture = await Manufacture.findOne({email:user.email});
   profile = manufacture.profileImg;
 };
-if(role === 'retailer') {
+if(user.role === 'retailer') {
   const manufacture = await Retailer.findOne({email:user.email});
   profile = manufacture.profileImg;
 };
