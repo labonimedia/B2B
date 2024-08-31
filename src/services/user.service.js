@@ -164,6 +164,7 @@ const getUserById = async (id) => {
  * @returns {Promise<User>}
  */
 const getUserByEmail = async (email) => {
+  console.log('getUserByEmail', email);
   return User.findOne({ email });
 };
 

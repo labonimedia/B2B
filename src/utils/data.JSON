@@ -1,0 +1,33 @@
+[{
+    "productType":"Clothing",
+    "gender":"Male",
+    "category": "Shirt",
+    "subCategory": "Shirts",
+    "inputs": ["Material",	"Pattern",	"Occasion",	"Lifestyle",	"Fit Type",	"Neck Style",	"Special Features",	"Closure Type",	"Pocket Description",	"Sleeve Cuff Style",	"Sleeve Length",	"Care Instructions",	"Colour",	"Size Set"
+]
+},
+{
+    "productType":"Clothing",
+    "gender":"Male",
+    "category": "T-shirts & Polos",
+    "subCategory": "T-Shirts",
+    "inputs": ["Material",	"Pattern",	"Occasion",	"Lifestyle",	"Fit Type",	"Neck Style",	"Special Features",	"Closure Type",	"Pocket Description",	"Sleeve Cuff Style",	"Sleeve Length",	"Care Instructions",	"Colour",	"Size Set"
+]  
+},
+{
+    "productType":"Clothing",
+    "gender":"Male",
+    "category": "T-shirts & Polos",
+    "subCategory": "Tank Tops",
+    "inputs": ["Material",	"Pattern",	"Occasion",	"Lifestyle",	"Fit Type",	"Neck Style",	"Special Features",	"Closure Type",	"Pocket Description",	"Sleeve Cuff Style",	"Sleeve Length",	"Care Instructions",	"Colour",	"Size Set"
+]  
+},
+{
+    "productType":"Clothing",
+    "gender":"Male",
+    "category": "T-shirts & Polos",
+    "subCategory": "Polos",
+    "inputs": ["Material",	"Pattern",	"Occasion",	"Lifestyle",	"Fit Type",	"Special Features",	"Closure Type",	"Pocket Description",	"Sleeve Cuff Style",	"Sleeve Length",	"Care Instructions",	"Colour",	"Size Set"
+]  
+}
+]
