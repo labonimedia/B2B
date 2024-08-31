@@ -20,4 +20,8 @@ router.route('/:id').get(auth('superadmin', 'manufacture', 'wholesaler', 'retail
 router
   .route('/cart-products/:email')
   .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), cartController.getCartByEmail);
+
+  router
+  .route('/place-order/products/:email')
+  .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), cartController.getCartByEmail);
 module.exports = router;
