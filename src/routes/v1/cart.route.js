@@ -23,5 +23,5 @@ router
 
   router
   .route('/place-order/products/:email')
-  .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), cartController.getCartByEmail);
+  .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), cartController.getCartByEmailToPlaceOrder);
 module.exports = router;
