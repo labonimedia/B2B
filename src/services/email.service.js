@@ -47,8 +47,9 @@ If you did not request any password resets, then ignore this email.`;
  * @returns {Promise}
  */
 const sendVerificationEmail = async (to) => {
-  const otpCode = otpService.generateOTP();
-  await otpService.createOtp(to, otpCode);
+  const otpCode = await otpService.generateOTP();
+ const otp =  await otpService.createOtp(to, otpCode);
+ console.log(otp)
   const subject = 'Email Verification';
   // replace this url with the link to the email verification page of your front-end app
   const text = `Dear user,

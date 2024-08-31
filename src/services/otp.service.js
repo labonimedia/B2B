@@ -17,9 +17,9 @@ const generateOTP = () => {
 };
 
 const verifyOtp = async (email, otp) => {
-  const otpDoc = await Otp.find({ email, otp });
-
-  if (!otpDoc[0] || !otpDoc[0].otp) {
+  const otpDoc = await Otp.findOne({ email, otp });
+console.log('verifyOtp',email, otp, otpDoc )
+  if (!otpDoc || !otpDoc.otp) {
     throw new Error('Otp does not match');
   }
 
