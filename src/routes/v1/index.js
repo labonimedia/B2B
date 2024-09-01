@@ -40,6 +40,7 @@ const cartRoute = require('./cart.route');
 const requestRoute = require('./request.route');
 const dockRoute = require('./doc.route');
 const productTypeRoute = require('./product.type.route');
+const mappingRoute = require('./mapping.route');
 
 const router = express.Router();
 
@@ -200,7 +201,10 @@ const defaultRoutes = [
   {
     path: '/doc',
     route: dockRoute,
-  }
+  },{
+    path: '/mapping',
+    route: mappingRoute,
+  },
 ];
 
 const devRoutes = [
