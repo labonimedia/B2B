@@ -1,8 +1,11 @@
 const httpStatus = require('http-status');
+const fs = require('fs');
+const path = require('path');
 const pick = require('../utils/pick');
 const ApiError = require('../utils/ApiError');
 const catchAsync = require('../utils/catchAsync');
 const { subCategoryService } = require('../services');
+// const products = require('../utils/')
 
 const createSubCategory = catchAsync(async (req, res) => {
   const user = await subCategoryService.createSubCategory(req.body);
@@ -30,6 +33,21 @@ const getSubCategoryById = catchAsync(async (req, res) => {
   }
   res.send(user);
 });
+
+// const getMapping = catchAsync(async (req, res) => {
+//   const { productType, gender, category, subCategory } = req.query;
+//   const filteredProducts = products.filter(product =>
+//       (!productType || product.productType === productType) &&
+//       (!gender || product.gender === gender) &&
+//       (!category || product.category === category) &&
+//       (!subCategory || product.subCategory === subCategory)
+//   );
+//   if (filteredProducts.length > 0) {
+//       res.send(filteredProducts);
+//   } else {
+//     throw new ApiError(httpStatus.NOT_FOUND, 'No products found matching the criteria.');
+//   }
+// });
 
 const updateSubCategoryById = catchAsync(async (req, res) => {
   const user = await subCategoryService.updateSubCategoryById(req.params.id, req.body);
