@@ -61,3 +61,4 @@ module.exports.TrouserFitType = require('./trouser.fit.type.model');
 module.exports.RiseStyle = require('./rise.style.model');
 module.exports.TrouserStyle = require('./trouser.style.model');
 module.exports.TrouserPocket = require('./trouser.pocket.model');
+module.exports.ShirtSizeSet = require('./shirt.size.set.model');
