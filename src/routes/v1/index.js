@@ -252,7 +252,9 @@ const defaultRoutes = [
     path: '/trouserpocket',
     route: trouserPocketRoute,
   },
-  {
+
+  
+ {
     path: '/mapping',
     route: mappingRoute,
   }
