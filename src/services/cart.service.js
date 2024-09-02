@@ -380,71 +380,78 @@ const getCartByEmailToPlaceOrder = async (email, productBy) => {
 
 
 const getCartByEmail = async (email) => {
-  // Find the cart by email and populate the product details
-  const cart = await Cart.find({ email }).populate('products.productId');
-  if (!cart) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Cart not found');
+  // Find all carts by email and populate the product details
+  const carts = await Cart.find({ email }).populate('products.productId');
+  if (!carts || carts.length === 0) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'No carts found for this email');
   }
 
-  const productByEmails = [...new Set(cart.products.map(item => item.productId.productBy))];
+  // Extract unique manufacturer emails from all cart products
+  const productByEmails = [...new Set(carts.flatMap(cart => cart.products.map(item => item.productId.productBy)))];
+
+  // Fetch manufacturers based on extracted emails
   const manufacturers = await Manufacture.find({ email: { $in: productByEmails } });
   const manufacturerMap = new Map(manufacturers.map(manufacturer => [manufacturer.email, manufacturer.fullName]));
+
   // Group products by manufacturer and include the manufacturer's full name
-  const groupedCart = cart.products.reduce((acc, item) => {
-    const { productBy } = item.productId;
-    if (!acc[productBy]) {
-      acc[productBy] = {
-        fullName: manufacturerMap.get(productBy) || 'Unknown Manufacturer',
-        products: []
-      };
-    }
-    acc[productBy].products.push({
-      quantity: item.quantity,
-      _id: item._id,
-      productId: {
-        selectedOccasion: item.productId.selectedOccasion,
-        selectedlifeStyle: item.productId.selectedlifeStyle,
-        specialFeature: item.productId.specialFeature,
-        designNumber: item.productId.designNumber,
-        brand: item.productId.brand,
-        productType: item.productId.productType,
-        gender: item.productId.gender,
-        clothing: item.productId.clothing,
-        subCategory: item.productId.subCategory,
-        productTitle: item.productId.productTitle,
-        productDescription: item.productId.productDescription,
-        material: item.productId.material,
-        materialvariety: item.productId.materialvariety,
-        fabricPattern: item.productId.fabricPattern,
-        fitStyle: item.productId.fitStyle,
-        neckStyle: item.productId.neckStyle,
-        closureType: item.productId.closureType,
-        pocketDescription: item.productId.pocketDescription,
-        sleeveCuffStyle: item.productId.sleeveCuffStyle,
-        sleeveLength: item.productId.sleeveLength,
-        careInstructions: item.productId.careInstructions,
-        sizes: item.productId.sizes,
-        ProductDeimension: item.productId.ProductDeimension,
-        setOFnetWeight: item.productId.setOFnetWeight,
-        setOfMRP: item.productId.setOfMRP,
-        setOfManPrice: item.productId.setOfManPrice,
-        currency: item.productId.currency,
-        quantity: item.productId.quantity,
-        dateOfManufacture: item.productId.dateOfManufacture,
-        dateOfListing: item.productId.dateOfListing,
-        productBy: item.productId.productBy,
-        colourCollections: item.productId.colourCollections,
-        id: item.productId._id,
-      },
+  const groupedCart = carts.reduce((acc, cart) => {
+    cart.products.forEach(item => {
+      const productBy = item.productId.productBy;
+      if (!acc[productBy]) {
+        acc[productBy] = {
+          fullName: manufacturerMap.get(productBy) || 'Unknown Manufacturer',
+          products: []
+        };
+      }
+      acc[productBy].products.push({
+        quantity: item.quantity,
+        _id: item._id,
+        productId: {
+          selectedOccasion: item.productId.selectedOccasion,
+          selectedlifeStyle: item.productId.selectedlifeStyle,
+          specialFeature: item.productId.specialFeature,
+          designNumber: item.productId.designNumber,
+          brand: item.productId.brand,
+          productType: item.productId.productType,
+          gender: item.productId.gender,
+          clothing: item.productId.clothing,
+          subCategory: item.productId.subCategory,
+          productTitle: item.productId.productTitle,
+          productDescription: item.productId.productDescription,
+          material: item.productId.material,
+          materialvariety: item.productId.materialvariety,
+          fabricPattern: item.productId.fabricPattern,
+          fitStyle: item.productId.fitStyle,
+          neckStyle: item.productId.neckStyle,
+          closureType: item.productId.closureType,
+          pocketDescription: item.productId.pocketDescription,
+          sleeveCuffStyle: item.productId.sleeveCuffStyle,
+          sleeveLength: item.productId.sleeveLength,
+          careInstructions: item.productId.careInstructions,
+          sizes: item.productId.sizes,
+          ProductDeimension: item.productId.ProductDeimension,
+          setOFnetWeight: item.productId.setOFnetWeight,
+          setOfMRP: item.productId.setOfMRP,
+          setOfManPrice: item.productId.setOfManPrice,
+          currency: item.productId.currency,
+          quantity: item.productId.quantity,
+          dateOfManufacture: item.productId.dateOfManufacture,
+          dateOfListing: item.productId.dateOfListing,
+          productBy: item.productId.productBy,
+          colourCollections: item.productId.colourCollections,
+          id: item.productId._id,
+        },
+      });
     });
     return acc;
   }, {});
 
-  // Convert the object to an array of objects
+  // Convert the grouped object to an array of objects
   const formattedCart = Object.values(groupedCart);
 
   return formattedCart;
 };
+
 /**
  * Get Cart by id
  * @param {ObjectId} id
