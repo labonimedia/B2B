@@ -48,4 +48,5 @@ module.exports.trouserFitTypeController = require('./trouser.fit.type.controller
 module.exports.riseStyleController = require('./rise.style.controller');
 module.exports.trouserStyleController= require('./trouser.style.controller');
 module.exports.trouserPocketController= require('./trouser.pocket.controller');
+module.exports.shirtSizeSetController= require('./shirt.size.set.controller');
 
