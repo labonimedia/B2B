@@ -1,30 +1,26 @@
 const mongoose = require('mongoose');
 
-const OrderCounterSchema = mongoose.Schema({
-    email: { 
-        type: String,
-        required: true, 
-        unique: true
-    },
-    count: {
-        type: Number,
-        default: 1 
-    },
-    resetDate: {
-        type: Date,
-        required: true,
-        default: function() {
-          // Set the default reset date to March 1st of the current year
-          const now = new Date();
-          const currentYear = now.getFullYear();
-          const resetDate = new Date(currentYear, 2, 1); // March 1st of the current year
-          if (now < resetDate) {
-            resetDate.setFullYear(currentYear - 1);
-          }
-          return resetDate;
-        },
-      },
-    });
+const orderCounterSchema = new mongoose.Schema({
+  wholesalerEmail: {
+    type: String,
+    required: true,
+  },
+  year: {
+    type: Number,
+    required: true,
+  },
+  count: {
+    type: Number,
+    required: true,
+    default: 1,
+  },
+}, {
+  timestamps: true,
+});
 
-const orderCounter = mongoose.model('orderCounter', OrderCounterSchema);
-module.exports = orderCounter;
+// Create a unique compound index on wholesalerEmail and year
+orderCounterSchema.index({ wholesalerEmail: 1, year: 1 }, { unique: true });
+
+const OrderCounter = mongoose.model('OrderCounter', orderCounterSchema);
+
+module.exports = OrderCounter;
