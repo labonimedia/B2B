@@ -47,6 +47,24 @@ const productSchema = mongoose.Schema(
     country: { type: String },
     city: { type: String },
     state: { type: String },
+
+    // new aded properties
+    seasons: { type: String },
+    noOfPockets: { type: String },
+    scoksStyle: { type: String },
+    troursePocketDescription: { type: String},
+    layerCompression: { type: String },
+    Waistband: { type: String },
+    includedComponents: { type: String },
+    riseStyle: { type: String },
+    trouserFitStyle: { type: String },
+    troursePocket: { type: String },
+    trourseRiseStyle: { type: String },
+    trourseStyle: { type: String },
+    trourseLength: { type: String },
+    coinPocket: { type: String },
+
+
     sizes: { type: [String], default: [] },
     ProductDeimension: [
       {
