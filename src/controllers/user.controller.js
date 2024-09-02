@@ -33,7 +33,10 @@ const updateUserByEmail = catchAsync(async (req, res) => {
   const user = await userService.updateUserByEmail(req.query.email, req.body);
   res.send(user);
 });
-
+// const updateUserByEmail = catchAsync(async (req, res) => {
+//   const user = await userService.updateUserByEmail(req.query.email, req.body);
+//   res.status(httpStatus.OK).send({ message: 'User updated successfully', user });
+// });
 const deleteUser = catchAsync(async (req, res) => {
   await userService.deleteUserById(req.params.userId);
   res.status(httpStatus.NO_CONTENT).send();

@@ -37,3 +37,14 @@ module.exports.cartController = require('./cart.controller');
 module.exports.requestController = require('./request.controller');
 module.exports.docController = require('./doc.controller');
 module.exports.productTypeController = require('./product.type.controller');
+module.exports.womenSleeveStyleController = require('./women.sleeve.type.controller');
+module.exports.topStyleController = require('./top.style.controller');
+module.exports.embellishmentFeaturesController = require('./embellishment.feature.controller');
+module.exports.noOfPocketsController = require('./no.of.pockets.controller');
+module.exports.coinPocketsController = require('./coin.pocket.controller');
+module.exports.waistSizeSetController = require('./waist.size.set.controller');
+module.exports.trouserFitTypeController = require('./trouser.fit.type.controller');
+module.exports.riseStyleController = require('./rise.style.controller');
+module.exports.trouserStyleController= require('./trouser.style.controller');
+module.exports.trouserPocketController= require('./trouser.pocket.controller');
+

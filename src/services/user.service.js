@@ -1,6 +1,7 @@
 const httpStatus = require('http-status');
 const { User, Wholesaler, Manufacture, Retailer, Counter } = require('../models');
 const ApiError = require('../utils/ApiError');
+const bcrypt = require('bcryptjs');
 const { createManufacture } = require('./manufacture.service');
 const { createWholesaler } = require('./wholesaler.service');
 const { createRetailer } = require('./retailer.service');
@@ -195,7 +196,24 @@ const updateUserByEmail = async (email, updateBody) => {
   await user.save();
   return user;
 };
+// const updateUserByEmail = async (email, updateBody) => {
+//   // Find the user by email
+//   const user = await getUserByEmail(email);
+//   if (!user) {
+//     throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+//   }
 
+//   // If password is being updated, hash it before saving
+//   if (updateBody.password) {
+//     updateBody.password = await bcrypt.hash(updateBody.password, 8);
+//   }
+
+//   // Update user fields
+//   Object.assign(user, updateBody);
+//   await user.save();
+
+//   return user;
+// };
 /**
  * Delete user by id
  * @param {ObjectId} userId

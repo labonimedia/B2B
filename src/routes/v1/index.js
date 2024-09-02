@@ -40,6 +40,16 @@ const cartRoute = require('./cart.route');
 const requestRoute = require('./request.route');
 const dockRoute = require('./doc.route');
 const productTypeRoute = require('./product.type.route');
+const womenSleeveTypeRoute = require('./women.sleeve.type.route');
+const topstyleRoute = require('./top.style.route');
+const embellishmentFeatureRoute = require('./embellishment.feature.route');
+const noOfPocketsRoute = require('./no.of.pockets.route');
+const coinPocketRoute = require('./coin.pocket.route');
+const waistSizeSetRoute = require('./waist.size.set.route');
+const trouserFitTypeRoute = require('./trouser.fit.type.route');
+const riseStyleRoute = require('./rise.style.route');
+const trouserStyleRoute = require('./trouser.style.route');
+const trouserPocketRoute = require('./trouser.pocket.route');
 
 const router = express.Router();
 
@@ -200,7 +210,48 @@ const defaultRoutes = [
   {
     path: '/doc',
     route: dockRoute,
-  }
+  },
+  {
+    path: '/womensleevetype',
+    route: womenSleeveTypeRoute,
+  },
+  {
+    path: '/topstyle',
+    route: topstyleRoute,
+  },
+  {
+    path: '/embellishmentfeature',
+    route: embellishmentFeatureRoute,
+  },
+  {
+    path: '/noofpockets',
+    route: noOfPocketsRoute,
+  },
+  {
+    path: '/coinpocket',
+    route: coinPocketRoute,
+  },
+  {
+    path: '/waistsizeset',
+    route: waistSizeSetRoute,
+  },
+  {
+    path: '/trouserfittype',
+    route: trouserFitTypeRoute,
+  },
+  {
+    path: '/risestyle',
+    route: riseStyleRoute,
+  },
+  {
+    path: '/trouserstyle',
+    route: trouserStyleRoute,
+  },
+  {
+    path: '/trouserpocket',
+    route: trouserPocketRoute,
+  },
+  
 ];
 
 const devRoutes = [
