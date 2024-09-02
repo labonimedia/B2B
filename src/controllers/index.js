@@ -48,3 +48,4 @@ module.exports.riseStyleController = require('./rise.style.controller');
 module.exports.trouserStyleController= require('./trouser.style.controller');
 module.exports.trouserPocketController= require('./trouser.pocket.controller');
 
+module.exports.mappingController = require('./mapping.controller');

@@ -50,6 +50,7 @@ const trouserFitTypeRoute = require('./trouser.fit.type.route');
 const riseStyleRoute = require('./rise.style.route');
 const trouserStyleRoute = require('./trouser.style.route');
 const trouserPocketRoute = require('./trouser.pocket.route');
+const mappingRoute = require('./mapping.route');
 
 const router = express.Router();
 
@@ -252,6 +253,10 @@ const defaultRoutes = [
     route: trouserPocketRoute,
   },
   
+  ,{
+    path: '/mapping',
+    route: mappingRoute,
+  },
 ];
 
 const devRoutes = [

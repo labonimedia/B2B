@@ -50,3 +50,4 @@ module.exports.trouserFitTypeService = require('./trouser.fit.type.service');
 module.exports.riseStyleService = require('./rise.style.service');
 module.exports.trouserStyleService = require('./trouser.style.service');
 module.exports.trouserPocketService = require('./trouser.pocket.service');
+module.exports.mappingService = require('./mapping.service');

@@ -1,0 +1,270 @@
+[{
+    "productType":"Clothing",
+    "gender":"Men",
+    "category": "Shirt",
+    "subCategory": "Shirt",
+    "inputs": ["material",	"fabricPattern",	"selectedOccasion",	"selectedlifeStyle",	"fitStyle",	"neckStyle",	"specialFeature",	"closureType",	"pocketDescription",	"sleeveCuffStyle",	"sleeveLength",	"careInstructions",	"Colour",	"Size Set"
+]
+},
+{
+    "productType":"Clothing",
+    "gender":"Men",
+    "category": "T-shirts & Polos",
+    "subCategory": "T-Shirt",
+    "inputs": ["material",	"fabricPattern",	"selectedOccasion",	"selectedlifeStyle",	"fitStyle",	"neckStyle",	"specialFeature",	"closureType",	"pocketDescription",	"sleeveCuffStyle",	"sleeveLength",	"careInstructions",	"Colour",	"Size Set"
+]  
+},
+{
+    "productType":"Clothing",
+    "gender":"Men",
+    "category": "T-shirts & Polos",
+    "subCategory": "Tank Tops",
+    "inputs": ["material",	"fabricPattern",	"selectedOccasion",	"selectedlifeStyle",	"fitStyle",	"neckStyle",	"specialFeature",	"closureType",	"pocketDescription",	"sleeveCuffStyle",	"sleeveLength",	"careInstructions",	"Colour",	"Size Set"
+]  
+},
+{
+    "productType":"Clothing",
+    "gender":"Men",
+    "category": "T-shirts & Polos",
+    "subCategory": "Polos",
+    "inputs": ["material",	"fabricPattern",	"selectedOccasion",	"selectedlifeStyle", "neckStyle",	"fitStyle",	"specialFeature",	"closureType",	"pocketDescription",	"sleeveCuffStyle",	"sleeveLength",	"careInstructions",	"Colour",	"Size Set"
+]  
+},
+{
+    "productType":"Clothing",
+    "gender":"Men",
+    "category": "T-shirts & Polos",
+    "subCategory": "Jersey",
+    "inputs": ["material",	"fabricPattern",	"selectedOccasion",	"selectedlifeStyle", "neckStyle",	"fitStyle",	"specialFeature",	"closureType",	"pocketDescription",	"sleeveCuffStyle",	"sleeveLength",	"careInstructions",	"Colour",	"Size Set"
+]  
+},
+{
+    "productType":"Clothing",
+    "gender":"Men",
+    "category": "Socks",
+    "subCategory": "Athletic Socks",
+    "inputs": ["material",	"fabricPattern",	"scoksStyle",	"careInstructions", "Colour"
+]  
+},
+{
+    "productType":"Clothing",
+    "gender":"Men",
+    "category": "Socks",
+    "subCategory": "Ankle Socks",
+    "inputs": ["material",	"fabricPattern",	"scoksStyle",	"careInstructions", "Colour"
+]  
+},
+{
+    "productType":"Clothing",
+    "gender":"Men",
+    "category": "Socks",
+    "subCategory": "Crew Socks",
+    "inputs": ["material",	"fabricPattern",	"scoksStyle",	"careInstructions", "Colour"
+]  
+},
+{
+    "productType":"Clothing",
+    "gender":"Men",
+    "category": "Socks",
+    "subCategory": "Knee-High Socks",
+    "inputs": ["material",	"fabricPattern",	"scoksStyle",	"careInstructions", "Colour"
+]  
+},
+
+{
+    "productType":"Clothing",
+    "gender":"Men",
+    "category": "Sweaters",
+    "subCategory": "Cardigans",
+    "inputs": ["material",	"fabricPattern","neckStyle", "sleeveLength",	"careInstructions", "seasons", "noOfPockets",	"Size Set", "specialFeature", "fitStyle", "closureType", "Men Shirt Size Set"
+]  
+},
+{
+    "productType":"Clothing",
+    "gender":"Men",
+    "category": "Sweaters",
+    "subCategory": "Vests",
+    "inputs": ["material",	"fabricPattern","neckStyle", "sleeveLength",	"careInstructions", "seasons", "noOfPockets",	"Size Set", "specialFeature", "fitStyle", "closureType", "Men Shirt Size Set"
+]  
+},
+{
+    "productType":"Clothing",
+    "gender":"Men",
+    "category": "Sweaters",
+    "subCategory": "Pullovers",
+    "inputs": ["material",	"fabricPattern","neckStyle", "sleeveLength",	"careInstructions", "seasons", "noOfPockets",	"Size Set", "specialFeature", "fitStyle", "closureType", "Men Shirt Size Set"
+]  
+},
+
+{
+    "productType":"Clothing",
+    "gender":"Men",
+    "category": "Sportswear",
+    "subCategory": "Track Jackets",
+    "inputs": ["material",	"fabricPattern",	"closureType",	"sleeveLength",	"seasons",	"neckStyle",	"noOfPockets",	"selectedOccasion",	"fitStyle",	"Colour",	"Men Shirt Size Set"
+
+]  
+},
+{
+    "productType":"Clothing",
+    "gender":"Men",
+    "category": "Sportswear",
+    "subCategory": "Track Pants",
+    "inputs": ["material",	"fabricPattern",	"closureType",	"troursePocketDescription",	"seasons",	"noOfPockets",	"selectedOccasion",	"fitStyle",	"Waist Size Set"
+
+]  
+},
+{
+    "productType":"Clothing",
+    "gender":"Men",
+    "category": "Sportswear",
+    "subCategory": "Sweatpants",
+    "inputs": ["material",	"fabricPattern",	"closureType",	"troursePocketDescription",	"seasons",	"noOfPockets","selectedOccasion", "Waist Size Set"
+]  
+},
+{
+    "productType":"Clothing",
+    "gender":"Men",
+    "category": "Sportswear",
+    "subCategory": "Gym Shorts",
+    "inputs": ["material",	"fabricPattern",	"careInstructions",	"layerCompression",	"Waistband",	"fitStyle",	"noOfPockets",	"Colour",	"Waist Size Set"
+]  
+},
+
+
+{
+    "productType":"Clothing",
+    "gender":"Men",
+    "category": "Ethnic Wear",
+    "subCategory": "Kurtas",
+    "inputs": ["material",	"fabricPattern",	"fitStyle",	"neckStyle",	"includedComponents",	"closureType",	"noOfPockets",	"selectedOccasion", "careInstructions",	"Colour",	"Size Set", "sleeveLength",	"pocketDescription", "Men Shirt Size Set"
+]  
+},
+{
+    "productType":"Clothing",
+    "gender":"Men",
+    "category": "Ethnic Wear",
+    "subCategory": "Kurta Sets",
+    "inputs": ["material",	"fabricPattern",	"fitStyle",	"neckStyle",	"includedComponents",	"closureType",	"noOfPockets",	"selectedOccasion", "careInstructions",	"Colour",	"Size Set", "sleeveLength",	"pocketDescription", "Men Shirt Size Set"
+]  
+},
+{
+    "productType":"Clothing",
+    "gender":"Men",
+    "category": "Ethnic Wear",
+    "subCategory": "Readymade Dhoti",
+    "inputs": ["material",	"fabricPattern",	"riseStyle",		"closureType",	"selectedOccasion", "careInstructions",	"Colour", "Waist Size Set"
+]  
+},
+{
+    "productType":"Clothing",
+    "gender":"Men",
+    "category": "Ethnic Wear",
+    "subCategory": "Readymade Lungis",
+    "inputs": ["material",	"fabricPattern",	"riseStyle",		"closureType",	"selectedOccasion", "careInstructions",	"Colour", "Waist Size Set"
+]  
+},
+{
+    "productType":"Clothing",
+    "gender":"Men",
+    "category": "Ethnic Wear",
+    "subCategory": "Pyjamas",
+    "inputs": ["material",	"fabricPattern", "fitStyle",	"riseStyle", "closureType",	"selectedOccasion",  "noOfPockets", "careInstructions", "pocketDescription",	"Colour", "Waist Size Set"
+]  
+},
+{
+    "productType":"Clothing",
+    "gender":"Men",
+    "category": "Ethnic Wear",
+    "subCategory": "Dhotis, Mundus & Lungis",
+    "inputs": ["material",	"fabricPattern",  "noOfPockets","Colour"
+]  
+},
+{
+    "productType":"Clothing",
+    "gender":"Men",
+    "category": "Ethnic Wear",
+    "subCategory": "Nehru Jackets & Vests",
+    "inputs": ["material",	"fabricPattern", "fitStyle",	"riseStyle", "closureType",	"selectedOccasion",  "noOfPockets", "sleeveLength",	"pocketDescription",	"neckStyle",	"Length",	"Colour",	"Men Shirt Size Set"
+]  
+},
+{
+    "productType":"Clothing",
+    "gender":"Men",
+    "category": "Ethnic Wear",
+    "subCategory": "Sherwanis",
+    "inputs": ["material",	"fabricPattern", "fitStyle",	"riseStyle", "closureType",	"selectedOccasion",  "noOfPockets", "sleeveLength",	"pocketDescription",	"neckStyle",	"Length",	"Colour",	"Men Shirt Size Set"
+]  
+},
+{
+    "productType":"Clothing",
+    "gender":"Men",
+    "category": "Ethnic Wear",
+    "subCategory": "Stoles",
+    "inputs": ["material",	"fabricPattern", "selectedOccasion",  "noOfPockets",  "Length",	"Colour"]  
+},
+{
+    "productType":"Clothing",
+    "gender":"Men",
+    "category": "Ethnic Wear",
+    "subCategory": "Safari Suits",
+    "inputs": ["material",	"fabricPattern", "fitStyle","closureType",	"selectedOccasion", "careInstructions", "noOfPockets", "sleeveLength",	"pocketDescription",	"neckStyle",	"Men Shirt Size Set"
+]  
+},
+{
+    "productType":"Clothing",
+    "gender":"Men",
+    "category": "Suits & Blazers",
+    "subCategory": "Suit Jackets",
+    "inputs": ["material",	"fabricPattern", "fitStyle","closureType",	"selectedOccasion", "careInstructions", "noOfPockets", "neckStyle", "specialFeature", "Colour",	"Men Shirt Size Set"
+]  
+},
+{
+    "productType":"Clothing",
+    "gender":"Men",
+    "category": "Suits & Blazers",
+    "subCategory": "Blazers",
+    "inputs": ["material",	"fabricPattern", "fitStyle","closureType",	"selectedOccasion", "careInstructions", "noOfPockets", "neckStyle", "specialFeature", "Colour",	"Men Shirt Size Set"
+]  
+},
+{
+    "productType":"Clothing",
+    "gender":"Men",
+    "category": "Suits & Blazers",
+    "subCategory": "Tuxedo Jackets",
+    "inputs": ["material",	"fabricPattern", "fitStyle","closureType",	"selectedOccasion", "careInstructions", "noOfPockets", "neckStyle", "specialFeature", "Colour",	"Men Shirt Size Set"
+]  
+},
+{
+    "productType":"Clothing",
+    "gender":"Men",
+    "category": "Suits & Blazers",
+    "subCategory": "Tuxedos",
+    "inputs": ["material",	"fabricPattern", "fitStyle","closureType",	"selectedOccasion", "careInstructions", "noOfPockets", "neckStyle", "specialFeature", "Colour",	"Men Shirt Size Set"
+]  
+},
+{
+    "productType":"Clothing",
+    "gender":"Men",
+    "category": "Suits & Blazers",
+    "subCategory": "Waistcoats",
+    "inputs": ["material",	"fabricPattern", "fitStyle","closureType",	"selectedOccasion", "careInstructions", "noOfPockets", "neckStyle", "specialFeature", "Colour",	"Men Shirt Size Set"
+]  
+},
+{
+    "productType":"Clothing",
+    "gender":"Men",
+    "category": "Uniform",
+    "subCategory": "Scrub Suit",
+    "inputs": ["material",	"fabricPattern", "fitStyle","closureType", "careInstructions", "noOfPockets", "pocketDescription", "neckStyle", "Colour",	"Men Shirt Size Set"
+]  
+},
+{
+    "productType":"Clothing",
+    "gender":"Men",
+    "category": "Trousers",
+    "subCategory": "Casual Trousers",
+    "inputs": ["material",	"fabricPattern", "trouserFitStyle", "closureType", "troursePocket", "trourseRiseStyle", "trourseStyle", "trourseLength",	"Waist Size Set", "noOfPockets",	"coinPocket",	"selectedOccasion",	"careInstructions"
+]  
+}
+]

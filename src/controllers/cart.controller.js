@@ -16,6 +16,12 @@ const getCartByEmail = catchAsync(async (req, res) => {
   res.status(httpStatus.OK).send(cart);
 });
 
+
+const getCartByEmailToPlaceOrder = catchAsync(async (req, res) => {
+  const { email, productBy } = req.params;
+  const cart = await cartService.getCartByEmailToPlaceOrder(email, productBy);
+  res.status(httpStatus.OK).send(cart);
+});
 // const queryCollarStyle = catchAsync(async (req, res) => {
 //   const filter = pick(req.query, ['name']);
 //   const options = pick(req.query, ['sortBy', 'limit', 'page']);
@@ -46,13 +52,9 @@ const deleteCartById = catchAsync(async (req, res) => {
 module.exports = {
   addToCart,
   getCartByEmail,
-  //   queryCollarStyle,
-  //   getCollarStyleById,
-  //   updateCollarStyleById,
-  //   deleteCollarStyleById,
   addToCart,
   getCartByEmail,
-  //   queryCollarStyle,
+  getCartByEmailToPlaceOrder,
   getCartById,
   updateCartById,
   deleteCartById,
