@@ -84,8 +84,9 @@ const retailerSchema = mongoose.Schema(
     turnover: {
       type: String,
     },
-    registerOnFTH : {
+    registerOnFTH: {
       type: Date,
+      default: Date.now
     },
     code: {
       type: String,
