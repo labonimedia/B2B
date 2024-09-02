@@ -165,7 +165,8 @@ const getUserById = async (id) => {
  */
 const getUserByEmail = async (email) => {
   console.log('getUserByEmail', email);
-  return User.findOne({ email });
+  const user = await User.findOne({ email });
+  return user
 };
 
 /**
@@ -175,17 +176,57 @@ const getUserByEmail = async (email) => {
  * @returns {Promise<User>}
  */
 const updateUserById = async (userId, updateBody) => {
-  const user = await getUserById(userId);
-  if (!user) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
-  }
+  console.log(userId, updateBody);
+
+  // Check if the email is already taken
   if (updateBody.email && (await User.isEmailTaken(updateBody.email, userId))) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Email already taken');
   }
-  Object.assign(user, updateBody);
-  await user.save();
-  return user;
+
+  // Update the user document directly in the database
+  const user = await User.findByIdAndUpdate(userId, updateBody, { new: true });
+
+  if (!user) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+  }
+
+  // Fetch the user's profile image based on the role
+  let profile;
+  switch (user.role) {
+    case 'wholesaler':
+      const wholesaler = await Wholesaler.findOne({ email: user.email });
+      profile = wholesaler ? wholesaler.profileImg : null;
+      break;
+    case 'manufacture':
+      const manufacturer = await Manufacture.findOne({ email: user.email });
+      profile = manufacturer ? manufacturer.profileImg : null;
+      break;
+    case 'retailer':
+      const retailer = await Retailer.findOne({ email: user.email });
+      profile = retailer ? retailer.profileImg : null;
+      break;
+    default:
+      profile = null;
+  }
+
+  // Combine the updated user object with the profile image
+  return { ...user.toObject(), profile };
 };
+
+// const updateUserById = async (userId, updateBody) => {
+//   console.log(userId, updateBody);
+//   const user = await getUserById(userId);
+//   if (!user) {
+//     throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+//   }
+//   if (updateBody.email && (await User.isEmailTaken(updateBody.email, userId))) {
+//     throw new ApiError(httpStatus.BAD_REQUEST, 'Email already taken');
+//   }
+//   Object.assign(user, updateBody);
+//   console.log(user)
+//   await user.save();
+//   return user;
+// };
 
 const updateUserByEmail = async (email, updateBody) => {
   const user = await getUserByEmail(email);
