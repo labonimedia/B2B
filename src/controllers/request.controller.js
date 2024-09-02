@@ -4,9 +4,17 @@ const { requestService } = require('../services');
 const pick = require('../utils/pick');
 const ApiError = require('../utils/ApiError');
 
+// const createRequest = catchAsync(async (req, res) => {
+//   const request = await requestService.createRequest(req.body, req.user);
+//   res.status(httpStatus.CREATED).send(request);
+// });
+
 const createRequest = catchAsync(async (req, res) => {
-  const request = await requestService.createRequest(req.body, req.user);
-  res.status(httpStatus.CREATED).send(request);
+  const result = await requestService.createRequest(req.body, req.user);
+  if (result.message) {
+    return res.status(httpStatus.OK).send(result);
+  }
+  return res.status(httpStatus.CREATED).send(result);
 });
 
 const createMultipleRequests = catchAsync(async (req, res) => {

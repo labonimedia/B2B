@@ -2,6 +2,17 @@ const httpStatus = require('http-status');
 const { Request, User, Manufacture } = require('../models');
 const ApiError = require('../utils/ApiError');
 
+// /**
+//  * Create a request
+//  * @param {Object} requestBody
+//  * @param {Object} user
+//  * @returns {Promise<Request>}
+//  */
+// const createRequest = async (requestBody, user) => {
+//   const request = await Request.create(requestBody);
+//   return request;
+// };
+
 /**
  * Create a request
  * @param {Object} requestBody
@@ -9,6 +20,20 @@ const ApiError = require('../utils/ApiError');
  * @returns {Promise<Request>}
  */
 const createRequest = async (requestBody, user) => {
+  // Check if a request with the same requestor and recipient already exists
+  const existingRequest = await Request.findOne({
+    requestByEmail: requestBody.requestByEmail,
+    email: requestBody.email,
+  });
+
+  if (existingRequest) {
+    return {
+      message: `A request with status '${existingRequest.status}' already exists between ${requestBody.requestByEmail} and ${requestBody.email}`,
+      existingRequest,
+    };
+  }
+
+  // Create a new request if no existing request is found
   const request = await Request.create(requestBody);
   return request;
 };
@@ -72,34 +97,70 @@ const createMultipleRequests = async (requestsBody, user) => {
 //   return request;
 // };
 
+// const acceptRequest = async (requestId, requestByEmail, requestToEmail, status) => {
+//   const request = await Request.findById(requestId);
+//   if (!request) {
+//     throw new ApiError(httpStatus.NOT_FOUND, 'Request not found');
+//   }
+//   if (status === 'rejected') {
+//     request.status = 'rejected';
+//     await request.save();
+//     return request;
+//   }
+//   if (request.status !== 'pending') {
+//     throw new ApiError(httpStatus.BAD_REQUEST, 'Request already processed');
+//   }
+//   const user = await User.findOne({ email: requestByEmail });
+//   if (!user) {
+//     throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+//   }
+//   const manufacture = await Manufacture.findOne({ email: requestToEmail });
+//   if (!manufacture) {
+//     throw new ApiError(httpStatus.NOT_FOUND, 'Manufacture not found');
+//   }
+//   if (user.refByEmail.includes(requestToEmail)) {
+//     throw new ApiError(httpStatus.BAD_REQUEST, 'Email already referenced');
+//   }
+//   user.refByEmail.push(requestToEmail);
+//   await user.save();
+//   request.status = status;
+//   await request.save();
+//   return request;
+// };
 const acceptRequest = async (requestId, requestByEmail, requestToEmail, status) => {
   const request = await Request.findById(requestId);
   if (!request) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Request not found');
   }
+
   if (status === 'rejected') {
     request.status = 'rejected';
     await request.save();
     return request;
   }
-  if (request.status !== 'pending') {
-    throw new ApiError(httpStatus.BAD_REQUEST, 'Request already processed');
+
+  // Allow acceptance even after rejection
+  if (status === 'accepted') {
+    const user = await User.findOne({ email: requestByEmail });
+    if (!user) {
+      throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+    }
+
+    const manufacture = await Manufacture.findOne({ email: requestToEmail });
+    if (!manufacture) {
+      throw new ApiError(httpStatus.NOT_FOUND, 'Manufacture not found');
+    }
+
+    // Check if the email is already referenced
+    if (!user.refByEmail.includes(requestToEmail)) {
+      user.refByEmail.push(requestToEmail);
+      await user.save();
+    }
+
+    request.status = 'accepted';
+    await request.save();
   }
-  const user = await User.findOne({ email: requestByEmail });
-  if (!user) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
-  }
-  const manufacture = await Manufacture.findOne({ email: requestToEmail });
-  if (!manufacture) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Manufacture not found');
-  }
-  if (user.refByEmail.includes(requestToEmail)) {
-    throw new ApiError(httpStatus.BAD_REQUEST, 'Email already referenced');
-  }
-  user.refByEmail.push(requestToEmail);
-  await user.save();
-  request.status = status;
-  await request.save();
+
   return request;
 };
 
