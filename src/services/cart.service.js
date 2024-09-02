@@ -381,7 +381,7 @@ const getCartByEmailToPlaceOrder = async (email, productBy) => {
 
 const getCartByEmail = async (email) => {
   // Find the cart by email and populate the product details
-  const cart = await Cart.findOne({ email }).populate('products.productId');
+  const cart = await Cart.find({ email }).populate('products.productId');
   if (!cart) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Cart not found');
   }
