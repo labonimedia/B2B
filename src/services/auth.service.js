@@ -83,12 +83,11 @@ const verifyEmail = async (email, otp) => {
 
     await otpService.verifyOtp(email, otp);
     const user = await userService.getUserByEmail(email);
-    console.log(user);
     if (!user) {
       throw new Error();
     }
     // await Token.deleteMany({ user: user.id, type: tokenTypes.VERIFY_EMAIL });
-    await userService.updateUserById(user.id, { isEmailVerified: true });
+    await userService.updateUserById(user._id, { isEmailVerified: true });
 };
 
 module.exports = {
