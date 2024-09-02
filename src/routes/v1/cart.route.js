@@ -22,7 +22,7 @@ router
   .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), cartController.getCartByEmail);
 
   router
-  .route('/place-order/products/:email')
+  .route('/place-order/products')
   .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), cartController.getCartByEmailToPlaceOrder);
 
 module.exports = router;

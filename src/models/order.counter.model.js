@@ -1,12 +1,12 @@
 const mongoose = require('mongoose');
 
 const OrderCounterSchema = mongoose.Schema({
-    wholesalerEmail: { 
+    email: { 
         type: String,
         required: true, 
         unique: true
     },
-    sequenceValue: {
+    count: {
         type: Number,
         default: 1 
     },

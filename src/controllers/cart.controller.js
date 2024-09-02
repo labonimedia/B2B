@@ -18,16 +18,13 @@ const getCartByEmail = catchAsync(async (req, res) => {
 
 
 const getCartByEmailToPlaceOrder = catchAsync(async (req, res) => {
-  const { email, productBy } = req.params;
+  const { email, productBy } = req.query;
+
+
   const cart = await cartService.getCartByEmailToPlaceOrder(email, productBy);
   res.status(httpStatus.OK).send(cart);
 });
-// const queryCollarStyle = catchAsync(async (req, res) => {
-//   const filter = pick(req.query, ['name']);
-//   const options = pick(req.query, ['sortBy', 'limit', 'page']);
-//   const result = await cartService.queryCollarStyle(filter, options);
-//   res.send(result);
-// });
+
 
 const getCartById = catchAsync(async (req, res) => {
   const user = await cartService.getCartById(req.params.id);

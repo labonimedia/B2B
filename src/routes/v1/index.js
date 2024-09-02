@@ -39,6 +39,7 @@ const wishlistRoute = require('./wishlist.route');
 const cartRoute = require('./cart.route');
 const requestRoute = require('./request.route');
 const dockRoute = require('./doc.route');
+const mappingRoute = require('./mapping.route');
 const productTypeRoute = require('./product.type.route');
 const womenSleeveTypeRoute = require('./women.sleeve.type.route');
 const topstyleRoute = require('./top.style.route');
@@ -50,7 +51,6 @@ const trouserFitTypeRoute = require('./trouser.fit.type.route');
 const riseStyleRoute = require('./rise.style.route');
 const trouserStyleRoute = require('./trouser.style.route');
 const trouserPocketRoute = require('./trouser.pocket.route');
-const mappingRoute = require('./mapping.route');
 
 const router = express.Router();
 
@@ -252,11 +252,13 @@ const defaultRoutes = [
     path: '/trouserpocket',
     route: trouserPocketRoute,
   },
+
   
-  ,{
+ {
     path: '/mapping',
     route: mappingRoute,
-  },
+  }
+  
 ];
 
 const devRoutes = [
