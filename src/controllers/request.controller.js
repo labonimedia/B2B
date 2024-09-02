@@ -30,6 +30,28 @@ const createMultipleRequests = catchAsync(async (req, res) => {
 //     const request = await requestService.acceptRequest(id, requestbyemail, requesttoemail, status);
 //     res.status(httpStatus.OK).send(request);
 //   });
+const filterRequests = catchAsync(async (req, res) => {
+  const { status, email, requestByEmail } = req.query;
+
+  if (!status) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Status is required');
+  }
+
+  const filter = { status };
+  
+  if (email) {
+    filter.email = email;
+  } else if (requestByEmail) {
+    filter.requestByEmail = requestByEmail;
+  } else {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Either email or requestByEmail is required');
+  }
+
+  const options = pick(req.query, ['sortBy', 'limit', 'page']);
+  const result = await requestService.queryRequests(filter, options);
+  res.send(result);
+});
+
 const acceptRequest = catchAsync(async (req, res) => {
   const { id, requestbyemail, requesttoemail} = req.params;
   const { status } = req.body;
@@ -89,5 +111,6 @@ module.exports = {
   queryRequests,
   updateRequestById,
   deleteRequestById,
-  createMultipleRequests
+  createMultipleRequests,
+  filterRequests
 };
