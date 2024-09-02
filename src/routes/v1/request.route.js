@@ -28,7 +28,7 @@ router
    requestController.acceptRequest);
 
   router
-   .route('/filterdata')
+   .route('/filterdata/status')
    .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), requestController.filterRequests);
  
 module.exports = router;
