@@ -18,8 +18,8 @@ const getCartByEmail = catchAsync(async (req, res) => {
 
 
 const getCartByEmailToPlaceOrder = catchAsync(async (req, res) => {
-  const { email } = req.params;
-  const cart = await cartService.getCartByEmailToPlaceOrder(email);
+  const { email, productBy } = req.params;
+  const cart = await cartService.getCartByEmailToPlaceOrder(email, productBy);
   res.status(httpStatus.OK).send(cart);
 });
 // const queryCollarStyle = catchAsync(async (req, res) => {

@@ -164,7 +164,6 @@ const getUserById = async (id) => {
  * @returns {Promise<User>}
  */
 const getUserByEmail = async (email) => {
-  console.log('getUserByEmail', email);
   const user = await User.findOne({ email });
   return user
 };
@@ -176,7 +175,6 @@ const getUserByEmail = async (email) => {
  * @returns {Promise<User>}
  */
 const updateUserById = async (userId, updateBody) => {
-  console.log(userId, updateBody);
 
   // Check if the email is already taken
   if (updateBody.email && (await User.isEmailTaken(updateBody.email, userId))) {

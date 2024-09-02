@@ -40,3 +40,4 @@ module.exports.Doc = require('./doc.model');
 module.exports.ProductType = require('./product.type.model');
 module.exports.Counter = require('./counter.model');
 module.exports.Mapping = require('./mapping.model');
+module.exports.OrderCounter = require('./order.counter.model');
