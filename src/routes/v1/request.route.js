@@ -27,4 +27,8 @@ router
     //auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
    requestController.acceptRequest);
 
+  router
+   .route('/filterdata')
+   .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), requestController.filterRequests);
+ 
 module.exports = router;
