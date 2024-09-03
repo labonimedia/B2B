@@ -52,3 +52,4 @@ module.exports.riseStyleService = require('./rise.style.service');
 module.exports.trouserStyleService = require('./trouser.style.service');
 module.exports.trouserPocketService = require('./trouser.pocket.service');
 module.exports.shirtSizeSetService = require('./shirt.size.set.service');
+module.exports.productOrderService = require('./product.order.service');

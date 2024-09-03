@@ -19,7 +19,6 @@ const manufactureDocSchema = mongoose.Schema(
 manufactureDocSchema.plugin(toJSON);
 manufactureDocSchema.plugin(paginate);
 
-
 const ManufactureDoc = mongoose.model('ManufactureDoc', manufactureDocSchema);
 
 module.exports = ManufactureDoc;

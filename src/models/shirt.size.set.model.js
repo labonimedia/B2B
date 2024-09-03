@@ -7,9 +7,9 @@ const shirtSizeSetSchema = mongoose.Schema(
       type: String,
       trim: true,
     },
-    number:{
-        type: String,
-    }
+    number: {
+      type: String,
+    },
   },
   {
     timestamps: true,

@@ -18,17 +18,17 @@ const fileupload = async (req, id) => {
   if (!manufacture) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Manufacture not found');
   }
- 
+
   const extractPath = (url) => new URL(url).pathname;
-  if(req.body.file){
+  if (req.body.file) {
     const file = req.body.file ? extractPath(req.body.file[0]) : null;
-    manufacture.file = file
+    manufacture.file = file;
   }
-  if (req.body.profileImg){
+  if (req.body.profileImg) {
     const profileImg = req.body.profileImg ? extractPath(req.body.profileImg[0]) : null;
     manufacture.profileImg = profileImg;
   }
-  if (req.body.fileName){
+  if (req.body.fileName) {
     const fileName = req.body.fileName || '';
     manufacture.fileName = fileName;
   }
@@ -36,7 +36,6 @@ const fileupload = async (req, id) => {
   await manufacture.save();
   return manufacture;
 };
-
 
 /**
  * Query for manufacture
@@ -69,16 +68,16 @@ const getManufactureById = async (id) => {
 
 const getManufactureByEmail = async (refByEmail, searchKeywords = '', options = {}) => {
   // Step 1: Find users with the specified email in their refByEmail field
-  const users = await User.find({ refByEmail: refByEmail });
+  const users = await User.find({ refByEmail });
   if (!users || users.length === 0) {
     throw new Error('No users found with the specified refByEmail');
   }
   // Step 2: Extract the emails of the referred users
-  const referredEmails = users.map(user => user.email);
+  const referredEmails = users.map((user) => user.email);
   if (referredEmails.length === 0) {
     throw new Error('No referred emails found');
   }
-  const searchRegex = new RegExp(searchKeywords, 'i'); 
+  const searchRegex = new RegExp(searchKeywords, 'i');
   // Step 3: Create a filter for the Manufacture records
   const manufactureFilter = {
     email: { $in: referredEmails },
@@ -86,13 +85,12 @@ const getManufactureByEmail = async (refByEmail, searchKeywords = '', options = 
       { fullName: { $regex: searchRegex } },
       { companyName: { $regex: searchRegex } },
       { country: { $regex: searchRegex } },
-      { city: { $regex: searchRegex } }
-    ]
+      { city: { $regex: searchRegex } },
+    ],
   };
   const manufactures = await Wholesaler.paginate(manufactureFilter, options);
   return manufactures;
 };
-
 
 /**
  * Get manufacture by id
@@ -102,16 +100,16 @@ const getManufactureByEmail = async (refByEmail, searchKeywords = '', options = 
 
 const getRetailersByEmail = async (refByEmail, searchKeywords = '', options = {}) => {
   // Step 1: Find users with the specified email in their refByEmail field
-  const users = await User.find({ refByEmail: refByEmail });
+  const users = await User.find({ refByEmail });
   if (!users || users.length === 0) {
     throw new Error('No users found with the specified refByEmail');
   }
   // Step 2: Extract the emails of the referred users
-  const referredEmails = users.map(user => user.email);
+  const referredEmails = users.map((user) => user.email);
   if (referredEmails.length === 0) {
     throw new Error('No referred emails found');
   }
-  const searchRegex = new RegExp(searchKeywords, 'i'); 
+  const searchRegex = new RegExp(searchKeywords, 'i');
   // Step 3: Create a filter for the Manufacture records
   const manufactureFilter = {
     email: { $in: referredEmails },
@@ -119,8 +117,8 @@ const getRetailersByEmail = async (refByEmail, searchKeywords = '', options = {}
       { fullName: { $regex: searchRegex } },
       { companyName: { $regex: searchRegex } },
       { country: { $regex: searchRegex } },
-      { city: { $regex: searchRegex } }
-    ]
+      { city: { $regex: searchRegex } },
+    ],
   };
   const manufactures = await Retailer.paginate(manufactureFilter, options);
   return manufactures;
@@ -174,5 +172,5 @@ module.exports = {
   fileupload,
   updateManufactureById,
   deleteManufactureById,
-  getRetailersByEmail
+  getRetailersByEmail,
 };

@@ -1,7 +1,7 @@
 const httpStatus = require('http-status');
+const bcrypt = require('bcryptjs');
 const { User, Wholesaler, Manufacture, Retailer, Counter } = require('../models');
 const ApiError = require('../utils/ApiError');
-const bcrypt = require('bcryptjs');
 const { createManufacture } = require('./manufacture.service');
 const { createWholesaler } = require('./wholesaler.service');
 const { createRetailer } = require('./retailer.service');
@@ -68,11 +68,7 @@ const createUser = async (userBody) => {
   }
 
   // Increment the sequence for the corresponding role
-  const counter = await Counter.findOneAndUpdate(
-    { role: userBody.role },
-    { $inc: { seq: 1 } },
-    { new: true, upsert: true }
-  );
+  const counter = await Counter.findOneAndUpdate({ role: userBody.role }, { $inc: { seq: 1 } }, { new: true, upsert: true });
 
   // Assign the generated code to the userBody
   userBody.code = `${prefix}${String(counter.seq).padStart(4, '0')}`;
@@ -166,7 +162,7 @@ const getUserById = async (id) => {
  */
 const getUserByEmail = async (email) => {
   const user = await User.findOne({ email });
-  return user
+  return user;
 };
 
 /**
@@ -176,7 +172,6 @@ const getUserByEmail = async (email) => {
  * @returns {Promise<User>}
  */
 const updateUserById = async (userId, updateBody) => {
-
   // Check if the email is already taken
   if (updateBody.email && (await User.isEmailTaken(updateBody.email, userId))) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Email already taken');

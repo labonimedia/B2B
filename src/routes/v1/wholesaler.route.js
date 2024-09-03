@@ -6,8 +6,11 @@ const { commonUploadMiddleware } = require('../../utils/upload');
 const router = express.Router();
 
 router.route('/upload/doc/:id').post(
-  auth('superadmin', 'manufacture','wholesaler',),
-  commonUploadMiddleware([{ name: 'file', maxCount: 1 },{ name: 'profileImg', maxCount: 1 }]),
+  auth('superadmin', 'manufacture', 'wholesaler'),
+  commonUploadMiddleware([
+    { name: 'file', maxCount: 1 },
+    { name: 'profileImg', maxCount: 1 },
+  ]),
   wholesalerController.fileupload
 );
 router
@@ -24,16 +27,15 @@ router
   .route('/manufactureList/:email')
   .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), wholesalerController.getManufactureList);
 
-  router
+router
   .route('/get-referred/retailer')
   .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), wholesalerController.getRetailerByEmail);
 
-
-  router
+router
   .route('/assigndiscount/:wholesalerId')
   .post(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), wholesalerController.assignDiscount);
 
-  router
+router
   .route('/getdiscount/:wholesalerId/:discountGivenBy')
   .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), wholesalerController.getDiscountByGivenBy);
 

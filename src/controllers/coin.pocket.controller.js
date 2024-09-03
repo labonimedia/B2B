@@ -35,7 +35,7 @@ const deleteCoinPocketsById = catchAsync(async (req, res) => {
 });
 
 module.exports = {
-    createCoinPockets,
+  createCoinPockets,
   queryCoinPockets,
   getCoinPocketsById,
   updateCoinPocketsById,

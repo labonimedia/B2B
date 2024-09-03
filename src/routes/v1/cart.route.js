@@ -21,7 +21,7 @@ router
   .route('/cart-products/:email')
   .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), cartController.getCartByEmail);
 
-  router
+router
   .route('/place-order/products')
   .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), cartController.getCartByEmailToPlaceOrder);
 

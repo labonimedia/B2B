@@ -38,7 +38,7 @@ const filterRequests = catchAsync(async (req, res) => {
   }
 
   const filter = { status };
-  
+
   if (email) {
     filter.email = email;
   } else if (requestByEmail) {
@@ -53,7 +53,7 @@ const filterRequests = catchAsync(async (req, res) => {
 });
 
 const acceptRequest = catchAsync(async (req, res) => {
-  const { id, requestbyemail, requesttoemail} = req.params;
+  const { id, requestbyemail, requesttoemail } = req.params;
   const { status } = req.body;
   const request = await requestService.acceptRequest(id, requestbyemail, requesttoemail, status);
   res.status(httpStatus.OK).send(request);
@@ -112,5 +112,5 @@ module.exports = {
   updateRequestById,
   deleteRequestById,
   createMultipleRequests,
-  filterRequests
+  filterRequests,
 };

@@ -9,12 +9,10 @@ const createWaistSizeSet = catchAsync(async (req, res) => {
   res.status(httpStatus.CREATED).send(user);
 });
 
-const queryWaistSizeSet
- = catchAsync(async (req, res) => {
+const queryWaistSizeSet = catchAsync(async (req, res) => {
   const filter = pick(req.query, ['name']);
   const options = pick(req.query, ['sortBy', 'limit', 'page']);
-  const result = await waistSizeSetService.queryWaistSizeSet
-(filter, options);
+  const result = await waistSizeSetService.queryWaistSizeSet(filter, options);
   res.send(result);
 });
 
@@ -37,7 +35,7 @@ const deleteWaistSizeSetById = catchAsync(async (req, res) => {
 });
 
 module.exports = {
-    createWaistSizeSet,
+  createWaistSizeSet,
   queryWaistSizeSet,
   getWaistSizeSetById,
   updateWaistSizeSetById,
