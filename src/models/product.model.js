@@ -52,7 +52,7 @@ const productSchema = mongoose.Schema(
     seasons: { type: String },
     noOfPockets: { type: String },
     scoksStyle: { type: String },
-    troursePocketDescription: { type: String},
+    troursePocketDescription: { type: String },
     layerCompression: { type: String },
     Waistband: { type: String },
     includedComponents: { type: String },
@@ -63,7 +63,6 @@ const productSchema = mongoose.Schema(
     trourseStyle: { type: String },
     trourseLength: { type: String },
     coinPocket: { type: String },
-
 
     sizes: { type: [String], default: [] },
     ProductDeimension: [

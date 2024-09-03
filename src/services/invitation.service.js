@@ -101,7 +101,6 @@ const emailService = require('./email.service');
 //       });
 //     })
 //   );
- 
 
 // /**
 //  * Create a Invitation
@@ -145,7 +144,7 @@ const bulkUploadInvitations = async (invitations, user) => {
  * @returns {Promise<Array<Invitation>>}
  */
 const bulkUpload = async (invitationArray = [], csvFilePath = null, user) => {
-  let modifiedInvitationsArray = csvFilePath;
+  const modifiedInvitationsArray = csvFilePath;
   if (!modifiedInvitationsArray || !modifiedInvitationsArray.length) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Missing or empty array');
   }

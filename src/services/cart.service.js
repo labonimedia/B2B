@@ -1,5 +1,5 @@
 const httpStatus = require('http-status');
-const { Product, Cart, Manufacture, Wholesaler, User, Retailer, OrderCounter} = require('../models');
+const { Product, Cart, Manufacture, Wholesaler, User, Retailer, OrderCounter } = require('../models');
 const ApiError = require('../utils/ApiError');
 
 const addToCart = async (email, productBy, productId, quantity) => {
@@ -21,7 +21,6 @@ const addToCart = async (email, productBy, productId, quantity) => {
   }
   return await cart.save();
 };
-
 
 /**
  * Get Cart by email for place order
@@ -45,9 +44,14 @@ const getCartByEmailToPlaceOrder = async (email, productBy) => {
   // Get wholesaler or retailer details based on user role
   let wholesaler = null;
   if (user.role === 'wholesaler' || user.role === 'retailer') {
-    wholesaler = user.role === 'wholesaler'
-      ? await Wholesaler.findOne({ email }).select('fullName companyName email address country state city pinCode mobNumber GSTIN code profileImg')
-      : await Retailer.findOne({ email }).select('fullName companyName email address country state city pinCode mobNumber GSTIN code profileImg');
+    wholesaler =
+      user.role === 'wholesaler'
+        ? await Wholesaler.findOne({ email }).select(
+            'fullName companyName email address country state city pinCode mobNumber GSTIN code profileImg'
+          )
+        : await Retailer.findOne({ email }).select(
+            'fullName companyName email address country state city pinCode mobNumber GSTIN code profileImg'
+          );
 
     if (!wholesaler) {
       throw new ApiError(httpStatus.NOT_FOUND, user.role === 'wholesaler' ? 'Wholesaler not found' : 'Retailer not found');
@@ -55,34 +59,39 @@ const getCartByEmailToPlaceOrder = async (email, productBy) => {
   }
 
   // Extract unique manufacturer emails from cart products
-  const productByEmails = [...new Set(cart.products.map(item => item.productId.productBy))];
+  const productByEmails = [...new Set(cart.products.map((item) => item.productId.productBy))];
 
   // Fetch manufacturer details for all unique emails
-  const manufacturers = await Manufacture.find({ email: { $in: productByEmails } }).select('fullName companyName email address country state city pinCode mobNumber GSTIN');
+  const manufacturers = await Manufacture.find({ email: { $in: productByEmails } }).select(
+    'fullName companyName email address country state city pinCode mobNumber GSTIN'
+  );
 
   // Map manufacturers by their email for easy lookup
-  const manufacturerMap = new Map(manufacturers.map(manufacturer => [
-    manufacturer.email,
-    {
-      fullName: manufacturer.fullName,
-      companyName: manufacturer.companyName,
-      email: manufacturer.email,
-      address: manufacturer.address,
-      country: manufacturer.country,
-      state: manufacturer.state,
-      city: manufacturer.city,
-      pinCode: manufacturer.pinCode,
-      mobNumber: manufacturer.mobNumber,
-      GSTIN: manufacturer.GSTIN,
-    }
-  ]));
+  const manufacturerMap = new Map(
+    manufacturers.map((manufacturer) => [
+      manufacturer.email,
+      {
+        fullName: manufacturer.fullName,
+        companyName: manufacturer.companyName,
+        email: manufacturer.email,
+        address: manufacturer.address,
+        country: manufacturer.country,
+        state: manufacturer.state,
+        city: manufacturer.city,
+        pinCode: manufacturer.pinCode,
+        mobNumber: manufacturer.mobNumber,
+        GSTIN: manufacturer.GSTIN,
+      },
+    ])
+  );
 
   // Determine the financial year based on the current date
   const now = new Date();
   const currentMonth = now.getMonth(); // 0-based (0 = January, ..., 2 = March)
   let financialYear;
 
-  if (currentMonth < 2 || (currentMonth === 2 && now.getDate() < 1)) { // Before March 1st
+  if (currentMonth < 2 || (currentMonth === 2 && now.getDate() < 1)) {
+    // Before March 1st
     financialYear = now.getFullYear() - 1;
   } else {
     financialYear = now.getFullYear();
@@ -102,7 +111,8 @@ const getCartByEmailToPlaceOrder = async (email, productBy) => {
       { new: true, upsert: true, setDefaultsOnInsert: true }
     );
   } catch (error) {
-    if (error.code === 11000) { // Duplicate key error
+    if (error.code === 11000) {
+      // Duplicate key error
       throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'Duplicate order counter entry.');
     }
     throw error;
@@ -161,9 +171,6 @@ const getCartByEmailToPlaceOrder = async (email, productBy) => {
   return Object.values(groupedCart);
 };
 
-
-
-
 const getCartByEmail = async (email) => {
   // Find all carts by email and populate the product details
   const carts = await Cart.find({ email }).populate('products.productId');
@@ -172,18 +179,18 @@ const getCartByEmail = async (email) => {
   }
 
   // Extract unique manufacturer emails from all cart products
-  const productByEmails = [...new Set(carts.flatMap(cart => cart.products.map(item => item.productId.productBy)))];
+  const productByEmails = [...new Set(carts.flatMap((cart) => cart.products.map((item) => item.productId.productBy)))];
 
   // Fetch manufacturers based on extracted emails
   const manufacturers = await Manufacture.find({ email: { $in: productByEmails } });
-  const manufacturerMap = new Map(manufacturers.map(manufacturer => [manufacturer.email, manufacturer.fullName]));
+  const manufacturerMap = new Map(manufacturers.map((manufacturer) => [manufacturer.email, manufacturer.fullName]));
   const groupedCart = carts.reduce((acc, cart) => {
-    cart.products.forEach(item => {
-      const productBy = item.productId.productBy;
+    cart.products.forEach((item) => {
+      const { productBy } = item.productId;
       if (!acc[productBy]) {
         acc[productBy] = {
           fullName: manufacturerMap.get(productBy) || 'Unknown Manufacturer',
-          products: []
+          products: [],
         };
       }
       acc[productBy].products.push({

@@ -65,7 +65,7 @@ const deleteShirtSizeSetById = async (id) => {
 };
 
 module.exports = {
-    createShirtSizeSet,
+  createShirtSizeSet,
   querySeason,
   getShirtSizeSetById,
   updateShirtSizeSetById,

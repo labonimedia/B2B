@@ -33,14 +33,11 @@ router
     brandController.deleteBrandById
   );
 router.post(
-    '/searchmanufacturelist',
-    auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), // Adjust roles as necessary
-    brandController.searchBrandAndOwnerDetails
-  );
-  router
+  '/searchmanufacturelist',
+  auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), // Adjust roles as necessary
+  brandController.searchBrandAndOwnerDetails
+);
+router
   .route('/brandlist/:email')
-  .get(
-    auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
-    brandController.getBrandByEmail
-  );
+  .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), brandController.getBrandByEmail);
 module.exports = router;

@@ -35,7 +35,7 @@ const deleteEmbellishmentFeaturesById = catchAsync(async (req, res) => {
 });
 
 module.exports = {
-    createEmbellishmentFeatures,
+  createEmbellishmentFeatures,
   queryEmbellishmentFeatures,
   getEmbellishmentFeaturesById,
   updateEmbellishmentFeaturesById,

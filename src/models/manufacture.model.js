@@ -5,7 +5,6 @@ const { toJSON, paginate } = require('./plugins');
 
 const manufactureSchema = mongoose.Schema(
   {
-  
     logo: {
       type: String,
     },
@@ -95,7 +94,7 @@ const manufactureSchema = mongoose.Schema(
     },
     registerOnFTH: {
       type: Date,
-      default: Date.now
+      default: Date.now,
     },
     socialMedia: {
       facebook: {

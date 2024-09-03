@@ -80,5 +80,5 @@ module.exports = {
   updateBrandById,
   deleteBrandById,
   searchBrandAndOwnerDetails,
-  getBrandByEmail
+  getBrandByEmail,
 };

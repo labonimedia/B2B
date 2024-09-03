@@ -41,7 +41,7 @@ const getBrandById = async (id) => {
  * @returns {Promise<Brand>}
  */
 const getBrandByEmail = async (email) => {
-  return Brand.find({brandOwner:email});
+  return Brand.find({ brandOwner: email });
 };
 
 /**
@@ -102,18 +102,18 @@ const searchBrandAndOwnerDetails = async (brandName) => {
   }
 
   // Extract brandOwner emails
-  const brandOwners = brands.map(brand => brand.brandOwner);
+  const brandOwners = brands.map((brand) => brand.brandOwner);
 
   // Fetch details of the manufacturers who own these brands
   const ownersDetails = await Manufacture.find({
-    email: { $in: brandOwners }
+    email: { $in: brandOwners },
   });
 
   // Create a map to easily associate each brandOwner email with its corresponding owner details
-  const ownerDetailsMap = new Map(ownersDetails.map(owner => [owner.email, owner]));
+  const ownerDetailsMap = new Map(ownersDetails.map((owner) => [owner.email, owner]));
 
   // Combine brand details with corresponding owner details
-  const combinedDetails = brands.map(brand => {
+  const combinedDetails = brands.map((brand) => {
     const ownerDetails = ownerDetailsMap.get(brand.brandOwner) || {};
     return {
       ...brand.toObject(),
@@ -131,5 +131,5 @@ module.exports = {
   updateBrandById,
   deleteBrandById,
   searchBrandAndOwnerDetails,
-  getBrandByEmail
+  getBrandByEmail,
 };

@@ -3,20 +3,20 @@ const { toJSON, paginate } = require('./plugins');
 
 const mappingSchema = mongoose.Schema(
   {
-    productType:{
-        type: String,
+    productType: {
+      type: String,
     },
-    gender:{
-        type: String,
+    gender: {
+      type: String,
     },
-    category:{
-        type: String,
-    } ,
+    category: {
+      type: String,
+    },
     subCategory: {
-        type: String,
+      type: String,
     },
-    inputs: [ String]
-},
+    inputs: [String],
+  },
   {
     timestamps: true,
   }

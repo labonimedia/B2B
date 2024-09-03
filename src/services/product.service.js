@@ -1,5 +1,5 @@
 const httpStatus = require('http-status');
-const { Product, Manufacture, Brand} = require('../models');
+const { Product, Manufacture, Brand } = require('../models');
 const ApiError = require('../utils/ApiError');
 const { deleteFile } = require('../utils/upload');
 
@@ -239,7 +239,7 @@ const deleteColorCollection = async (productId, collectionId) => {
 //     query.state = filters.state;
 //   }
 //   const products = await Product.find(query);
-  
+
 //   if (products.length === 0) {
 //     throw new ApiError(httpStatus.NOT_FOUND, 'No products found');
 //   }
@@ -523,31 +523,32 @@ const filterProductsAndFetchManufactureDetails = async (filters) => {
   }
 
   // Create a map to easily associate each brandOwner email with its corresponding manufacturer details
-  const manufacturerMap = new Map(manufacturers.map(manufacturer => [manufacturer.email, manufacturer]));
+  const manufacturerMap = new Map(manufacturers.map((manufacturer) => [manufacturer.email, manufacturer]));
 
   // Combine the products with their corresponding brand and manufacturer details
-  const combinedDetails = products.map((product) => {
-    // Find the brand corresponding to this product
-    const brand = brands.find((b) => b.brandName === product.brand);
+  const combinedDetails = products
+    .map((product) => {
+      // Find the brand corresponding to this product
+      const brand = brands.find((b) => b.brandName === product.brand);
 
-    // If the brand is not found, skip this product
-    if (!brand) {
-      return null;
-    }
+      // If the brand is not found, skip this product
+      if (!brand) {
+        return null;
+      }
 
-    // Find the manufacturer corresponding to this brand's owner
-    const manufacturer = manufacturerMap.get(brand.brandOwner) || {};
+      // Find the manufacturer corresponding to this brand's owner
+      const manufacturer = manufacturerMap.get(brand.brandOwner) || {};
 
-    return {
-      ...product.toObject(),
-      brand: brand.toObject ? brand.toObject() : brand,
-      ownerDetails: manufacturer.toObject ? manufacturer.toObject() : manufacturer,
-    };
-  }).filter(detail => detail !== null); // Filter out any null entries
+      return {
+        ...product.toObject(),
+        brand: brand.toObject ? brand.toObject() : brand,
+        ownerDetails: manufacturer.toObject ? manufacturer.toObject() : manufacturer,
+      };
+    })
+    .filter((detail) => detail !== null); // Filter out any null entries
 
   return combinedDetails;
 };
-
 
 module.exports = {
   fileupload,
@@ -559,5 +560,5 @@ module.exports = {
   deleteProductById,
   deleteColorCollection,
   updateColorCollection,
-  filterProductsAndFetchManufactureDetails
+  filterProductsAndFetchManufactureDetails,
 };

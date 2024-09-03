@@ -11,15 +11,15 @@ const fileupload = async (req, id) => {
   }
 
   const extractPath = (url) => new URL(url).pathname;
-  if(req.body.file){
+  if (req.body.file) {
     const file = req.body.file ? extractPath(req.body.file[0]) : null;
     wholesaler.file = file;
   }
-  if (req.body.profileImg){
+  if (req.body.profileImg) {
     const profileImg = req.body.profileImg ? extractPath(req.body.profileImg[0]) : null;
     wholesaler.profileImg = profileImg;
   }
-  if (req.body.fileName){
+  if (req.body.fileName) {
     const fileName = req.body.fileName || '';
     wholesaler.fileName = fileName;
   }
