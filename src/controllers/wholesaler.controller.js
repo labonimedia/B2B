@@ -77,10 +77,24 @@ const getRetailerByEmail = catchAsync(async (req, res) => {
   res.send(user);
 });
 
+// const assignDiscount = catchAsync(async (req, res) => {
+//   const { wholesalerId } = req.params;
+//   const { discountGivenBy, discountPercentage } = req.body;
+//   const wholesaler = await wholesalerService.assignOrUpdateDiscount(wholesalerId, discountGivenBy, discountPercentage);
+//   res.status(httpStatus.OK).send(wholesaler);
+// });
 const assignDiscount = catchAsync(async (req, res) => {
   const { wholesalerId } = req.params;
-  const { discountGivenBy, discountPercentage } = req.body;
-  const wholesaler = await wholesalerService.assignOrUpdateDiscount(wholesalerId, discountGivenBy, discountPercentage);
+  const { discountGivenBy, discountCategory, productDiscount, shippingDiscount } = req.body;
+
+  const wholesaler = await wholesalerService.assignOrUpdateDiscount(
+    wholesalerId,
+    discountGivenBy,
+    discountCategory,
+    productDiscount,
+    shippingDiscount
+  );
+
   res.status(httpStatus.OK).send(wholesaler);
 });
 

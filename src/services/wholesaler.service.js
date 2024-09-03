@@ -197,21 +197,44 @@ const getRetailerByEmail = async (refByEmail, searchKeywords = '', options = {})
 //   return manufactures;
 // };
 
-const assignOrUpdateDiscount = async (wholesalerId, discountGivenBy, discountPercentage) => {
+// const assignOrUpdateDiscount = async (wholesalerId, discountGivenBy, discountPercentage) => {
+//   const wholesaler = await Wholesaler.findById(wholesalerId);
+//   if (!wholesaler) {
+//     throw new ApiError(httpStatus.NOT_FOUND, 'Wholesaler not found');
+//   }
+//   const existingDiscountIndex = wholesaler.discountGiven.findIndex(
+//     (discount) => discount.discountGivenBy === discountGivenBy
+//   );
+//   if (existingDiscountIndex !== -1) {
+//     // Update the existing discount
+//     wholesaler.discountGiven[existingDiscountIndex].discountCategory = discountPercentage;
+//   } else {
+//     // Add new discount entry
+//     wholesaler.discountGiven.push({ discountGivenBy, discountCategory ,productDiscount , shippingDiscount });
+//   }
+//   await wholesaler.save();
+//   return wholesaler;
+// };
+const assignOrUpdateDiscount = async (wholesalerId, discountGivenBy, discountCategory, productDiscount, shippingDiscount) => {
   const wholesaler = await Wholesaler.findById(wholesalerId);
   if (!wholesaler) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Wholesaler not found');
   }
+
   const existingDiscountIndex = wholesaler.discountGiven.findIndex(
     (discount) => discount.discountGivenBy === discountGivenBy
   );
+
   if (existingDiscountIndex !== -1) {
     // Update the existing discount
-    wholesaler.discountGiven[existingDiscountIndex].discountPercentage = discountPercentage;
+    wholesaler.discountGiven[existingDiscountIndex].discountCategory = discountCategory;
+    wholesaler.discountGiven[existingDiscountIndex].productDiscount = productDiscount;
+    wholesaler.discountGiven[existingDiscountIndex].shippingDiscount = shippingDiscount;
   } else {
     // Add new discount entry
-    wholesaler.discountGiven.push({ discountGivenBy, discountPercentage });
+    wholesaler.discountGiven.push({ discountGivenBy, discountCategory, productDiscount, shippingDiscount });
   }
+
   await wholesaler.save();
   return wholesaler;
 };
