@@ -2,7 +2,6 @@ const httpStatus = require('http-status');
 const { Retailer } = require('../models');
 const ApiError = require('../utils/ApiError');
 
-
 const fileupload = async (req, id) => {
   // Find the document by ID
   const retailer = await Retailer.findById(id);
@@ -10,17 +9,17 @@ const fileupload = async (req, id) => {
   if (!retailer) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Retailer not found');
   }
- 
+
   const extractPath = (url) => new URL(url).pathname;
-  if(req.body.file){
+  if (req.body.file) {
     const file = req.body.file ? extractPath(req.body.file[0]) : null;
     retailer.file = file;
   }
-  if (req.body.profileImg){
+  if (req.body.profileImg) {
     const profileImg = req.body.profileImg ? extractPath(req.body.profileImg[0]) : null;
     retailer.profileImg = profileImg;
   }
-  if (req.body.fileName){
+  if (req.body.fileName) {
     const fileName = req.body.fileName || '';
     retailer.fileName = fileName;
   }
@@ -83,7 +82,7 @@ const getUserByEmail = async (email) => {
  * @returns {Promise<Retailer>}
  */
 const updateRetailerById = async (email, updateBody) => {
-  console.log('updateBody',updateBody)
+  console.log('updateBody', updateBody);
   const user = await getUserByEmail(email);
   if (!user) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Retailer not found');

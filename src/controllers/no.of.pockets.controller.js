@@ -35,7 +35,7 @@ const deleteTopTypeById = catchAsync(async (req, res) => {
 });
 
 module.exports = {
-    createNoOfPockets,
+  createNoOfPockets,
   queryTopType,
   getTopTypeById,
   updateTopTypeById,

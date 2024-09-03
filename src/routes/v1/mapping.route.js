@@ -6,12 +6,12 @@ const router = express.Router();
 
 router
   .route('/')
-  .post(auth('superadmin','manufacture', 'wholesaler', 'retailer'), mappingController.createMapping)
+  .post(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), mappingController.createMapping)
   .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), mappingController.queryMapping);
 
 router
   .route('/:id')
-  .get(auth('superadmin','manufacture', 'wholesaler', 'retailer'), mappingController.getMappingById)
+  .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), mappingController.getMappingById)
   .patch(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), mappingController.updateMappingById)
   .delete(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), mappingController.deleteMappingById);
 

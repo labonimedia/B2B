@@ -2,16 +2,14 @@ const httpStatus = require('http-status');
 const path = require('path');
 const csv = require('csvtojson');
 const { join } = require('path');
-const pick = require('../utils/pick');
 const fs = require('fs');
+const pick = require('../utils/pick');
 const ApiError = require('../utils/ApiError');
 const catchAsync = require('../utils/catchAsync');
 const { invitationService } = require('../services');
 
 const staticFolder = path.join(__dirname, '../');
 const uploadsFolder = path.join(staticFolder, 'uploads');
-
-
 
 const bulkUploadFile = catchAsync(async (req, res) => {
   if (req.file) {
@@ -66,7 +64,7 @@ const sendReInvitation = catchAsync(async (req, res) => {
 });
 
 const sendReInvitationBulk = catchAsync(async (req, res) => {
-  const emails = req.body.emails; // Expecting an array of emails in the request body
+  const { emails } = req.body; // Expecting an array of emails in the request body
   // console.log(emails);
   if (!Array.isArray(emails) || emails.length === 0) {
     return res.status(httpStatus.BAD_REQUEST).send({ message: 'Emails are required and should be an array.' });
@@ -75,7 +73,6 @@ const sendReInvitationBulk = catchAsync(async (req, res) => {
   const results = await invitationService.sendReInvitation(emails);
   res.status(httpStatus.CREATED).send({ message: 'Invitations sent successfully', results });
 });
-
 
 const queryInvitation = catchAsync(async (req, res) => {
   const filter = pick(req.query, ['name', 'role', 'status', 'invitedBy']);

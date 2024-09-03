@@ -100,7 +100,7 @@ const wholesalerSchema = mongoose.Schema(
     },
     registerOnFTH: {
       type: Date,
-      default: Date.now
+      default: Date.now,
     },
     code: {
       type: String,

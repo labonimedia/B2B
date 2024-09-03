@@ -9,14 +9,13 @@ const fileupload = catchAsync(async (req, res) => {
   res.status(httpStatus.CREATED).send(user);
 });
 
-
 const createManufacture = catchAsync(async (req, res) => {
   const user = await manufactureService.createManufacture(req.body);
   res.status(httpStatus.CREATED).send(user);
 });
 
 const queryManufacture = catchAsync(async (req, res) => {
-  const filter = pick(req.query, ['name', 'role', 'status','fullName','companyName','email']);
+  const filter = pick(req.query, ['name', 'role', 'status', 'fullName', 'companyName', 'email']);
   const options = pick(req.query, ['sortBy', 'limit', 'page']);
   const result = await manufactureService.queryManufacture(filter, options);
   res.send(result);
@@ -68,5 +67,5 @@ module.exports = {
   fileupload,
   updateManufactureById,
   deleteManufactureById,
-  getRetailersByEmail
+  getRetailersByEmail,
 };

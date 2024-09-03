@@ -52,6 +52,7 @@ const riseStyleRoute = require('./rise.style.route');
 const trouserStyleRoute = require('./trouser.style.route');
 const trouserPocketRoute = require('./trouser.pocket.route');
 const shirtSizeSetRoute = require('./shirt.size.set.route');
+const productOrderRoute = require('./product.order.route');
 
 const router = express.Router();
 
@@ -144,7 +145,7 @@ const defaultRoutes = [
     path: '/producttype',
     route: productTypeRoute,
   },
-  
+
   {
     path: '/length-women-dress',
     route: lengthWomenDressRoute,
@@ -257,11 +258,14 @@ const defaultRoutes = [
     path: '/shirt-size-set',
     route: shirtSizeSetRoute,
   },
- {
+  {
     path: '/mapping',
     route: mappingRoute,
-  }
-  
+  },
+  {
+    path: '/product-order',
+    route: productOrderRoute,
+  },
 ];
 
 const devRoutes = [

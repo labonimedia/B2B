@@ -78,16 +78,15 @@ const resetPassword = async (resetPasswordToken, newPassword) => {
  * @returns {Promise}
  */
 const verifyEmail = async (email, otp) => {
- 
-    // const verifyEmailTokenDoc = await tokenService.verifyToken(verifyEmailToken, tokenTypes.VERIFY_EMAIL);
+  // const verifyEmailTokenDoc = await tokenService.verifyToken(verifyEmailToken, tokenTypes.VERIFY_EMAIL);
 
-    await otpService.verifyOtp(email, otp);
-    const user = await userService.getUserByEmail(email);
-    if (!user) {
-      throw new Error();
-    }
-    // await Token.deleteMany({ user: user.id, type: tokenTypes.VERIFY_EMAIL });
-    await userService.updateUserById(user._id, { isEmailVerified: true });
+  await otpService.verifyOtp(email, otp);
+  const user = await userService.getUserByEmail(email);
+  if (!user) {
+    throw new Error();
+  }
+  // await Token.deleteMany({ user: user.id, type: tokenTypes.VERIFY_EMAIL });
+  await userService.updateUserById(user._id, { isEmailVerified: true });
 };
 
 module.exports = {

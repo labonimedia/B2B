@@ -16,15 +16,12 @@ const getCartByEmail = catchAsync(async (req, res) => {
   res.status(httpStatus.OK).send(cart);
 });
 
-
 const getCartByEmailToPlaceOrder = catchAsync(async (req, res) => {
   const { email, productBy } = req.query;
-
 
   const cart = await cartService.getCartByEmailToPlaceOrder(email, productBy);
   res.status(httpStatus.OK).send(cart);
 });
-
 
 const getCartById = catchAsync(async (req, res) => {
   const user = await cartService.getCartById(req.params.id);

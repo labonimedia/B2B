@@ -20,7 +20,8 @@ router
 
 router.route('/registered-user/:email').get(
   // auth('superadmin', 'manufacture', 'wholesaler'),
- userController.getUserByEmail);
+  userController.getUserByEmail
+);
 
 module.exports = router;
 

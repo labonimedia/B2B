@@ -33,7 +33,7 @@ router
   .route('/re-invitation/:email')
   .get(auth('superadmin', 'manufacture', 'wholesaler'), invitationController.sendReInvitation);
 
-  router
+router
   .route('/bulk/re-invitation/array')
   .post(auth('superadmin', 'manufacture', 'wholesaler'), invitationController.sendReInvitationBulk);
 module.exports = router;

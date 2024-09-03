@@ -15,7 +15,7 @@ router
   .patch(auth('superadmin', 'manufacture', 'wholesaler'), subCategoryController.updateSubCategoryById)
   .delete(auth('superadmin', 'manufacture', 'wholesaler'), subCategoryController.deleteSubCategoryById);
 
-  router
+router
   .route('/get-category/by-gender')
   .get(auth('superadmin', 'manufacture', 'wholesaler'), subCategoryController.getCategory);
 module.exports = router;
