@@ -93,8 +93,9 @@ const manufactureSchema = mongoose.Schema(
     turnover: {
       type: String,
     },
-    registerOnFTH : {
+    registerOnFTH: {
       type: Date,
+      default: Date.now
     },
     socialMedia: {
       facebook: {
