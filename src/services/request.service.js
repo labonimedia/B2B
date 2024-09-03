@@ -13,6 +13,30 @@ const ApiError = require('../utils/ApiError');
 //   return request;
 // };
 
+// /**
+//  * Create a request
+//  * @param {Object} requestBody
+//  * @param {Object} user
+//  * @returns {Promise<Request>}
+//  */
+// const createRequest = async (requestBody, user) => {
+//   // Check if a request with the same requestor and recipient already exists
+//   const existingRequest = await Request.findOne({
+//     requestByEmail: requestBody.requestByEmail,
+//     email: requestBody.email,
+//   });
+
+//   if (existingRequest) {
+//     return {
+//       message: `A request with status '${existingRequest.status}' already exists between ${requestBody.requestByEmail} and ${requestBody.email}`,
+//       existingRequest,
+//     };
+//   }
+
+//   // Create a new request if no existing request is found
+//   const request = await Request.create(requestBody);
+//   return request;
+// };
 /**
  * Create a request
  * @param {Object} requestBody
@@ -27,10 +51,7 @@ const createRequest = async (requestBody, user) => {
   });
 
   if (existingRequest) {
-    return {
-      message: `A request with status '${existingRequest.status}' already exists between ${requestBody.requestByEmail} and ${requestBody.email}`,
-      existingRequest,
-    };
+    throw new ApiError(httpStatus.UNAUTHORIZED, `A request with status '${existingRequest.status}' already exists between ${requestBody.requestByEmail} and ${requestBody.email}`);
   }
 
   // Create a new request if no existing request is found
