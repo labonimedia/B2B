@@ -32,7 +32,7 @@ router
   .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), wholesalerController.getRetailerByEmail);
 
 router
-  .route('/assigndiscount/:wholesalerId')
+  .route('/assigndiscount')
   .post(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), wholesalerController.assignDiscount);
 
 router
