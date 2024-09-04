@@ -9,7 +9,7 @@ const wholesalerSchema = mongoose.Schema(
         discountGivenBy: {
           type: String,
         },
-        discountCategory: {
+        category: {
           type: String,
         },
         productDiscount: {
