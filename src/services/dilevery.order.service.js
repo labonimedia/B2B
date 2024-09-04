@@ -41,7 +41,7 @@ const getDileveryOrderById = async (id) => {
  * @returns {Promise<Material>}
  */
 const getDileveryOrderBycustomerEmail= async (customerEmail) => {
-    return DileveryOrder.findById({customerEmail});
+    return DileveryOrder.findOne({customerEmail});
   };
 
 /**
@@ -74,7 +74,6 @@ const getManufactureChalanNo = async (email) => {
       throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'An error occurred while updating the challan counter.');
     }
   
-    // Construct and return the result object
     return {
       profileImg: manufacture.profileImg,
       challanNo: challanCounter.count,
