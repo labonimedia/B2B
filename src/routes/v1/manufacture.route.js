@@ -16,7 +16,9 @@ router.route('/upload/doc/:id').post(
 
 router
   .route('/')
-  .post(auth('superadmin', 'manufacture'), manufactureController.createManufacture)
+  .post(
+    //auth('superadmin', 'manufacture'),
+   manufactureController.createManufacture)
   .get(auth('superadmin', 'manufacture'), manufactureController.queryManufacture);
 
 router
@@ -32,5 +34,13 @@ router
 router
   .route('/get-referred/retailers')
   .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), manufactureController.getRetailersByEmail);
+
+router
+  .route('/:manufactureId/visibility')
+  .patch(auth('superadmin', 'manufacture'), manufactureController.updateVisibilitySettings);
+
+router
+  .route('/:manufactureId/visible-profile')
+  .get(auth('superadmin', 'manufacture'), manufactureController.getVisibleProfile);
 
 module.exports = router;

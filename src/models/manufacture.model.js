@@ -137,6 +137,35 @@ const manufactureSchema = mongoose.Schema(
       type: Boolean,
       default: true,
     },
+    visibilitySettings: {
+      logo: { type: Boolean, default: true },
+      file: { type: Boolean, default: true },
+      fileName: { type: Boolean, default: true },
+      profileImg: { type: Boolean, default: true },
+      currency: { type: Boolean, default: true },
+      leagalStatusOfFirm: { type: Boolean, default: true },
+      fullName: { type: Boolean, default: true },
+      companyName: { type: Boolean, default: true },
+      email: { type: Boolean, default: true },
+      address: { type: Boolean, default: true },
+      state: { type: Boolean, default: true },
+      introduction: { type: Boolean, default: true },
+      city: { type: Boolean, default: true },
+      country: { type: Boolean, default: true },
+      pinCode: { type: Boolean, default: true },
+      mobNumber: { type: Boolean, default: true },
+      mobNumber2: { type: Boolean, default: true },
+      email2: { type: Boolean, default: true },
+      GSTIN: { type: Boolean, default: true },
+      pan: { type: Boolean, default: true },
+      code: { type: Boolean, default: true },
+      establishDate: { type: Boolean, default: true },
+      turnover: { type: Boolean, default: true },
+      registerOnFTH: { type: Boolean, default: true },
+      socialMedia: { type: Boolean, default: true },
+      BankDetails: { type: Boolean, default: true },
+      isActive: { type: Boolean, default: true },
+    },
   },
   {
     timestamps: true,
@@ -175,6 +204,18 @@ manufactureSchema.pre('save', async function (next) {
   }
   next();
 });
+
+// Add the static method to get the visible fields
+manufactureSchema.methods.getVisibleProfile = function () {
+  const manufacture = this.toObject();
+  const visibleProfile = {};
+  for (const key in manufacture) {
+    if (manufacture.visibilitySettings[key] !== false) {
+      visibleProfile[key] = manufacture[key];
+    }
+  }
+  return visibleProfile;
+};
 
 /**
  * @typedef ManufactureUser

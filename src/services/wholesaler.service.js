@@ -215,10 +215,11 @@ const getRetailerByEmail = async (refByEmail, searchKeywords = '', options = {})
 //   await wholesaler.save();
 //   return wholesaler;
 // };
+
 const assignOrUpdateDiscount = async (
   email,
   discountGivenBy,
-  discountCategory,
+  category,
   productDiscount,
   shippingDiscount
 ) => {
@@ -233,12 +234,12 @@ const assignOrUpdateDiscount = async (
 
   if (existingDiscountIndex !== -1) {
     // Update the existing discount
-    wholesaler.discountGiven[existingDiscountIndex].discountCategory = discountCategory;
+    wholesaler.discountGiven[existingDiscountIndex].category = category;
     wholesaler.discountGiven[existingDiscountIndex].productDiscount = productDiscount;
     wholesaler.discountGiven[existingDiscountIndex].shippingDiscount = shippingDiscount;
   } else {
     // Add new discount entry
-    wholesaler.discountGiven.push({ discountGivenBy, discountCategory, productDiscount, shippingDiscount });
+    wholesaler.discountGiven.push({ discountGivenBy, category, productDiscount, shippingDiscount });
   }
 
   await wholesaler.save();
