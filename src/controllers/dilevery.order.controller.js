@@ -24,6 +24,14 @@ const getDileveryOrderById = catchAsync(async (req, res) => {
   res.send(user);
 });
 
+const getManufactureChalanNo = catchAsync(async (req, res) => {
+    const user = await dileveryOrderService.getManufactureChalanNo(req.params.email);
+    if (!user) {
+      throw new ApiError(httpStatus.NOT_FOUND, 'Manufacture not found');
+    }
+    res.send(user);
+  });
+
 const updateDileveryOrderById = catchAsync(async (req, res) => {
   const user = await dileveryOrderService.updateDileveryOrderById(req.params.id, req.body);
   res.send(user);
@@ -37,6 +45,7 @@ const deleteDileveryOrderById = catchAsync(async (req, res) => {
 module.exports = {
   createDileveryOrder,
   queryDileveryOrder,
+  getManufactureChalanNo,
   getDileveryOrderById,
   updateDileveryOrderById,
   deleteDileveryOrderById,
