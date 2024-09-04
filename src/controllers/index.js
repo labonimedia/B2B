@@ -50,3 +50,4 @@ module.exports.trouserStyleController = require('./trouser.style.controller');
 module.exports.trouserPocketController = require('./trouser.pocket.controller');
 module.exports.shirtSizeSetController = require('./shirt.size.set.controller');
 module.exports.productOrderController = require('./product.order.controller');
+module.exports.dileveryOrderController = require('./dilevery.order.controller');
