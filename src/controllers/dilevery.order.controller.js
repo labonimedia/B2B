@@ -25,7 +25,7 @@ const getDileveryOrderById = catchAsync(async (req, res) => {
 });
 
 const getManufactureChalanNo = catchAsync(async (req, res) => {
-    const user = await dileveryOrderService.getManufactureChalanNo(req.params.email);
+    const user = await dileveryOrderService.getManufactureChalanNo(req.query.email);
     if (!user) {
       throw new ApiError(httpStatus.NOT_FOUND, 'Manufacture not found');
     }
