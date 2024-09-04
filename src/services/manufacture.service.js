@@ -162,6 +162,35 @@ const deleteManufactureById = async (email) => {
   await user.remove();
   return user;
 };
+/**
+ * Update visibility settings for a manufacturer's profile
+ * @param {ObjectId} manufactureId
+ * @param {Object} visibilitySettings
+ * @returns {Promise<Manufacture>}
+ */
+const updateVisibilitySettings = async (manufactureId, visibilitySettings) => {
+  const manufacture = await Manufacture.findById(manufactureId);
+  if (!manufacture) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Manufacture not found');
+  }
+
+  manufacture.visibilitySettings = { ...manufacture.visibilitySettings, ...visibilitySettings };
+  await manufacture.save();
+  return manufacture;
+};
+
+/**
+ * Get the visible profile for a manufacturer
+ * @param {ObjectId} manufactureId
+ * @returns {Promise<Object>}
+ */
+const getVisibleProfile = async (manufactureId) => {
+  const manufacture = await Manufacture.findById(manufactureId);
+  if (!manufacture) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Manufacture not found');
+  }
+  return manufacture.getVisibleProfile();
+};
 
 module.exports = {
   createManufacture,
@@ -173,4 +202,6 @@ module.exports = {
   updateManufactureById,
   deleteManufactureById,
   getRetailersByEmail,
+  updateVisibilitySettings,
+  getVisibleProfile
 };
