@@ -41,7 +41,7 @@ const getDileveryOrderById = async (id) => {
  * @returns {Promise<Material>}
  */
 const getDileveryOrderBycustomerEmail= async (customerEmail) => {
-    return DileveryOrder.findOne({customerEmail});
+    return DileveryOrder.find({customerEmail});
   };
 
 /**
