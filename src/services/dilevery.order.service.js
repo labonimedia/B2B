@@ -1,6 +1,7 @@
 const httpStatus = require('http-status');
-const { DileveryOrder } = require('../models');
+const { DileveryOrder, Manufacture, ChallanCounter } = require('../models');
 const ApiError = require('../utils/ApiError');
+const { profile } = require('winston');
 
 /**
  * Create a Material
@@ -35,6 +36,43 @@ const getDileveryOrderById = async (id) => {
 };
 
 /**
+ * Get Material by id
+ * @param {ObjectId} id
+ * @returns {Promise<Material>}
+ */
+const getManufactureChalanNo = async (email) => {
+    // Find manufacture by email and select only the profileImg field
+    const manufacture = await Manufacture.findOne({ email }).select('profileImg');
+  
+    if (!manufacture) {
+      throw new ApiError(httpStatus.NOT_FOUND, 'Manufacture not found');
+    }
+  
+    let challanCounter;
+    try {
+      // Increment the counter and upsert if not present
+      challanCounter = await ChallanCounter.findOneAndUpdate(
+        { email },
+        { $inc: { count: 1 } },
+        { new: true, upsert: true, setDefaultsOnInsert: true }
+      );
+  
+      // Handle potential errors (e.g., duplicate key)
+    } catch (error) {
+      if (error.code === 11000) {
+        throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'Duplicate order counter entry.');
+      }
+      throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'An error occurred while updating the challan counter.');
+    }
+  
+    // Construct and return the result object
+    return {
+      profileImg: manufacture.profileImg,
+      challanNo: challanCounter.count,
+    };
+  };
+  
+/**
  * Update Material by id
  * @param {ObjectId} Id
  * @param {Object} updateBody
@@ -67,6 +105,7 @@ const deleteDileveryOrderById = async (id) => {
 module.exports = {
   createDileveryOrder,
   queryDileveryOrder,
+  getManufactureChalanNo,
   getDileveryOrderById,
   updateDileveryOrderById,
   deleteDileveryOrderById,
