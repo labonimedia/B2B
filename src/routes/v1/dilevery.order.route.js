@@ -16,6 +16,11 @@ router
   .delete(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), dileveryOrderController.deleteDileveryOrderById);
 
   router
+  .route('/get/challan')
+  .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), dileveryOrderController.getManufactureChalanNo)
+  
+  router
   .route('/get/challan/number')
   .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), dileveryOrderController.getManufactureChalanNo)
+
 module.exports = router;
