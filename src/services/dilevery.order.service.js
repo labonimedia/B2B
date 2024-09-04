@@ -40,6 +40,15 @@ const getDileveryOrderById = async (id) => {
  * @param {ObjectId} id
  * @returns {Promise<Material>}
  */
+const getDileveryOrderBycustomerEmail= async (customerEmail) => {
+    return DileveryOrder.findById({customerEmail});
+  };
+
+/**
+ * Get Material by id
+ * @param {ObjectId} id
+ * @returns {Promise<Material>}
+ */
 const getManufactureChalanNo = async (email) => {
     // Find manufacture by email and select only the profileImg field
     const manufacture = await Manufacture.findOne({ email }).select('profileImg');
@@ -106,6 +115,7 @@ module.exports = {
   createDileveryOrder,
   queryDileveryOrder,
   getManufactureChalanNo,
+  getDileveryOrderBycustomerEmail,
   getDileveryOrderById,
   updateDileveryOrderById,
   deleteDileveryOrderById,

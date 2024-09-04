@@ -24,6 +24,14 @@ const getDileveryOrderById = catchAsync(async (req, res) => {
   res.send(user);
 });
 
+const getDileveryOrderBycustomerEmail = catchAsync(async (req, res) => {
+    const user = await dileveryOrderService.getDileveryOrderBycustomerEmail(req.query.customerEmail);
+    if (!user) {
+      throw new ApiError(httpStatus.NOT_FOUND, 'DileveryOrder not found');
+    }
+    res.send(user);
+  });
+
 const getManufactureChalanNo = catchAsync(async (req, res) => {
     const user = await dileveryOrderService.getManufactureChalanNo(req.query.email);
     if (!user) {
@@ -47,6 +55,7 @@ module.exports = {
   queryDileveryOrder,
   getManufactureChalanNo,
   getDileveryOrderById,
+  getDileveryOrderBycustomerEmail,
   updateDileveryOrderById,
   deleteDileveryOrderById,
 };
