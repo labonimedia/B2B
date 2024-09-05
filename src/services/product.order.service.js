@@ -46,7 +46,7 @@ const getProductOrderBySupplyer = async (supplierEmail) => {
     throw new ApiError(httpStatus.NOT_FOUND, 'No Product Orders found for this supplier');
   }
 
-  const companyEmails = productOrders.map(order => order.companyEmail);
+  const companyEmails = productOrders.map(order => order.productBy);
 
   const wholesalers = await Wholesaler.find({
     'discountGiven.discountGivenBy': { $in: companyEmails }
@@ -60,12 +60,12 @@ const getProductOrderBySupplyer = async (supplierEmail) => {
   const updatedProductOrders = productOrders.map((order) => {
     // Find the matching wholesaler for the order's companyEmail
     const wholesaler = wholesalers.find((wholesaler) =>
-      wholesaler.discountGiven.some((discount) => discount.discountGivenBy === order.companyEmail)
+      wholesaler.discountGiven.some((discount) => discount.discountGivenBy === order.productBy)
     );
 
     if (wholesaler) {
       // Find the relevant discounts from the wholesaler
-      const discounts = wholesaler.discountGiven.filter(discount => discount.discountGivenBy === order.companyEmail);
+      const discounts = wholesaler.discountGiven.filter(discount => discount.discountGivenBy === order.productBy);
 
       // Push the discounts into the productOrder object
       return {
