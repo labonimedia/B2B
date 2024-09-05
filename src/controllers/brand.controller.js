@@ -18,7 +18,11 @@ const createBrand = catchAsync(async (req, res) => {
 });
 
 const queryBrand = catchAsync(async (req, res) => {
-  const filter = pick(req.query, ['name', 'brandOwner']);
+  const { name, brandOwner } = req.query;
+  let filter= {};
+  if (name)filter = { name: new RegExp(name, 'i') };
+  if (brandOwner) filter = { brandOwner: brandOwner };
+  // const filter = pick(req.query, ['name', 'brandOwner']);
   const options = pick(req.query, ['sortBy', 'limit', 'page']);
   const result = await brandService.queryBrand(filter, options);
   res.send(result);
