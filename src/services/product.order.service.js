@@ -39,7 +39,7 @@ const getProductOrderById = async (id) => {
  * @param {email} supplierEmail
  * @returns {Promise<Material>}
  */
-const getProductOrderBySupplier = async (supplierEmail) => {
+const getProductOrderBySupplyer = async (supplierEmail) => {
   const productOrders = await ProductOrder.find({ supplierEmail });
 
   if (productOrders.length === 0) {
