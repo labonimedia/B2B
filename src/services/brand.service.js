@@ -21,7 +21,6 @@ const createBrand = async (reqBody) => {
  * @returns {Promise<QueryResult>}
  */
 const queryBrand = async (filter, options) => {
-  console.log('queryBrand', filter, options);
   const Brands = await Brand.paginate(filter, options);
   return Brands;
 };
