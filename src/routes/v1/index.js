@@ -55,6 +55,7 @@ const trouserPocketRoute = require('./trouser.pocket.route');
 const shirtSizeSetRoute = require('./shirt.size.set.route');
 const productOrderRoute = require('./product.order.route');
 const dileveryOrderRoute = require('./dilevery.order.route');
+const courierRoute = require('./courier.route');
 
 const router = express.Router();
 
@@ -271,6 +272,10 @@ const defaultRoutes = [
   {
     path: '/dilevery-order',
     route: dileveryOrderRoute,
+  },
+  {
+    path: '/courier',
+    route: courierRoute,
   }
 ];
 
