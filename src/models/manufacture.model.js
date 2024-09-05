@@ -25,7 +25,6 @@ const manufactureSchema = mongoose.Schema(
     },
     fullName: {
       type: String,
-      // required: true,
       trim: true,
     },
     companyName: {
@@ -33,15 +32,6 @@ const manufactureSchema = mongoose.Schema(
     },
     email: {
       type: String,
-      // required: true,
-      // unique: true,
-      // trim: true,
-      // lowercase: true,
-      // validate(value) {
-      //   if (!validator.isEmail(value)) {
-      //     throw new Error('Invalid email');
-      //   }
-      // },
     },
     address: {
       type: String,
@@ -69,13 +59,6 @@ const manufactureSchema = mongoose.Schema(
     },
     email2: {
       type: String,
-      // trim: true,
-      // lowercase: true,
-      // validate(value) {
-      //   if (!validator.isEmail(value)) {
-      //     throw new Error('Invalid email');
-      //   }
-      // },
     },
     GSTIN: {
       type: String,
@@ -137,7 +120,38 @@ const manufactureSchema = mongoose.Schema(
       type: Boolean,
       default: true,
     },
+
+    // visibilitySettings: {
+    //   logo: { type: Boolean, default: true },
+    //   file: { type: Boolean, default: true },
+    //   fileName: { type: Boolean, default: true },
+    //   profileImg: { type: Boolean, default: true },
+    //   currency: { type: Boolean, default: true },
+    //   leagalStatusOfFirm: { type: Boolean, default: true },
+    //   fullName: { type: Boolean, default: true },
+    //   companyName: { type: Boolean, default: true },
+    //   email: { type: Boolean, default: true },
+    //   address: { type: Boolean, default: true },
+    //   state: { type: Boolean, default: true },
+    //   introduction: { type: Boolean, default: true },
+    //   city: { type: Boolean, default: true },
+    //   country: { type: Boolean, default: true },
+    //   pinCode: { type: Boolean, default: true },
+    //   mobNumber: { type: Boolean, default: true },
+    //   mobNumber2: { type: Boolean, default: true },
+    //   email2: { type: Boolean, default: true },
+    //   GSTIN: { type: Boolean, default: true },
+    //   pan: { type: Boolean, default: true },
+    //   code: { type: Boolean, default: true },
+    //   establishDate: { type: Boolean, default: true },
+    //   turnover: { type: Boolean, default: true },
+    //   registerOnFTH: { type: Boolean, default: true },
+    //   socialMedia: { type: Boolean, default: true },
+    //   BankDetails: { type: Boolean, default: true },
+    //   isActive: { type: Boolean, default: true },
+    // },
     visibilitySettings: {
+      // Basic fields
       logo: { type: Boolean, default: true },
       file: { type: Boolean, default: true },
       fileName: { type: Boolean, default: true },
@@ -162,8 +176,22 @@ const manufactureSchema = mongoose.Schema(
       establishDate: { type: Boolean, default: true },
       turnover: { type: Boolean, default: true },
       registerOnFTH: { type: Boolean, default: true },
-      socialMedia: { type: Boolean, default: true },
-      BankDetails: { type: Boolean, default: true },
+
+      // Social Media fields
+      'socialMedia.facebook': { type: Boolean, default: true },
+      'socialMedia.instagram': { type: Boolean, default: true },
+      'socialMedia.linkedIn': { type: Boolean, default: true },
+      'socialMedia.webSite': { type: Boolean, default: true },
+
+      // Bank Details fields
+      'BankDetails.accountNumber': { type: Boolean, default: true },
+      'BankDetails.accountType': { type: Boolean, default: true },
+      'BankDetails.bankName': { type: Boolean, default: true },
+      'BankDetails.IFSCcode': { type: Boolean, default: true },
+      'BankDetails.country': { type: Boolean, default: true },
+      'BankDetails.city': { type: Boolean, default: true },
+      'BankDetails.branch': { type: Boolean, default: true },
+
       isActive: { type: Boolean, default: true },
     },
   },

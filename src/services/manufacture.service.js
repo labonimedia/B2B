@@ -162,6 +162,7 @@ const deleteManufactureById = async (email) => {
   await user.remove();
   return user;
 };
+
 /**
  * Update visibility settings for a manufacturer's profile
  * @param {ObjectId} manufactureId
