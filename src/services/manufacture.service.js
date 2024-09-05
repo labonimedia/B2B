@@ -162,22 +162,84 @@ const deleteManufactureById = async (email) => {
   await user.remove();
   return user;
 };
+
+// /**
+//  * Update visibility settings for a manufacturer's profile
+//  * @param {ObjectId} manufactureId
+//  * @param {Object} visibilitySettings
+//  * @returns {Promise<Manufacture>}
+//  */
+// const updateVisibilitySettings = async (manufactureId, visibilitySettings) => {
+//   const manufacture = await Manufacture.findById(manufactureId);
+//   if (!manufacture) {
+//     throw new ApiError(httpStatus.NOT_FOUND, 'Manufacture not found');
+//   }
+
+//   manufacture.visibilitySettings = { ...manufacture.visibilitySettings, ...visibilitySettings };
+//   await manufacture.save();
+//   return manufacture;
+// };
 /**
- * Update visibility settings for a manufacturer's profile
+ * Update visibility settings for a manufacturer's profile based on payload
  * @param {ObjectId} manufactureId
- * @param {Object} visibilitySettings
+ * @param {Object} payload
  * @returns {Promise<Manufacture>}
  */
-const updateVisibilitySettings = async (manufactureId, visibilitySettings) => {
+const updateVisibilitySettings = async (manufactureId, payload) => {
   const manufacture = await Manufacture.findById(manufactureId);
   if (!manufacture) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Manufacture not found');
   }
 
+  // Map the payload fields to the visibilitySettings structure
+  const visibilitySettings = {
+    logo: payload.logo !== undefined ? payload.logo : manufacture.visibilitySettings.logo,
+    file: payload.file !== undefined ? payload.file : manufacture.visibilitySettings.file,
+    fileName: payload.fileName !== undefined ? payload.fileName : manufacture.visibilitySettings.fileName,
+    profileImg: payload.profileImg !== undefined ? payload.profileImg : manufacture.visibilitySettings.profileImg,
+    fullName: payload.fullName !== undefined ? payload.fullName : manufacture.visibilitySettings.fullName,
+    companyName: payload.companyName !== undefined ? payload.companyName : manufacture.visibilitySettings.companyName,
+    email: payload.email !== undefined ? payload.email : manufacture.visibilitySettings.email,
+    address: payload.address !== undefined ? payload.address : manufacture.visibilitySettings.address,
+    state: payload.state !== undefined ? payload.state : manufacture.visibilitySettings.state,
+    introduction: payload.introduction !== undefined ? payload.introduction : manufacture.visibilitySettings.introduction,
+    city: payload.city !== undefined ? payload.city : manufacture.visibilitySettings.city,
+    country: payload.country !== undefined ? payload.country : manufacture.visibilitySettings.country,
+    pinCode: payload.pinCode !== undefined ? payload.pinCode : manufacture.visibilitySettings.pinCode,
+    mobNumber: payload.mobNumber !== undefined ? payload.mobNumber : manufacture.visibilitySettings.mobNumber,
+    mobNumber2: payload.mobNumber2 !== undefined ? payload.mobNumber2 : manufacture.visibilitySettings.mobNumber2,
+    email2: payload.email2 !== undefined ? payload.email2 : manufacture.visibilitySettings.email2,
+    GSTIN: payload.GSTIN !== undefined ? payload.GSTIN : manufacture.visibilitySettings.GSTIN,
+    pan: payload.pan !== undefined ? payload.pan : manufacture.visibilitySettings.pan,
+    code: payload.code !== undefined ? payload.code : manufacture.visibilitySettings.code,
+    establishDate: payload.establishDate !== undefined ? payload.establishDate : manufacture.visibilitySettings.establishDate,
+    turnover: payload.turnover !== undefined ? payload.turnover : manufacture.visibilitySettings.turnover,
+    registerOnFTH: payload.registerOnFTH !== undefined ? payload.registerOnFTH : manufacture.visibilitySettings.registerOnFTH,
+    
+    // Social Media fields
+    'socialMedia.facebook': payload.socialMedia?.facebook !== undefined ? payload.socialMedia.facebook : manufacture.visibilitySettings['socialMedia.facebook'],
+    'socialMedia.instagram': payload.socialMedia?.instagram !== undefined ? payload.socialMedia.instagram : manufacture.visibilitySettings['socialMedia.instagram'],
+    'socialMedia.linkedIn': payload.socialMedia?.linkedIn !== undefined ? payload.socialMedia.linkedIn : manufacture.visibilitySettings['socialMedia.linkedIn'],
+    'socialMedia.webSite': payload.socialMedia?.webSite !== undefined ? payload.socialMedia.webSite : manufacture.visibilitySettings['socialMedia.webSite'],
+
+    // Bank Details fields
+    'BankDetails.accountNumber': payload.BankDetails?.accountNumber !== undefined ? payload.BankDetails.accountNumber : manufacture.visibilitySettings['BankDetails.accountNumber'],
+    'BankDetails.accountType': payload.BankDetails?.accountType !== undefined ? payload.BankDetails.accountType : manufacture.visibilitySettings['BankDetails.accountType'],
+    'BankDetails.bankName': payload.BankDetails?.bankName !== undefined ? payload.BankDetails.bankName : manufacture.visibilitySettings['BankDetails.bankName'],
+    'BankDetails.IFSCcode': payload.BankDetails?.IFSCcode !== undefined ? payload.BankDetails.IFSCcode : manufacture.visibilitySettings['BankDetails.IFSCcode'],
+    'BankDetails.country': payload.BankDetails?.country !== undefined ? payload.BankDetails.country : manufacture.visibilitySettings['BankDetails.country'],
+    'BankDetails.city': payload.BankDetails?.city !== undefined ? payload.BankDetails.city : manufacture.visibilitySettings['BankDetails.city'],
+    'BankDetails.branch': payload.BankDetails?.branch !== undefined ? payload.BankDetails.branch : manufacture.visibilitySettings['BankDetails.branch'],
+
+    isActive: payload.isActive !== undefined ? payload.isActive : manufacture.visibilitySettings.isActive,
+  };
+
+  // Update visibility settings
   manufacture.visibilitySettings = { ...manufacture.visibilitySettings, ...visibilitySettings };
   await manufacture.save();
   return manufacture;
 };
+
 
 /**
  * Get the visible profile for a manufacturer
