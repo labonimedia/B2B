@@ -65,3 +65,4 @@ module.exports.ShirtSizeSet = require('./shirt.size.set.model');
 module.exports.ProductOrder = require('./product.order.model');
 module.exports.DileveryOrder = require('./dilevery.order.model');
 module.exports.ChallanCounter = require('./challan.counter.model');
+module.exports.Courier = require('./courier.model');

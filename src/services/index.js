@@ -54,3 +54,4 @@ module.exports.trouserPocketService = require('./trouser.pocket.service');
 module.exports.shirtSizeSetService = require('./shirt.size.set.service');
 module.exports.productOrderService = require('./product.order.service');
 module.exports.dileveryOrderService = require('./dilevery.order.service');
+module.exports.courierService = require('./courier.service');
