@@ -62,17 +62,16 @@ const deleteManufactureById = catchAsync(async (req, res) => {
 const updateVisibilitySettings = catchAsync(async (req, res) => {
   const { manufactureId } = req.params;
   const visibilitySettings = req.body;
-
   const manufacture = await manufactureService.updateVisibilitySettings(manufactureId, visibilitySettings);
   res.status(httpStatus.OK).send(manufacture);
 });
 
 const getVisibleProfile = catchAsync(async (req, res) => {
   const { manufactureId } = req.params;
-
   const visibleProfile = await manufactureService.getVisibleProfile(manufactureId);
   res.status(httpStatus.OK).send(visibleProfile);
 });
+
 module.exports = {
   createManufacture,
   queryManufacture,
@@ -83,5 +82,5 @@ module.exports = {
   deleteManufactureById,
   getRetailersByEmail,
   updateVisibilitySettings,
-  getVisibleProfile
+  getVisibleProfile,
 };

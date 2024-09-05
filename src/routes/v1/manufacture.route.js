@@ -41,6 +41,8 @@ router
 
 router
   .route('/:manufactureId/visible-profile')
-  .get(auth('superadmin', 'manufacture'), manufactureController.getVisibleProfile);
+  .get(
+    //auth('superadmin', 'manufacture'),
+     manufactureController.getVisibleProfile);
 
 module.exports = router;
