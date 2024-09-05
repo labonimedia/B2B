@@ -45,9 +45,7 @@ const getProductOrderBySupplyer = async (supplierEmail) => {
   if (productOrders.length === 0) {
     throw new ApiError(httpStatus.NOT_FOUND, 'No Product Orders found for this supplier');
   }
-
-  const companyEmails = productOrders.map(order => order.productBy);
-
+  const companyEmails = productOrders.map(order => order.supplierEmail);
   const wholesalers = await Wholesaler.find({
     'discountGiven.discountGivenBy': { $in: companyEmails }
   });
@@ -55,26 +53,17 @@ const getProductOrderBySupplyer = async (supplierEmail) => {
   if (wholesalers.length === 0) {
     throw new ApiError(httpStatus.NOT_FOUND, 'No wholesalers found with matching discounts');
   }
-
-  // Push the relevant discounts into each productOrder
   const updatedProductOrders = productOrders.map((order) => {
-    // Find the matching wholesaler for the order's companyEmail
     const wholesaler = wholesalers.find((wholesaler) =>
-      wholesaler.discountGiven.some((discount) => discount.discountGivenBy === order.productBy)
+      wholesaler.discountGiven.some((discount) => discount.discountGivenBy === order.supplierEmail)
     );
-
     if (wholesaler) {
-      // Find the relevant discounts from the wholesaler
-      const discounts = wholesaler.discountGiven.filter(discount => discount.discountGivenBy === order.productBy);
-
-      // Push the discounts into the productOrder object
+      const discounts = wholesaler.discountGiven.filter(discount => discount.discountGivenBy === order.supplierEmail);
       return {
-        ...order.toObject(),  // Convert Mongoose document to plain object
-        discounts,            // Add discounts to the productOrder
+        ...order.toObject(),
+        discounts,      
       };
     }
-
-    // If no matching wholesaler found, return the productOrder as is with an empty discounts array
     return {
       ...order.toObject(),
       discounts: [],
