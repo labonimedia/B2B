@@ -56,7 +56,8 @@ const getProductOrderBySupplyer = async (supplierEmail) => {
   return wholesalers.map(wholesaler => ({
     wholesalerName: wholesaler.fullName,
     companyName: wholesaler.companyName,
-    discounts: wholesaler.discountGiven.filter(discount => companyEmails.includes(discount.discountGivenBy))
+    discounts: wholesaler.discountGiven.filter(discount => companyEmails.includes(discount.discountGivenBy)),
+    productOrders,
   }));
 };
 
