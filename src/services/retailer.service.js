@@ -87,8 +87,10 @@ const updateRetailerById = async (email, updateBody) => {
   if (!user) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Retailer not found');
   }
+  console.log('Retailer', user);
   Object.assign(user, updateBody);
   await user.save();
+  console.log('User', user);
   return user;
 };
 
