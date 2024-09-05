@@ -36,11 +36,11 @@ router
   .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), manufactureController.getRetailersByEmail);
 
 router
-  .route('/:manufactureId/visibility')
+  .route('/visibility/:manufactureId')
   .patch(auth('superadmin', 'manufacture'), manufactureController.updateVisibilitySettings);
 
 router
-  .route('/:manufactureId/visible-profile')
+  .route('/visible-profile/:manufactureId')
   .get(
     //auth('superadmin', 'manufacture'),
      manufactureController.getVisibleProfile);
