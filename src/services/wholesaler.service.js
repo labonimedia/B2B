@@ -216,14 +216,8 @@ const getRetailerByEmail = async (refByEmail, searchKeywords = '', options = {})
 //   return wholesaler;
 // };
 
-const assignOrUpdateDiscount = async (
-  email,
-  discountGivenBy,
-  category,
-  productDiscount,
-  shippingDiscount
-) => {
-  const wholesaler = await Wholesaler.findOne({email: email});
+const assignOrUpdateDiscount = async (email, discountGivenBy, category, productDiscount, shippingDiscount) => {
+  const wholesaler = await Wholesaler.findOne({ email });
   if (!wholesaler) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Wholesaler not found');
   }

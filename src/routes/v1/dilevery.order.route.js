@@ -15,12 +15,12 @@ router
   .patch(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), dileveryOrderController.updateDileveryOrderById)
   .delete(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), dileveryOrderController.deleteDileveryOrderById);
 
-  router
+router
   .route('/get/challan')
-  .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), dileveryOrderController.getDileveryOrderBycustomerEmail)
-  
-  router
+  .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), dileveryOrderController.getDileveryOrderBycustomerEmail);
+
+router
   .route('/get/challan/number')
-  .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), dileveryOrderController.getManufactureChalanNo)
+  .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), dileveryOrderController.getManufactureChalanNo);
 
 module.exports = router;

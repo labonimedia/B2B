@@ -17,8 +17,9 @@ router.route('/upload/doc/:id').post(
 router
   .route('/')
   .post(
-    //auth('superadmin', 'manufacture'),
-   manufactureController.createManufacture)
+    // auth('superadmin', 'manufacture'),
+    manufactureController.createManufacture
+  )
   .get(auth('superadmin', 'manufacture'), manufactureController.queryManufacture);
 
 router

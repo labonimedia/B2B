@@ -4,7 +4,7 @@ const { toJSON, paginate } = require('./plugins');
 const productOrderShema = mongoose.Schema(
   {
     buyerEmail: {
-        type: String,
+      type: String,
     },
     buyerAddress: {
       type: String,
@@ -83,7 +83,7 @@ const productOrderShema = mongoose.Schema(
       type: String,
     },
     supplierEmail: {
-        type: String,
+      type: String,
     },
     supplierGSTIN: {
       type: String,
