@@ -15,7 +15,7 @@ router
   .patch(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), productOrderController.updateProductOrderById)
   .delete(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), productOrderController.deleteProductOrderById);
 
-  router
+router
   .route('/get-product-order/by-supplyer')
-  .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), productOrderController.getProductOrderBySupplyer)
+  .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), productOrderController.getProductOrderBySupplyer);
 module.exports = router;

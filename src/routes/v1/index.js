@@ -276,7 +276,7 @@ const defaultRoutes = [
   {
     path: '/courier',
     route: courierRoute,
-  }
+  },
 ];
 
 const devRoutes = [

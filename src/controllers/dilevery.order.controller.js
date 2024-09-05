@@ -25,20 +25,20 @@ const getDileveryOrderById = catchAsync(async (req, res) => {
 });
 
 const getDileveryOrderBycustomerEmail = catchAsync(async (req, res) => {
-    const user = await dileveryOrderService.getDileveryOrderBycustomerEmail(req.query.customerEmail);
-    if (!user) {
-      throw new ApiError(httpStatus.NOT_FOUND, 'DileveryOrder not found');
-    }
-    res.send(user);
-  });
+  const user = await dileveryOrderService.getDileveryOrderBycustomerEmail(req.query.customerEmail);
+  if (!user) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'DileveryOrder not found');
+  }
+  res.send(user);
+});
 
 const getManufactureChalanNo = catchAsync(async (req, res) => {
-    const user = await dileveryOrderService.getManufactureChalanNo(req.query.email);
-    if (!user) {
-      throw new ApiError(httpStatus.NOT_FOUND, 'Manufacture not found');
-    }
-    res.send(user);
-  });
+  const user = await dileveryOrderService.getManufactureChalanNo(req.query.email);
+  if (!user) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Manufacture not found');
+  }
+  res.send(user);
+});
 
 const updateDileveryOrderById = catchAsync(async (req, res) => {
   const user = await dileveryOrderService.updateDileveryOrderById(req.params.id, req.body);

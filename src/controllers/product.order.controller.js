@@ -25,12 +25,12 @@ const getProductOrderById = catchAsync(async (req, res) => {
 });
 
 const getProductOrderBySupplyer = catchAsync(async (req, res) => {
-    const user = await productOrderService.getProductOrderBySupplyer(req.query.supplierEmail);
-    if (!user) {
-      throw new ApiError(httpStatus.NOT_FOUND, 'ProductOrder not found');
-    }
-    res.send(user);
-  });
+  const user = await productOrderService.getProductOrderBySupplyer(req.query.supplierEmail);
+  if (!user) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'ProductOrder not found');
+  }
+  res.send(user);
+});
 
 const updateProductOrderById = catchAsync(async (req, res) => {
   const user = await productOrderService.updateProductOrderById(req.params.id, req.body);

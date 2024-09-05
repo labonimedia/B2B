@@ -18,7 +18,7 @@ const challanCounterSchema = new mongoose.Schema(
 );
 
 // Create a unique compound index on wholesalerEmail and year
-challanCounterSchema.index({ email: 1}, { unique: true });
+challanCounterSchema.index({ email: 1 }, { unique: true });
 
 const ChallanCounter = mongoose.model('ChallanCounter', challanCounterSchema);
 

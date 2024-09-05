@@ -1,5 +1,5 @@
 const httpStatus = require('http-status');
-const { ProductOrder } = require('../models');
+const { ProductOrder, Wholesaler } = require('../models');
 const ApiError = require('../utils/ApiError');
 
 /**
@@ -40,8 +40,26 @@ const getProductOrderById = async (id) => {
  * @returns {Promise<Material>}
  */
 const getProductOrderBySupplyer = async (supplierEmail) => {
-    return ProductOrder.find({supplierEmail});
-  };
+  const productOrders = await ProductOrder.find({ supplierEmail });
+  
+  if (productOrders.length === 0) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'No Product Orders found for this supplier');
+  }
+  const companyEmails = productOrders.map(order => order.companyEmail);
+  const wholesalers = await Wholesaler.find({
+    'discountGiven.discountGivenBy': { $in: companyEmails }  // Find discounts given by those companyEmails
+  });
+
+  if (wholesalers.length === 0) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'No wholesalers found with matching discounts');
+  }
+  return wholesalers.map(wholesaler => ({
+    wholesalerName: wholesaler.fullName,
+    companyName: wholesaler.companyName,
+    discounts: wholesaler.discountGiven.filter(discount => companyEmails.includes(discount.discountGivenBy))
+  }));
+};
+
 /**
  * Update Material by id
  * @param {ObjectId} Id
