@@ -59,13 +59,18 @@ const deleteManufactureById = catchAsync(async (req, res) => {
   res.status(httpStatus.NO_CONTENT).send();
 });
 
+// const updateVisibilitySettings = catchAsync(async (req, res) => {
+//   const { manufactureId } = req.params;
+//   const visibilitySettings = req.body;
+//   const manufacture = await manufactureService.updateVisibilitySettings(manufactureId, visibilitySettings);
+//   res.status(httpStatus.OK).send(manufacture);
+// });
 const updateVisibilitySettings = catchAsync(async (req, res) => {
   const { manufactureId } = req.params;
-  const visibilitySettings = req.body;
-  const manufacture = await manufactureService.updateVisibilitySettings(manufactureId, visibilitySettings);
+  const payload = req.body; // The entire payload from the request body
+  const manufacture = await manufactureService.updateVisibilitySettings(manufactureId, payload);
   res.status(httpStatus.OK).send(manufacture);
 });
-
 const getVisibleProfile = catchAsync(async (req, res) => {
   const { manufactureId } = req.params;
   const visibleProfile = await manufactureService.getVisibleProfile(manufactureId);
