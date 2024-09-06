@@ -13,6 +13,9 @@ const productSchema = new mongoose.Schema({
 });
 
 const dileveryOrderSchema = new mongoose.Schema({
+  discount: {
+    type: String,
+  },
   challanDate: { type: String },
   challanNo: { type: String },
   companyName: { type: String },
