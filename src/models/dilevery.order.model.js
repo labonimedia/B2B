@@ -3,6 +3,7 @@ const { toJSON, paginate } = require('./plugins');
 
 const productSchema = new mongoose.Schema({
   srNo: { type: String },
+  status: { type: String },
   name: { type: String },
   designNo: { type: String },
   qty: { type: String },
