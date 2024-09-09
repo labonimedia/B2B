@@ -98,7 +98,7 @@ const updateDileveryOrderById = async (id, updateBody) => {
 
 const updateStatus = async (orderId, productId, status) => {
         const result = await DileveryOrder.findOneAndUpdate(
-            { _id: orderId, 'products._id': productId },
+            { id: orderId, 'products._id': productId },
             { $set: { 'products.$.status': status } },
             { new: true }
         );
