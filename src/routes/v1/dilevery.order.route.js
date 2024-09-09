@@ -25,6 +25,6 @@ router
 
   router
   .route('/update/order/status/:orderId/:productId')
-  .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), dileveryOrderController.getDileveryOrderBycustomerEmail);
+  .patch(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), dileveryOrderController.getDileveryOrderBycustomerEmail);
 
 module.exports = router;
