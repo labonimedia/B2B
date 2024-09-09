@@ -75,6 +75,27 @@ const getUserByEmail = async (email) => {
   return Wholesaler.findOne({ email });
 };
 
+
+/**
+ * Get user by email
+ * @param {string} email
+ * @returns {Promise<Wholesaler>}
+ */
+const getSearchWholesaler = async ( searchKeywords = '', options = {}) => {
+  const searchRegex = new RegExp(searchKeywords, 'i');
+  // Step 3: Create a filter for the Manufacture records
+  const wholesalerFilter = {
+    $or: [
+      { address: {$regex: searchRegex}},
+      { fullName: { $regex: searchRegex } },
+      { companyName: { $regex: searchRegex } },
+      { country: { $regex: searchRegex } },
+      { city: { $regex: searchRegex } },
+    ],
+  };
+  const wholesalers = await Wholesaler.paginate(wholesalerFilter, options);
+  return wholesalers;
+};
 /**
  * Update Wholesaler by id
  * @param {ObjectId} Id
@@ -261,6 +282,7 @@ module.exports = {
   updateWholesalerById,
   deleteWholesalerById,
   getUser,
+  getSearchWholesaler,
   fileupload,
   getUsersByEmails,
   assignOrUpdateDiscount,
