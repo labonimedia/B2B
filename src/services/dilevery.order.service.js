@@ -106,6 +106,7 @@ const updateStatus = async (orderId, productId, status) => {
         if (!result) {
           throw new ApiError(httpStatus.NOT_FOUND, 'DileveryOrder or Product not found' );
         }
+        return result;
 }
 
 /**
