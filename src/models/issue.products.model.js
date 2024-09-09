@@ -7,6 +7,7 @@ const  productSchema = new mongoose.Schema({
   designNo: { type: String },
   qty: { type: String },
   demandQty: { type: String },
+  otherIssue: { type: String },
   issue: { type: String },
   recivedQty: { type: String },
   rate: { type: String },
