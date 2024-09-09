@@ -9,7 +9,6 @@ const wholesalerRoute = require('./wholesaler.route');
 const clothingMensRoute = require('./clothing.mens.route');
 const materialRoute = require('./material.route');
 const patternRoute = require('./pattern.route');
-
 const fitTypeRoute = require('./fit.type.route');
 const sleeveCutStyleRoute = require('./sleev.cut.style.route');
 const pocketDiscriptionRoute = require('./pocket.discription.route');
@@ -56,7 +55,7 @@ const shirtSizeSetRoute = require('./shirt.size.set.route');
 const productOrderRoute = require('./product.order.route');
 const dileveryOrderRoute = require('./dilevery.order.route');
 const courierRoute = require('./courier.route');
-const issueProductsRoute = require('./issue.products.route');
+const issueProductsRoute = require('./issue.product.route');
 
 const router = express.Router();
 
