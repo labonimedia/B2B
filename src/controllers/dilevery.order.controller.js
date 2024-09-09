@@ -45,6 +45,12 @@ const updateDileveryOrderById = catchAsync(async (req, res) => {
   res.send(user);
 });
 
+const updateStatus = catchAsync(async (req, res) => {
+  const { orderId, productId } = req.params;
+  const user = await dileveryOrderService.updateStatus( orderId, productId, req.body.status);
+  res.send(user);
+});
+
 const deleteDileveryOrderById = catchAsync(async (req, res) => {
   await dileveryOrderService.deleteDileveryOrderById(req.params.id);
   res.status(httpStatus.NO_CONTENT).send();
@@ -55,6 +61,7 @@ module.exports = {
   queryDileveryOrder,
   getManufactureChalanNo,
   getDileveryOrderById,
+  updateStatus,
   getDileveryOrderBycustomerEmail,
   updateDileveryOrderById,
   deleteDileveryOrderById,

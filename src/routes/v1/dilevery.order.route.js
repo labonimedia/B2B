@@ -23,4 +23,8 @@ router
   .route('/get/challan/number')
   .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), dileveryOrderController.getManufactureChalanNo);
 
+  router
+  .route('/update/order/status/:orderId/:productId')
+  .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), dileveryOrderController.getDileveryOrderBycustomerEmail);
+
 module.exports = router;

@@ -22,6 +22,7 @@ const dileveryOrderSchema = new mongoose.Schema({
     type: String,
   },
   challanDate: { type: String },
+  // challanStatus: { type: String }, 
   challanNo: { type: String },
   companyName: { type: String },
   companyEmail: { type: String },    // manufacture 
