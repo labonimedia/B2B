@@ -87,7 +87,7 @@ const getManufactureChalanNo = async (email) => {
  * @returns {Promise<Material>}
  */
 const updateDileveryOrderById = async (id, updateBody) => {
-  const user = await getMaterialById(id);
+  const user = await getDileveryOrderById(id);
   if (!user) {
     throw new ApiError(httpStatus.NOT_FOUND, 'DileveryOrder not found');
   }
