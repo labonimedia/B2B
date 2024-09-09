@@ -9,7 +9,6 @@ const wholesalerRoute = require('./wholesaler.route');
 const clothingMensRoute = require('./clothing.mens.route');
 const materialRoute = require('./material.route');
 const patternRoute = require('./pattern.route');
-
 const fitTypeRoute = require('./fit.type.route');
 const sleeveCutStyleRoute = require('./sleev.cut.style.route');
 const pocketDiscriptionRoute = require('./pocket.discription.route');
