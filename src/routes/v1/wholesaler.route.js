@@ -39,4 +39,8 @@ router
   .route('/getdiscount/:wholesalerId/:discountGivenBy')
   .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), wholesalerController.getDiscountByGivenBy);
 
+  router
+  .route('/get-search/wholesaler-by-address')
+  .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), wholesalerController.getSearchWholesaler);
+
 module.exports = router;

@@ -6,6 +6,7 @@ const productSchema = new mongoose.Schema({
   name: { type: String },
   designNo: { type: String },
   qty: { type: String },
+  demandQnt: { type: String },
   rate: { type: String },
   taxableValue: { type: String },
   gst: { type: String },

@@ -21,6 +21,13 @@ const queryWholesaler = catchAsync(async (req, res) => {
   res.send(result);
 });
 
+const getSearchWholesaler = catchAsync(async (req, res) => {
+  const { searchKeywords } = req.query
+  const options = pick(req.query, ['sortBy', 'limit', 'page']);
+  const result = await wholesalerService.getSearchWholesaler(searchKeywords, options);
+  res.send(result);
+});
+
 const getWholesalerById = catchAsync(async (req, res) => {
   const user = await wholesalerService.getUserByEmail(req.params.email);
   if (!user) {
@@ -107,6 +114,7 @@ module.exports = {
   getWholesalerById,
   getRetailerByEmail,
   fileupload,
+  getSearchWholesaler,
   updateWholesalerById,
   deleteWholesalerById,
   getManufactureList,
