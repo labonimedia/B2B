@@ -52,3 +52,4 @@ module.exports.shirtSizeSetController = require('./shirt.size.set.controller');
 module.exports.productOrderController = require('./product.order.controller');
 module.exports.dileveryOrderController = require('./dilevery.order.controller');
 module.exports.courierController = require('./courier.controller');
+module.exports.issueProductsController = require('./issue.products.controller');
