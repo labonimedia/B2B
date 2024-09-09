@@ -95,6 +95,19 @@ const updateDileveryOrderById = async (id, updateBody) => {
   return user;
 };
 
+
+const updateStatus = async (orderId, productId, status) => {
+        const result = await DileveryOrder.findOneAndUpdate(
+            { _id: orderId, 'products._id': productId },
+            { $set: { 'products.$.status': status } },
+            { new: true }
+        );
+
+        if (!result) {
+          throw new ApiError(httpStatus.NOT_FOUND, 'DileveryOrder or Product not found' );
+        }
+}
+
 /**
  * Delete user by id
  * @param {ObjectId} userId
@@ -113,6 +126,7 @@ module.exports = {
   createDileveryOrder,
   queryDileveryOrder,
   getManufactureChalanNo,
+  updateStatus,
   getDileveryOrderBycustomerEmail,
   getDileveryOrderById,
   updateDileveryOrderById,
