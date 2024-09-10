@@ -55,7 +55,7 @@ const updateDileveryOrderById = catchAsync(async (req, res) => {
 
 const updateStatus = catchAsync(async (req, res) => {
   const { orderId, productId } = req.params;
-  const user = await dileveryOrderService.updateStatus( orderId, productId, req.body.status);
+  const user = await dileveryOrderService.updateStatus(orderId, productId, req.body.status);
   res.send(user);
 });
 

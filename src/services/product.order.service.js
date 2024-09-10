@@ -45,9 +45,9 @@ const getProductOrderBySupplyer = async (supplierEmail) => {
   if (productOrders.length === 0) {
     throw new ApiError(httpStatus.NOT_FOUND, 'No Product Orders found for this supplier');
   }
-  const companyEmails = productOrders.map(order => order.supplierEmail);
+  const companyEmails = productOrders.map((order) => order.supplierEmail);
   const wholesalers = await Wholesaler.find({
-    'discountGiven.discountGivenBy': { $in: companyEmails }
+    'discountGiven.discountGivenBy': { $in: companyEmails },
   });
 
   if (wholesalers.length === 0) {
@@ -58,10 +58,10 @@ const getProductOrderBySupplyer = async (supplierEmail) => {
       wholesaler.discountGiven.some((discount) => discount.discountGivenBy === order.supplierEmail)
     );
     if (wholesaler) {
-      const discounts = wholesaler.discountGiven.filter(discount => discount.discountGivenBy === order.supplierEmail);
+      const discounts = wholesaler.discountGiven.filter((discount) => discount.discountGivenBy === order.supplierEmail);
       return {
         ...order.toObject(),
-        discounts,      
+        discounts,
       };
     }
     return {
@@ -72,7 +72,6 @@ const getProductOrderBySupplyer = async (supplierEmail) => {
 
   return updatedProductOrders;
 };
-
 
 /**
  * Update Material by id

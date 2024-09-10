@@ -3,7 +3,6 @@ const { toJSON, paginate } = require('./plugins');
 
 const productOrderShema = mongoose.Schema(
   {
-
     buyerEmail: {
       type: String,
     },

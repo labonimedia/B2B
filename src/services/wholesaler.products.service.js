@@ -302,6 +302,6 @@ module.exports = {
   getProductById,
   updateProductById,
   deleteProductById,
-//   deleteColorCollection,
-//   updateColorCollection,
+  //   deleteColorCollection,
+  //   updateColorCollection,
 };

@@ -285,7 +285,7 @@ const defaultRoutes = [
   {
     path: '/wholesaler-products',
     route: wholesalerProductsRoute,
-  }
+  },
 ];
 
 const devRoutes = [
