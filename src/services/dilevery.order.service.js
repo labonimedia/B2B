@@ -52,7 +52,7 @@ const getDileveryOrderById = async (id) => {
 //           productDesignMap[designNo].push(order.companyEmail);
 //         }
 //       });
-//     }); 
+//     });
 //     console.log('dileveryOrders:', {  dileveryOrders });
 
 //     // Step 3: Query the Product collection based on designNumber and productBy
@@ -63,9 +63,9 @@ const getDileveryOrderById = async (id) => {
 //         productBy: { $in: productByList },
 //       }).lean();
 //     });
-    
+
 //     const products = await Promise.all(productPromises);
-    
+
 //     // Step 4: Group products by `productBy`
 //     const groupedByProductBy = {};
 //     products.flat().forEach((product) => {
@@ -80,56 +80,56 @@ const getDileveryOrderById = async (id) => {
 // }
 
 const getGroupedProductsByStatus = async (customerEmail) => {
-    // Step 1: Find all orders where product status is "done" for the given customerEmail
-    const dileveryOrders = await DileveryOrder.find({
-      'products.status': 'done',
-      customerEmail,
-    }).lean();
-    // Step 2: Extract designNumber and companyEmail (representing the manufacturer) for products with "done" status
-    const productDesignMap = {};
-    dileveryOrders.forEach((order) => {
-      order.products.forEach((product) => {
-        if (product.status === 'done') {
-          const { designNo } = product;
-          productDesignMap[designNo] = productDesignMap[designNo] || [];
-          productDesignMap[designNo].push(order.companyEmail); // Push manufacturer email (companyEmail)
-        }
-      });
-    });
-    // Step 3: Query the Product collection based on designNumber and manufacturer emails
-    const productPromises = Object.entries(productDesignMap).map(async ([designNumber, productByList]) => {
-      // Query Product collection
-      const products = await Product.find({
-        designNumber,
-        productBy: { $in: productByList }, // Assuming productBy is the email
-      }).lean();
-      // Fetch fullName of manufacturers from the Manufacturer collection
-      const manufacturers = await Manufacture.find({
-        email: { $in: productByList }, // Assuming email is the identifier in the Manufacturer collection
-      }).lean();
-      // Create a map for manufacturer emails to fullName
-      const manufacturerMap = {};
-      manufacturers.forEach((manufacturer) => {
-        manufacturerMap[manufacturer.email] = manufacturer.fullName;
-      });
-      // Replace productBy with the fullName from the Manufacturer collection
-      return products.map((product) => ({
-        ...product,
-        manufacturerFullName: manufacturerMap[product.productBy], // Assuming productBy holds the email
-      }));
-    });
-    const products = await Promise.all(productPromises);
-    // Step 4: Group products by `manufacturerFullName`
-    const groupedByManufacturer = {};
-    products.flat().forEach((product) => {
-      const { manufacturerFullName } = product;
-      if (!groupedByManufacturer[manufacturerFullName]) {
-        groupedByManufacturer[manufacturerFullName] = [];
+  // Step 1: Find all orders where product status is "done" for the given customerEmail
+  const dileveryOrders = await DileveryOrder.find({
+    'products.status': 'done',
+    customerEmail,
+  }).lean();
+  // Step 2: Extract designNumber and companyEmail (representing the manufacturer) for products with "done" status
+  const productDesignMap = {};
+  dileveryOrders.forEach((order) => {
+    order.products.forEach((product) => {
+      if (product.status === 'done') {
+        const { designNo } = product;
+        productDesignMap[designNo] = productDesignMap[designNo] || [];
+        productDesignMap[designNo].push(order.companyEmail); // Push manufacturer email (companyEmail)
       }
-      groupedByManufacturer[manufacturerFullName].push(product);
     });
-    return groupedByManufacturer;
-  }
+  });
+  // Step 3: Query the Product collection based on designNumber and manufacturer emails
+  const productPromises = Object.entries(productDesignMap).map(async ([designNumber, productByList]) => {
+    // Query Product collection
+    const products = await Product.find({
+      designNumber,
+      productBy: { $in: productByList }, // Assuming productBy is the email
+    }).lean();
+    // Fetch fullName of manufacturers from the Manufacturer collection
+    const manufacturers = await Manufacture.find({
+      email: { $in: productByList }, // Assuming email is the identifier in the Manufacturer collection
+    }).lean();
+    // Create a map for manufacturer emails to fullName
+    const manufacturerMap = {};
+    manufacturers.forEach((manufacturer) => {
+      manufacturerMap[manufacturer.email] = manufacturer.fullName;
+    });
+    // Replace productBy with the fullName from the Manufacturer collection
+    return products.map((product) => ({
+      ...product,
+      manufacturerFullName: manufacturerMap[product.productBy], // Assuming productBy holds the email
+    }));
+  });
+  const products = await Promise.all(productPromises);
+  // Step 4: Group products by `manufacturerFullName`
+  const groupedByManufacturer = {};
+  products.flat().forEach((product) => {
+    const { manufacturerFullName } = product;
+    if (!groupedByManufacturer[manufacturerFullName]) {
+      groupedByManufacturer[manufacturerFullName] = [];
+    }
+    groupedByManufacturer[manufacturerFullName].push(product);
+  });
+  return groupedByManufacturer;
+};
 /**
  * Get Material by id
  * @param {ObjectId} id
@@ -191,19 +191,18 @@ const updateDileveryOrderById = async (id, updateBody) => {
   return user;
 };
 
-
 const updateStatus = async (orderId, productId, status) => {
-        const result = await DileveryOrder.findOneAndUpdate(
-            { _id: orderId, 'products._id': productId },
-            { $set: { 'products.$.status': status } },
-            { new: true }
-        );
+  const result = await DileveryOrder.findOneAndUpdate(
+    { _id: orderId, 'products._id': productId },
+    { $set: { 'products.$.status': status } },
+    { new: true }
+  );
 
-        if (!result) {
-          throw new ApiError(httpStatus.NOT_FOUND, 'DileveryOrder or Product not found' );
-        }
-        return result;
-}
+  if (!result) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'DileveryOrder or Product not found');
+  }
+  return result;
+};
 
 /**
  * Delete user by id

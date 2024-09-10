@@ -3,10 +3,7 @@ const { toJSON, paginate } = require('./plugins');
 
 const productSchema = new mongoose.Schema({
   srNo: { type: String },
-  status: { type: String,
-  enum: ['pending', 'done','issue'],
-  default: 'pending',
-   },
+  status: { type: String, enum: ['pending', 'done', 'issue'], default: 'pending' },
   name: { type: String },
   designNo: { type: String },
   qty: { type: String },
@@ -22,17 +19,17 @@ const dileveryOrderSchema = new mongoose.Schema({
     type: String,
   },
   challanDate: { type: String },
-  challanStatus: { type: String}, 
+  challanStatus: { type: String },
   challanNo: { type: String },
   companyName: { type: String },
-  companyEmail: { type: String },    // manufacture 
+  companyEmail: { type: String }, // manufacture
   companyAddress: { type: String },
   companyContact: { type: String },
   companyDetails: { type: String },
   companyGSTIN: { type: String },
   customerName: { type: String },
   customerAddress: { type: String },
-  customerEmail: { type: String },        // wholesaler
+  customerEmail: { type: String }, // wholesaler
   customerDetails: { type: String },
   customerGSTIN: { type: String },
   customerPhone: { type: String },

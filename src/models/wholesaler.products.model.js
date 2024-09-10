@@ -4,7 +4,7 @@ const { paginate, toJSON } = require('./plugins');
 const wholesalerProductSchema = mongoose.Schema(
   {
     wholesalerPrice: {
-        type: String,
+      type: String,
     },
     currency: {
       type: String,

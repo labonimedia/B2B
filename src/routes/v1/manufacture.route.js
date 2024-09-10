@@ -40,10 +40,9 @@ router
   .route('/visibility/:manufactureId')
   .patch(auth('superadmin', 'manufacture'), manufactureController.updateVisibilitySettings);
 
-router
-  .route('/visible-profile/:manufactureId')
-  .get(
-    //auth('superadmin', 'manufacture'),
-     manufactureController.getVisibleProfile);
+router.route('/visible-profile/:manufactureId').get(
+  // auth('superadmin', 'manufacture'),
+  manufactureController.getVisibleProfile
+);
 
 module.exports = router;

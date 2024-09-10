@@ -22,7 +22,7 @@ const queryWholesaler = catchAsync(async (req, res) => {
 });
 
 const getSearchWholesaler = catchAsync(async (req, res) => {
-  const { searchKeywords } = req.query
+  const { searchKeywords } = req.query;
   const options = pick(req.query, ['sortBy', 'limit', 'page']);
   const result = await wholesalerService.getSearchWholesaler(searchKeywords, options);
   res.send(result);
