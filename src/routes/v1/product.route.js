@@ -38,6 +38,10 @@ router.route('/update/colour-collection').patch(
   productController.updateColorCollection
 );
 
+router
+  .route('/get-product/by-desingnumber')
+  .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), productController.getProductBydesigneNo);
+
 // Delete route
 router
   .route('/delete/colour-collection')

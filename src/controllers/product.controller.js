@@ -69,6 +69,15 @@ const getProductById = catchAsync(async (req, res) => {
   res.send(user);
 });
 
+const getProductBydesigneNo = catchAsync(async (req, res) => {
+  const { designNumber, productBy } = req.query;
+  const user = await productService.getProductBydesigneNo(designNumber, productBy);
+  if (!user) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Product not found');
+  }
+  res.send(user);
+});
+
 const updateProductById = catchAsync(async (req, res) => {
   const user = await productService.updateProductById(req.params.id, req.body);
   res.send(user);
@@ -114,6 +123,7 @@ module.exports = {
   queryProduct,
   searchProducts,
   getProductById,
+  getProductBydesigneNo,
   updateProductById,
   deleteProductById,
   updateColorCollection,
