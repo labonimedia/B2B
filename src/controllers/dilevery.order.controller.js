@@ -40,6 +40,14 @@ const getManufactureChalanNo = catchAsync(async (req, res) => {
   res.send(user);
 });
 
+const getGroupedProductsByStatus = catchAsync(async (req, res) => {
+  const user = await dileveryOrderService.getGroupedProductsByStatus(req.query.customerEmail);
+  if (!user) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Product not found');
+  }
+  res.send(user);
+});
+
 const updateDileveryOrderById = catchAsync(async (req, res) => {
   const user = await dileveryOrderService.updateDileveryOrderById(req.params.id, req.body);
   res.send(user);
@@ -62,6 +70,7 @@ module.exports = {
   getManufactureChalanNo,
   getDileveryOrderById,
   updateStatus,
+  getGroupedProductsByStatus,
   getDileveryOrderBycustomerEmail,
   updateDileveryOrderById,
   deleteDileveryOrderById,
