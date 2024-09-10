@@ -10,7 +10,7 @@ const createIssuedProducts = catchAsync(async (req, res) => {
 });
 
 const queryIssuedProducts = catchAsync(async (req, res) => {
-  const filter = pick(req.query, ['name', 'productType', 'gender', 'category', 'subCategory']);
+  const filter = pick(req.query, ['customerEmail']);
   const options = pick(req.query, ['sortBy', 'limit', 'page']);
   const result = await issueProductsService.queryIssuedProducts(filter, options);
   res.send(result);

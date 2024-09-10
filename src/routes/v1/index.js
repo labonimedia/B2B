@@ -56,6 +56,7 @@ const productOrderRoute = require('./product.order.route');
 const dileveryOrderRoute = require('./dilevery.order.route');
 const courierRoute = require('./courier.route');
 const issueProductsRoute = require('./issue.product.route');
+const wholesalerProductsRoute = require('./wholesaler.products.route');
 
 const router = express.Router();
 
@@ -280,6 +281,10 @@ const defaultRoutes = [
   {
     path: '/issue-products',
     route: issueProductsRoute,
+  },
+  {
+    path: '/wholesaler-products',
+    route: wholesalerProductsRoute,
   }
 ];
 

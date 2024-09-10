@@ -67,3 +67,4 @@ module.exports.DileveryOrder = require('./dilevery.order.model');
 module.exports.ChallanCounter = require('./challan.counter.model');
 module.exports.Courier = require('./courier.model');
 module.exports.IssuedProducts = require('./issue.products.model');
+module.exports.WholesalerProducts = require('./wholesaler.products.model');

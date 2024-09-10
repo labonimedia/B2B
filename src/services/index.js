@@ -56,3 +56,4 @@ module.exports.productOrderService = require('./product.order.service');
 module.exports.dileveryOrderService = require('./dilevery.order.service');
 module.exports.courierService = require('./courier.service');
 module.exports.issueProductsService = require('./issue.products.service');
+module.exports.wholesalerProductsService = require('./wholesaler.products.service');
