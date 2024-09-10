@@ -1,14 +1,18 @@
 const mongoose = require('mongoose');
 const { paginate, toJSON } = require('./plugins');
 
-const productSchema = mongoose.Schema(
+const wholesalerProductSchema = mongoose.Schema(
   {
+    wholesalerPrice: {
+        type: String,
+    },
     currency: {
       type: String,
     },
     productBy: {
       type: String,
     },
+
     dateOfManufacture: {
       type: Date,
     },
@@ -116,9 +120,9 @@ const productSchema = mongoose.Schema(
     timestamps: true,
   }
 );
-productSchema.index({ productBy: 1, designNumber: 1 }, { unique: true });
+// wholesalerProductSchema.index({ productBy: 1, designNumber: 1 }, { unique: true });
 // Add text index to searchable fields
-productSchema.index({
+wholesalerProductSchema.index({
   productBy: 'text',
   brand: 'text',
   productType: 'text',
@@ -142,12 +146,12 @@ productSchema.index({
   careInstructions: 'text',
 });
 // add plugin that converts mongoose to json
-productSchema.plugin(toJSON);
-productSchema.plugin(paginate);
+wholesalerProductSchema.plugin(toJSON);
+wholesalerProductSchema.plugin(paginate);
 
 /**
  * @typedef Product
  */
 
-const Product = mongoose.model('Product', productSchema);
-module.exports = Product;
+const WholesalerProducts = mongoose.model('WholesalerProducts', wholesalerProductSchema);
+module.exports = WholesalerProducts;

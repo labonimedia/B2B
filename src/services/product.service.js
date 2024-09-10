@@ -68,7 +68,6 @@ const fileupload = async (req, productId) => {
  * @returns {Promise<Product>}
  */
 const createProduct = async (reqBody) => {
-  const product = await Product.find();
   return Product.create(reqBody);
 };
 
