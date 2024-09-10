@@ -6,7 +6,7 @@ const ApiError = require('../utils/ApiError');
 /**
  * fileupload
  * @param {Object} reqBody
- * @returns {Promise<Product>}
+ * @returns {Promise<WholesalerProducts>}
  */
 
 const fileupload = async (req, productId) => {
@@ -41,7 +41,7 @@ const fileupload = async (req, productId) => {
 /**
  * Create a Product
  * @param {Object} reqBody
- * @returns {Promise<Product>}
+ * @returns {Promise<WholesalerProducts>}
  */
 const createProduct = async (reqBody) => {
   return WholesalerProducts.create(reqBody);
@@ -80,7 +80,7 @@ const searchProducts = async (filter, options) => {
 /**
  * Get Product by id
  * @param {ObjectId} id
- * @returns {Promise<Product>}
+ * @returns {Promise<WholesalerProducts>}
  */
 const getProductById = async (id) => {
   return WholesalerProducts.findById(id);
@@ -90,7 +90,7 @@ const getProductById = async (id) => {
  * Update Product by id
  * @param {ObjectId} Id
  * @param {Object} updateBody
- * @returns {Promise<Product>}
+ * @returns {Promise<WholesalerProducts>}
  */
 const updateProductById = async (id, updateBody) => {
   const user = await getProductById(id);
@@ -105,7 +105,7 @@ const updateProductById = async (id, updateBody) => {
 /**
  * Delete user by id
  * @param {ObjectId} userId
- * @returns {Promise<Product>}
+ * @returns {Promise<WholesalerProducts>}
  */
 const deleteProductById = async (id) => {
   const user = await getProductById(id);

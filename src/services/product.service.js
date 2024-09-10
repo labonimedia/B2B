@@ -111,6 +111,15 @@ const getProductById = async (id) => {
 };
 
 /**
+ * Get Product by id
+ * @param {ObjectId} id
+ * @returns {Promise<Product>}
+ */
+const getProductBydesigneNo = async (designNumber, productBy) => {
+  return Product.findOne({ designNumber, productBy });
+};
+
+/**
  * Update Product by id
  * @param {ObjectId} Id
  * @param {Object} updateBody
@@ -554,6 +563,7 @@ module.exports = {
   createProduct,
   queryProduct,
   searchProducts,
+  getProductBydesigneNo,
   getProductById,
   updateProductById,
   deleteProductById,
