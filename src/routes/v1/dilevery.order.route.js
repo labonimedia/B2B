@@ -22,8 +22,8 @@ router
 
   router
   .route('/get-ordered/products')
-  .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), dileveryOrderController.getGroupedProductsByStatus);
-
+  .get( dileveryOrderController.getGroupedProductsByStatus);
+//auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
 router
   .route('/get/challan/number')
   .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), dileveryOrderController.getManufactureChalanNo);

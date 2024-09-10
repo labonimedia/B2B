@@ -1,0 +1,1 @@
+{"indexes":[{"v":{"$numberInt":"2"},"key":{"_id":{"$numberInt":"1"}},"name":"_id_"}],"uuid":"4d7746f30a4d4dca956976acb908af70","collectionName":"dileveryorders","type":"collection"}
