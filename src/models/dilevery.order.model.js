@@ -22,7 +22,7 @@ const dileveryOrderSchema = new mongoose.Schema({
     type: String,
   },
   challanDate: { type: String },
-  // challanStatus: { type: String }, 
+  challanStatus: { type: String}, 
   challanNo: { type: String },
   companyName: { type: String },
   companyEmail: { type: String },    // manufacture 
@@ -39,6 +39,7 @@ const dileveryOrderSchema = new mongoose.Schema({
   eWayNo: { type: String },
   placeOfSupply: { type: String },
   products: { type: [productSchema] },
+  pONumber: { type: String },
   totalRate: { type: Number },
   totalGST: { type: Number },
   totalAmount: { type: Number },

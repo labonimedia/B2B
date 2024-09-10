@@ -20,6 +20,7 @@ const createDileveryOrder = async (reqBody) => {
  * @param {number} [options.page] - Current page (default = 1)
  * @returns {Promise<QueryResult>}
  */
+
 const queryDileveryOrder = async (filter, options) => {
   const material = await DileveryOrder.paginate(filter, options);
   return material;
