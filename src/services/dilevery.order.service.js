@@ -35,7 +35,46 @@ const getDileveryOrderById = async (id) => {
   return DileveryOrder.findById(id);
 };
 
+const getGroupedProductsByStatus = async (customerEmail) => {
+    const dileveryOrders = await DileveryOrder.find({
+      'products.status': 'done',
+      customerEmail,
+    }).lean();
 
+    // Step 2: Extract designNumber and productBy for products with "done" status
+    const productDesignMap = {};
+    dileveryOrders.forEach((order) => {
+      order.products.forEach((product) => {
+        if (product.status === 'done') {
+          const { designNo } = product;
+          productDesignMap[designNo] = productDesignMap[designNo] || [];
+          productDesignMap[designNo].push(order.companyEmail);
+        }
+      });
+    });
+
+    // Step 3: Query the Product collection based on designNumber and productBy
+    const productPromises = Object.entries(productDesignMap).map(([designNumber, productByList]) => {
+      return Product.find({
+        designNumber,
+        productBy: { $in: productByList },
+      }).lean();
+    });
+
+    const products = await Promise.all(productPromises);
+
+    // Step 4: Group products by `productBy`
+    const groupedByProductBy = {};
+    products.flat().forEach((product) => {
+      const { productBy } = product;
+      if (!groupedByProductBy[productBy]) {
+        groupedByProductBy[productBy] = [];
+      }
+      groupedByProductBy[productBy].push(product);
+    });
+
+    return groupedByProductBy;
+}
 
 /**
  * Get Material by id
@@ -131,6 +170,7 @@ module.exports = {
   queryDileveryOrder,
   getManufactureChalanNo,
   updateStatus,
+  getGroupedProductsByStatus,
   getDileveryOrderBycustomerEmail,
   getDileveryOrderById,
   updateDileveryOrderById,
