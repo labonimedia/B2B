@@ -3,6 +3,11 @@ const { paginate, toJSON } = require('./plugins');
 
 const productSchema = mongoose.Schema(
   {
+    FSIN: {
+      type: String,
+      unique: true,
+      required: true,
+    },
     currency: {
       type: String,
     },
@@ -111,6 +116,7 @@ const productSchema = mongoose.Schema(
         productVideo: { type: String },
       },
     ],
+
   },
   {
     timestamps: true,
@@ -145,6 +151,17 @@ productSchema.index({
 productSchema.plugin(toJSON);
 productSchema.plugin(paginate);
 
+productSchema.pre('save', function (next) {
+  const product = this;
+
+  // Generate the unique code if it hasn't been set
+  if (!product.FSIN) {
+    const uniqueCode = crypto.randomBytes(6).toString('hex').toUpperCase(); // Generates 12 character alphanumeric string
+    product.FSIN = uniqueCode;
+  }
+
+  next();
+});
 /**
  * @typedef Product
  */

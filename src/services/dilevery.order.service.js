@@ -96,24 +96,21 @@ const getGroupedProductsByStatus = async (customerEmail) => {
     }
     groupedByManufacturer[manufacturerFullName].push(product);
   });
-
   // Step 6: Combine delivery order data with matching product details
   const result = [];
   deliveryOrders.forEach((order) => {
     order.products.forEach((product) => {
       if (product.status === 'done') {
         const { designNo } = product;
-
         // Find matching products for the same designNo
         const matchingProducts = products.flat().filter(p => p.designNumber === designNo);
-
         // Include both the delivery order product and the matching products
         result.push({
-          deliveryProduct: product,       // Product details from the delivery order
-          matchingProducts: matchingProducts,  // Matching product details from the Product collection
+          deliveryProduct: product,
+          matchingProducts: matchingProducts,
           orderDetails: {
-            companyEmail: order.companyEmail,  // Manufacturer email from the delivery order
-            orderId: order._id,                // Delivery order ID
+            companyEmail: order.companyEmail,
+            orderId: order._id,              
           }
         });
       }
