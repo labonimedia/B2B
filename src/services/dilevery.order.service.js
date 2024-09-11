@@ -40,7 +40,7 @@ const getGroupedProductsByStatus = async (customerEmail) => {
   // Step 1: Fetch delivery orders with 'done' status products
   const deliveryOrders = await DileveryOrder.find({
     'products.status': 'done',
-    productStatus: 'added',
+    productStatus: 'pending',
     customerEmail,
   }).lean();
   
