@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
-const { paginate, toJSON } = require('./plugins');
 const crypto = require('crypto');
+const { paginate, toJSON } = require('./plugins');
 
 const productSchema = mongoose.Schema(
   {
@@ -116,7 +116,6 @@ const productSchema = mongoose.Schema(
         productVideo: { type: String },
       },
     ],
-
   },
   {
     timestamps: true,

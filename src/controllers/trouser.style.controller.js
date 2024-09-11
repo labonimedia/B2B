@@ -12,7 +12,7 @@ const createTrouserStyle = catchAsync(async (req, res) => {
 const queryTrouserStyle = catchAsync(async (req, res) => {
   const filter = pick(req.query, ['name']);
   const options = pick(req.query, ['sortBy', 'limit', 'page']);
-  const result = await TrouserStyle.queryTrouserStyle(filter, options);
+  const result = await trouserStyleService.queryTrouserStyle(filter, options);
   res.send(result);
 });
 

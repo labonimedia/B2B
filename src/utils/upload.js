@@ -19,7 +19,7 @@ const compressVideo = async (fileBuffer) => {
   const outputFileName = `${uuidv4()}-output.mp4`;
   const inputFilePath = path.join('/tmp', inputFileName);
   const outputFilePath = path.join('/tmp', outputFileName);
-
+  // eslint-disable-next-line security/detect-non-literal-fs-filename
   await fs.promises.writeFile(inputFilePath, fileBuffer);
 
   await new Promise((resolve, reject) => {
@@ -31,10 +31,11 @@ const compressVideo = async (fileBuffer) => {
       .on('error', reject)
       .run();
   });
-
+  // eslint-disable-next-line security/detect-non-literal-fs-filename
   const compressedBuffer = await fs.promises.readFile(outputFilePath);
-
+  // eslint-disable-next-line security/detect-non-literal-fs-filename
   await fs.promises.unlink(inputFilePath);
+  // eslint-disable-next-line security/detect-non-literal-fs-filename
   await fs.promises.unlink(outputFilePath);
 
   return compressedBuffer;
@@ -53,14 +54,12 @@ const uploadFile = async (file) => {
   }
 
   const command = new PutObjectCommand(params);
+  // eslint-disable-next-line no-useless-catch
   try {
-    const data = await s3Client.send(command);
+    await s3Client.send(command);
     return `https://lmscontent-cdn.blr1.digitaloceanspaces.com/b2b/${params.Key}`;
   } catch (err) {
-    console.error('Error uploading file:', err);
     throw err; // Rethrow the error after logging it
-    throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'Failed to upload files');
-    // res.status(500).send({ error: 'Failed to upload files', details: err.message });
   }
 };
 
@@ -82,7 +81,6 @@ const uploadFiles = async (req, res, next) => {
     await Promise.all(uploadPromises);
     next();
   } catch (err) {
-    console.error('Error in uploadFiles middleware:', err);
     res.status(500).send({ error: 'Failed to upload files', details: err.message });
     throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'Failed to upload files');
   }
@@ -104,12 +102,11 @@ const deleteFile = async (filePath) => {
   };
 
   const command = new DeleteObjectCommand(params);
+  // eslint-disable-next-line no-useless-catch
   try {
     await s3Client.send(command);
   } catch (err) {
-    console.error('Error deleting file:', err);
     throw err; // Rethrow the error after logging it
-    throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'Failed to upload files'); // Rethrow the error after logging it
   }
 };
 

@@ -41,7 +41,7 @@ const getMappingById = async (id) => {
  * @returns {Promise<Material>}
  */
 const updateMappingById = async (id, updateBody) => {
-  const user = await getMaterialById(id);
+  const user = await getMappingById(id);
   if (!user) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Mapping not found');
   }

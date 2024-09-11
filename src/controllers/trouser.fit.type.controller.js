@@ -12,7 +12,7 @@ const createTrouserFitType = catchAsync(async (req, res) => {
 const queryTrouserFitType = catchAsync(async (req, res) => {
   const filter = pick(req.query, ['name']);
   const options = pick(req.query, ['sortBy', 'limit', 'page']);
-  const result = await TrouserFitType.queryTrouserFitType(filter, options);
+  const result = await trouserFitTypeService.queryTrouserFitType(filter, options);
   res.send(result);
 });
 

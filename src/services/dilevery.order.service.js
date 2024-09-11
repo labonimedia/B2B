@@ -35,7 +35,6 @@ const getDileveryOrderById = async (id) => {
   return DileveryOrder.findById(id);
 };
 
-
 const getGroupedProductsByStatus = async (customerEmail) => {
   // Step 1: Fetch delivery orders with 'done' status products
   const deliveryOrders = await DileveryOrder.find({
@@ -43,9 +42,9 @@ const getGroupedProductsByStatus = async (customerEmail) => {
     // productStatus: 'pending',
     customerEmail,
   }).lean();
-  
+
   const productDesignMap = {};
-  
+
   // Step 2: Build a map of design numbers to manufacturer emails (companyEmail)
   deliveryOrders.forEach((order) => {
     order.products.forEach((product) => {
@@ -88,7 +87,7 @@ const getGroupedProductsByStatus = async (customerEmail) => {
 
   // Step 5: Group delivery order products with 'done' status by `manufacturerFullName`
   const groupedByManufacturer = {};
-  
+
   // Flatten the array of arrays
   products.flat().forEach((product) => {
     const { manufacturerFullName } = product;
@@ -104,15 +103,15 @@ const getGroupedProductsByStatus = async (customerEmail) => {
       if (product.status === 'done') {
         const { designNo } = product;
         // Find matching products for the same designNo
-        const matchingProducts = products.flat().filter(p => p.designNumber === designNo);
+        const matchingProducts = products.flat().filter((p) => p.designNumber === designNo);
         // Include both the delivery order product and the matching products
         result.push({
           deliveryProduct: product,
-          matchingProducts: matchingProducts,
+          matchingProducts,
           orderDetails: {
             companyEmail: order.companyEmail,
-            orderId: order._id,              
-          }
+            orderId: order._id,
+          },
         });
       }
     });
@@ -120,8 +119,6 @@ const getGroupedProductsByStatus = async (customerEmail) => {
 
   return result;
 };
-
-
 
 // const getGroupedProductsByStatus = async (customerEmail) => {
 //   const dileveryOrders = await DileveryOrder.find({
@@ -143,7 +140,7 @@ const getGroupedProductsByStatus = async (customerEmail) => {
 //     // Query Product collection
 //     const products = await Product.find({
 //       designNumber,
-//       productBy: { $in: productByList }, 
+//       productBy: { $in: productByList },
 //     }).lean();
 //     // Fetch fullName of manufacturers from the Manufacturer collection
 //     const manufacturers = await Manufacture.find({

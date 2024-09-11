@@ -1,5 +1,4 @@
 const httpStatus = require('http-status');
-const bcrypt = require('bcryptjs');
 const { User, Wholesaler, Manufacture, Retailer, Counter } = require('../models');
 const ApiError = require('../utils/ApiError');
 const { createManufacture } = require('./manufacture.service');
@@ -71,6 +70,7 @@ const createUser = async (userBody) => {
   const counter = await Counter.findOneAndUpdate({ role: userBody.role }, { $inc: { seq: 1 } }, { new: true, upsert: true });
 
   // Assign the generated code to the userBody
+  // eslint-disable-next-line no-param-reassign
   userBody.code = `${prefix}${String(counter.seq).padStart(4, '0')}`;
 
   // Create additional data based on role and create corresponding record
@@ -124,6 +124,39 @@ const queryUsers = async (filter, options) => {
   return users;
 };
 
+// /**
+//  * Get user by id
+//  * @param {ObjectId} id
+//  * @returns {Promise<User>}
+//  */
+// const getUserById = async (id) => {
+//   const user = await User.findById(id);
+//   if (!user) {
+//     throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+//   }
+//   let profile;
+//   switch (user.role) {
+//     // eslint-disable-next-line no-case-declarations
+//     case 'wholesaler':
+//       const wholesaler = await Wholesaler.findOne({ email: user.email });
+//       profile = wholesaler ? wholesaler.profileImg : null;
+//       break;
+//     // eslint-disable-next-line no-case-declarations
+//     case 'manufacture':
+//       const manufacturer = await Manufacture.findOne({ email: user.email });
+//       profile = manufacturer ? manufacturer.profileImg : null;
+//       break;
+//     // eslint-disable-next-line no-case-declarations
+//     case 'retailer':
+//       const retailer = await Retailer.findOne({ email: user.email });
+//       profile = retailer ? retailer.profileImg : null;
+//       break;
+//     default:
+//       profile = null;
+//   }
+
+//   return { ...user.toObject(), profile };
+// };
 /**
  * Get user by id
  * @param {ObjectId} id
@@ -136,25 +169,29 @@ const getUserById = async (id) => {
   }
   let profile;
   switch (user.role) {
-    case 'wholesaler':
+    case 'wholesaler': {
       const wholesaler = await Wholesaler.findOne({ email: user.email });
       profile = wholesaler ? wholesaler.profileImg : null;
       break;
-    case 'manufacture':
+    }
+    case 'manufacture': {
       const manufacturer = await Manufacture.findOne({ email: user.email });
       profile = manufacturer ? manufacturer.profileImg : null;
       break;
-    case 'retailer':
+    }
+    case 'retailer': {
       const retailer = await Retailer.findOne({ email: user.email });
       profile = retailer ? retailer.profileImg : null;
       break;
-    default:
+    }
+    default: {
       profile = null;
+      break;
+    }
   }
 
   return { ...user.toObject(), profile };
 };
-
 /**
  * Get user by email
  * @param {string} email
@@ -164,6 +201,52 @@ const getUserByEmail = async (email) => {
   const user = await User.findOne({ email });
   return user;
 };
+
+// /**
+//  * Update user by id
+//  * @param {ObjectId} userId
+//  * @param {Object} updateBody
+//  * @returns {Promise<User>}
+//  */
+// const updateUserById = async (userId, updateBody) => {
+//   // Check if the email is already taken
+//   if (updateBody.email && (await User.isEmailTaken(updateBody.email, userId))) {
+//     throw new ApiError(httpStatus.BAD_REQUEST, 'Email already taken');
+//   }
+
+//   // Update the user document directly in the database
+//   const user = await User.findByIdAndUpdate(userId, updateBody, { new: true });
+
+//   if (!user) {
+//     throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+//   }
+
+//   // Fetch the user's profile image based on the role
+//   let profile;
+//   switch (user.role) {
+//     // eslint-disable-next-line no-case-declarations
+//     case 'wholesaler':
+//       const wholesaler = await Wholesaler.findOne({ email: user.email });
+//       profile = wholesaler ? wholesaler.profileImg : null;
+//       break;
+//     // eslint-disable-next-line no-case-declarations
+//     case 'manufacture':
+//       const manufacturer = await Manufacture.findOne({ email: user.email });
+//       profile = manufacturer ? manufacturer.profileImg : null;
+//       break;
+//     // eslint-disable-next-line no-case-declarations
+//     case 'retailer':
+//       const retailer = await Retailer.findOne({ email: user.email });
+//       profile = retailer ? retailer.profileImg : null;
+//       break;
+//     // eslint-disable-next-line no-case-declarations
+//     default:
+//       profile = null;
+//   }
+
+//   // Combine the updated user object with the profile image
+//   return { ...user.toObject(), profile };
+// };
 
 /**
  * Update user by id
@@ -187,26 +270,30 @@ const updateUserById = async (userId, updateBody) => {
   // Fetch the user's profile image based on the role
   let profile;
   switch (user.role) {
-    case 'wholesaler':
+    case 'wholesaler': {
       const wholesaler = await Wholesaler.findOne({ email: user.email });
       profile = wholesaler ? wholesaler.profileImg : null;
       break;
-    case 'manufacture':
+    }
+    case 'manufacture': {
       const manufacturer = await Manufacture.findOne({ email: user.email });
       profile = manufacturer ? manufacturer.profileImg : null;
       break;
-    case 'retailer':
+    }
+    case 'retailer': {
       const retailer = await Retailer.findOne({ email: user.email });
       profile = retailer ? retailer.profileImg : null;
       break;
-    default:
+    }
+    default: {
       profile = null;
+      break;
+    }
   }
 
   // Combine the updated user object with the profile image
   return { ...user.toObject(), profile };
 };
-
 // const updateUserById = async (userId, updateBody) => {
 //   console.log(userId, updateBody);
 //   const user = await getUserById(userId);

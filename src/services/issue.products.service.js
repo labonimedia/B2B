@@ -1,6 +1,5 @@
 const httpStatus = require('http-status');
-const { profile } = require('winston');
-const { IssuedProducts, Manufacture, ChallanCounter } = require('../models');
+const { IssuedProducts } = require('../models');
 const ApiError = require('../utils/ApiError');
 
 /**
@@ -51,7 +50,7 @@ const getIssuedProductsBycustomerEmail = async (customerEmail) => {
  * @returns {Promise<Material>}
  */
 const updateIssuedProductsById = async (id, updateBody) => {
-  const user = await getMaterialById(id);
+  const user = await getIssuedProductsById(id);
   if (!user) {
     throw new ApiError(httpStatus.NOT_FOUND, 'IssuedProducts not found');
   }

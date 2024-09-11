@@ -19,10 +19,7 @@ const dileveryOrderSchema = new mongoose.Schema({
     type: String,
   },
   challanDate: { type: String },
-  productStatus: { type: String,
-    default: 'pending',
-    enum:[ 'pending', 'added']
-   },
+  productStatus: { type: String, default: 'pending', enum: ['pending', 'added'] },
   challanNo: { type: String },
   companyName: { type: String },
   companyEmail: { type: String }, // manufacture

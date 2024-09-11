@@ -2,7 +2,6 @@ const httpStatus = require('http-status');
 const path = require('path');
 const csv = require('csvtojson');
 const { join } = require('path');
-const fs = require('fs');
 const pick = require('../utils/pick');
 const ApiError = require('../utils/ApiError');
 const catchAsync = require('../utils/catchAsync');

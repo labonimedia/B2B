@@ -12,7 +12,7 @@ const createTrouserPocket = catchAsync(async (req, res) => {
 const queryTrouserPocket = catchAsync(async (req, res) => {
   const filter = pick(req.query, ['name']);
   const options = pick(req.query, ['sortBy', 'limit', 'page']);
-  const result = await TrouserPocket.queryTrouserPocket(filter, options);
+  const result = await trouserPocketService.queryTrouserPocket(filter, options);
   res.send(result);
 });
 

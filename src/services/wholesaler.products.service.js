@@ -1,5 +1,5 @@
 const httpStatus = require('http-status');
-const { WholesalerProducts, Manufacture, Brand } = require('../models');
+const { WholesalerProducts } = require('../models');
 const ApiError = require('../utils/ApiError');
 // const { deleteFile } = require('../utils/upload');
 
@@ -35,6 +35,7 @@ const fileupload = async (req, productId) => {
   };
 
   product.colourCollections.push(newColourCollection);
+  // eslint-disable-next-line no-return-await
   return await product.save();
 };
 
@@ -70,7 +71,9 @@ const queryProduct = async (filter, options) => {
 const searchProducts = async (filter, options) => {
   // If there's a search term, add a text search condition
   if (filter.search) {
+    // eslint-disable-next-line no-param-reassign
     filter.$text = { $search: filter.search };
+    // eslint-disable-next-line no-param-reassign
     delete filter.search;
   }
 

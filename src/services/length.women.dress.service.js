@@ -21,8 +21,8 @@ const createLenthWomenDress = async (reqBody) => {
  * @returns {Promise<QueryResult>}
  */
 const queryLenthWomenDress = async (filter, options) => {
-  const LenthWomenDress = await LenthWomenDress.paginate(filter, options);
-  return LenthWomenDress;
+  const lenthWomenDress = await LenthWomenDress.paginate(filter, options);
+  return lenthWomenDress;
 };
 
 /**
