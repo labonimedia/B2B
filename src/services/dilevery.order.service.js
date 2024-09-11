@@ -35,59 +35,18 @@ const getDileveryOrderById = async (id) => {
   return DileveryOrder.findById(id);
 };
 
-// const getGroupedProductsByStatus = async (customerEmail) => {
-//     const dileveryOrders = await DileveryOrder.find({
-//       'products.status': 'done',
-//       customerEmail,
-//     }).lean();
-
-//     console.log('Dilevery Orders:', dileveryOrders);
-//     // Step 2: Extract designNumber and productBy for products with "done" status
-//     const productDesignMap = {};
-//     dileveryOrders.forEach((order) => {
-//       order.products.forEach((product) => {
-//         if (product.status === 'done') {
-//           const { designNo } = product;
-//           productDesignMap[designNo] = productDesignMap[designNo] || [];
-//           productDesignMap[designNo].push(order.companyEmail);
-//         }
-//       });
-//     });
-//     console.log('dileveryOrders:', {  dileveryOrders });
-
-//     // Step 3: Query the Product collection based on designNumber and productBy
-//     const productPromises = Object.entries(productDesignMap).map(([designNumber, productByList]) => {
-//       console.log('Querying Product with:', { designNumber, productByList });
-//       return Product.find({
-//         designNumber,
-//         productBy: { $in: productByList },
-//       }).lean();
-//     });
-
-//     const products = await Promise.all(productPromises);
-
-//     // Step 4: Group products by `productBy`
-//     const groupedByProductBy = {};
-//     products.flat().forEach((product) => {
-//       const { productBy } = product;
-//       if (!groupedByProductBy[productBy]) {
-//         groupedByProductBy[productBy] = [];
-//       }
-//       groupedByProductBy[productBy].push(product);
-//     });
-// console.log(groupedByProductBy)
-//     return groupedByProductBy;
-// }
 
 const getGroupedProductsByStatus = async (customerEmail) => {
-  // Step 1: Find all orders where product status is "done" for the given customerEmail
-  const dileveryOrders = await DileveryOrder.find({
+  // Step 1: Fetch delivery orders with 'done' status products
+  const deliveryOrders = await DileveryOrder.find({
     'products.status': 'done',
     customerEmail,
   }).lean();
-  // Step 2: Extract designNumber and companyEmail (representing the manufacturer) for products with "done" status
+  
   const productDesignMap = {};
-  dileveryOrders.forEach((order) => {
+  
+  // Step 2: Build a map of design numbers to manufacturer emails (companyEmail)
+  deliveryOrders.forEach((order) => {
     order.products.forEach((product) => {
       if (product.status === 'done') {
         const { designNo } = product;
@@ -96,31 +55,40 @@ const getGroupedProductsByStatus = async (customerEmail) => {
       }
     });
   });
+
   // Step 3: Query the Product collection based on designNumber and manufacturer emails
   const productPromises = Object.entries(productDesignMap).map(async ([designNumber, productByList]) => {
-    // Query Product collection
+    // Fetch matching products from Product collection
     const products = await Product.find({
       designNumber,
-      productBy: { $in: productByList }, // Assuming productBy is the email
+      productBy: { $in: productByList },
     }).lean();
+
     // Fetch fullName of manufacturers from the Manufacturer collection
     const manufacturers = await Manufacture.find({
-      email: { $in: productByList }, // Assuming email is the identifier in the Manufacturer collection
+      email: { $in: productByList }, // Assuming email is the identifier in Manufacturer collection
     }).lean();
+
     // Create a map for manufacturer emails to fullName
     const manufacturerMap = {};
     manufacturers.forEach((manufacturer) => {
       manufacturerMap[manufacturer.email] = manufacturer.fullName;
     });
-    // Replace productBy with the fullName from the Manufacturer collection
+
+    // Return each product with fullName of the manufacturer
     return products.map((product) => ({
       ...product,
       manufacturerFullName: manufacturerMap[product.productBy], // Assuming productBy holds the email
     }));
   });
+
+  // Step 4: Resolve all promises to get the list of products
   const products = await Promise.all(productPromises);
-  // Step 4: Group products by `manufacturerFullName`
+
+  // Step 5: Group delivery order products with 'done' status by `manufacturerFullName`
   const groupedByManufacturer = {};
+  
+  // Flatten the array of arrays
   products.flat().forEach((product) => {
     const { manufacturerFullName } = product;
     if (!groupedByManufacturer[manufacturerFullName]) {
@@ -128,8 +96,85 @@ const getGroupedProductsByStatus = async (customerEmail) => {
     }
     groupedByManufacturer[manufacturerFullName].push(product);
   });
-  return groupedByManufacturer;
+
+  // Step 6: Combine delivery order data with matching product details
+  const result = [];
+  deliveryOrders.forEach((order) => {
+    order.products.forEach((product) => {
+      if (product.status === 'done') {
+        const { designNo } = product;
+
+        // Find matching products for the same designNo
+        const matchingProducts = products.flat().filter(p => p.designNumber === designNo);
+
+        // Include both the delivery order product and the matching products
+        result.push({
+          deliveryProduct: product,       // Product details from the delivery order
+          matchingProducts: matchingProducts,  // Matching product details from the Product collection
+          orderDetails: {
+            companyEmail: order.companyEmail,  // Manufacturer email from the delivery order
+            orderId: order._id,                // Delivery order ID
+          }
+        });
+      }
+    });
+  });
+
+  return result;
 };
+
+
+
+// const getGroupedProductsByStatus = async (customerEmail) => {
+//   const dileveryOrders = await DileveryOrder.find({
+//     'products.status': 'done',
+//     customerEmail,
+//   }).lean();
+//   const productDesignMap = {};
+//   dileveryOrders.forEach((order) => {
+//     order.products.forEach((product) => {
+//       if (product.status === 'done') {
+//         const { designNo } = product;
+//         productDesignMap[designNo] = productDesignMap[designNo] || [];
+//         productDesignMap[designNo].push(order.companyEmail); // Push manufacturer email (companyEmail)
+//       }
+//     });
+//   });
+//   // Step 3: Query the Product collection based on designNumber and manufacturer emails
+//   const productPromises = Object.entries(productDesignMap).map(async ([designNumber, productByList]) => {
+//     // Query Product collection
+//     const products = await Product.find({
+//       designNumber,
+//       productBy: { $in: productByList }, 
+//     }).lean();
+//     // Fetch fullName of manufacturers from the Manufacturer collection
+//     const manufacturers = await Manufacture.find({
+//       email: { $in: productByList }, // Assuming email is the identifier in the Manufacturer collection
+//     }).lean();
+//     // Create a map for manufacturer emails to fullName
+//     const manufacturerMap = {};
+//     manufacturers.forEach((manufacturer) => {
+//       manufacturerMap[manufacturer.email] = manufacturer.fullName;
+//     });
+//     // Replace productBy with the fullName from the Manufacturer collection
+//     return products.map((product) => ({
+//       ...product,
+//       manufacturerFullName: manufacturerMap[product.productBy], // Assuming productBy holds the email
+//     }));
+//   });
+//   const products = await Promise.all(productPromises);
+//   // Step 4: Group products by `manufacturerFullName`
+//   const groupedByManufacturer = {};
+//   products.flat().forEach((product) => {
+//     const { manufacturerFullName } = product;
+//     if (!groupedByManufacturer[manufacturerFullName]) {
+//       groupedByManufacturer[manufacturerFullName] = [];
+//     }
+//     groupedByManufacturer[manufacturerFullName].push(product);
+//   });
+//   return groupedByManufacturer;
+// };
+
 /**
  * Get Material by id
  * @param {ObjectId} id
@@ -160,8 +205,6 @@ const getManufactureChalanNo = async (email) => {
       { $inc: { count: 1 } },
       { new: true, upsert: true, setDefaultsOnInsert: true }
     );
-
-    // Handle potential errors (e.g., duplicate key)
   } catch (error) {
     if (error.code === 11000) {
       throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'Duplicate order counter entry.');
