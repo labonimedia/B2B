@@ -69,7 +69,6 @@ const getProductById = catchAsync(async (req, res) => {
   res.send(user);
 });
 
-
 const getProductByWholealer = catchAsync(async (req, res) => {
   const user = await wholesalerProductsService.getProductByWholealer(req.query.wholesalerEmail);
   if (!user) {

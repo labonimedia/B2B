@@ -1,4 +1,3 @@
-const httpStatus = require('http-status');
 const { Otp } = require('../models');
 // const config = require('../config/config');
 // const ApiError = require('../utils/ApiError');
@@ -18,7 +17,6 @@ const generateOTP = () => {
 
 const verifyOtp = async (email, otp) => {
   const otpDoc = await Otp.findOne({ email, otp });
-  console.log('verifyOtp', email, otp, otpDoc);
   if (!otpDoc || !otpDoc.otp) {
     throw new Error('Otp does not match');
   }

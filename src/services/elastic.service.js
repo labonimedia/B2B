@@ -21,8 +21,8 @@ const createElastic = async (reqBody) => {
  * @returns {Promise<QueryResult>}
  */
 const queryElastic = async (filter, options) => {
-  const Elastic = await Elastic.paginate(filter, options);
-  return Elastic;
+  const elastic = await Elastic.paginate(filter, options);
+  return elastic;
 };
 
 /**

@@ -12,7 +12,7 @@ const createRiseStyle = catchAsync(async (req, res) => {
 const queryRiseStyle = catchAsync(async (req, res) => {
   const filter = pick(req.query, ['name']);
   const options = pick(req.query, ['sortBy', 'limit', 'page']);
-  const result = await RiseStyle.queryRiseStyle(filter, options);
+  const result = await riseStyleService.queryRiseStyle(filter, options);
   res.send(result);
 });
 

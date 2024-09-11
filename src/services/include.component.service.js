@@ -21,8 +21,8 @@ const createIncludeComponent = async (reqBody) => {
  * @returns {Promise<QueryResult>}
  */
 const queryIncludeComponent = async (filter, options) => {
-  const IncludeComponent = await IncludeComponent.paginate(filter, options);
-  return IncludeComponent;
+  const includeComponent = await IncludeComponent.paginate(filter, options);
+  return includeComponent;
 };
 
 /**

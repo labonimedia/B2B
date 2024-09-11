@@ -32,7 +32,7 @@ const ApiError = require('../utils/ApiError');
  * @param {Object} user
  * @returns {Promise<Request>}
  */
-const createRequest = async (requestBody, user) => {
+const createRequest = async (requestBody) => {
   // Check if a request with the same requestor and recipient already exists
   const existingRequest = await Request.findOne({
     requestByEmail: requestBody.requestByEmail,
@@ -51,7 +51,7 @@ const createRequest = async (requestBody, user) => {
   return request;
 };
 
-const createMultipleRequests = async (requestsBody, user) => {
+const createMultipleRequests = async (requestsBody) => {
   const requests = await Promise.all(
     requestsBody.map(async (requestBody) => {
       return Request.create(requestBody);

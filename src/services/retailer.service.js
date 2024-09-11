@@ -82,15 +82,12 @@ const getUserByEmail = async (email) => {
  * @returns {Promise<Retailer>}
  */
 const updateRetailerById = async (email, updateBody) => {
-  console.log('updateBody', updateBody);
   const user = await getUserByEmail(email);
   if (!user) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Retailer not found');
   }
-  console.log('Retailer', user);
   Object.assign(user, updateBody);
   await user.save();
-  console.log('User', user);
   return user;
 };
 
@@ -107,7 +104,6 @@ const deleteRetailerById = async (email) => {
   await user.remove();
   return user;
 };
-
 
 // /**
 //  * Get user by ID
@@ -170,5 +166,5 @@ module.exports = {
   updateRetailerById,
   deleteRetailerById,
   getUserById,
-  getWholesalersByEmails
+  getWholesalersByEmails,
 };

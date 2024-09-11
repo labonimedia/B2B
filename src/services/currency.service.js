@@ -1105,7 +1105,7 @@ const currencyData = {
 
 //   return result;
 // };
-const queryCurrency = async (filter) => {
+const queryCurrency = async () => {
   // Convert the currencyData object to an array
   const currencyArray = Object.values(currencyData);
   // Prepare the response

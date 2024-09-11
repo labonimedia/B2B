@@ -24,8 +24,7 @@ router
   .patch(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), retailerController.updateRetailerById)
   .delete(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), retailerController.deleteRetailerById);
 
-router.route('/wholesalerslist/:id').get(
-    auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
-    retailerController.getWholesalersByRetailerId
-  );
+router
+  .route('/wholesalerslist/:id')
+  .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), retailerController.getWholesalersByRetailerId);
 module.exports = router;
