@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const { paginate, toJSON } = require('./plugins');
+const crypto = require('crypto');
 
 const productSchema = mongoose.Schema(
   {
