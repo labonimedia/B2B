@@ -6,6 +6,9 @@ const wholesalerProductSchema = mongoose.Schema(
     wholesalerPrice: {
       type: String,
     },
+    wholesalerEmail: {
+      type: String,
+    },
     currency: {
       type: String,
     },
