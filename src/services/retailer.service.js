@@ -109,6 +109,23 @@ const deleteRetailerById = async (email) => {
 };
 
 
+// /**
+//  * Get user by ID
+//  * @param {ObjectId} id
+//  * @returns {Promise<User>}
+//  */
+// const getUserById = async (id) => {
+//   return User.findById(id);
+// };
+
+// /**
+//  * Get wholesalers by emails
+//  * @param {Array} emails - Array of wholesaler emails
+//  * @returns {Promise<Array<User>>}
+//  */
+// const getWholesalersByEmails = async (emails) => {
+//   return User.find({ email: { $in: emails }, role: 'wholesaler' });
+// };
 /**
  * Get user by ID
  * @param {ObjectId} id
@@ -119,12 +136,29 @@ const getUserById = async (id) => {
 };
 
 /**
- * Get wholesalers by emails
- * @param {Array} emails - Array of wholesaler emails
- * @returns {Promise<Array<User>>}
+ * Get wholesalers by emails with pagination
+ * @param {Array<string>} emails - Array of wholesaler emails
+ * @param {Object} options - Pagination options (limit, page)
+ * @returns {Promise<QueryResult>}
  */
-const getWholesalersByEmails = async (emails) => {
-  return User.find({ email: { $in: emails }, role: 'wholesaler' });
+const getWholesalersByEmails = async (emails, options) => {
+  const limit = options.limit ? parseInt(options.limit, 10) : 10;
+  const page = options.page ? parseInt(options.page, 10) : 1;
+  const skip = (page - 1) * limit;
+
+  // Query to find wholesalers by emails
+  const query = { email: { $in: emails }, role: 'wholesaler' };
+
+  const totalDocs = await User.countDocuments(query);
+  const docs = await User.find(query).skip(skip).limit(limit);
+
+  return {
+    docs,
+    totalDocs,
+    limit,
+    page,
+    totalPages: Math.ceil(totalDocs / limit),
+  };
 };
 
 module.exports = {

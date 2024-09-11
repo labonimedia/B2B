@@ -39,17 +39,36 @@ const deleteRetailerById = catchAsync(async (req, res) => {
   res.status(httpStatus.NO_CONTENT).send();
 });
 
+// const getWholesalersByRetailerId = catchAsync(async (req, res) => {
+//   const retailer = await retailerService.getUserById(req.params.id);
+
+//   if (!retailer) {
+//     throw new ApiError(httpStatus.NOT_FOUND, 'Retailer not found');
+//   }
+
+//   const wholesalers = await retailerService.getWholesalersByEmails(retailer.refByEmail);
+
+//   res.status(httpStatus.OK).send(wholesalers);
+// });
 const getWholesalersByRetailerId = catchAsync(async (req, res) => {
-  const retailer = await retailerService.getUserById(req.params.id);
+  const { id } = req.params;
+  const options = pick(req.query, ['limit', 'page']);
+
+  // Get retailer by ID
+  const retailer = await retailerService.getUserById(id);
 
   if (!retailer) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Retailer not found');
   }
 
-  const wholesalers = await retailerService.getWholesalersByEmails(retailer.refByEmail);
+  const refByEmail = retailer.refByEmail || [];
+
+  // Get wholesalers by emails from refByEmail array
+  const wholesalers = await retailerService.getWholesalersByEmails(refByEmail, options);
 
   res.status(httpStatus.OK).send(wholesalers);
 });
+
 module.exports = {
   createRetailer,
   queryRetailer,
