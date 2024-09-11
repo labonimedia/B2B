@@ -6,7 +6,6 @@ const productSchema = mongoose.Schema(
     FSIN: {
       type: String,
       unique: true,
-      required: true,
     },
     currency: {
       type: String,
