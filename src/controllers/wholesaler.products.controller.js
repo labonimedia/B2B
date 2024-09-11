@@ -55,7 +55,7 @@ const searchProducts = catchAsync(async (req, res) => {
 });
 
 const queryProduct = catchAsync(async (req, res) => {
-  const filter = pick(req.query, ['name', 'status', 'productBy']);
+  const filter = pick(req.query, ['name', 'status', 'wholesalerEmail']);
   const options = pick(req.query, ['sortBy', 'limit', 'page']);
   const result = await wholesalerProductsService.queryProduct(filter, options);
   res.send(result);
@@ -63,6 +63,15 @@ const queryProduct = catchAsync(async (req, res) => {
 
 const getProductById = catchAsync(async (req, res) => {
   const user = await wholesalerProductsService.getProductById(req.params.id);
+  if (!user) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Product not found');
+  }
+  res.send(user);
+});
+
+
+const getProductByWholealer = catchAsync(async (req, res) => {
+  const user = await wholesalerProductsService.getProductByWholealer(req.query.wholesalerEmail);
   if (!user) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Product not found');
   }
@@ -93,6 +102,7 @@ const deleteProductById = catchAsync(async (req, res) => {
 
 module.exports = {
   fileupload,
+  getProductByWholealer,
   createProduct,
   queryProduct,
   searchProducts,

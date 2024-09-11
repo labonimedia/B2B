@@ -87,6 +87,15 @@ const getProductById = async (id) => {
 };
 
 /**
+ * Get Product by id
+ * @param {ObjectId} id
+ * @returns {Promise<WholesalerProducts>}
+ */
+const getProductByWholealer = async (wholesalerEmail) => {
+  return (await WholesalerProducts.find(wholesalerEmail)).select('brand');
+};
+
+/**
  * Update Product by id
  * @param {ObjectId} Id
  * @param {Object} updateBody
@@ -296,6 +305,7 @@ const deleteProductById = async (id) => {
 
 module.exports = {
   fileupload,
+  getProductByWholealer,
   createProduct,
   queryProduct,
   searchProducts,
