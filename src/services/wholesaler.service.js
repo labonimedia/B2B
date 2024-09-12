@@ -67,15 +67,41 @@ const getWholesalerById = async (id) => {
 const getUserByEmail = async (email) => {
   return Wholesaler.findOne({ email });
 };
+
+// // Utility function to escape special characters in the search keywords
+// const escapeRegExp = (string) => {
+//   return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // Escapes special characters
+// };
+
+// const getSearchWholesaler = async (searchKeywords = '', options = {}) => {
+//   const sanitizedKeywords = escapeRegExp(searchKeywords); // Sanitize input
+//   // eslint-disable-next-line security/detect-non-literal-regexp
+//   const searchRegex = new RegExp(sanitizedKeywords, 'i');
+
+//   const wholesalerFilter = {
+//     $or: [
+//       { address: { $regex: searchRegex } },
+//       { fullName: { $regex: searchRegex } },
+//       { companyName: { $regex: searchRegex } },
+//       { country: { $regex: searchRegex } },
+//       { city: { $regex: searchRegex } },
+//     ],
+//   };
+
+//   const wholesalers = await Wholesaler.paginate(wholesalerFilter, options);
+//   return wholesalers;
+// };
 // Utility function to escape special characters in the search keywords
 const escapeRegExp = (string) => {
   return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // Escapes special characters
 };
 
 const getSearchWholesaler = async (searchKeywords = '', options = {}) => {
-  const sanitizedKeywords = escapeRegExp(searchKeywords); // Sanitize input
+  // Sanitize and normalize input to avoid case and special character issues
+  const sanitizedKeywords = escapeRegExp(searchKeywords.trim()); // Trim and sanitize input
+  
   // eslint-disable-next-line security/detect-non-literal-regexp
-  const searchRegex = new RegExp(sanitizedKeywords, 'i');
+  const searchRegex = new RegExp(sanitizedKeywords, 'i'); // Case-insensitive search
 
   const wholesalerFilter = {
     $or: [
@@ -90,6 +116,7 @@ const getSearchWholesaler = async (searchKeywords = '', options = {}) => {
   const wholesalers = await Wholesaler.paginate(wholesalerFilter, options);
   return wholesalers;
 };
+
 /**
  * Update Wholesaler by id
  * @param {ObjectId} Id
