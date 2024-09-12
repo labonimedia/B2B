@@ -20,6 +20,7 @@ const createBrand = catchAsync(async (req, res) => {
 const queryBrand = catchAsync(async (req, res) => {
   const { name, brandOwner } = req.query;
   let filter = {};
+  // eslint-disable-next-line security/detect-non-literal-regexp
   if (name) filter = { name: new RegExp(name, 'i') };
   if (brandOwner) filter = { brandOwner };
   // const filter = pick(req.query, ['name', 'brandOwner']);

@@ -43,10 +43,8 @@ const deleteCartById = catchAsync(async (req, res) => {
 });
 
 module.exports = {
-  addToCart,
   getCartByEmail,
   addToCart,
-  getCartByEmail,
   getCartByEmailToPlaceOrder,
   getCartById,
   updateCartById,

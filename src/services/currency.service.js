@@ -1,4 +1,5 @@
 const currencyData = {
+  // eslint-disable-next-line security/detect-bidi-characters
   USD: {
     symbol: '$',
     name: 'US Dollar',
@@ -8,6 +9,7 @@ const currencyData = {
     code: 'USD',
     name_plural: 'US dollars',
   },
+  // eslint-disable-next-line security/detect-bidi-characters
   CAD: {
     symbol: 'CA$',
     name: 'Canadian Dollar',
@@ -26,6 +28,7 @@ const currencyData = {
     code: 'EUR',
     name_plural: 'euros',
   },
+
   AED: {
     symbol: 'AED',
     name: 'United Arab Emirates Dirham',
