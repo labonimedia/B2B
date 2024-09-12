@@ -31,8 +31,6 @@ const invitationSchema = mongoose.Schema(
     },
     status: {
       type: String,
-      // enum: ['pending', 'accepted'],
-      // default: 'pending',
     },
     invitedBy: [
       {

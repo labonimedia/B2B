@@ -21,8 +21,8 @@ const createSeason = async (reqBody) => {
  * @returns {Promise<QueryResult>}
  */
 const querySeason = async (filter, options) => {
-  const Seasons = await Season.paginate(filter, options);
-  return Seasons;
+  const seasons = await Season.paginate(filter, options);
+  return seasons;
 };
 
 /**

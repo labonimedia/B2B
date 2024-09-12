@@ -21,8 +21,8 @@ const createClosureType = async (reqBody) => {
  * @returns {Promise<QueryResult>}
  */
 const queryClosureType = async (filter, options) => {
-  const ClosureTypes = await ClosureType.paginate(filter, options);
-  return ClosureTypes;
+  const closureTypes = await ClosureType.paginate(filter, options);
+  return closureTypes;
 };
 
 /**

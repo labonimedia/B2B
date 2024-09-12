@@ -15,8 +15,4 @@ router
   .patch(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), issueProductsController.updateIssuedProductsById)
   .delete(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), issueProductsController.deleteIssuedProductsById);
 
-// router
-//   .route('/get/challan')
-//   .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), issueProductsController.getDileveryOrderBycustomerEmail);
-
 module.exports = router;

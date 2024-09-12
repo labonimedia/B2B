@@ -14,21 +14,6 @@ const createProduct = catchAsync(async (req, res) => {
   res.status(httpStatus.CREATED).send(user);
 });
 
-// const searchProducts = catchAsync(async (req, res) => {
-//   const filter = {};
-//   const options = {};
-
-//   // Build the filter object based on the query parameters
-//   Object.keys(req.query).forEach((key) => {
-//     if (req.query[key]) {
-//       filter[key] = req.query[key];
-//     }
-//   });
-
-//   const products = await productService.searchProducts(filter, options);
-//   res.status(httpStatus.OK).send(products);
-// });
-
 const searchProducts = catchAsync(async (req, res) => {
   const filter = {};
   const options = {};
@@ -105,17 +90,6 @@ const getFilteredProducts = catchAsync(async (req, res) => {
   const result = await productService.filterProductsAndFetchManufactureDetails(filters);
   res.status(httpStatus.OK).json(result);
 });
-// const getFilteredProducts = catchAsync(async (req, res) => {
-//   const filters = req.body;
-
-//   if (!filters || Object.keys(filters).length === 0) {
-//     // No filters provided, respond with an error or empty array
-//     return res.status(httpStatus.BAD_REQUEST).json({ message: 'No filters provided' });
-//   }
-
-//   const result = await productService.filterProductsAndFetchManufactureDetails(filters);
-//   res.status(httpStatus.OK).json(result);
-// });
 
 module.exports = {
   fileupload,

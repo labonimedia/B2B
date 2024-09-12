@@ -23,14 +23,6 @@ const fileupload = async (req, id) => {
     const fileName = req.body.fileName || '';
     retailer.fileName = fileName;
   }
-  // const file = req.body.file ? extractPath(req.body.file[0]) : null;
-  // const profileImg = req.body.profileImg ? extractPath(req.body.profileImg[0]) : null;
-  // const fileName = req.body.fileName || '';
-
-  // retailer.file = file;
-  // retailer.fileName = fileName;
-  // retailer.profileImg = profileImg;
-
   await retailer.save();
   return retailer;
 };
@@ -105,23 +97,6 @@ const deleteRetailerById = async (email) => {
   return user;
 };
 
-// /**
-//  * Get user by ID
-//  * @param {ObjectId} id
-//  * @returns {Promise<User>}
-//  */
-// const getUserById = async (id) => {
-//   return User.findById(id);
-// };
-
-// /**
-//  * Get wholesalers by emails
-//  * @param {Array} emails - Array of wholesaler emails
-//  * @returns {Promise<Array<User>>}
-//  */
-// const getWholesalersByEmails = async (emails) => {
-//   return User.find({ email: { $in: emails }, role: 'wholesaler' });
-// };
 /**
  * Get user by ID
  * @param {ObjectId} id

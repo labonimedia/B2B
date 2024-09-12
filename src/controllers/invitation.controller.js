@@ -20,32 +20,6 @@ const bulkUploadFile = catchAsync(async (req, res) => {
     throw new ApiError(httpStatus.NOT_FOUND, 'Missing file');
   }
 });
-// const bulkUploadHandler = async (req, res) => {
-//   if (!req.file) {
-//     return res.status(httpStatus.BAD_REQUEST).send({ message: 'No file uploaded' });
-//   }
-
-//   const invitations = [];
-//   const filePath = path.join(uploadsFolder, req.file.filename);
-
-//   try {
-//     fs.createReadStream(filePath)
-//       .pipe(csv())
-//       .on('data', (row) => {
-//         invitations.push(row);
-//       })
-//       .on('end', async () => {
-//         try {
-//           const result = await invitationService.bulkUploadInvitations(invitations);
-//           res.status(httpStatus.CREATED).send(result);
-//         } catch (error) {
-//           throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, error.message);
-//         }
-//       });
-//   } catch (error) {
-//     res.status(httpStatus.INTERNAL_SERVER_ERROR).send({ message: error.message });
-//   }
-// };
 
 const arrayInvitations = catchAsync(async (req, res) => {
   const invitations = await invitationService.bulkUploadInvitations(req.body.invitations, req.user);
@@ -64,11 +38,9 @@ const sendReInvitation = catchAsync(async (req, res) => {
 
 const sendReInvitationBulk = catchAsync(async (req, res) => {
   const { emails } = req.body; // Expecting an array of emails in the request body
-  // console.log(emails);
   if (!Array.isArray(emails) || emails.length === 0) {
     return res.status(httpStatus.BAD_REQUEST).send({ message: 'Emails are required and should be an array.' });
   }
-
   const results = await invitationService.sendReInvitation(emails);
   res.status(httpStatus.CREATED).send({ message: 'Invitations sent successfully', results });
 });

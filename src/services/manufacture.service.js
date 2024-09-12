@@ -163,22 +163,6 @@ const deleteManufactureById = async (email) => {
   return user;
 };
 
-// /**
-//  * Update visibility settings for a manufacturer's profile
-//  * @param {ObjectId} manufactureId
-//  * @param {Object} visibilitySettings
-//  * @returns {Promise<Manufacture>}
-//  */
-// const updateVisibilitySettings = async (manufactureId, visibilitySettings) => {
-//   const manufacture = await Manufacture.findById(manufactureId);
-//   if (!manufacture) {
-//     throw new ApiError(httpStatus.NOT_FOUND, 'Manufacture not found');
-//   }
-
-//   manufacture.visibilitySettings = { ...manufacture.visibilitySettings, ...visibilitySettings };
-//   await manufacture.save();
-//   return manufacture;
-// };
 /**
  * Update visibility settings for a manufacturer's profile based on payload
  * @param {ObjectId} manufactureId

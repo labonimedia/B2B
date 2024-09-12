@@ -5,7 +5,6 @@ const { cartController } = require('../../controllers');
 const router = express.Router();
 
 router.route('/').post(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), cartController.addToCart);
-//   .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), cartController.queryWishlist);
 
 router
   .route('/update/cart')
@@ -14,8 +13,6 @@ router
   .route('/delete/cart')
   .delete(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), cartController.deleteCartById);
 router.route('/:id').get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), cartController.getCartById);
-// .patch(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), cartController.updateCartById)
-// .delete(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), cartController.deleteCartById);
 
 router
   .route('/cart-products/:email')

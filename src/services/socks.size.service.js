@@ -21,8 +21,8 @@ const createSocksSize = async (reqBody) => {
  * @returns {Promise<QueryResult>}
  */
 const querySocksSize = async (filter, options) => {
-  const SocksSizes = await SocksSize.paginate(filter, options);
-  return SocksSizes;
+  const socksSizes = await SocksSize.paginate(filter, options);
+  return socksSizes;
 };
 
 /**

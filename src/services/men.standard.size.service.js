@@ -21,8 +21,8 @@ const createMenStandardSize = async (reqBody) => {
  * @returns {Promise<QueryResult>}
  */
 const queryMenStandardSize = async (filter, options) => {
-  const MenStandardSizes = await MenStandardSize.paginate(filter, options);
-  return MenStandardSizes;
+  const menStandardSizes = await MenStandardSize.paginate(filter, options);
+  return menStandardSizes;
 };
 
 /**

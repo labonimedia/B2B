@@ -280,15 +280,6 @@ const updateCartByEmail = async (email, productId, quantity) => {
   await cart.save();
   return cart;
 };
-// const updateCartById = async (id, updateBody) => {
-//   const user = await getCartById(id);
-//   if (!user) {
-//     throw new ApiError(httpStatus.NOT_FOUND, 'Cart not found');
-//   }
-//   Object.assign(user, updateBody);
-//   await user.save();
-//   return user;
-// };
 
 /**
  * Delete user by id
@@ -311,14 +302,7 @@ const deleteCartItemByEmail = async (email, productId) => {
   await cart.save();
   return cart;
 };
-// const deleteCartById = async (id) => {
-//   const user = await getCartById(id);
-//   if (!user) {
-//     throw new ApiError(httpStatus.NOT_FOUND, 'Cart not found');
-//   }
-//   await user.remove();
-//   return user;
-// };
+
 module.exports = {
   addToCart,
   getCartByEmail,

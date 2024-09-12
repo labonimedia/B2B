@@ -74,43 +74,19 @@ const deleteBrandById = async (id) => {
   return user;
 };
 
-// const searchBrandAndOwnerDetails = async (brandName) => {
-//   // Search for brands by brandName
-//   const brands = await Brand.find({ brandName: { $regex: brandName, $options: 'i' } });
-
-//   if (brands.length === 0) {
-//     return { brands: [], owners: [] }; // No brands found
-//   }
-
-//   // Extract brandOwner values
-//   const brandOwners = brands.map(brand => brand.brandOwner);
-
-//   // Fetch details of the manufacturers who own these brands
-//   const ownersDetails = await Manufacture.find({
-//     email: { $in: brandOwners }
-//   });
-
-//   return { brands, ownersDetails };
-// };
 const searchBrandAndOwnerDetails = async (brandName) => {
-  // Search for brands by brandName
   const brands = await Brand.find({ brandName: { $regex: brandName, $options: 'i' } });
 
   if (brands.length === 0) {
-    return []; // No brands found
+    return [];
   }
-
-  // Extract brandOwner emails
   const brandOwners = brands.map((brand) => brand.brandOwner);
-
-  // Fetch details of the manufacturers who own these brands
   const ownersDetails = await Manufacture.find({
     email: { $in: brandOwners },
   });
 
   // Create a map to easily associate each brandOwner email with its corresponding owner details
   const ownerDetailsMap = new Map(ownersDetails.map((owner) => [owner.email, owner]));
-
   // Combine brand details with corresponding owner details
   const combinedDetails = brands.map((brand) => {
     const ownerDetails = ownerDetailsMap.get(brand.brandOwner) || {};

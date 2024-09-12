@@ -21,8 +21,8 @@ const createSpecialFeature = async (reqBody) => {
  * @returns {Promise<QueryResult>}
  */
 const querySpecialFeature = async (filter, options) => {
-  const SpecialFeatures = await SpecialFeature.paginate(filter, options);
-  return SpecialFeatures;
+  const specialFeatures = await SpecialFeature.paginate(filter, options);
+  return specialFeatures;
 };
 
 /**

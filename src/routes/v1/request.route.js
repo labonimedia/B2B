@@ -18,9 +18,6 @@ router
   .patch(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), requestController.updateRequestById)
   .delete(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), requestController.deleteRequestById);
 
-// router
-//   .route('/accept/:id/:requestbyemail/:requesttoemail')
-//   .post(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), requestController.acceptRequest);
 router
   .route('/accept/:id/:requestbyemail/:requesttoemail')
   .post(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), requestController.acceptRequest);
