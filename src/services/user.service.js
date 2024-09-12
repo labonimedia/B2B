@@ -10,45 +10,6 @@ const { createRetailer } = require('./retailer.service');
  * @param {Object} userBody
  * @returns {Promise<User>}
  */
-// const createUser = async (userBody) => {
-//   if (await User.isEmailTaken(userBody.email)) {
-//     throw new ApiError(httpStatus.BAD_REQUEST, 'Email already taken');
-//   }
-//   if (userBody.role === 'manufacture') {
-//     const data = {
-//       fullName: userBody.fullName,
-//       companyName: userBody.companyName,
-//       email: userBody.email,
-//       // enum: ['superadmin', 'manufacture', 'wholesaler', 'distributer'],
-//       mobNumber: userBody.mobileNumber,
-//       category: userBody.category,
-//     };
-//     await createManufacture(data);
-//   }
-//   if (userBody.role === 'wholesaler') {
-//     const data = {
-//       fullName: userBody.fullName,
-//       companyName: userBody.companyName,
-//       email: userBody.email,
-//       // enum: ['superadmin', 'manufacture', 'wholesaler', 'retailer'],
-//       mobNumber: userBody.mobileNumber,
-//       category: userBody.category,
-//     };
-//     await createWholesaler(data);
-//   }
-//   if (userBody.role === 'retailer') {
-//     const data = {
-//       fullName: userBody.fullName,
-//       companyName: userBody.companyName,
-//       email: userBody.email,
-//       // enum: ['superadmin', 'manufacture', 'wholesaler', 'distributer'],
-//       mobNumber: userBody.mobileNumber,
-//       category: userBody.category,
-//     };
-//     await createRetailer(data);
-//   }
-//   return User.create(userBody);
-// };
 
 const createUser = async (userBody) => {
   // Check if the email is already taken
@@ -124,39 +85,6 @@ const queryUsers = async (filter, options) => {
   return users;
 };
 
-// /**
-//  * Get user by id
-//  * @param {ObjectId} id
-//  * @returns {Promise<User>}
-//  */
-// const getUserById = async (id) => {
-//   const user = await User.findById(id);
-//   if (!user) {
-//     throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
-//   }
-//   let profile;
-//   switch (user.role) {
-//     // eslint-disable-next-line no-case-declarations
-//     case 'wholesaler':
-//       const wholesaler = await Wholesaler.findOne({ email: user.email });
-//       profile = wholesaler ? wholesaler.profileImg : null;
-//       break;
-//     // eslint-disable-next-line no-case-declarations
-//     case 'manufacture':
-//       const manufacturer = await Manufacture.findOne({ email: user.email });
-//       profile = manufacturer ? manufacturer.profileImg : null;
-//       break;
-//     // eslint-disable-next-line no-case-declarations
-//     case 'retailer':
-//       const retailer = await Retailer.findOne({ email: user.email });
-//       profile = retailer ? retailer.profileImg : null;
-//       break;
-//     default:
-//       profile = null;
-//   }
-
-//   return { ...user.toObject(), profile };
-// };
 /**
  * Get user by id
  * @param {ObjectId} id
@@ -201,52 +129,6 @@ const getUserByEmail = async (email) => {
   const user = await User.findOne({ email });
   return user;
 };
-
-// /**
-//  * Update user by id
-//  * @param {ObjectId} userId
-//  * @param {Object} updateBody
-//  * @returns {Promise<User>}
-//  */
-// const updateUserById = async (userId, updateBody) => {
-//   // Check if the email is already taken
-//   if (updateBody.email && (await User.isEmailTaken(updateBody.email, userId))) {
-//     throw new ApiError(httpStatus.BAD_REQUEST, 'Email already taken');
-//   }
-
-//   // Update the user document directly in the database
-//   const user = await User.findByIdAndUpdate(userId, updateBody, { new: true });
-
-//   if (!user) {
-//     throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
-//   }
-
-//   // Fetch the user's profile image based on the role
-//   let profile;
-//   switch (user.role) {
-//     // eslint-disable-next-line no-case-declarations
-//     case 'wholesaler':
-//       const wholesaler = await Wholesaler.findOne({ email: user.email });
-//       profile = wholesaler ? wholesaler.profileImg : null;
-//       break;
-//     // eslint-disable-next-line no-case-declarations
-//     case 'manufacture':
-//       const manufacturer = await Manufacture.findOne({ email: user.email });
-//       profile = manufacturer ? manufacturer.profileImg : null;
-//       break;
-//     // eslint-disable-next-line no-case-declarations
-//     case 'retailer':
-//       const retailer = await Retailer.findOne({ email: user.email });
-//       profile = retailer ? retailer.profileImg : null;
-//       break;
-//     // eslint-disable-next-line no-case-declarations
-//     default:
-//       profile = null;
-//   }
-
-//   // Combine the updated user object with the profile image
-//   return { ...user.toObject(), profile };
-// };
 
 /**
  * Update user by id
@@ -294,20 +176,6 @@ const updateUserById = async (userId, updateBody) => {
   // Combine the updated user object with the profile image
   return { ...user.toObject(), profile };
 };
-// const updateUserById = async (userId, updateBody) => {
-//   console.log(userId, updateBody);
-//   const user = await getUserById(userId);
-//   if (!user) {
-//     throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
-//   }
-//   if (updateBody.email && (await User.isEmailTaken(updateBody.email, userId))) {
-//     throw new ApiError(httpStatus.BAD_REQUEST, 'Email already taken');
-//   }
-//   Object.assign(user, updateBody);
-//   console.log(user)
-//   await user.save();
-//   return user;
-// };
 
 const updateUserByEmail = async (email, updateBody) => {
   const user = await getUserByEmail(email);
@@ -318,24 +186,7 @@ const updateUserByEmail = async (email, updateBody) => {
   await user.save();
   return user;
 };
-// const updateUserByEmail = async (email, updateBody) => {
-//   // Find the user by email
-//   const user = await getUserByEmail(email);
-//   if (!user) {
-//     throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
-//   }
 
-//   // If password is being updated, hash it before saving
-//   if (updateBody.password) {
-//     updateBody.password = await bcrypt.hash(updateBody.password, 8);
-//   }
-
-//   // Update user fields
-//   Object.assign(user, updateBody);
-//   await user.save();
-
-//   return user;
-// };
 /**
  * Delete user by id
  * @param {ObjectId} userId

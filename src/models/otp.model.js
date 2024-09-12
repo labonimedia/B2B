@@ -15,10 +15,10 @@ const otpSchema = mongoose.Schema(
       default: Date.now,
       expires: 180,
     },
+  },
+  {
+    timestamps: true,
   }
-  // {
-  //   timestamps: true,
-  // }
 );
 
 /**

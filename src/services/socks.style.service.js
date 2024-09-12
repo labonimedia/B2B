@@ -21,8 +21,8 @@ const createSocksStyle = async (reqBody) => {
  * @returns {Promise<QueryResult>}
  */
 const querySocksStyle = async (filter, options) => {
-  const SocksStyles = await SocksStyle.paginate(filter, options);
-  return SocksStyles;
+  const socksStyles = await SocksStyle.paginate(filter, options);
+  return socksStyles;
 };
 
 /**

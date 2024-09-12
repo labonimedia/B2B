@@ -21,8 +21,8 @@ const createSleeveLength = async (reqBody) => {
  * @returns {Promise<QueryResult>}
  */
 const querySleeveLength = async (filter, options) => {
-  const SleeveLengths = await SleeveLength.paginate(filter, options);
-  return SleeveLengths;
+  const sleeveLengths = await SleeveLength.paginate(filter, options);
+  return sleeveLengths;
 };
 
 /**

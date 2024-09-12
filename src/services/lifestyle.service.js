@@ -21,8 +21,8 @@ const createLifestyle = async (reqBody) => {
  * @returns {Promise<QueryResult>}
  */
 const queryLifestyle = async (filter, options) => {
-  const Lifestyles = await Lifestyle.paginate(filter, options);
-  return Lifestyles;
+  const lifestyles = await Lifestyle.paginate(filter, options);
+  return lifestyles;
 };
 
 /**

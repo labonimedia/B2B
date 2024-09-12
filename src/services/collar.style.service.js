@@ -21,8 +21,8 @@ const createCollarStyle = async (reqBody) => {
  * @returns {Promise<QueryResult>}
  */
 const queryCollarStyle = async (filter, options) => {
-  const CollarStyle = await CollarStyle.paginate(filter, options);
-  return CollarStyle;
+  const collarStyle = await CollarStyle.paginate(filter, options);
+  return collarStyle;
 };
 
 /**

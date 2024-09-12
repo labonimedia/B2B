@@ -23,13 +23,6 @@ const fileupload = async (req, id) => {
     const fileName = req.body.fileName || '';
     wholesaler.fileName = fileName;
   }
-  // const file = req.body.file ? extractPath(req.body.file[0]) : null;
-  // const profileImg = req.body.profileImg ? extractPath(req.body.profileImg[0]) : null;
-  // const fileName = req.body.fileName || '';
-
-  // wholesaler.file = file;
-  // wholesaler.fileName = fileName;
-  // wholesaler.profileImg = profileImg;
 
   await wholesaler.save();
   return wholesaler;
@@ -79,26 +72,6 @@ const escapeRegExp = (string) => {
   return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // Escapes special characters
 };
 
-// /**
-//  * Get user by email
-//  * @param {string} email
-//  * @returns {Promise<Wholesaler>}
-//  */
-// const getSearchWholesaler = async (searchKeywords = '', options = {}) => {
-//   const searchRegex = new RegExp(searchKeywords, 'i');
-//   // Step 3: Create a filter for the Manufacture records
-//   const wholesalerFilter = {
-//     $or: [
-//       { address: { $regex: searchRegex } },
-//       { fullName: { $regex: searchRegex } },
-//       { companyName: { $regex: searchRegex } },
-//       { country: { $regex: searchRegex } },
-//       { city: { $regex: searchRegex } },
-//     ],
-//   };
-//   const wholesalers = await Wholesaler.paginate(wholesalerFilter, options);
-//   return wholesalers;
-// };
 const getSearchWholesaler = async (searchKeywords = '', options = {}) => {
   const sanitizedKeywords = escapeRegExp(searchKeywords); // Sanitize input
   // eslint-disable-next-line security/detect-non-literal-regexp
@@ -155,14 +128,6 @@ const deleteWholesalerById = async (email) => {
 const getUser = async (email) => {
   return User.findOne({ email });
 };
-// /**
-//  * Get users by email
-//  * @param {ObjectId} email
-//  * @returns {Promise<User>}
-//  */
-// const getUsersByEmails = async (emails) => {
-//   return User.find({ email: { $in: emails } });
-// };
 
 /**
  * Get users by emails with pagination
@@ -190,34 +155,6 @@ const getUsersByEmails = async (emails, options) => {
   };
 };
 
-// const getRetailerByEmail = async (refByEmail, searchKeywords = '', options = {}) => {
-//   const users = await User.find({ refByEmail });
-//   if (!users || users.length === 0) {
-//     throw new Error('No users found with the specified refByEmail');
-//   }
-
-//   // Step 2: Extract the emails of the referred users
-//   const referredEmails = users.map((user) => user.email);
-//   if (referredEmails.length === 0) {
-//     throw new Error('No referred emails found');
-//   }
-
-//   const searchRegex = new RegExp(searchKeywords, 'i');
-
-//   const manufactureFilter = {
-//     email: { $in: referredEmails },
-//     $or: [
-//       { fullName: { $regex: searchRegex } },
-//       { companyName: { $regex: searchRegex } },
-//       { country: { $regex: searchRegex } },
-//       { city: { $regex: searchRegex } },
-//     ],
-//   };
-
-//   // Use pagination options if provided
-//   const manufactures = await Retailer.paginate(manufactureFilter, options);
-//   return manufactures;
-// };
 const getRetailerByEmail = async (refByEmail, searchKeywords = '', options = {}) => {
   const sanitizedKeywords = escapeRegExp(searchKeywords); // Sanitize input
   // eslint-disable-next-line security/detect-non-literal-regexp
@@ -246,44 +183,6 @@ const getRetailerByEmail = async (refByEmail, searchKeywords = '', options = {})
   const manufactures = await Retailer.paginate(manufactureFilter, options);
   return manufactures;
 };
-// const getRetailerByEmail = async (refByEmail, filter = {}, options = {}) => {
-//   // Step 1: Find users with the specified email in their refByEmail field
-//   const users = await User.find({ refByEmail });
-//   if (!users || users.length === 0) {
-//     throw new Error('No users found with the specified refByEmail');
-//   }
-//   // Step 2: Extract the emails of the referred users
-//   const referredEmails = users.map(user => user.email);
-//   if (referredEmails.length === 0) {
-//     throw new Error('No referred emails found');
-//   }
-//   // Step 3: Create a filter for the Manufacture records
-//   const manufactureFilter = {
-//     email: { $in: referredEmails },
-//     ...filter,
-//   };
-//   const manufactures = await Retailer.paginate(manufactureFilter, options);
-//   return manufactures;
-// };
-
-// const assignOrUpdateDiscount = async (wholesalerId, discountGivenBy, discountPercentage) => {
-//   const wholesaler = await Wholesaler.findById(wholesalerId);
-//   if (!wholesaler) {
-//     throw new ApiError(httpStatus.NOT_FOUND, 'Wholesaler not found');
-//   }
-//   const existingDiscountIndex = wholesaler.discountGiven.findIndex(
-//     (discount) => discount.discountGivenBy === discountGivenBy
-//   );
-//   if (existingDiscountIndex !== -1) {
-//     // Update the existing discount
-//     wholesaler.discountGiven[existingDiscountIndex].discountCategory = discountPercentage;
-//   } else {
-//     // Add new discount entry
-//     wholesaler.discountGiven.push({ discountGivenBy, discountCategory ,productDiscount , shippingDiscount });
-//   }
-//   await wholesaler.save();
-//   return wholesaler;
-// };
 
 const assignOrUpdateDiscount = async (email, discountGivenBy, category, productDiscount, shippingDiscount) => {
   const wholesaler = await Wholesaler.findOne({ email });
@@ -309,17 +208,6 @@ const assignOrUpdateDiscount = async (email, discountGivenBy, category, productD
   return wholesaler;
 };
 
-// const getDiscountByGivenBy = async (wholesalerId, discountGivenBy) => {
-//   const wholesaler = await Wholesaler.findById(wholesalerId);
-//   if (!wholesaler) {
-//     throw new ApiError(httpStatus.NOT_FOUND, 'Wholesaler not found');
-//   }
-//   const discount = wholesaler.discountGiven.find((discount) => discount.discountGivenBy === discountGivenBy);
-//   if (!discount) {
-//     throw new ApiError(httpStatus.NOT_FOUND, 'Discount not found');
-//   }
-//   return discount;
-// };
 const getDiscountByGivenBy = async (wholesalerId, discountGivenBy) => {
   const wholesaler = await Wholesaler.findById(wholesalerId);
   if (!wholesaler) {

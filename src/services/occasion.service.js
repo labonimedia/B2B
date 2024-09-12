@@ -21,8 +21,8 @@ const createOccasion = async (reqBody) => {
  * @returns {Promise<QueryResult>}
  */
 const queryOccasion = async (filter, options) => {
-  const Occasions = await Occasion.paginate(filter, options);
-  return Occasions;
+  const occasions = await Occasion.paginate(filter, options);
+  return occasions;
 };
 
 /**

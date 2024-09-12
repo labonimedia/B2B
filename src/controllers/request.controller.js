@@ -4,11 +4,6 @@ const { requestService } = require('../services');
 const pick = require('../utils/pick');
 const ApiError = require('../utils/ApiError');
 
-// const createRequest = catchAsync(async (req, res) => {
-//   const request = await requestService.createRequest(req.body, req.user);
-//   res.status(httpStatus.CREATED).send(request);
-// });
-
 const createRequest = catchAsync(async (req, res) => {
   const result = await requestService.createRequest(req.body, req.user);
   if (result.message) {
@@ -21,15 +16,7 @@ const createMultipleRequests = catchAsync(async (req, res) => {
   const requests = await requestService.createMultipleRequests(req.body.requests, req.user);
   res.status(httpStatus.CREATED).send(requests);
 });
-// const acceptRequest = catchAsync(async (req, res) => {
-//   const request = await requestService.acceptRequest(req.params.id, req.user);
-//   res.status(httpStatus.OK).send(request);
-// });
-// const acceptRequest = catchAsync(async (req, res) => {
-//     const { id, requestbyemail, requesttoemail, status } = req.params;
-//     const request = await requestService.acceptRequest(id, requestbyemail, requesttoemail, status);
-//     res.status(httpStatus.OK).send(request);
-//   });
+
 const filterRequests = catchAsync(async (req, res) => {
   const { status, email, requestByEmail } = req.query;
 

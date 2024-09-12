@@ -21,8 +21,8 @@ const createSubCategory = async (reqBody) => {
  * @returns {Promise<QueryResult>}
  */
 const querySubCategory = async (filter, options) => {
-  const SubCategorys = await SubCategory.paginate(filter, options);
-  return SubCategorys;
+  const subCategorys = await SubCategory.paginate(filter, options);
+  return subCategorys;
 };
 
 /**

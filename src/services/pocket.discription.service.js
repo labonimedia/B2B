@@ -21,8 +21,8 @@ const createPocketDiscription = async (reqBody) => {
  * @returns {Promise<QueryResult>}
  */
 const queryPocketDiscription = async (filter, options) => {
-  const PocketDiscriptions = await PocketDiscription.paginate(filter, options);
-  return PocketDiscriptions;
+  const pocketDiscriptions = await PocketDiscription.paginate(filter, options);
+  return pocketDiscriptions;
 };
 
 /**

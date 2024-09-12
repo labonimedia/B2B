@@ -21,8 +21,8 @@ const createShirtSizeSet = async (reqBody) => {
  * @returns {Promise<QueryResult>}
  */
 const querySeason = async (filter, options) => {
-  const Seasons = await ShirtSizeSet.paginate(filter, options);
-  return Seasons;
+  const seasons = await ShirtSizeSet.paginate(filter, options);
+  return seasons;
 };
 
 /**

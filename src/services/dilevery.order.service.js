@@ -120,56 +120,6 @@ const getGroupedProductsByStatus = async (customerEmail) => {
   return result;
 };
 
-// const getGroupedProductsByStatus = async (customerEmail) => {
-//   const dileveryOrders = await DileveryOrder.find({
-//     'products.status': 'done',
-//     customerEmail,
-//   }).lean();
-//   const productDesignMap = {};
-//   dileveryOrders.forEach((order) => {
-//     order.products.forEach((product) => {
-//       if (product.status === 'done') {
-//         const { designNo } = product;
-//         productDesignMap[designNo] = productDesignMap[designNo] || [];
-//         productDesignMap[designNo].push(order.companyEmail); // Push manufacturer email (companyEmail)
-//       }
-//     });
-//   });
-//   // Step 3: Query the Product collection based on designNumber and manufacturer emails
-//   const productPromises = Object.entries(productDesignMap).map(async ([designNumber, productByList]) => {
-//     // Query Product collection
-//     const products = await Product.find({
-//       designNumber,
-//       productBy: { $in: productByList },
-//     }).lean();
-//     // Fetch fullName of manufacturers from the Manufacturer collection
-//     const manufacturers = await Manufacture.find({
-//       email: { $in: productByList }, // Assuming email is the identifier in the Manufacturer collection
-//     }).lean();
-//     // Create a map for manufacturer emails to fullName
-//     const manufacturerMap = {};
-//     manufacturers.forEach((manufacturer) => {
-//       manufacturerMap[manufacturer.email] = manufacturer.fullName;
-//     });
-//     // Replace productBy with the fullName from the Manufacturer collection
-//     return products.map((product) => ({
-//       ...product,
-//       manufacturerFullName: manufacturerMap[product.productBy], // Assuming productBy holds the email
-//     }));
-//   });
-//   const products = await Promise.all(productPromises);
-//   // Step 4: Group products by `manufacturerFullName`
-//   const groupedByManufacturer = {};
-//   products.flat().forEach((product) => {
-//     const { manufacturerFullName } = product;
-//     if (!groupedByManufacturer[manufacturerFullName]) {
-//       groupedByManufacturer[manufacturerFullName] = [];
-//     }
-//     groupedByManufacturer[manufacturerFullName].push(product);
-//   });
-//   return groupedByManufacturer;
-// };
-
 /**
  * Get Material by id
  * @param {ObjectId} id

@@ -14,21 +14,6 @@ const createProduct = catchAsync(async (req, res) => {
   res.status(httpStatus.CREATED).send(user);
 });
 
-// const searchProducts = catchAsync(async (req, res) => {
-//   const filter = {};
-//   const options = {};
-
-//   // Build the filter object based on the query parameters
-//   Object.keys(req.query).forEach((key) => {
-//     if (req.query[key]) {
-//       filter[key] = req.query[key];
-//     }
-//   });
-
-//   const products = await wholesalerProductsService.searchProducts(filter, options);
-//   res.status(httpStatus.OK).send(products);
-// });
-
 const searchProducts = catchAsync(async (req, res) => {
   const filter = {};
   const options = {};
@@ -86,18 +71,6 @@ const deleteProductById = catchAsync(async (req, res) => {
   await wholesalerProductsService.deleteProductById(req.params.id);
   res.status(httpStatus.NO_CONTENT).send();
 });
-
-// // Update
-// const updateColorCollection = catchAsync(async (req, res) => {
-//   const user = await wholesalerProductsService.updateColorCollection(req, req.query.id);
-//   res.status(httpStatus.OK).send(user);
-// });
-
-// // Delete
-// const deleteColorCollection = catchAsync(async (req, res) => {
-//   await wholesalerProductsService.deleteColorCollection(req.query.id, req.query.collectionId);
-//   res.status(httpStatus.NO_CONTENT).send();
-// });
 
 module.exports = {
   fileupload,

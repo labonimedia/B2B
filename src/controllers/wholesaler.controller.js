@@ -46,17 +46,6 @@ const deleteWholesalerById = catchAsync(async (req, res) => {
   res.status(httpStatus.NO_CONTENT).send();
 });
 
-// const getManufactureList = catchAsync(async (req, res) => {
-//   const { email } = req.params;
-//   const user = await wholesalerService.getUser(email);
-//   if (!user) {
-//     return res.status(httpStatus.NOT_FOUND).send({ message: 'User not found' });
-//   }
-//   const refByEmail = user.refByEmail || [];
-//   const refUsers = await wholesalerService.getUsersByEmails(refByEmail);
-//   res.status(httpStatus.OK).send(refUsers);
-// });
-
 const getManufactureList = catchAsync(async (req, res) => {
   const { email } = req.params;
   const options = pick(req.query, ['limit', 'page']);
@@ -72,8 +61,6 @@ const getManufactureList = catchAsync(async (req, res) => {
 const getRetailerByEmail = catchAsync(async (req, res) => {
   const { refByEmail, searchKeywords } = req.query;
   const options = pick(req.query, ['sortBy', 'limit', 'page']);
-
-  // Retrieve retailer data from the service
   const user = await wholesalerService.getRetailerByEmail(refByEmail, searchKeywords, options);
 
   if (!user) {
@@ -83,12 +70,6 @@ const getRetailerByEmail = catchAsync(async (req, res) => {
   res.send(user);
 });
 
-// const assignDiscount = catchAsync(async (req, res) => {
-//   const { wholesalerId } = req.params;
-//   const { discountGivenBy, discountPercentage } = req.body;
-//   const wholesaler = await wholesalerService.assignOrUpdateDiscount(wholesalerId, discountGivenBy, discountPercentage);
-//   res.status(httpStatus.OK).send(wholesaler);
-// });
 const assignDiscount = catchAsync(async (req, res) => {
   const { email, discountGivenBy, category, productDiscount, shippingDiscount } = req.body;
 
