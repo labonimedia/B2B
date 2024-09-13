@@ -3,7 +3,7 @@ const { paginate, toJSON } = require('./plugins');
 
 const wholesalerProductSchema = mongoose.Schema(
   {
-    wholesalerPrice: {
+    setOfWholesalerPrice: {
       type: String,
     },
     wholesalerEmail: {
@@ -104,6 +104,7 @@ const wholesalerProductSchema = mongoose.Schema(
         height: { type: String },
         weight: { type: String },
         manufacturerPrice: { type: String },
+        wholesalerPrice: { type: Number },
         singleMRP: { type: String },
       },
     ],
