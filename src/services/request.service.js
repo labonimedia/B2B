@@ -36,6 +36,42 @@ const createMultipleRequests = async (requestsBody) => {
   return requests;
 };
 
+// const acceptRequest = async (requestId, requestByEmail, requestToEmail, status) => {
+//   const request = await Request.findById(requestId);
+//   if (!request) {
+//     throw new ApiError(httpStatus.NOT_FOUND, 'Request not found');
+//   }
+
+//   if (status === 'rejected') {
+//     request.status = 'rejected';
+//     await request.save();
+//     return request;
+//   }
+
+//   // Allow acceptance even after rejection
+//   if (status === 'accepted') {
+//     const user = await User.findOne({ email: requestByEmail });
+//     if (!user) {
+//       throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+//     }
+
+//     const manufacture = await Manufacture.findOne({ email: requestToEmail });
+//     if (!manufacture) {
+//       throw new ApiError(httpStatus.NOT_FOUND, 'Manufacture not found');
+//     }
+
+//     // Check if the email is already referenced
+//     if (!user.refByEmail.includes(requestToEmail)) {
+//       user.refByEmail.push(requestToEmail);
+//       await user.save();
+//     }
+
+//     request.status = 'accepted';
+//     await request.save();
+//   }
+
+//   return request;
+// };
 const acceptRequest = async (requestId, requestByEmail, requestToEmail, status) => {
   const request = await Request.findById(requestId);
   if (!request) {
@@ -48,26 +84,31 @@ const acceptRequest = async (requestId, requestByEmail, requestToEmail, status) 
     return request;
   }
 
-  // Allow acceptance even after rejection
   if (status === 'accepted') {
     const user = await User.findOne({ email: requestByEmail });
     if (!user) {
       throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
     }
 
+    // Find either a Manufacture or a Wholesaler by email
     const manufacture = await Manufacture.findOne({ email: requestToEmail });
-    if (!manufacture) {
-      throw new ApiError(httpStatus.NOT_FOUND, 'Manufacture not found');
+    const wholesaler = await Wholesaler.findOne({ email: requestToEmail });
+
+    // Check if Manufacture or Wholesaler exists
+    if (!manufacture && !wholesaler) {
+      throw new ApiError(httpStatus.NOT_FOUND, 'Manufacture or Wholesaler not found');
     }
 
-    // Check if the email is already referenced
+    // Check if the email is already referenced in refByEmail
     if (!user.refByEmail.includes(requestToEmail)) {
       user.refByEmail.push(requestToEmail);
       await user.save();
     }
 
+    // Update the request status to accepted
     request.status = 'accepted';
     await request.save();
+    
   }
 
   return request;

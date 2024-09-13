@@ -99,7 +99,7 @@ const escapeRegExp = (string) => {
 const getSearchWholesaler = async (searchKeywords = '', options = {}) => {
   // Sanitize and normalize input to avoid case and special character issues
   const sanitizedKeywords = escapeRegExp(searchKeywords.trim()); // Trim and sanitize input
-  
+
   // eslint-disable-next-line security/detect-non-literal-regexp
   const searchRegex = new RegExp(sanitizedKeywords, 'i'); // Case-insensitive search
 
