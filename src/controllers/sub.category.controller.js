@@ -9,12 +9,19 @@ const createSubCategory = catchAsync(async (req, res) => {
   res.status(httpStatus.CREATED).send(user);
 });
 
+// const querySubCategory = catchAsync(async (req, res) => {
+//   const filter = pick(req.query, ['productType', 'gender', 'category', 'subCategory']);
+//   const options = pick(req.query, ['sortBy', 'limit', 'page']);
+//   const result = await subCategoryService.querySubCategory(filter, options);
+//   res.send(result);
+// });
 const querySubCategory = catchAsync(async (req, res) => {
-  const filter = pick(req.query, ['productType', 'gender', 'category', 'subCategory']);
-  const options = pick(req.query, ['sortBy', 'limit', 'page']);
+  const filter = pick(req.body, ['productType', 'gender', 'category', 'subCategory']); // Filter from req.body
+  const options = pick(req.query, ['sortBy', 'limit', 'page']); // Options from req.query
   const result = await subCategoryService.querySubCategory(filter, options);
   res.send(result);
 });
+
 
 const getCategory = catchAsync(async (req, res) => {
   const filter = pick(req.query, ['productType', 'gender', 'category']);
