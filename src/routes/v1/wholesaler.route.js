@@ -41,6 +41,6 @@ router
 
 router
   .route('/get-search/wholesaler-by-address')
-  .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), wholesalerController.getSearchWholesaler);
+  .post(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), wholesalerController.getSearchWholesaler);
 
 module.exports = router;
