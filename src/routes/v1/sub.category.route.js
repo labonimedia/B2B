@@ -8,9 +8,7 @@ router
   .route('/')
   .post(auth('superadmin', 'manufacture', 'wholesaler'), subCategoryController.createSubCategory)
   .get(auth('superadmin', 'manufacture', 'wholesaler'), subCategoryController.querySubCategory);
-  router
-  .route('/filter')
-  .post(auth('superadmin', 'manufacture', 'wholesaler'), subCategoryController.querySubCategory);
+router.route('/filter').post(auth('superadmin', 'manufacture', 'wholesaler'), subCategoryController.querySubCategory);
 router
   .route('/:id')
   .get(auth('superadmin', 'manufacture', 'wholesaler'), subCategoryController.getSubCategoryById)

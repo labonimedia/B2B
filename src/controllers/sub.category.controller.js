@@ -22,7 +22,6 @@ const querySubCategory = catchAsync(async (req, res) => {
   res.send(result);
 });
 
-
 const getCategory = catchAsync(async (req, res) => {
   const filter = pick(req.query, ['productType', 'gender', 'category']);
   const options = pick(req.query, ['sortBy', 'limit', 'page']);
