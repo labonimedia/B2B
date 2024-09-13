@@ -108,6 +108,7 @@ const acceptRequest = async (requestId, requestByEmail, requestToEmail, status) 
     // Update the request status to accepted
     request.status = 'accepted';
     await request.save();
+    
   }
 
   return request;
