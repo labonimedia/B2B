@@ -72,6 +72,41 @@ const deleteProductById = catchAsync(async (req, res) => {
   res.status(httpStatus.NO_CONTENT).send();
 });
 
+const searchWholesalerProducts = catchAsync(async (req, res) => {
+  const filter = {};
+  const options = {};
+  // Extract filter parameters from req.body
+  if (req.body.brand) {
+    filter.brand = req.body.brand;
+  }
+  // Extract pagination options from req.query
+  if (req.query.sortBy) {
+    options.sortBy = req.query.sortBy;
+  }
+  if (req.query.limit) {
+    options.limit = parseInt(req.query.limit, 10);
+  }
+  if (req.query.page) {
+    options.page = parseInt(req.query.page, 10);
+  }
+  const result = await wholesalerProductsService.searchWholesalerProductsByBrand(filter, options);
+  res.status(httpStatus.OK).send(result);
+});
+
+const filterProducts = async (req, res) => {
+  try {
+    const filters = req.body; // Filters will be sent in the request body
+    const options = {
+      limit: req.query.limit || 10, // Pagination options
+      page: req.query.page || 1,
+    };
+
+    const data = await wholesalerProductsService.filterWholesalerProducts(filters, options);
+    res.status(200).json(data);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
 module.exports = {
   fileupload,
   getProductByWholealer,
@@ -81,4 +116,6 @@ module.exports = {
   getProductById,
   updateProductById,
   deleteProductById,
+  searchWholesalerProducts,
+  filterProducts,
 };

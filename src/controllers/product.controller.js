@@ -14,15 +14,42 @@ const createProduct = catchAsync(async (req, res) => {
   res.status(httpStatus.CREATED).send(user);
 });
 
+// const searchProducts = catchAsync(async (req, res) => {
+//   const filter = {};
+//   const options = {};
+
+//   Object.keys(req.query).forEach((key) => {
+//     if (req.query[key] && !['sortBy', 'populate', 'limit', 'page'].includes(key)) {
+//       filter[key] = req.query[key];
+//     }
+//   });
+//   if (req.query.sortBy) {
+//     options.sortBy = req.query.sortBy;
+//   }
+//   if (req.query.populate) {
+//     options.populate = req.query.populate;
+//   }
+//   if (req.query.limit) {
+//     options.limit = parseInt(req.query.limit, 10);
+//   }
+//   if (req.query.page) {
+//     options.page = parseInt(req.query.page, 10);
+//   }
+//   const products = await productService.searchProducts(filter, options);
+//   res.status(httpStatus.OK).send(products);
+// });
 const searchProducts = catchAsync(async (req, res) => {
   const filter = {};
   const options = {};
 
-  Object.keys(req.query).forEach((key) => {
-    if (req.query[key] && !['sortBy', 'populate', 'limit', 'page'].includes(key)) {
-      filter[key] = req.query[key];
+  // Extract filter parameters from req.body
+  Object.keys(req.body).forEach((key) => {
+    if (req.body[key] && !['sortBy', 'populate', 'limit', 'page'].includes(key)) {
+      filter[key] = req.body[key];
     }
   });
+
+  // Extract pagination and other query options from req.query
   if (req.query.sortBy) {
     options.sortBy = req.query.sortBy;
   }
@@ -35,6 +62,8 @@ const searchProducts = catchAsync(async (req, res) => {
   if (req.query.page) {
     options.page = parseInt(req.query.page, 10);
   }
+
+  // Call the service to search products
   const products = await productService.searchProducts(filter, options);
   res.status(httpStatus.OK).send(products);
 });

@@ -154,6 +154,7 @@ wholesalerSchema.plugin(paginate);
 /**
  * @typedef Wholesaler
  */
+
 const Wholesaler = mongoose.model('Wholesaler', wholesalerSchema);
 
 module.exports = Wholesaler;
