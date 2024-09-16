@@ -155,39 +155,50 @@ const deleteProductById = async (id) => {
 //   };
 // };
 
+/**
+ * Search for wholesaler products by brand and fetch wholesaler details
+ * @param {Object} filter - The filter criteria for searching products
+ * @param {Object} options - Query options (pagination, limit, etc.)
+ * @returns {Promise<Object>} - A paginated result of products with wholesaler details
+ */
+
 const searchWholesalerProductsByBrand = async (filter, options) => {
-  try {
-    // Fetch paginated products based on filter and options
-    const products = await WholesalerProducts.paginate(filter, options);
+  // Calculate how many products to skip based on the current page and limit
+  const page = options.page ? parseInt(options.page, 10) : 1;
+  const limit = options.limit ? parseInt(options.limit, 10) : 10;
+  const skip = (page - 1) * limit;
 
-    // Ensure that products and products.docs are defined and valid
-    if (!products || !products.docs || !Array.isArray(products.docs)) {
-      throw new Error('No products found or invalid pagination structure');
-    }
+  // Fetch products based on the filter, limit, and page
+  const products = await WholesalerProducts.find(filter)
+    .limit(limit)
+    .skip(skip)
+    .exec();
 
-    // Fetch wholesaler details for each product found
-    const results = await Promise.all(
-      products.docs.map(async (product) => {
-        const wholesaler = await Wholesaler.findOne({ email: product.wholesalerEmail });
-        return {
-          product,
-          wholesaler: wholesaler || null, // Return null if no wholesaler is found
-        };
-      })
-    );
+  // Count the total number of documents that match the filter
+  const totalDocs = await WholesalerProducts.countDocuments(filter);
 
-    // Return the paginated product data along with wholesaler details
-    return {
-      totalDocs: products.totalDocs,
-      limit: products.limit,
-      totalPages: products.totalPages,
-      page: products.page,
-      results,
-    };
-  } catch (error) {
-    console.error('Error in searchWholesalerProductsByBrand:', error.message);
-    throw error; // Rethrow the error to be caught in the controller
-  }
+  // Fetch wholesaler details for each product found
+  const results = await Promise.all(
+    products.map(async (product) => {
+      const wholesaler = await Wholesaler.findOne({ email: product.wholesalerEmail });
+      return {
+        product,
+        wholesaler: wholesaler || null,
+      };
+    })
+  );
+
+  // Calculate total pages based on the total documents and the limit
+  const totalPages = Math.ceil(totalDocs / limit);
+
+  // Return the paginated product data along with wholesaler details
+  return {
+    totalDocs,
+    limit,
+    totalPages,
+    page,
+    results,
+  };
 };
 
 /**
