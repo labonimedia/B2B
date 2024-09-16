@@ -9,6 +9,7 @@ const productSchema = new mongoose.Schema({
   demandQty: { type: String },
   otherIssue: { type: String },
   issue: { type: String },
+  subIssue: { type: String },
   recivedQty: { type: String },
   rate: { type: String },
   taxableValue: { type: String },
