@@ -127,33 +127,69 @@ const deleteProductById = async (id) => {
   return user;
 };
 
-/**
- * Search for wholesaler products by brand and fetch wholesaler details
- * @param {Object} filter - The filter criteria for searching products
- * @param {Object} options - Query options (pagination, etc.)
- * @returns {Promise<Object>} - A paginated result of products with wholesaler details
- */
+// /**
+//  * Search for wholesaler products by brand and fetch wholesaler details
+//  * @param {Object} filter - The filter criteria for searching products
+//  * @param {Object} options - Query options (pagination, etc.)
+//  * @returns {Promise<Object>} - A paginated result of products with wholesaler details
+//  */
+
+// const searchWholesalerProductsByBrand = async (filter, options) => {
+//   const products = await WholesalerProducts.paginate(filter, options);
+//   // Fetch wholesaler details for each product found
+//   const results = await Promise.all(
+//     products.docs.map(async (product) => {
+//       const wholesaler = await Wholesaler.findOne({ email: product.wholesalerEmail });
+//       return {
+//         product,
+//         wholesaler: wholesaler || null,
+//       };
+//     })
+//   );
+//   return {
+//     totalDocs: products.totalDocs,
+//     limit: products.limit,
+//     totalPages: products.totalPages,
+//     page: products.page,
+//     results,
+//   };
+// };
 
 const searchWholesalerProductsByBrand = async (filter, options) => {
-  const products = await WholesalerProducts.paginate(filter, options);
-  // Fetch wholesaler details for each product found
-  const results = await Promise.all(
-    products.docs.map(async (product) => {
-      const wholesaler = await Wholesaler.findOne({ email: product.wholesalerEmail });
-      return {
-        product,
-        wholesaler: wholesaler || null,
-      };
-    })
-  );
-  return {
-    totalDocs: products.totalDocs,
-    limit: products.limit,
-    totalPages: products.totalPages,
-    page: products.page,
-    results,
-  };
+  try {
+    // Fetch paginated products based on filter and options
+    const products = await WholesalerProducts.paginate(filter, options);
+
+    // Ensure that products and products.docs are defined and valid
+    if (!products || !products.docs || !Array.isArray(products.docs)) {
+      throw new Error('No products found or invalid pagination structure');
+    }
+
+    // Fetch wholesaler details for each product found
+    const results = await Promise.all(
+      products.docs.map(async (product) => {
+        const wholesaler = await Wholesaler.findOne({ email: product.wholesalerEmail });
+        return {
+          product,
+          wholesaler: wholesaler || null, // Return null if no wholesaler is found
+        };
+      })
+    );
+
+    // Return the paginated product data along with wholesaler details
+    return {
+      totalDocs: products.totalDocs,
+      limit: products.limit,
+      totalPages: products.totalPages,
+      page: products.page,
+      results,
+    };
+  } catch (error) {
+    console.error('Error in searchWholesalerProductsByBrand:', error.message);
+    throw error; // Rethrow the error to be caught in the controller
+  }
 };
+
 /**
  * Filter products based on dynamic filters and fetch wholesaler details
  * @param {Object} filters - The filter criteria for searching products
