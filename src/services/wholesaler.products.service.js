@@ -1,5 +1,5 @@
 const httpStatus = require('http-status');
-const { WholesalerProducts } = require('../models');
+const { WholesalerProducts, Wholesaler } = require('../models');
 const ApiError = require('../utils/ApiError');
 
 /**
@@ -127,6 +127,83 @@ const deleteProductById = async (id) => {
   return user;
 };
 
+/**
+ * Search for wholesaler products by brand and fetch wholesaler details
+ * @param {Object} filter - The filter criteria for searching products
+ * @param {Object} options - Query options (pagination, etc.)
+ * @returns {Promise<Object>} - A paginated result of products with wholesaler details
+ */
+
+const searchWholesalerProductsByBrand = async (filter, options) => {
+  const products = await WholesalerProducts.paginate(filter, options);
+  // Fetch wholesaler details for each product found
+  const results = await Promise.all(
+    products.docs.map(async (product) => {
+      const wholesaler = await Wholesaler.findOne({ email: product.wholesalerEmail });
+      return {
+        product,
+        wholesaler: wholesaler || null,
+      };
+    })
+  );
+  return {
+    totalDocs: products.totalDocs,
+    limit: products.limit,
+    totalPages: products.totalPages,
+    page: products.page,
+    results,
+  };
+};
+/**
+ * Filter products based on dynamic filters and fetch wholesaler details
+ * @param {Object} filters - The filter criteria for searching products
+ * @param {Object} options - Query options (pagination, etc.)
+ * @returns {Promise<Object>} - A paginated result of products with wholesaler details
+ */
+const filterWholesalerProducts = async (filters, options) => {
+  // Building dynamic filter for products
+  const productFilter = {};
+
+  // Apply filters dynamically if they exist
+  if (filters.productType) productFilter.productType = filters.productType;
+  if (filters.gender) productFilter.gender = filters.gender;
+  if (filters.clothing) productFilter.clothing = filters.clothing;
+  if (filters.subCategory) productFilter.subCategory = filters.subCategory;
+
+  // Fetch filtered products with pagination
+  const products = await WholesalerProducts.paginate(productFilter, options);
+
+  // Fetch wholesaler details for each filtered product
+  const results = await Promise.all(
+    products.docs.map(async (product) => {
+      const wholesaler = await Wholesaler.findOne({ email: product.wholesalerEmail });
+      return {
+        product,
+        wholesaler: wholesaler || null,
+      };
+    })
+  );
+
+  // Additional filtering by country, state, city if present
+  let filteredResults = results;
+  if (filters.country) {
+    filteredResults = filteredResults.filter((result) => result.wholesaler?.country === filters.country);
+  }
+  if (filters.state) {
+    filteredResults = filteredResults.filter((result) => result.wholesaler?.state === filters.state);
+  }
+  if (filters.city) {
+    filteredResults = filteredResults.filter((result) => result.wholesaler?.city === filters.city);
+  }
+
+  return {
+    totalDocs: products.totalDocs,
+    limit: products.limit,
+    totalPages: products.totalPages,
+    page: products.page,
+    results: filteredResults,
+  };
+};
 module.exports = {
   fileupload,
   getProductByWholealer,
@@ -136,4 +213,6 @@ module.exports = {
   getProductById,
   updateProductById,
   deleteProductById,
+  searchWholesalerProductsByBrand,
+  filterWholesalerProducts,
 };

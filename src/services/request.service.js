@@ -1,5 +1,5 @@
 const httpStatus = require('http-status');
-const { Request, User, Manufacture, Wholesaler} = require('../models');
+const { Request, User, Manufacture, Wholesaler } = require('../models');
 const ApiError = require('../utils/ApiError');
 
 /**
@@ -108,7 +108,6 @@ const acceptRequest = async (requestId, requestByEmail, requestToEmail, status) 
     // Update the request status to accepted
     request.status = 'accepted';
     await request.save();
-
   }
 
   return request;
