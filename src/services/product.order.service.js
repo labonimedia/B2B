@@ -39,36 +39,68 @@ const getProductOrderById = async (id) => {
  * @param {email} supplierEmail
  * @returns {Promise<Material>}
  */
-const getProductOrderBySupplyer = async (supplierEmail) => {
+// const getProductOrderBySupplyer = async (supplierEmail) => {
+//   const productOrders = await ProductOrder.find({ supplierEmail });
+
+//   if (productOrders.length === 0) {
+//     throw new ApiError(httpStatus.NOT_FOUND, 'No Product Orders found for this supplier');
+//   }
+//   const companyEmails = productOrders.map((order) => order.supplierEmail);
+//   const wholesalers = await Wholesaler.find({
+//     'discountGiven.discountGivenBy': { $in: companyEmails },
+//   });
+
+//   if (wholesalers.length === 0) {
+//     throw new ApiError(httpStatus.NOT_FOUND, 'No wholesalers found with matching discounts');
+//   }
+//   const updatedProductOrders = productOrders.map((order) => {
+//     const matchedWholesaler = wholesalers.find((wholesaler) =>
+//       wholesaler.discountGiven.some((discount) => discount.discountGivenBy === order.supplierEmail)
+//     );
+//     if (matchedWholesaler) {
+//       const discounts = matchedWholesaler.discountGiven.filter(
+//         (discount) => discount.discountGivenBy === order.supplierEmail
+//       );
+//       return {
+//         ...order.toObject(),
+//         discounts,
+//       };
+//     }
+//     return {
+//       ...order.toObject(),
+//       discounts: [],
+//     };
+//   });
+
+//   return updatedProductOrders;
+// };
+
+const getProductOrderBySupplier = async (supplierEmail) => {
   const productOrders = await ProductOrder.find({ supplierEmail });
 
   if (productOrders.length === 0) {
     throw new ApiError(httpStatus.NOT_FOUND, 'No Product Orders found for this supplier');
   }
+
   const companyEmails = productOrders.map((order) => order.supplierEmail);
   const wholesalers = await Wholesaler.find({
     'discountGiven.discountGivenBy': { $in: companyEmails },
   });
 
-  if (wholesalers.length === 0) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'No wholesalers found with matching discounts');
-  }
   const updatedProductOrders = productOrders.map((order) => {
     const matchedWholesaler = wholesalers.find((wholesaler) =>
       wholesaler.discountGiven.some((discount) => discount.discountGivenBy === order.supplierEmail)
     );
-    if (matchedWholesaler) {
-      const discounts = matchedWholesaler.discountGiven.filter(
-        (discount) => discount.discountGivenBy === order.supplierEmail
-      );
-      return {
-        ...order.toObject(),
-        discounts,
-      };
-    }
+
+    const discounts = matchedWholesaler
+      ? matchedWholesaler.discountGiven.filter(
+          (discount) => discount.discountGivenBy === order.supplierEmail
+        )
+      : [];
+
     return {
       ...order.toObject(),
-      discounts: [],
+      discounts, // This will be an empty array if no discounts were found
     };
   });
 
