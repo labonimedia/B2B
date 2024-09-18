@@ -75,7 +75,7 @@ const getProductOrderById = async (id) => {
 //   return updatedProductOrders;
 // };
 
-const getProductOrderBySupplier = async (supplierEmail) => {
+const getProductOrderBySupplyer = async (supplierEmail) => {
   const productOrders = await ProductOrder.find({ supplierEmail });
 
   if (productOrders.length === 0) {
