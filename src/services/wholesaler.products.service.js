@@ -198,56 +198,118 @@ const searchWholesalerProductsByBrand = async (filter, options) => {
   };
 };
 
+// /**
+//  * Filter products based on dynamic filters and fetch wholesaler details
+//  * @param {Object} filters - The filter criteria for searching products
+//  * @param {Object} options - Query options (pagination, etc.)
+//  * @returns {Promise<Object>} - A paginated result of products with wholesaler details
+//  */
+// const filterWholesalerProducts = async (filters, options) => {
+//   // Building dynamic filter for products
+//   const productFilter = {};
+
+//   // Apply filters dynamically if they exist
+//   if (filters.productType) productFilter.productType = filters.productType;
+//   if (filters.gender) productFilter.gender = filters.gender;
+//   if (filters.clothing) productFilter.clothing = filters.clothing;
+//   if (filters.subCategory) productFilter.subCategory = filters.subCategory;
+
+//   // Fetch filtered products with pagination
+//   const products = await WholesalerProducts.paginate(productFilter, options);
+
+//   // Fetch wholesaler details for each filtered product
+//   const results = await Promise.all(
+//     products.docs.map(async (product) => {
+//       const wholesaler = await Wholesaler.findOne({ email: product.wholesalerEmail });
+//       return {
+//         product,
+//         wholesaler: wholesaler || null,
+//       };
+//     })
+//   );
+
+//   // Additional filtering by country, state, city if present
+//   let filteredResults = results;
+//   if (filters.country) {
+//     filteredResults = filteredResults.filter((result) => result.wholesaler?.country === filters.country);
+//   }
+//   if (filters.state) {
+//     filteredResults = filteredResults.filter((result) => result.wholesaler?.state === filters.state);
+//   }
+//   if (filters.city) {
+//     filteredResults = filteredResults.filter((result) => result.wholesaler?.city === filters.city);
+//   }
+
+//   return {
+//     totalDocs: products.totalDocs,
+//     limit: products.limit,
+//     totalPages: products.totalPages,
+//     page: products.page,
+//     results: filteredResults,
+//   };
+// };
 /**
- * Filter products based on dynamic filters and fetch wholesaler details
- * @param {Object} filters - The filter criteria for searching products
- * @param {Object} options - Query options (pagination, etc.)
- * @returns {Promise<Object>} - A paginated result of products with wholesaler details
- */
+* Filter products based on dynamic filters and fetch wholesaler details
+* @param {Object} filters - The filter criteria for searching products
+* @param {Object} options - Query options (pagination, etc.)
+* @returns {Promise<Object>} - A paginated result of products with wholesaler details
+*/
 const filterWholesalerProducts = async (filters, options) => {
-  // Building dynamic filter for products
-  const productFilter = {};
+ // Building dynamic filter for products
+ const productFilter = {};
 
-  // Apply filters dynamically if they exist
-  if (filters.productType) productFilter.productType = filters.productType;
-  if (filters.gender) productFilter.gender = filters.gender;
-  if (filters.clothing) productFilter.clothing = filters.clothing;
-  if (filters.subCategory) productFilter.subCategory = filters.subCategory;
+ // Apply filters dynamically if they exist
+ if (filters.productType) productFilter.productType = filters.productType;
+ if (filters.gender) productFilter.gender = filters.gender;
+ if (filters.clothing) productFilter.clothing = filters.clothing;
+ if (filters.subCategory) productFilter.subCategory = filters.subCategory;
 
-  // Fetch filtered products with pagination
-  const products = await WholesalerProducts.paginate(productFilter, options);
+ // Handle pagination options
+ const page = options.page ? parseInt(options.page, 10) : 1;
+ const limit = options.limit ? parseInt(options.limit, 10) : 10;
+ const skip = (page - 1) * limit;
 
-  // Fetch wholesaler details for each filtered product
-  const results = await Promise.all(
-    products.docs.map(async (product) => {
-      const wholesaler = await Wholesaler.findOne({ email: product.wholesalerEmail });
-      return {
-        product,
-        wholesaler: wholesaler || null,
-      };
-    })
-  );
+ // Fetch filtered products with pagination
+ const products = await WholesalerProducts.find(productFilter).limit(limit).skip(skip).exec();
 
-  // Additional filtering by country, state, city if present
-  let filteredResults = results;
-  if (filters.country) {
-    filteredResults = filteredResults.filter((result) => result.wholesaler?.country === filters.country);
-  }
-  if (filters.state) {
-    filteredResults = filteredResults.filter((result) => result.wholesaler?.state === filters.state);
-  }
-  if (filters.city) {
-    filteredResults = filteredResults.filter((result) => result.wholesaler?.city === filters.city);
-  }
+ // Count the total number of products that match the filter
+ const totalDocs = await WholesalerProducts.countDocuments(productFilter);
 
-  return {
-    totalDocs: products.totalDocs,
-    limit: products.limit,
-    totalPages: products.totalPages,
-    page: products.page,
-    results: filteredResults,
-  };
+ // Fetch wholesaler details for each filtered product
+ const results = await Promise.all(
+   products.map(async (product) => {
+     const wholesaler = await Wholesaler.findOne({ email: product.wholesalerEmail });
+     return {
+       product,
+       wholesaler: wholesaler || null, // Handle case where wholesaler is not found
+     };
+   })
+ );
+
+ // Additional filtering by country, state, city if present
+ let filteredResults = results;
+ if (filters.country) {
+   filteredResults = filteredResults.filter((result) => result.wholesaler?.country === filters.country);
+ }
+ if (filters.state) {
+   filteredResults = filteredResults.filter((result) => result.wholesaler?.state === filters.state);
+ }
+ if (filters.city) {
+   filteredResults = filteredResults.filter((result) => result.wholesaler?.city === filters.city);
+ }
+
+ // Calculate total pages
+ const totalPages = Math.ceil(totalDocs / limit);
+
+ return {
+   totalDocs,
+   limit,
+   totalPages,
+   page,
+   results: filteredResults,
+ };
 };
+
 module.exports = {
   fileupload,
   getProductByWholealer,
