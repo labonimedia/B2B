@@ -17,5 +17,5 @@ router
 
 router
   .route('/get-category/by-gender')
-  .get(auth('superadmin', 'manufacture', 'wholesaler'), subCategoryController.getCategory);
+  .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), subCategoryController.getCategory);
 module.exports = router;

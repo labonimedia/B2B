@@ -169,10 +169,7 @@ const searchWholesalerProductsByBrand = async (filter, options) => {
   const skip = (page - 1) * limit;
 
   // Fetch products based on the filter, limit, and page
-  const products = await WholesalerProducts.find(filter)
-    .limit(limit)
-    .skip(skip)
-    .exec();
+  const products = await WholesalerProducts.find(filter).limit(limit).skip(skip).exec();
 
   // Count the total number of documents that match the filter
   const totalDocs = await WholesalerProducts.countDocuments(filter);
