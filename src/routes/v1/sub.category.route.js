@@ -7,7 +7,7 @@ const router = express.Router();
 router
   .route('/')
   .post(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), subCategoryController.createSubCategory)
-  .get(auth('superadmin', 'manufacture', 'wholesaler'), subCategoryController.querySubCategory);
+  .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), subCategoryController.querySubCategory);
 router.route('/filter').post(auth('superadmin', 'manufacture', 'wholesaler'), subCategoryController.querySubCategory);
 router
   .route('/:id')
