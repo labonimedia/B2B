@@ -249,65 +249,122 @@ const searchWholesalerProductsByBrand = async (filter, options) => {
 //   };
 // };
 /**
-* Filter products based on dynamic filters and fetch wholesaler details
-* @param {Object} filters - The filter criteria for searching products
-* @param {Object} options - Query options (pagination, etc.)
-* @returns {Promise<Object>} - A paginated result of products with wholesaler details
-*/
+ * Filter products based on dynamic filters and fetch wholesaler details
+ * @param {Object} filters - The filter criteria for searching products
+ * @param {Object} options - Query options (pagination, etc.)
+ * @returns {Promise<Object>} - A paginated result of products with wholesaler details
+ */
 const filterWholesalerProducts = async (filters, options) => {
- // Building dynamic filter for products
- const productFilter = {};
+  // Building dynamic filter for products
+  const productFilter = {};
 
- // Apply filters dynamically if they exist
- if (filters.productType) productFilter.productType = filters.productType;
- if (filters.gender) productFilter.gender = filters.gender;
- if (filters.clothing) productFilter.clothing = filters.clothing;
- if (filters.subCategory) productFilter.subCategory = filters.subCategory;
+  // Apply filters dynamically if they exist
+  if (filters.productType) productFilter.productType = filters.productType;
+  if (filters.gender) productFilter.gender = filters.gender;
+  if (filters.clothing) productFilter.clothing = filters.clothing;
+  if (filters.subCategory) productFilter.subCategory = filters.subCategory;
 
- // Handle pagination options
- const page = options.page ? parseInt(options.page, 10) : 1;
- const limit = options.limit ? parseInt(options.limit, 10) : 10;
- const skip = (page - 1) * limit;
+  // Handle pagination options
+  const page = options.page ? parseInt(options.page, 10) : 1;
+  const limit = options.limit ? parseInt(options.limit, 10) : 10;
+  const skip = (page - 1) * limit;
 
- // Fetch filtered products with pagination
- const products = await WholesalerProducts.find(productFilter).limit(limit).skip(skip).exec();
+  // Fetch filtered products with pagination
+  const products = await WholesalerProducts.find(productFilter).limit(limit).skip(skip).exec();
 
- // Count the total number of products that match the filter
- const totalDocs = await WholesalerProducts.countDocuments(productFilter);
+  // Count the total number of products that match the filter
+  const totalDocs = await WholesalerProducts.countDocuments(productFilter);
 
- // Fetch wholesaler details for each filtered product
- const results = await Promise.all(
-   products.map(async (product) => {
-     const wholesaler = await Wholesaler.findOne({ email: product.wholesalerEmail });
-     return {
-       product,
-       wholesaler: wholesaler || null, // Handle case where wholesaler is not found
-     };
-   })
- );
+  // Fetch wholesaler details for each filtered product
+  const results = await Promise.all(
+    products.map(async (product) => {
+      const wholesaler = await Wholesaler.findOne({ email: product.wholesalerEmail });
+      return {
+        product,
+        wholesaler: wholesaler || null, // Handle case where wholesaler is not found
+      };
+    })
+  );
 
- // Additional filtering by country, state, city if present
- let filteredResults = results;
- if (filters.country) {
-   filteredResults = filteredResults.filter((result) => result.wholesaler?.country === filters.country);
- }
- if (filters.state) {
-   filteredResults = filteredResults.filter((result) => result.wholesaler?.state === filters.state);
- }
- if (filters.city) {
-   filteredResults = filteredResults.filter((result) => result.wholesaler?.city === filters.city);
- }
+  // Additional filtering by country, state, city if present
+  let filteredResults = results;
+  if (filters.country) {
+    filteredResults = filteredResults.filter((result) => result.wholesaler?.country === filters.country);
+  }
+  if (filters.state) {
+    filteredResults = filteredResults.filter((result) => result.wholesaler?.state === filters.state);
+  }
+  if (filters.city) {
+    filteredResults = filteredResults.filter((result) => result.wholesaler?.city === filters.city);
+  }
 
- // Calculate total pages
- const totalPages = Math.ceil(totalDocs / limit);
+  // Calculate total pages
+  const totalPages = Math.ceil(totalDocs / limit);
 
- return {
-   totalDocs,
-   limit,
-   totalPages,
-   page,
-   results: filteredResults,
- };
+  return {
+    totalDocs,
+    limit,
+    totalPages,
+    page,
+    results: filteredResults,
+  };
+};
+const getUniqueBrandsByEmail = async (wholesalerEmail) => {
+  try {
+    // Use aggregation to get unique brands for the given wholesalerEmail
+    const uniqueBrands = await WholesalerProducts.aggregate([
+      {
+        $match: { wholesalerEmail }, // Filter by wholesalerEmail
+      },
+      {
+        $group: {
+          _id: '$brand', // Group by brand to get unique values
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          brand: '$_id', // Rename _id to brand
+        },
+      },
+    ]);
+
+    return uniqueBrands;
+  } catch (error) {
+    throw new Error('Error fetching unique brands: ' + error.message);
+  }
+};
+
+const productTypeFilter = async (filters, page, limit) => {
+  // Build the query object based on the provided filters
+  const query = {};
+
+  if (filters.brand) {
+    query.brand = filters.brand;
+  }
+  if (filters.productType) {
+    query.productType = filters.productType;
+  }
+  if (filters.gender) {
+    query.gender = filters.gender;
+  }
+  if (filters.clothing) {
+    query.clothing = filters.clothing;
+  }
+  if (filters.subCategory) {
+    query.subCategory = filters.subCategory;
+  }
+  if (filters.wholesalerEmail) {
+    query.wholesalerEmail = filters.wholesalerEmail;
+  }
+
+  // Set pagination options: skip and limit
+  const skip = (page - 1) * limit;
+
+  // Fetch the filtered and paginated results from the database
+  const products = await WholesalerProducts.find(query).skip(skip).limit(limit);
+
+  return products;
 };
 
 module.exports = {
@@ -321,4 +378,6 @@ module.exports = {
   deleteProductById,
   searchWholesalerProductsByBrand,
   filterWholesalerProducts,
+  getUniqueBrandsByEmail,
+  productTypeFilter,
 };

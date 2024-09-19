@@ -35,9 +35,9 @@ const deleteReturnOrderById = catchAsync(async (req, res) => {
 });
 
 module.exports = {
-    createReturnOrder,
-    queryReturnOrder,
-    getReturnOrderById,
-    updateReturnOrderById,
-    deleteReturnOrderById,
+  createReturnOrder,
+  queryReturnOrder,
+  getReturnOrderById,
+  updateReturnOrderById,
+  deleteReturnOrderById,
 };

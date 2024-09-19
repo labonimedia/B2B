@@ -58,6 +58,26 @@ const courierRoute = require('./courier.route');
 const issueProductsRoute = require('./issue.product.route');
 const wholesalerProductsRoute = require('./wholesaler.products.route');
 const returnOrderRoute = require('./return.order.route');
+const blazerClouserTypeRoute = require('./blazer.clouser.type.route');
+const waistTypeRoute = require('./waist.type.route');
+const weaveTypeRoute = require('./weave.type.route');
+const ethnicdesignRoute = require('./ethnic.design.route');
+const sareeStyleRoute = require('./saree.style.route');
+const womenStyleRoute = require('./women.style.route');
+const womenKurtaLengthRoute = require('./women.kurta.length.route');
+const workTypeRoute = require('./work.type.route');
+const finishTypeRoute = require('./finish.type.route');
+const apparelSilhouetteRoute = require('./apparel.silhouette.route');
+const ethnicBottomsStyleRoute = require('./ethnic.bottoms.style.route');
+const backStyleRoute = require('./back.style.route');
+const braSizeRoute = require('./bra.size.route');
+const braStyleRoute = require('./bra.style.route');
+const braPadTypeRoute = require('./bra.pad.type.route');
+const braClosureRoute = require('./bra.closure.route');
+const cupSizeRoute = require('./cup.size.route');
+const opacityRoute = require('./opacity.route');
+const entitytypeRoute = require('./entity.type.route');
+const sizeSetRoute = require('./size.set.route');
 
 const router = express.Router();
 
@@ -290,6 +310,87 @@ const defaultRoutes = [
   {
     path: '/return-order',
     route: returnOrderRoute,
+  },
+  {
+    path: '/blazerclousertype',
+    route: blazerClouserTypeRoute,
+  },
+  {
+    path: '/waisttype',
+    route: waistTypeRoute,
+  },
+  {
+    path: '/weavetype',
+    route: weaveTypeRoute,
+  },
+  {
+    path: '/ethnicdesign',
+    route: ethnicdesignRoute,
+  },
+  {
+    path: '/sareestyle',
+    route: sareeStyleRoute,
+  },
+  {
+    path: '/womenstyle',
+    route: womenStyleRoute,
+  },
+  {
+    path: '/women-kurta-length',
+    route: womenKurtaLengthRoute,
+  },
+  {
+    path: '/worktype',
+    route: workTypeRoute,
+  },
+
+  {
+    path: '/finishtype',
+    route: finishTypeRoute,
+  },
+  {
+    path: '/apparelsilhouette',
+    route: apparelSilhouetteRoute,
+  },
+  {
+    path: '/ethnic-bottoms-style',
+    route: ethnicBottomsStyleRoute,
+  },
+  {
+    path: '/backstyle',
+    route: backStyleRoute,
+  },
+  {
+    path: '/brasize',
+    route: braSizeRoute,
+  },
+  {
+    path: '/brastyle',
+    route: braStyleRoute,
+  },
+  {
+    path: '/brapadtype',
+    route: braPadTypeRoute,
+  },
+  {
+    path: '/braclosure',
+    route: braClosureRoute,
+  },
+  {
+    path: '/cupsize',
+    route: cupSizeRoute,
+  },
+  {
+    path: '/opacity',
+    route: opacityRoute,
+  },
+  {
+    path: '/entitytype',
+    route: entitytypeRoute,
+  },
+  {
+    path: '/size-set',
+    route: sizeSetRoute,
   }
 ];
 
