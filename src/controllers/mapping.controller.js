@@ -24,6 +24,15 @@ const getMappingById = catchAsync(async (req, res) => {
   res.send(user);
 });
 
+const getMappingByQuery = catchAsync(async (req, res) => {
+  const {productType,gender,category, subCategory} = req.body;
+  const user = await mappingService.getMappingByQuery(productType,gender,category, subCategory);
+  if (!user) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Mapping not found');
+  }
+  res.send(user);
+});
+
 const updateMappingById = catchAsync(async (req, res) => {
   const user = await mappingService.updateMappingById(req.params.id, req.body);
   res.send(user);
@@ -38,6 +47,7 @@ module.exports = {
   createMapping,
   queryMapping,
   getMappingById,
+  getMappingByQuery,
   updateMappingById,
   deleteMappingById,
 };
