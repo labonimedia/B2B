@@ -391,7 +391,7 @@ const defaultRoutes = [
   {
     path: '/size-set',
     route: sizeSetRoute,
-  }
+  },
 ];
 
 const devRoutes = [

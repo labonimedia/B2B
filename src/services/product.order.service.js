@@ -93,9 +93,7 @@ const getProductOrderBySupplyer = async (supplierEmail) => {
     );
 
     const discounts = matchedWholesaler
-      ? matchedWholesaler.discountGiven.filter(
-          (discount) => discount.discountGivenBy === order.supplierEmail
-        )
+      ? matchedWholesaler.discountGiven.filter((discount) => discount.discountGivenBy === order.supplierEmail)
       : [];
 
     return {
