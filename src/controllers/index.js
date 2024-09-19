@@ -74,3 +74,4 @@ module.exports.braClosureController = require('./bra.closure.controller');
 module.exports.cupSizeController = require('./cup.size.controller');
 module.exports.opacityController = require('./opacity.controller');
 module.exports.entityController = require('./entity.type.controller');
+module.exports.sizeSetController = require('./size.set.controller')
