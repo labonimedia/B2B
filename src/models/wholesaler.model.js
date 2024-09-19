@@ -29,6 +29,9 @@ const wholesalerSchema = mongoose.Schema(
     fileName: {
       type: String,
     },
+    altCode: {
+      type: String,
+    },
     profileImg: {
       type: String,
     },

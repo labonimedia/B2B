@@ -78,6 +78,7 @@ const searchBrandAndOwnerDetails = catchAsync(async (req, res) => {
   const data = await brandService.searchBrandAndOwnerDetails(brandName);
   res.status(httpStatus.OK).send(data);
 });
+
 module.exports = {
   createBrand,
   queryBrand,

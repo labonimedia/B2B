@@ -104,7 +104,6 @@ const getCartByEmailToPlaceOrder = async (email, productBy) => {
 
   // Get the current order count for the wholesaler and financial year
   let orderCount;
-  console.log(`Order count: ${wholesaler.email}`)
   try {
     orderCount = await OrderCounter.findOneAndUpdate(
       { wholesalerEmail: wholesaler.email, year: financialYear },
@@ -112,7 +111,6 @@ const getCartByEmailToPlaceOrder = async (email, productBy) => {
       { new: true, upsert: true, setDefaultsOnInsert: true }
     );
   } catch (error) {
-    console.log(error);
     if (error.code === 11000) {
       // Duplicate key error
       throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'Duplicate order counter entry.');

@@ -32,6 +32,9 @@ const retailerSchema = mongoose.Schema(
     profileImg: {
       type: String,
     },
+    altCode: {
+      type: String,
+    },
     fullName: {
       type: String,
       required: true,

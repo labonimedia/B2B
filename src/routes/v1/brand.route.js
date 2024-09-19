@@ -13,23 +13,23 @@ router
     brandController.createBrand
   )
   .get(
-    auth('superadmin', 'manufacture', 'wholesaler', 'retailer', 'wholesaler', 'retailer', 'wholesaler', 'retailer'),
+    auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
     brandController.queryBrand
   );
 
 router
   .route('/:id')
   .get(
-    auth('superadmin', 'manufacture', 'wholesaler', 'retailer', 'wholesaler', 'retailer', 'wholesaler', 'retailer'),
+    auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
     brandController.getBrandById
   )
   .patch(
-    auth('superadmin', 'manufacture', 'wholesaler', 'retailer', 'wholesaler', 'retailer', 'wholesaler', 'retailer'),
+    auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
     commonUploadMiddleware([{ name: 'brandLogo', maxCount: 1 }]),
     brandController.updateBrandById
   )
   .delete(
-    auth('superadmin', 'manufacture', 'wholesaler', 'retailer', 'wholesaler', 'retailer'),
+    auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
     brandController.deleteBrandById
   );
 router.post(
