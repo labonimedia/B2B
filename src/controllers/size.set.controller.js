@@ -24,6 +24,14 @@ const getSizeSetById = catchAsync(async (req, res) => {
   res.send(user);
 });
 
+const getSizeSetByType = catchAsync(async (req, res) => {
+  const user = await sizeSetService.getSizeSetByType(req.query.sizeType);
+  if (!user) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Size Set not found');
+  }
+  res.send(user);
+});
+
 const updateSizeSetById = catchAsync(async (req, res) => {
   const user = await sizeSetService.updateSizeSetById(req.params.id, req.body);
   res.send(user);
@@ -38,6 +46,7 @@ module.exports = {
   createSizeSet,
   querySizeSet,
   getSizeSetById,
+  getSizeSetByType,
   updateSizeSetById,
   deleteSizeSetById,
 };

@@ -462,6 +462,11 @@
         "sizeChart": [  
         "Standard Size",
         "Brand Size",
+        "Waist Size Set (Standard Size)",
+        "Waist (in)",
+        "Inseam (in)",
+        "Length (in)",
+        "Rise (in)",
         "Length",
         "Width",
         "Height",

@@ -15,4 +15,8 @@ router
   .patch(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), sizeSetController.updateSizeSetById)
   .delete(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), sizeSetController.deleteSizeSetById);
 
+
+  router
+  .route('/size-type/size-set')
+  .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), sizeSetController.getSizeSetByType)
 module.exports = router;
