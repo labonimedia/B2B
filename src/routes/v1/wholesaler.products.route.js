@@ -25,4 +25,7 @@ router
 router
   .route('/multiplefilters/filter-wholesalers')
   .post(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), wholesalerProductsController.filterProducts);
+router.get('/unique-brands/:wholesalerEmail', wholesalerProductsController.getUniqueBrands);
+router.post('/multiplefilter', wholesalerProductsController.filterWholesalerProducts);
+
 module.exports = router;
