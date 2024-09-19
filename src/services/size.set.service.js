@@ -35,6 +35,15 @@ const getSizeSetById = async (id) => {
 };
 
 /**
+ * Get SizeSet by id
+ * @param {ObjectId} id
+ * @returns {Promise<SizeSet>}
+ */
+const getSizeSetByType = async (sizeType) => {
+  return SizeSet.findOne({sizeType});
+};
+
+/**
  * Update SizeSet by id
  * @param {ObjectId} Id
  * @param {Object} updateBody
@@ -68,6 +77,7 @@ module.exports = {
   createSizeSet,
   querySizeSet,
   getSizeSetById,
+  getSizeSetByType,
   updateSizeSetById,
   deleteSizeSetById,
 };

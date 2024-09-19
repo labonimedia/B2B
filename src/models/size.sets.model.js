@@ -4,10 +4,9 @@ const { toJSON, paginate } = require('./plugins');
 const sizeSchema = new mongoose.Schema(
   {
     wordSize: { type: String },
-    size: { type: Number },
-  },
-  { _id: false }
-);
+    size: { type: String }
+}, { _id: false });
+
 
 const sizeChartSchema = new mongoose.Schema({
   sizeType: { type: String, required: true },

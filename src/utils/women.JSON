@@ -354,6 +354,126 @@
             "Occasion",
             "Waist Size Set"
         ]
+    },
+    {
+        "productType": "Clothing",
+        "gender": "Female",
+        "category": "Western Wear",
+        "subCategory": "Shrugs",
+        "inputs": [
+            "Material",
+            "Pattern",
+            "length",
+            "Sleeve Length",
+            "Fit Type",
+            "Closure Type",
+            "Embellishment Feature",
+            "Neckline",
+            "Pocket Description",
+            "Elasticity",
+            "Top Style",
+            "Colour",
+            "Work Type",
+            "Special Features",
+            "Care Instructions",
+            "Lifestyle",
+            "Occasion",
+            "Size set"
+        ]
+    },
+    {
+        "productType": "Clothing",
+        "gender": "Female",
+        "category": "Western Wear",
+        "subCategory": "Rainwear",
+        "inputs": [
+            "Material",
+            "Pattern",
+            "length",
+            "Sleeve Length",
+            "Fit Type",
+            "Closure Type",
+            "Special Features",
+            "Care Instructions",
+            "Occasion",
+            "Size set"
+        ]
+    },
+    {
+        "productType": "Clothing",
+        "gender": "Female",
+        "category": "Western Wear",
+        "subCategory": "Ponchos & Capes",
+        "inputs": [
+            "Material",
+            "Pattern",
+            "Neckline",
+            "length",
+            "Special Features",
+            "Care Instructions",
+            "Occasion",
+            "Size set"
+        ]
+    },
+    {
+        "productType": "Clothing",
+        "gender": "Female",
+        "category": "Winter Wear",
+        "subCategory": "Coats",
+        "inputs": [
+            "Material",	"Pattern",	"Women Sleeve Type",	"Sleeve Length",	"Closure Type",	"Fit Type",	"Neckline",	"Elasticity",	"No of pockets",	"Special Features",	"Care Instructions",	"Lifestyle",	"Occasion",	"Size Set"
+
+        ]
+    },
+    {
+        "productType": "Clothing",
+        "gender": "Female",
+        "category": "Winter Wear",
+        "subCategory": "Jackets",
+        "inputs": [
+            "Material",	"Pattern",	"Women Sleeve Type",	"Sleeve Length",	"Closure Type",	"Fit Type",	"Neckline",	"Elasticity",	"No of pockets",	"Special Features",	"Care Instructions",	"Lifestyle",	"Occasion",	"Size Set"
+
+        ]
+    },
+    {
+        "productType": "Clothing",
+        "gender": "Female",
+        "category": "Winter Wear",
+        "subCategory": "Vests",
+        "inputs": [
+            "Material",	"Pattern",	"Women Sleeve Type",	"Sleeve Length",	"Closure Type",	"Fit Type",	"Neckline",	"Elasticity",	"No of pockets",	"Special Features",	"Care Instructions",	"Lifestyle",	"Occasion",	"Size Set"
+
+        ]
+    },
+    {
+        "productType": "Clothing",
+        "gender": "Female",
+        "category": "Winter Wear",
+        "subCategory": "Pullover Sweaters",
+        "inputs": [
+            "Material",	"Pattern",	"Women Sleeve Type",	"Sleeve Length",	"Closure Type",	"Fit Type",	"Neckline",	"Elasticity",	"No of pockets",	"Special Features",	"Care Instructions",	"Lifestyle",	"Occasion",	"Size Set"
+
+        ]
+    },
+    {
+        "productType": "Clothing",
+        "gender": "Female",
+        "category": "Winter Wear",
+        "subCategory": "Cardigans",
+        "inputs": [
+            "Material",	"Pattern",	"Women Sleeve Type",	"Sleeve Length",	"Closure Type",	"Fit Type",	"Neckline",	"Elasticity",	"No of pockets",	"Special Features",	"Care Instructions",	"Lifestyle",	"Occasion",	"Size Set"
+
+        ]
+    },
+    {
+        "productType": "Clothing",
+        "gender": "Female",
+        "category": "Winter Wear",
+        "subCategory": "Twin-Sets",
+        "inputs": [
+            "Material",	"Pattern",	"Women Sleeve Type",	"Sleeve Length",	"Closure Type",	"Fit Type",	"Neckline",	"Elasticity",	"No of pockets",	"Special Features",	"Care Instructions",	"Lifestyle",	"Occasion",	"Size Set"
+
+        ]
     }
 ]
 
@@ -462,6 +582,11 @@
         "sizeChart": [  
         "Standard Size",
         "Brand Size",
+        "Waist Size Set (Standard Size)",
+        "Waist (in)",
+        "Inseam (in)",
+        "Length (in)",
+        "Rise (in)",
         "Length",
         "Width",
         "Height",
