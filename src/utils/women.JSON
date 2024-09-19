@@ -1,0 +1,548 @@
+[
+    {
+        "productType": "Clothing",
+        "gender": "Female",
+        "category": "Western Wear",
+        "subCategory": "Tops",
+        "inputs": [
+            "Material",
+            "Pattern",
+            "Women Sleeve Type",
+            "Sleeve Length",
+            "Sleeve Cuff Style",
+            "Closure Type",
+            "Fit Type",
+            "Neckline",
+            "Elasticity",
+            "Pocket Description",
+            "Top Style",
+            "No of pockets",
+            "Work Type",
+            "Special Features",
+            "Care Instructions",
+            "Lifestyle",
+            "Occasion",
+            "Size Set"
+        ]
+    },
+    {
+        "productType": "Clothing",
+        "gender": "Female",
+        "category": "Western Wear",
+        "subCategory": "T-Shirts",
+        "inputs": [
+            "Material",
+            "Pattern",
+            "Women Sleeve Type",
+            "Sleeve Length",
+            "Sleeve Cuff Style",
+            "Closure Type",
+            "Fit Type",
+            "Neckline",
+            "Elasticity",
+            "Pocket Description",
+            "Top Style",
+            "No of pockets",
+            "Work Type",
+            "Special Features",
+            "Care Instructions",
+            "Lifestyle",
+            "Occasion",
+            "Size Set"
+        ]
+    },
+    {
+        "productType": "Clothing",
+        "gender": "Female",
+        "category": "Western Wear",
+        "subCategory": "Shirts",
+        "inputs": [
+            "Material",
+            "Pattern",
+            "Women Sleeve Type",
+            "Sleeve Length",
+            "Sleeve Cuff Style",
+            "Closure Type",
+            "Fit Type",
+            "Neckline",
+            "Elasticity",
+            "Collar Style",
+            "Top Style",
+            "No of pockets",
+            "Pocket Description",
+            "Work Type",
+            "Special Features",
+            "Care Instructions",
+            "Lifestyle",
+            "Occasion",
+            "Size Set"
+        ]
+    },
+    {
+        "productType": "Clothing",
+        "gender": "Female",
+        "category": "Western Wear",
+        "subCategory": "Polos",
+        "inputs": [
+            "Material",
+            "Pattern",
+            "Women Sleeve Type",
+            "Sleeve Length",
+            "Sleeve Cuff Style",
+            "Closure Type",
+            "Fit Type",
+            "Neckline",
+            "Elasticity",
+            "Collar Style",
+            "Top Style",
+            "No of pockets",
+            "Pocket Description",
+            "Work Type",
+            "Special Features",
+            "Care Instructions",
+            "Lifestyle",
+            "Occasion",
+            "Size Set"
+        ]
+    },
+    {
+        "productType": "Clothing",
+        "gender": "Female",
+        "category": "Western Wear",
+        "subCategory": "Dresses",
+        "inputs": [
+            "Material",
+            "Pattern",
+            "Women Sleeve Type",
+            "Sleeve Length",
+            "Length",
+            "Embellishment Feature",
+            "Fit Type",
+            "Neckline",
+            "Elasticity",
+            "Collar Style",
+            "Style",
+            "No of pockets",
+            "Work Type",
+            "Waist Type",
+            "Special Features",
+            "Care Instructions",
+            "Lifestyle",
+            "Occasion",
+            "Size Set"
+        ]
+    },
+    {
+        "productType": "Clothing",
+        "gender": "Female",
+        "category": "Western Wear",
+        "subCategory": "Jumpsuits",
+        "inputs": [
+            "Material",
+            "Pattern",
+            "Women Sleeve Type",
+            "Sleeve Length",
+            "Length",
+            "Closure Type",
+            "Fit Type",
+            "Neckline",
+            "Elasticity",
+            "Collar Style",
+            "Style",
+            "No of pockets",
+            "Work Type",
+            "Waist Type",
+            "Special Features",
+            "Care Instructions",
+            "Lifestyle",
+            "Occasion",
+            "Size Set"
+        ]
+    },
+    {
+        "productType": "Clothing",
+        "gender": "Female",
+        "category": "Western Wear",
+        "subCategory": "Trousers",
+        "inputs": [
+            "Material",
+            "Pattern",
+            "Waist Rise",
+            "Trouser Style",
+            "Trouser Fit Type",
+            "Closure Type",
+            "Trourse Length",
+            "Trouser Pocket",
+            "No of pockets",
+            "Elasticity",
+            "Rise Type",
+            "Colour",
+            "Work Type",
+            "Coin Pocket",
+            "Waist Type",
+            "Special Features",
+            "Care Instructions",
+            "Lifestyle",
+            "Occasion",
+            "Waist Size Set"
+        ]
+    },
+    {
+        "productType": "Clothing",
+        "gender": "Female",
+        "category": "Western Wear",
+        "subCategory": "Trousers",
+        "inputs": [
+            "Material",
+            "Pattern",
+            "Waist Rise",
+            "Trouser Style",
+            "Trouser Fit Type",
+            "Closure Type",
+            "Trourse Length",
+            "Trouser Pocket",
+            "No of pockets",
+            "Elasticity",
+            "Rise Type",
+            "Colour",
+            "Work Type",
+            "Coin Pocket",
+            "Waist Type",
+            "Special Features",
+            "Care Instructions",
+            "Lifestyle",
+            "Occasion",
+            "Waist Size Set"
+        ]
+    },
+    {
+        "productType": "Clothing",
+        "gender": "Female",
+        "category": "Western Wear",
+        "subCategory": "Jeans",
+        "inputs": [
+            "Material",
+            "Pattern",
+            "Waist Rise",
+            "Trouser Style",
+            "Trouser Fit Type",
+            "Closure Type",
+            "Trourse Length",
+            "Trouser Pocket",
+            "No of pockets",
+            "Elasticity",
+            "Rise Type",
+            "Colour",
+            "Work Type",
+            "Coin Pocket",
+            "Waist Type",
+            "Special Features",
+            "Care Instructions",
+            "Lifestyle",
+            "Occasion",
+            "Waist Size Set"
+        ]
+    },
+    {
+        "productType": "Clothing",
+        "gender": "Female",
+        "category": "Western Wear",
+        "subCategory": "Jeggings",
+        "inputs": [
+            "Material",
+            "Pattern",
+            "Waist Rise",
+            "Trouser Style",
+            "Trouser Fit Type",
+            "Closure Type",
+            "Trourse Length",
+            "Trouser Pocket",
+            "No of pockets",
+            "Elasticity",
+            "Rise Type",
+            "Colour",
+            "Work Type",
+            "Coin Pocket",
+            "Waist Type",
+            "Special Features",
+            "Care Instructions",
+            "Lifestyle",
+            "Occasion",
+            "Waist Size Set"
+        ]
+    },
+    {
+        "productType": "Clothing",
+        "gender": "Female",
+        "category": "Western Wear",
+        "subCategory": "Skirts",
+        "inputs": [
+            "Material",
+            "Pattern",
+            "length",
+            "Style",
+            "Trouser Fit Type",
+            "Closure Type",
+            "Trourse Length",
+            "Trouser Pocket",
+            "No of pockets",
+            "Elasticity",
+            "Rise Type",
+            "Colour",
+            "Work Type",
+            "Coin Pocket",
+            "Waist Type",
+            "Special Features",
+            "Care Instructions",
+            "Lifestyle",
+            "Occasion",
+            "Waist Size Set"
+        ]
+    },
+    {
+        "productType": "Clothing",
+        "gender": "Female",
+        "category": "Western Wear",
+        "subCategory": "Shorts",
+        "inputs": [
+            "Material",
+            "Pattern",
+            "length",
+            "Style",
+            "Trouser Fit Type",
+            "Closure Type",
+            "Trourse Length",
+            "Trouser Pocket",
+            "No of pockets",
+            "Elasticity",
+            "Rise Type",
+            "Colour",
+            "Work Type",
+            "Coin Pocket",
+            "Waist Type",
+            "Special Features",
+            "Care Instructions",
+            "Lifestyle",
+            "Occasion",
+            "Waist Size Set"
+        ]
+    },
+    {
+        "productType": "Clothing",
+        "gender": "Female",
+        "category": "Western Wear",
+        "subCategory": "Leggings",
+        "inputs": [
+            "Material",
+            "Pattern",
+            "length",
+            "Style",
+            "Trouser Fit Type",
+            "Closure Type",
+            "Trourse Length",
+            "Trouser Pocket",
+            "No of pockets",
+            "Elasticity",
+            "Rise Type",
+            "Colour",
+            "Work Type",
+            "Coin Pocket",
+            "Waist Type",
+            "Special Features",
+            "Care Instructions",
+            "Lifestyle",
+            "Occasion",
+            "Waist Size Set"
+        ]
+    }
+]
+
+
+
+
+
+[
+    {
+        "SizeType": "Size set",
+        "sizeChart": [
+            "Standard Size",
+            "Brand Size",
+            "Chest Size",
+            "Shoulder Size",
+            "Front Length",
+            "Length",
+            "Width",
+            "Height",
+            "Weight",
+            "Manufacturer's Price",
+            "MRP"
+        ],
+        "Sizes": [
+            {
+                "wordSize": "5XS",
+            },
+            {
+                "wordSize": "4XS",
+            },
+            {
+                "wordSize": "3XS",
+            },
+            {
+                "wordSize": "2XS",
+            },
+            {
+                "wordSize": "XS",
+            },
+            {
+                "size": 36,
+                "wordSize": "S",
+            },
+            {
+                "size": 38,
+                "wordSize": "M",
+            },
+            {
+                "size": 40,
+                "wordSize": "L",
+            },
+            {
+                "size": 42,
+                "wordSize": "XL",
+            },
+            {
+                "size": 44,
+                "wordSize": "2XL",
+            },
+            {
+                "size": 46,
+                "wordSize": "3XL",
+            },
+            {
+                "size": 48,
+                "wordSize": "4XL",
+            },
+            {
+                "size": 50,
+                "wordSize": "5XL",
+            },
+            {
+                "size": 52,
+                "wordSize": "6XL",
+            },
+            {
+                "size": 54,
+                "wordSize": "7XL",
+            },
+            {
+                "size": 56,
+                "wordSize": "8XL",
+            },
+            {
+                "wordSize": "Free",
+            }
+        ]
+    },
+    {
+        "sizeType": "Waist Size Set",
+        "sizeChart": [  
+        "Standard Size",
+        "Brand Size",
+        "Length",
+        "Width",
+        "Height",
+        "Weight",
+        "Manufacturer's Price",
+        "MRP"],
+        "Sizes": [
+            {
+                "size": 22,
+            },
+            {
+                "size": 23,
+            },
+            {
+                "size": 24,
+            }
+            {
+                "size": 25,
+            },
+            {
+                "size": 26,
+            },
+            {
+                "size": 27,
+            }
+            {
+                "size": 28,
+            },
+            {
+                "size": 29,
+            },
+            {
+                "size": 30,
+            }
+            {
+                "size": 31,
+            },
+            {
+                "size": 32,
+            },
+            {
+                "size": 33,
+            }
+            {
+                "size": 34,
+            },
+            {
+                "size": 35,
+            },
+            {
+                "size": 36,
+            }
+
+            {
+                "size": 37,
+            },
+            {
+                "size": 38,
+            },
+            {
+                "size": 39,
+            },
+            {
+                "size": 40,
+            },
+            {
+                "size": 41,
+            },
+            {
+                "size": 42,
+            }
+            {
+                "size": 43,
+            },
+            {
+                "size": 44,
+            },
+            {
+                "size": 45,
+            }
+            {
+                "size": 46,
+            },
+            {
+                "size": 47,
+            },
+            {
+                "size": 48,
+            }
+            {
+                "size": 49,
+            },
+            {
+                "size": 50,
+            }
+        ],
+    }
+]
+
