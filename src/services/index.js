@@ -77,3 +77,4 @@ module.exports.braClosureService = require('./bra.closure.service');
 module.exports.cupSizeService = require('./cup.size.service');
 module.exports.opacityService = require('./opacity.service');
 module.exports.entityService = require('./entity.type.service');
+module.exports.sizeSetService = require('./size.sets.service');

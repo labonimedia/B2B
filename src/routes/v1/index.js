@@ -77,6 +77,7 @@ const braClosureRoute = require('./bra.closure.route');
 const cupSizeRoute = require('./cup.size.route');
 const opacityRoute = require('./opacity.route');
 const entitytypeRoute = require('./entity.type.route');
+const sizeSetRoute = require('./size.set.route');
 
 const router = express.Router();
 
@@ -387,6 +388,10 @@ const defaultRoutes = [
     path: '/entitytype',
     route: entitytypeRoute,
   },
+  {
+    path: '/size-set',
+    route: sizeSetRoute,
+  }
 ];
 
 const devRoutes = [

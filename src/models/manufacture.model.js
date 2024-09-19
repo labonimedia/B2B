@@ -68,6 +68,9 @@ const manufactureSchema = mongoose.Schema(
     code: {
       type: String,
     },
+    altCode: {
+      type: String,
+    },
     establishDate: {
       type: Date,
     },

@@ -76,7 +76,7 @@
     "gender":"Men",
     "category": "Sweaters",
     "subCategory": "Cardigans",
-    "inputs": ["material",	"fabricPattern","neckStyle", "sleeveLength",	"careInstructions", "seasons", "noOfPockets",	"Size Set", "specialFeature", "fitStyle", "closureType", "Men Shirt Size Set"
+    "inputs": ["material",	"fabricPattern","neckStyle", "sleeveLength",	"careInstructions", "seasons", "noOfPockets","specialFeature", "fitStyle", "closureType", "Size Set"
 ]  
 },
 {
@@ -84,7 +84,7 @@
     "gender":"Men",
     "category": "Sweaters",
     "subCategory": "Vests",
-    "inputs": ["material",	"fabricPattern","neckStyle", "sleeveLength",	"careInstructions", "seasons", "noOfPockets",	"Size Set", "specialFeature", "fitStyle", "closureType", "Men Shirt Size Set"
+    "inputs": ["material",	"fabricPattern","neckStyle", "sleeveLength",	"careInstructions", "seasons", "noOfPockets","specialFeature", "fitStyle", "closureType", "Size Set"
 ]  
 },
 {
@@ -92,7 +92,7 @@
     "gender":"Men",
     "category": "Sweaters",
     "subCategory": "Pullovers",
-    "inputs": ["material",	"fabricPattern","neckStyle", "sleeveLength",	"careInstructions", "seasons", "noOfPockets",	"Size Set", "specialFeature", "fitStyle", "closureType", "Men Shirt Size Set"
+    "inputs": ["material",	"fabricPattern","neckStyle", "sleeveLength",	"careInstructions", "seasons", "noOfPockets", "specialFeature", "fitStyle", "closureType", "Size Set"
 ]  
 },
 
@@ -101,7 +101,7 @@
     "gender":"Men",
     "category": "Sportswear",
     "subCategory": "Track Jackets",
-    "inputs": ["material",	"fabricPattern",	"closureType",	"sleeveLength",	"seasons",	"neckStyle",	"noOfPockets",	"selectedOccasion",	"fitStyle",	"Colour",	"Men Shirt Size Set"
+    "inputs": ["material",	"fabricPattern",	"closureType",	"sleeveLength",	"seasons",	"neckStyle",	"noOfPockets",	"selectedOccasion",	"fitStyle",	"Colour",	"Size Set"
 
 ]  
 },
@@ -137,7 +137,7 @@
     "gender":"Men",
     "category": "Ethnic Wear",
     "subCategory": "Kurtas",
-    "inputs": ["material",	"fabricPattern",	"fitStyle",	"neckStyle",	"includedComponents",	"closureType",	"noOfPockets",	"selectedOccasion", "careInstructions",	"Colour",	"Size Set", "sleeveLength",	"pocketDescription", "Men Shirt Size Set"
+    "inputs": ["material",	"fabricPattern",	"fitStyle",	"neckStyle",	"includedComponents",	"closureType",	"noOfPockets",	"selectedOccasion", "careInstructions",	"Colour", "sleeveLength",	"pocketDescription", "Size Set"
 ]  
 },
 {
@@ -145,7 +145,7 @@
     "gender":"Men",
     "category": "Ethnic Wear",
     "subCategory": "Kurta Sets",
-    "inputs": ["material",	"fabricPattern",	"fitStyle",	"neckStyle",	"includedComponents",	"closureType",	"noOfPockets",	"selectedOccasion", "careInstructions",	"Colour",	"Size Set", "sleeveLength",	"pocketDescription", "Men Shirt Size Set"
+    "inputs": ["material",	"fabricPattern",	"fitStyle",	"neckStyle",	"includedComponents",	"closureType",	"noOfPockets",	"selectedOccasion", "careInstructions",	"Colour","sleeveLength",	"pocketDescription", "Size Set"
 ]  
 },
 {
@@ -185,7 +185,7 @@
     "gender":"Men",
     "category": "Ethnic Wear",
     "subCategory": "Nehru Jackets & Vests",
-    "inputs": ["material",	"fabricPattern", "fitStyle",	"riseStyle", "closureType",	"selectedOccasion",  "noOfPockets", "sleeveLength",	"pocketDescription",	"neckStyle",	"Length",	"Colour",	"Men Shirt Size Set"
+    "inputs": ["material",	"fabricPattern", "fitStyle",	"riseStyle", "closureType",	"selectedOccasion",  "noOfPockets", "sleeveLength",	"pocketDescription",	"neckStyle",	"Length",	"Colour",	"Size Set"
 ]  
 },
 {
@@ -193,7 +193,7 @@
     "gender":"Men",
     "category": "Ethnic Wear",
     "subCategory": "Sherwanis",
-    "inputs": ["material",	"fabricPattern", "fitStyle",	"riseStyle", "closureType",	"selectedOccasion",  "noOfPockets", "sleeveLength",	"pocketDescription",	"neckStyle",	"Length",	"Colour",	"Men Shirt Size Set"
+    "inputs": ["material",	"fabricPattern", "fitStyle",	"riseStyle", "closureType",	"selectedOccasion",  "noOfPockets", "sleeveLength",	"pocketDescription",	"neckStyle",	"Length",	"Colour",	"Size Set"
 ]  
 },
 {
@@ -208,7 +208,7 @@
     "gender":"Men",
     "category": "Ethnic Wear",
     "subCategory": "Safari Suits",
-    "inputs": ["material",	"fabricPattern", "fitStyle","closureType",	"selectedOccasion", "careInstructions", "noOfPockets", "sleeveLength",	"pocketDescription",	"neckStyle",	"Men Shirt Size Set"
+    "inputs": ["material",	"fabricPattern", "fitStyle","closureType",	"selectedOccasion", "careInstructions", "noOfPockets", "sleeveLength",	"pocketDescription",	"neckStyle",	"Size Set"
 ]  
 },
 {
@@ -216,7 +216,7 @@
     "gender":"Men",
     "category": "Suits & Blazers",
     "subCategory": "Suit Jackets",
-    "inputs": ["material",	"fabricPattern", "fitStyle","closureType",	"selectedOccasion", "careInstructions", "noOfPockets", "neckStyle", "specialFeature", "Colour",	"Men Shirt Size Set"
+    "inputs": ["material",	"fabricPattern", "fitStyle","closureType",	"selectedOccasion", "careInstructions", "noOfPockets", "neckStyle", "specialFeature", "Colour",	"Size Set"
 ]  
 },
 {
@@ -224,7 +224,7 @@
     "gender":"Men",
     "category": "Suits & Blazers",
     "subCategory": "Blazers",
-    "inputs": ["material",	"fabricPattern", "fitStyle","closureType",	"selectedOccasion", "careInstructions", "noOfPockets", "neckStyle", "specialFeature", "Colour",	"Men Shirt Size Set"
+    "inputs": ["material",	"fabricPattern", "fitStyle","closureType",	"selectedOccasion", "careInstructions", "noOfPockets", "neckStyle", "specialFeature", "Colour",	"Size Set"
 ]  
 },
 {
@@ -232,7 +232,7 @@
     "gender":"Men",
     "category": "Suits & Blazers",
     "subCategory": "Tuxedo Jackets",
-    "inputs": ["material",	"fabricPattern", "fitStyle","closureType",	"selectedOccasion", "careInstructions", "noOfPockets", "neckStyle", "specialFeature", "Colour",	"Men Shirt Size Set"
+    "inputs": ["material",	"fabricPattern", "fitStyle","closureType",	"selectedOccasion", "careInstructions", "noOfPockets", "neckStyle", "specialFeature", "Colour",	"Size Set"
 ]  
 },
 {
@@ -240,7 +240,7 @@
     "gender":"Men",
     "category": "Suits & Blazers",
     "subCategory": "Tuxedos",
-    "inputs": ["material",	"fabricPattern", "fitStyle","closureType",	"selectedOccasion", "careInstructions", "noOfPockets", "neckStyle", "specialFeature", "Colour",	"Men Shirt Size Set"
+    "inputs": ["material",	"fabricPattern", "fitStyle","closureType",	"selectedOccasion", "careInstructions", "noOfPockets", "neckStyle", "specialFeature", "Colour",	"Size Set"
 ]  
 },
 {
@@ -248,7 +248,7 @@
     "gender":"Men",
     "category": "Suits & Blazers",
     "subCategory": "Waistcoats",
-    "inputs": ["material",	"fabricPattern", "fitStyle","closureType",	"selectedOccasion", "careInstructions", "noOfPockets", "neckStyle", "specialFeature", "Colour",	"Men Shirt Size Set"
+    "inputs": ["material",	"fabricPattern", "fitStyle","closureType",	"selectedOccasion", "careInstructions", "noOfPockets", "neckStyle", "specialFeature", "Colour",	"Size Set"
 ]  
 },
 {
@@ -256,7 +256,7 @@
     "gender":"Men",
     "category": "Uniform",
     "subCategory": "Scrub Suit",
-    "inputs": ["material",	"fabricPattern", "fitStyle","closureType", "careInstructions", "noOfPockets", "pocketDescription", "neckStyle", "Colour",	"Men Shirt Size Set"
+    "inputs": ["material",	"fabricPattern", "fitStyle","closureType", "careInstructions", "noOfPockets", "pocketDescription", "neckStyle", "Colour",	"Size Set"
 ]  
 },
 {

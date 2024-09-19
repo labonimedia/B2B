@@ -87,3 +87,4 @@ module.exports.BraClosure = require('./bra.closure.model');
 module.exports.CupSize = require('./cup.size.model');
 module.exports.Opacity = require('./opacity.model');
 module.exports.Entity = require('./entity.type.model');
+module.exports.SizeSet = require('./size.sets.model');
