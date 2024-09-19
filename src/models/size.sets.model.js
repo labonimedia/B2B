@@ -13,8 +13,8 @@ const sizeChartSchema = new mongoose.Schema({
     Sizes: [sizeSchema]
 });
 
-sizeSchema.plugin(toJSON);
-sizeSchema.plugin(paginate);
+sizeChartSchema.plugin(toJSON);
+sizeChartSchema.plugin(paginate);
 // Create the model
 const SizeSet = mongoose.model('SizeSet', sizeChartSchema);
 
