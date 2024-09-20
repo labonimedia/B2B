@@ -121,6 +121,21 @@ const productSchema = mongoose.Schema(
         frontLength: {
           type: String,
         },
+        waistSizeSetStandardSize: {
+          type: String,
+        },
+        waist: {
+          type: String,
+        },
+        inseam: {
+          type: String,
+        },
+        lengthIn: {
+          type: String,
+        },
+        rise: {
+          type: String,
+        },
         length: { type: String },
         width: { type: String },
         height: { type: String },
