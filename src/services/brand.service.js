@@ -52,6 +52,7 @@ const getBrandByEmail = async (email) => {
 const getBrandByEmailAndVisibility = async (email, visibility) => {
   return Brand.find({ brandOwner: email, visibility: visibility});
 };
+
 /**
  * Update Brand by id
  * @param {ObjectId} Id

@@ -46,7 +46,7 @@ const getBrandByEmail = catchAsync(async (req, res) => {
 });
 
 const getBrandByEmailAndVisibility = catchAsync(async (req, res) => {
-  const { email, visibility } = req.query;
+  const { email, visibility } = req.params;
   const user = await brandService.getBrandByEmailAndVisibility( email, visibility );
   if (!user) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Brand Not Found');

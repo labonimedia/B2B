@@ -12,29 +12,20 @@ router
     commonUploadMiddleware([{ name: 'brandLogo', maxCount: 1 }]),
     brandController.createBrand
   )
-  .get(
-    auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
-    brandController.queryBrand
-  );
+  .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), brandController.queryBrand);
 
 router
   .route('/:id')
-  .get(
-    auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
-    brandController.getBrandById
-  )
+  .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), brandController.getBrandById)
   .patch(
     auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
     commonUploadMiddleware([{ name: 'brandLogo', maxCount: 1 }]),
     brandController.updateBrandById
   )
-  .delete(
-    auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
-    brandController.deleteBrandById
-  );
+  .delete(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), brandController.deleteBrandById);
 router.post(
   '/searchmanufacturelist',
-  auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), // Adjust roles as necessary
+  auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
   brandController.searchBrandAndOwnerDetails
 );
 router
