@@ -5,23 +5,23 @@
         "category": "Western Wear",
         "subCategory": "Tops",
         "inputs": [
-            "Material",
-            "Pattern",
-            "Women Sleeve Type",
-            "Sleeve Length",
-            "Sleeve Cuff Style",
-            "Closure Type",
-            "Fit Type",
-            "Neckline",
-            "Elasticity",
-            "Pocket Description",
-            "Top Style",
-            "No of pockets",
-            "Work Type",
-            "Special Features",
-            "Care Instructions",
-            "Lifestyle",
-            "Occasion",
+            "material",
+            "fabricPattern",
+            "womenSleeveType",
+            "sleeveLength",
+            "sleeveCuffStyle",
+            "closureType",
+            "fitType",
+            "neckline",
+            "elasticity",
+            "pocketDescription",
+            "topStyle",
+            "noOfPockets",
+            "workType",
+            "specialFeature",
+            "careInstructions",
+            "selectedlifeStyle",
+            "selectedOccasion",
             "Size Set"
         ]
     },
@@ -31,23 +31,23 @@
         "category": "Western Wear",
         "subCategory": "T-Shirts",
         "inputs": [
-            "Material",
-            "Pattern",
-            "Women Sleeve Type",
-            "Sleeve Length",
-            "Sleeve Cuff Style",
-            "Closure Type",
-            "Fit Type",
-            "Neckline",
-            "Elasticity",
-            "Pocket Description",
-            "Top Style",
-            "No of pockets",
-            "Work Type",
-            "Special Features",
-            "Care Instructions",
-            "Lifestyle",
-            "Occasion",
+            "material",
+            "fabricPattern",
+            "womenSleeveType",
+            "sleeveLength",
+            "sleeveCuffStyle",
+            "closureType",
+            "fitType",
+            "neckline",
+            "elasticity",
+            "pocketDescription",
+            "topStyle",
+            "noOfPockets",
+            "workType",
+            "specialFeature",
+            "careInstructions",
+            "selectedlifeStyle",
+            "selectedOccasion",
             "Size Set"
         ]
     },
@@ -57,24 +57,24 @@
         "category": "Western Wear",
         "subCategory": "Shirts",
         "inputs": [
-            "Material",
-            "Pattern",
-            "Women Sleeve Type",
-            "Sleeve Length",
-            "Sleeve Cuff Style",
-            "Closure Type",
-            "Fit Type",
-            "Neckline",
-            "Elasticity",
-            "Collar Style",
-            "Top Style",
-            "No of pockets",
-            "Pocket Description",
-            "Work Type",
-            "Special Features",
-            "Care Instructions",
-            "Lifestyle",
-            "Occasion",
+            "material",
+            "fabricPattern",
+            "womenSleeveType",
+            "sleeveLength",
+            "sleeveCuffStyle",
+            "closureType",
+            "fitType",
+            "neckline",
+            "elasticity",
+            "collarstyle",
+            "topStyle",
+            "noOfPockets",
+            "pocketDescription",
+            "workType",
+            "specialFeature",
+            "careInstructions",
+            "selectedlifeStyle",
+            "selectedOccasion",
             "Size Set"
         ]
     },
@@ -84,24 +84,24 @@
         "category": "Western Wear",
         "subCategory": "Polos",
         "inputs": [
-            "Material",
-            "Pattern",
-            "Women Sleeve Type",
-            "Sleeve Length",
-            "Sleeve Cuff Style",
-            "Closure Type",
-            "Fit Type",
-            "Neckline",
-            "Elasticity",
-            "Collar Style",
-            "Top Style",
-            "No of pockets",
-            "Pocket Description",
-            "Work Type",
-            "Special Features",
-            "Care Instructions",
-            "Lifestyle",
-            "Occasion",
+            "material",
+            "fabricPattern",
+            "womenSleeveType",
+            "sleeveLength",
+            "sleeveCuffStyle",
+            "closureType",
+            "fitType",
+            "neckline",
+            "elasticity",
+            "collarstyle",
+            "topStyle",
+            "noOfPockets",
+            "pocketDescription",
+            "workType",
+            "specialFeature",
+            "careInstructions",
+            "selectedlifeStyle",
+            "selectedOccasion",
             "Size Set"
         ]
     },
@@ -111,24 +111,24 @@
         "category": "Western Wear",
         "subCategory": "Dresses",
         "inputs": [
-            "Material",
-            "Pattern",
-            "Women Sleeve Type",
-            "Sleeve Length",
-            "Length",
-            "Embellishment Feature",
-            "Fit Type",
-            "Neckline",
-            "Elasticity",
-            "Collar Style",
-            "Style",
-            "No of pockets",
-            "Work Type",
-            "Waist Type",
-            "Special Features",
-            "Care Instructions",
-            "Lifestyle",
-            "Occasion",
+            "material",
+            "fabricPattern",
+            "womenSleeveType",
+            "sleeveLength",
+            "itemLength",
+            "embellishmentFeature",
+            "fitType",
+            "neckline",
+            "elasticity",
+            "collarstyle",
+            "itemStyle",
+            "noOfPockets",
+            "workType",
+            "waistType",
+            "specialFeature",
+            "careInstructions",
+            "selectedlifeStyle",
+            "selectedOccasion",
             "Size Set"
         ]
     },
@@ -138,24 +138,24 @@
         "category": "Western Wear",
         "subCategory": "Jumpsuits",
         "inputs": [
-            "Material",
-            "Pattern",
-            "Women Sleeve Type",
-            "Sleeve Length",
-            "Length",
-            "Closure Type",
-            "Fit Type",
-            "Neckline",
-            "Elasticity",
-            "Collar Style",
-            "Style",
-            "No of pockets",
-            "Work Type",
-            "Waist Type",
-            "Special Features",
-            "Care Instructions",
-            "Lifestyle",
-            "Occasion",
+            "material",
+            "fabricPattern",
+            "womenSleeveType",
+            "sleeveLength",
+            "itemLength",
+            "closureType",
+            "fitType",
+            "neckline",
+            "elasticity",
+            "collarstyle",
+            "itemStyle",
+            "noOfPockets",
+            "workType",
+            "waistType",
+            "specialFeature",
+            "careInstructions",
+            "selectedlifeStyle",
+            "selectedOccasion",
             "Size Set"
         ]
     },
@@ -165,25 +165,25 @@
         "category": "Western Wear",
         "subCategory": "Trousers",
         "inputs": [
-            "Material",
-            "Pattern",
-            "Waist Rise",
-            "Trouser Style",
-            "Trouser Fit Type",
-            "Closure Type",
-            "Trourse Length",
-            "Trouser Pocket",
-            "No of pockets",
-            "Elasticity",
-            "Rise Type",
+            "material",
+            "fabricPattern",
+            "waistRise",
+            "trourseStyle",
+            "trouserFitStyle",
+            "closureType",
+            "trourseLength",
+            "troursePocket",
+            "noOfPockets",
+            "elasticity",
+            "riseStyle",
             "Colour",
-            "Work Type",
-            "Coin Pocket",
-            "Waist Type",
-            "Special Features",
-            "Care Instructions",
-            "Lifestyle",
-            "Occasion",
+            "workType",
+            "coinPocket",
+            "waistType",
+            "specialFeature",
+            "careInstructions",
+            "selectedlifeStyle",
+            "selectedOccasion",
             "Waist Size Set"
         ]
     },
@@ -193,25 +193,25 @@
         "category": "Western Wear",
         "subCategory": "Trousers",
         "inputs": [
-            "Material",
-            "Pattern",
-            "Waist Rise",
-            "Trouser Style",
-            "Trouser Fit Type",
-            "Closure Type",
-            "Trourse Length",
-            "Trouser Pocket",
-            "No of pockets",
-            "Elasticity",
-            "Rise Type",
+            "material",
+            "fabricPattern",
+            "waistRise",
+            "trourseStyle",
+            "trouserFitStyle",
+            "closureType",
+            "trourseLength",
+            "troursePocket",
+            "noOfPockets",
+            "elasticity",
+            "riseStyle",
             "Colour",
-            "Work Type",
-            "Coin Pocket",
-            "Waist Type",
-            "Special Features",
-            "Care Instructions",
-            "Lifestyle",
-            "Occasion",
+            "workType",
+            "coinPocket",
+            "waistType",
+            "specialFeature",
+            "careInstructions",
+            "selectedlifeStyle",
+            "selectedOccasion",
             "Waist Size Set"
         ]
     },
@@ -221,25 +221,25 @@
         "category": "Western Wear",
         "subCategory": "Jeans",
         "inputs": [
-            "Material",
-            "Pattern",
-            "Waist Rise",
-            "Trouser Style",
-            "Trouser Fit Type",
-            "Closure Type",
-            "Trourse Length",
-            "Trouser Pocket",
-            "No of pockets",
-            "Elasticity",
-            "Rise Type",
+            "material",
+            "fabricPattern",
+            "waistRise",
+            "trourseStyle",
+            "trouserFitStyle",
+            "closureType",
+            "trourseLength",
+            "troursePocket",
+            "noOfPockets",
+            "elasticity",
+            "riseStyle",
             "Colour",
-            "Work Type",
-            "Coin Pocket",
-            "Waist Type",
-            "Special Features",
-            "Care Instructions",
-            "Lifestyle",
-            "Occasion",
+            "workType",
+            "coinPocket",
+            "waistType",
+            "specialFeature",
+            "careInstructions",
+            "selectedlifeStyle",
+            "selectedOccasion",
             "Waist Size Set"
         ]
     },
@@ -249,25 +249,25 @@
         "category": "Western Wear",
         "subCategory": "Jeggings",
         "inputs": [
-            "Material",
-            "Pattern",
-            "Waist Rise",
-            "Trouser Style",
-            "Trouser Fit Type",
-            "Closure Type",
-            "Trourse Length",
-            "Trouser Pocket",
-            "No of pockets",
-            "Elasticity",
-            "Rise Type",
+            "material",
+            "fabricPattern",
+            "waistRise",
+            "trourseStyle",
+            "trouserFitStyle",
+            "closureType",
+            "trourseLength",
+            "troursePocket",
+            "noOfPockets",
+            "elasticity",
+            "riseStyle",
             "Colour",
-            "Work Type",
-            "Coin Pocket",
-            "Waist Type",
-            "Special Features",
-            "Care Instructions",
-            "Lifestyle",
-            "Occasion",
+            "workType",
+            "coinPocket",
+            "waistType",
+            "specialFeature",
+            "careInstructions",
+            "selectedlifeStyle",
+            "selectedOccasion",
             "Waist Size Set"
         ]
     },
@@ -277,25 +277,25 @@
         "category": "Western Wear",
         "subCategory": "Skirts",
         "inputs": [
-            "Material",
-            "Pattern",
+            "material",
+            "fabricPattern",
             "length",
-            "Style",
-            "Trouser Fit Type",
-            "Closure Type",
-            "Trourse Length",
-            "Trouser Pocket",
-            "No of pockets",
-            "Elasticity",
-            "Rise Type",
+            "itemStyle",
+            "trouserFitStyle",
+            "closureType",
+            "trourseLength",
+            "troursePocket",
+            "noOfPockets",
+            "elasticity",
+            "riseStyle",
             "Colour",
-            "Work Type",
-            "Coin Pocket",
-            "Waist Type",
-            "Special Features",
-            "Care Instructions",
-            "Lifestyle",
-            "Occasion",
+            "workType",
+            "coinPocket",
+            "waistType",
+            "specialFeature",
+            "careInstructions",
+            "selectedlifeStyle",
+            "selectedOccasion",
             "Waist Size Set"
         ]
     },
@@ -305,25 +305,25 @@
         "category": "Western Wear",
         "subCategory": "Shorts",
         "inputs": [
-            "Material",
-            "Pattern",
+            "material",
+            "fabricPattern",
             "length",
-            "Style",
-            "Trouser Fit Type",
-            "Closure Type",
-            "Trourse Length",
-            "Trouser Pocket",
-            "No of pockets",
-            "Elasticity",
-            "Rise Type",
+            "itemStyle",
+            "trouserFitStyle",
+            "closureType",
+            "trourseLength",
+            "troursePocket",
+            "noOfPockets",
+            "elasticity",
+            "riseStyle",
             "Colour",
-            "Work Type",
-            "Coin Pocket",
-            "Waist Type",
-            "Special Features",
-            "Care Instructions",
-            "Lifestyle",
-            "Occasion",
+            "workType",
+            "coinPocket",
+            "waistType",
+            "specialFeature",
+            "careInstructions",
+            "selectedlifeStyle",
+            "selectedOccasion",
             "Waist Size Set"
         ]
     },
@@ -333,25 +333,25 @@
         "category": "Western Wear",
         "subCategory": "Leggings",
         "inputs": [
-            "Material",
-            "Pattern",
+            "material",
+            "fabricPattern",
             "length",
-            "Style",
-            "Trouser Fit Type",
-            "Closure Type",
-            "Trourse Length",
-            "Trouser Pocket",
-            "No of pockets",
-            "Elasticity",
-            "Rise Type",
+            "itemStyle",
+            "trouserFitStyle",
+            "closureType",
+            "trourseLength",
+            "troursePocket",
+            "noOfPockets",
+            "elasticity",
+            "riseStyle",
             "Colour",
-            "Work Type",
-            "Coin Pocket",
-            "Waist Type",
-            "Special Features",
-            "Care Instructions",
-            "Lifestyle",
-            "Occasion",
+            "workType",
+            "coinPocket",
+            "waistType",
+            "specialFeature",
+            "careInstructions",
+            "selectedlifeStyle",
+            "selectedOccasion",
             "Waist Size Set"
         ]
     },
@@ -361,23 +361,23 @@
         "category": "Western Wear",
         "subCategory": "Shrugs",
         "inputs": [
-            "Material",
-            "Pattern",
+            "material",
+            "fabricPattern",
             "length",
-            "Sleeve Length",
-            "Fit Type",
-            "Closure Type",
-            "Embellishment Feature",
-            "Neckline",
-            "Pocket Description",
-            "Elasticity",
-            "Top Style",
+            "sleeveLength",
+            "fitType",
+            "closureType",
+            "embellishmentFeature",
+            "neckline",
+            "pocketDescription",
+            "elasticity",
+            "topStyle",
             "Colour",
-            "Work Type",
-            "Special Features",
-            "Care Instructions",
-            "Lifestyle",
-            "Occasion",
+            "workType",
+            "specialFeature",
+            "careInstructions",
+            "selectedlifeStyle",
+            "selectedOccasion",
             "Size set"
         ]
     },
@@ -387,15 +387,15 @@
         "category": "Western Wear",
         "subCategory": "Rainwear",
         "inputs": [
-            "Material",
-            "Pattern",
+            "material",
+            "fabricPattern",
             "length",
-            "Sleeve Length",
-            "Fit Type",
-            "Closure Type",
-            "Special Features",
-            "Care Instructions",
-            "Occasion",
+            "sleeveLength",
+            "fitType",
+            "closureType",
+            "specialFeature",
+            "careInstructions",
+            "selectedOccasion",
             "Size set"
         ]
     },
@@ -405,13 +405,13 @@
         "category": "Western Wear",
         "subCategory": "Ponchos & Capes",
         "inputs": [
-            "Material",
-            "Pattern",
-            "Neckline",
+            "material",
+            "fabricPattern",
+            "neckline",
             "length",
-            "Special Features",
-            "Care Instructions",
-            "Occasion",
+            "specialFeature",
+            "careInstructions",
+            "selectedOccasion",
             "Size set"
         ]
     },
@@ -421,8 +421,20 @@
         "category": "Winter Wear",
         "subCategory": "Coats",
         "inputs": [
-            "Material",	"Pattern",	"Women Sleeve Type",	"Sleeve Length",	"Closure Type",	"Fit Type",	"Neckline",	"Elasticity",	"No of pockets",	"Special Features",	"Care Instructions",	"Lifestyle",	"Occasion",	"Size Set"
-
+            "material",
+            "fabricPattern",
+            "womenSleeveType",
+            "sleeveLength",
+            "closureType",
+            "fitType",
+            "neckline",
+            "elasticity",
+            "noOfPockets",
+            "specialFeature",
+            "careInstructions",
+            "selectedlifeStyle",
+            "selectedOccasion",
+            "Size Set"
         ]
     },
     {
@@ -431,8 +443,20 @@
         "category": "Winter Wear",
         "subCategory": "Jackets",
         "inputs": [
-            "Material",	"Pattern",	"Women Sleeve Type",	"Sleeve Length",	"Closure Type",	"Fit Type",	"Neckline",	"Elasticity",	"No of pockets",	"Special Features",	"Care Instructions",	"Lifestyle",	"Occasion",	"Size Set"
-
+            "material",
+            "fabricPattern",
+            "womenSleeveType",
+            "sleeveLength",
+            "closureType",
+            "fitType",
+            "neckline",
+            "elasticity",
+            "noOfPockets",
+            "specialFeature",
+            "careInstructions",
+            "selectedlifeStyle",
+            "selectedOccasion",
+            "Size Set"
         ]
     },
     {
@@ -441,8 +465,20 @@
         "category": "Winter Wear",
         "subCategory": "Vests",
         "inputs": [
-            "Material",	"Pattern",	"Women Sleeve Type",	"Sleeve Length",	"Closure Type",	"Fit Type",	"Neckline",	"Elasticity",	"No of pockets",	"Special Features",	"Care Instructions",	"Lifestyle",	"Occasion",	"Size Set"
-
+            "material",
+            "fabricPattern",
+            "womenSleeveType",
+            "sleeveLength",
+            "closureType",
+            "fitType",
+            "neckline",
+            "elasticity",
+            "noOfPockets",
+            "specialFeature",
+            "careInstructions",
+            "selectedlifeStyle",
+            "selectedOccasion",
+            "Size Set"
         ]
     },
     {
@@ -451,8 +487,20 @@
         "category": "Winter Wear",
         "subCategory": "Pullover Sweaters",
         "inputs": [
-            "Material",	"Pattern",	"Women Sleeve Type",	"Sleeve Length",	"Closure Type",	"Fit Type",	"Neckline",	"Elasticity",	"No of pockets",	"Special Features",	"Care Instructions",	"Lifestyle",	"Occasion",	"Size Set"
-
+            "material",
+            "fabricPattern",
+            "womenSleeveType",
+            "sleeveLength",
+            "closureType",
+            "fitType",
+            "neckline",
+            "elasticity",
+            "noOfPockets",
+            "specialFeature",
+            "careInstructions",
+            "selectedlifeStyle",
+            "selectedOccasion",
+            "Size Set"
         ]
     },
     {
@@ -461,8 +509,20 @@
         "category": "Winter Wear",
         "subCategory": "Cardigans",
         "inputs": [
-            "Material",	"Pattern",	"Women Sleeve Type",	"Sleeve Length",	"Closure Type",	"Fit Type",	"Neckline",	"Elasticity",	"No of pockets",	"Special Features",	"Care Instructions",	"Lifestyle",	"Occasion",	"Size Set"
-
+            "material",
+            "fabricPattern",
+            "womenSleeveType",
+            "sleeveLength",
+            "closureType",
+            "fitType",
+            "neckline",
+            "elasticity",
+            "noOfPockets",
+            "specialFeature",
+            "careInstructions",
+            "selectedlifeStyle",
+            "selectedOccasion",
+            "Size Set"
         ]
     },
     {
@@ -471,8 +531,20 @@
         "category": "Winter Wear",
         "subCategory": "Twin-Sets",
         "inputs": [
-            "Material",	"Pattern",	"Women Sleeve Type",	"Sleeve Length",	"Closure Type",	"Fit Type",	"Neckline",	"Elasticity",	"No of pockets",	"Special Features",	"Care Instructions",	"Lifestyle",	"Occasion",	"Size Set"
-
+            "material",
+            "fabricPattern",
+            "womenSleeveType",
+            "sleeveLength",
+            "closureType",
+            "fitType",
+            "neckline",
+            "elasticity",
+            "noOfPockets",
+            "specialFeature",
+            "careInstructions",
+            "selectedlifeStyle",
+            "selectedOccasion",
+            "Size Set"
         ]
     },
     {
@@ -481,7 +553,15 @@
         "category": "Ethnic Wear",
         "subCategory": "Sarees",
         "inputs": [
-            "Material",	"Pattern",	"Occasion",	"Weave Type",	"Ethnic Design",	"Saree Style",	"Color",	"Work Type",	"Lifestyle"
+            "material",
+            "fabricPattern",
+            "selectedOccasion",
+            "weaveType",
+            "ethnicDesign",
+            "sareeStyle",
+            "Color",
+            "workType",
+            "selectedlifeStyle"
         ]
     },
     {
@@ -490,22 +570,22 @@
         "category": "Ethnic Wear",
         "subCategory": "Kurtas & Kurtis",
         "inputs": [
-            "Material",
-            "Pattern",
-            "Women Style",
-            "Neckline",
-            "Collar Style",
-            "Fit Type",
-            "Closure Type",
-            "Sleeve Length",
-            "Women Sleeve Type",
-            "Pocket Description",
-            "Special Features",
-            "Included Components",
-            "Care Instructions",
-            "Work Type",
-            "Lifestyle",
-            "Occasion",
+            "material",
+            "fabricPattern",
+            "womenStyle",
+            "neckline",
+            "collarstyle",
+            "fitType",
+            "closureType",
+            "sleeveLength",
+            "womenSleeveType",
+            "pocketDescription",
+            "specialFeature",
+            "includedComponents",
+            "careInstructions",
+            "workType",
+            "selectedlifeStyle",
+            "selectedOccasion",
             "Colour",
             "Size Set"
         ]
@@ -516,42 +596,57 @@
         "category": "Ethnic Wear",
         "subCategory": "Salwar Kurta Suits",
         "inputs": [
-            "Material",
-            "Pattern",
-            "Women Style",
-            "Neckline",
-            "Collar Style",
-            "Fit Type",
-            "Closure Type",
-            "Sleeve Length",
-            "Women Sleeve Type",
-            "Pocket Description",
-            "Special Features",
-            "Included Components",
-            "Care Instructions",
-            "Lifestyle",
-            "Occasion",
+            "material",
+            "fabricPattern",
+            "womenStyle",
+            "neckline",
+            "collarstyle",
+            "fitType",
+            "closureType",
+            "sleeveLength",
+            "womenSleeveType",
+            "pocketDescription",
+            "specialFeature",
+            "includedComponents",
+            "careInstructions",
+            "selectedlifeStyle",
+            "selectedOccasion",
             "Colour",
             "Size Set",
-            "Bottom included",
+            "bottomIncluded", 
             "length",
-            "Style",
-            "Closure Type",
-            "Rise Type"
+            "itemStyle",
+            "closureType",
+            "riseStyle"
         ]
     },
-
-
-
-
     {
         "productType": "Clothing",
         "gender": "Female",
         "category": "Ethnic Wear",
         "subCategory": "Gowns",
         "inputs": [
-          "Material",	"Pattern",	"Women Style",	"Ghera (mtr)",	"Length",	"Style",	"Embellishment Feature",	"Apparel Silhouette",	"Neck Style",	"Closure Type",	"Women Sleeve Type",	"Included Components",	"Special Features",	"Fit Type",	"Collar Style",	"Work Type",	"Lifestyle",	"Occasion",	"Care Instructions",	"Colour",	"Size Set"
-
+            "material",
+            "fabricPattern",
+            "womenStyle",
+            "gheraInMTR",
+            "itemLength",
+            "itemStyle",
+            "embellishmentFeature",
+            "apparelSilhouette",
+            "neckStyle",
+            "closureType",
+            "womenSleeveType",
+            "includedComponents",
+            "specialFeature",
+            "fitType",
+            "collarstyle",
+            "workType",
+            "selectedlifeStyle",
+            "selectedOccasion",
+            "careInstructions",
+            "Colour",
+            "Size Set"
         ]
     },
     {
@@ -560,7 +655,19 @@
         "category": "Ethnic Wear",
         "subCategory": "Bottom Wear",
         "inputs": [
-            "Material",	"Pattern",	"Length",	"Ethnic Bottoms Style",	"Closure Type",	"Pocket Description",	"Fit Type",	"Lifestyle",	"Occasion",	"Care Instructions",	"Colour",	"Rise Style",	"Waist Size Set"
+            "material",
+            "fabricPattern",
+            "itemLength",
+            "ethnicBottomsStyle",
+            "closureType",
+            "pocketDescription",
+            "fitType",
+            "selectedlifeStyle",
+            "selectedOccasion",
+            "careInstructions",
+            "Colour",
+            "riseStyle",
+            "Waist Size Set"
         ]
     },
     {
@@ -569,7 +676,20 @@
         "category": "Ethnic Wear",
         "subCategory": "Blouses",
         "inputs": [
-            "Material",	"Pattern",	"Women Sleeve Type",	"Sleeve Length",	"Closure Type",	 "Embellishment Feature",	"Fit Type",	"Finish type",	"Neck Style",	"Elasticity",	"Lifestyle",	"Occasion",	"Care Instructions",	"Size Set"
+            "material",
+            "fabricPattern",
+            "womenSleeveType",
+            "sleeveLength",
+            "closureType",
+            "embellishmentFeature",
+            "fitType",
+            "finishType",
+            "neckStyle",
+            "elasticity",
+            "selectedlifeStyle",
+            "selectedOccasion",
+            "careInstructions",
+            "Size Set"
         ]
     },
     {
@@ -578,8 +698,14 @@
         "category": "Ethnic Wear",
         "subCategory": "Chunnis & Dupattas",
         "inputs": [
-            "Material",	"Pattern",	"Work Type",	"Weave type",	"Lifestyle",	"Occasion",	"Care Instructions"
-  ]
+            "material",
+            "fabricPattern",
+            "workType",
+            "weaveType",
+            "selectedlifeStyle",
+            "selectedOccasion",
+            "careInstructions"
+        ]
     },
     {
         "productType": "Clothing",
@@ -587,8 +713,10 @@
         "category": "Ethnic Wear",
         "subCategory": "Petticoat",
         "inputs": [
-            "Material",	"Pattern", "Length"
-  ]
+            "material",
+            "fabricPattern",
+            "itemLength"
+        ]
     },
     {
         "productType": "Clothing",
@@ -596,218 +724,27 @@
         "category": "Ethnic Wear",
         "subCategory": "Kaftan",
         "inputs": [
-            "Material",	"Pattern",	"Women Style",	"Ghera (mtr)",	"Length",	"Style",	"Embellishment Feature",	"Apparel Silhouette",	"Neck Style",	"Closure Type",	"Women Sleeve Type",	"Included Components",	"Special Features",	"Fit Type",	"Collar Style",	"Work Type",	"Lifestyle",	"Occasion",	"Care Instructions",	"Colour",	"Size Set"
-
-  ]
-    }
-]
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-[
-    {
-        "SizeType": "Size set",
-        "sizeChart": [
-            "Standard Size",
-            "Brand Size",
-            "Chest Size",
-            "Shoulder Size",
-            "Front Length",
-            "Length",
-            "Width",
-            "Height",
-            "Weight",
-            "Manufacturer's Price",
-            "MRP"
-        ],
-        "Sizes": [
-            {
-                "wordSize": "5XS",
-            },
-            {
-                "wordSize": "4XS",
-            },
-            {
-                "wordSize": "3XS",
-            },
-            {
-                "wordSize": "2XS",
-            },
-            {
-                "wordSize": "XS",
-            },
-            {
-                "size": 36,
-                "wordSize": "S",
-            },
-            {
-                "size": 38,
-                "wordSize": "M",
-            },
-            {
-                "size": 40,
-                "wordSize": "L",
-            },
-            {
-                "size": 42,
-                "wordSize": "XL",
-            },
-            {
-                "size": 44,
-                "wordSize": "2XL",
-            },
-            {
-                "size": 46,
-                "wordSize": "3XL",
-            },
-            {
-                "size": 48,
-                "wordSize": "4XL",
-            },
-            {
-                "size": 50,
-                "wordSize": "5XL",
-            },
-            {
-                "size": 52,
-                "wordSize": "6XL",
-            },
-            {
-                "size": 54,
-                "wordSize": "7XL",
-            },
-            {
-                "size": 56,
-                "wordSize": "8XL",
-            },
-            {
-                "wordSize": "Free",
-            }
+            "material",
+            "fabricPattern",
+            "womenStyle", 
+            "gheraInMTR", 
+            "itemLength",
+            "itemStyle",
+            "embellishmentFeature",
+            "apparelSilhouette",
+            "neckStyle",
+            "closureType",
+            "womenSleeveType",
+            "includedComponents",
+            "specialFeature",
+            "fitType",
+            "collarstyle",
+            "workType",
+            "selectedlifeStyle",
+            "selectedOccasion",
+            "careInstructions",
+            "Colour",
+            "Size Set"
         ]
-    },
-    {
-        "sizeType": "Waist Size Set",
-        "sizeChart": [  
-        "Standard Size",
-        "Brand Size",
-        "Waist Size Set (Standard Size)",
-        "Waist (in)",
-        "Inseam (in)",
-        "Length (in)",
-        "Rise (in)",
-        "Length",
-        "Width",
-        "Height",
-        "Weight",
-        "Manufacturer's Price",
-        "MRP"],
-        "Sizes": [
-            {
-                "size": 22,
-            },
-            {
-                "size": 23,
-            },
-            {
-                "size": 24,
-            }
-            {
-                "size": 25,
-            },
-            {
-                "size": 26,
-            },
-            {
-                "size": 27,
-            }
-            {
-                "size": 28,
-            },
-            {
-                "size": 29,
-            },
-            {
-                "size": 30,
-            }
-            {
-                "size": 31,
-            },
-            {
-                "size": 32,
-            },
-            {
-                "size": 33,
-            }
-            {
-                "size": 34,
-            },
-            {
-                "size": 35,
-            },
-            {
-                "size": 36,
-            }
-
-            {
-                "size": 37,
-            },
-            {
-                "size": 38,
-            },
-            {
-                "size": 39,
-            },
-            {
-                "size": 40,
-            },
-            {
-                "size": 41,
-            },
-            {
-                "size": 42,
-            }
-            {
-                "size": 43,
-            },
-            {
-                "size": 44,
-            },
-            {
-                "size": 45,
-            }
-            {
-                "size": 46,
-            },
-            {
-                "size": 47,
-            },
-            {
-                "size": 48,
-            }
-            {
-                "size": 49,
-            },
-            {
-                "size": 50,
-            }
-        ],
     }
 ]
-
