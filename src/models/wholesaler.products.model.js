@@ -71,6 +71,28 @@ const wholesalerProductSchema = mongoose.Schema(
     trourseLength: { type: String },
     coinPocket: { type: String },
 
+    womenSleeveType: { type: String },
+    fitType: { type: String },
+    neckline: { type: String },
+    elasticity: { type: String },
+    topStyle: { type: String },
+    workType: { type: String },
+    collarstyle: { type: String },
+    itemLength: { type: String },
+    embellishmentFeature: { type: String },
+    itemStyle: { type: String },
+    waistType: { type: String },
+    waistRise: { type: String},
+    weaveType: { type: String},
+    ethnicDesign: { type: String },
+    sareeStyle: { type: String },
+    apparelSilhouette: { type: String },
+    bottomIncluded: {type: String},
+    ethnicBottomsStyle: { type: String},
+    womenStyle: { type: String },
+    gheraInMTR: { type: String },
+    finishType: { type: String },
+    
     sizes: { type: [String], default: [] },
     ProductDeimension: [
       {
