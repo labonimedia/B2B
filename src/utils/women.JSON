@@ -474,6 +474,131 @@
             "Material",	"Pattern",	"Women Sleeve Type",	"Sleeve Length",	"Closure Type",	"Fit Type",	"Neckline",	"Elasticity",	"No of pockets",	"Special Features",	"Care Instructions",	"Lifestyle",	"Occasion",	"Size Set"
 
         ]
+    },
+    {
+        "productType": "Clothing",
+        "gender": "Female",
+        "category": "Ethnic Wear",
+        "subCategory": "Sarees",
+        "inputs": [
+            "Material",	"Pattern",	"Occasion",	"Weave Type",	"Ethnic Design",	"Saree Style",	"Color",	"Work Type",	"Lifestyle"
+        ]
+    },
+    {
+        "productType": "Clothing",
+        "gender": "Female",
+        "category": "Ethnic Wear",
+        "subCategory": "Kurtas & Kurtis",
+        "inputs": [
+            "Material",
+            "Pattern",
+            "Women Style",
+            "Neckline",
+            "Collar Style",
+            "Fit Type",
+            "Closure Type",
+            "Sleeve Length",
+            "Women Sleeve Type",
+            "Pocket Description",
+            "Special Features",
+            "Included Components",
+            "Care Instructions",
+            "Work Type",
+            "Lifestyle",
+            "Occasion",
+            "Colour",
+            "Size Set"
+        ]
+    },
+    {
+        "productType": "Clothing",
+        "gender": "Female",
+        "category": "Ethnic Wear",
+        "subCategory": "Salwar Kurta Suits",
+        "inputs": [
+            "Material",
+            "Pattern",
+            "Women Style",
+            "Neckline",
+            "Collar Style",
+            "Fit Type",
+            "Closure Type",
+            "Sleeve Length",
+            "Women Sleeve Type",
+            "Pocket Description",
+            "Special Features",
+            "Included Components",
+            "Care Instructions",
+            "Lifestyle",
+            "Occasion",
+            "Colour",
+            "Size Set",
+            "Bottom included",
+            "length",
+            "Style",
+            "Closure Type",
+            "Rise Type"
+        ]
+    },
+
+
+
+
+    {
+        "productType": "Clothing",
+        "gender": "Female",
+        "category": "Ethnic Wear",
+        "subCategory": "Gowns",
+        "inputs": [
+          "Material",	"Pattern",	"Women Style",	"Ghera (mtr)",	"Length",	"Style",	"Embellishment Feature",	"Apparel Silhouette",	"Neck Style",	"Closure Type",	"Women Sleeve Type",	"Included Components",	"Special Features",	"Fit Type",	"Collar Style",	"Work Type",	"Lifestyle",	"Occasion",	"Care Instructions",	"Colour",	"Size Set"
+
+        ]
+    },
+    {
+        "productType": "Clothing",
+        "gender": "Female",
+        "category": "Ethnic Wear",
+        "subCategory": "Bottom Wear",
+        "inputs": [
+            "Material",	"Pattern",	"Length",	"Ethnic Bottoms Style",	"Closure Type",	"Pocket Description",	"Fit Type",	"Lifestyle",	"Occasion",	"Care Instructions",	"Colour",	"Rise Style",	"Waist Size Set"
+        ]
+    },
+    {
+        "productType": "Clothing",
+        "gender": "Female",
+        "category": "Ethnic Wear",
+        "subCategory": "Blouses",
+        "inputs": [
+            "Material",	"Pattern",	"Women Sleeve Type",	"Sleeve Length",	"Closure Type",	 "Embellishment Feature",	"Fit Type",	"Finish type",	"Neck Style",	"Elasticity",	"Lifestyle",	"Occasion",	"Care Instructions",	"Size Set"
+        ]
+    },
+    {
+        "productType": "Clothing",
+        "gender": "Female",
+        "category": "Ethnic Wear",
+        "subCategory": "Chunnis & Dupattas",
+        "inputs": [
+            "Material",	"Pattern",	"Work Type",	"Weave type",	"Lifestyle",	"Occasion",	"Care Instructions"
+  ]
+    },
+    {
+        "productType": "Clothing",
+        "gender": "Female",
+        "category": "Ethnic Wear",
+        "subCategory": "Petticoat",
+        "inputs": [
+            "Material",	"Pattern", "Length"
+  ]
+    },
+    {
+        "productType": "Clothing",
+        "gender": "Female",
+        "category": "Ethnic Wear",
+        "subCategory": "Kaftan",
+        "inputs": [
+            "Material",	"Pattern",	"Women Style",	"Ghera (mtr)",	"Length",	"Style",	"Embellishment Feature",	"Apparel Silhouette",	"Neck Style",	"Closure Type",	"Women Sleeve Type",	"Included Components",	"Special Features",	"Fit Type",	"Collar Style",	"Work Type",	"Lifestyle",	"Occasion",	"Care Instructions",	"Colour",	"Size Set"
+
+  ]
     }
 ]
 
