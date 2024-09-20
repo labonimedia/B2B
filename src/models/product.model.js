@@ -48,12 +48,12 @@ const productSchema = mongoose.Schema(
     pocketDescription: { type: String },
     sleeveCuffStyle: { type: String },
     sleeveLength: { type: String },
+   
     careInstructions: { type: String },
     country: { type: String },
     city: { type: String },
     state: { type: String },
 
-    // new aded properties
     seasons: { type: String },
     noOfPockets: { type: String },
     scoksStyle: { type: String },
@@ -68,6 +68,30 @@ const productSchema = mongoose.Schema(
     trourseStyle: { type: String },
     trourseLength: { type: String },
     coinPocket: { type: String },
+
+    /// newly added fields
+    womenSleeveType: { type: String },
+    fitType: { type: String },
+    neckline: { type: String },
+    elasticity: { type: String },
+    topStyle: { type: String },
+    workType: { type: String },
+    collarstyle: { type: String },
+    itemLength: { type: String },
+    embellishmentFeature: { type: String },
+    itemStyle: { type: String },
+    waistType: { type: String },
+    waistRise: { type: String},
+    weaveType: { type: String},
+    ethnicDesign: { type: String },
+    sareeStyle: { type: String },
+    apparelSilhouette: { type: String },
+    bottomIncluded: {type: String},
+    ethnicBottomsStyle: { type: String},
+    womenStyle: { type: String },
+    gheraInMTR: { type: String },
+    finishType: { type: String },
+
 
     sizes: { type: [String], default: [] },
     ProductDeimension: [
@@ -145,6 +169,29 @@ productSchema.index({
   sleeveCuffStyle: 'text',
   sleeveLength: 'text',
   careInstructions: 'text',
+
+
+  womenSleeveType: 'text',
+  fitType: 'text',
+  neckline: 'text',
+  elasticity: 'text',
+  topStyle: 'text',
+  workType: 'text',
+  collarstyle: 'text',
+  itemLength: 'text',
+  embellishmentFeature: 'text',
+  itemStyle: 'text',
+  waistType: 'text',
+  waistRise: 'text',
+  weaveType: 'text',
+  ethnicDesign: 'text',
+  sareeStyle: 'text',
+  apparelSilhouette: 'text',
+  bottomIncluded: 'text',
+  ethnicBottomsStyle: 'text',
+  womenStyle: 'text',
+  gheraInMTR: 'text',
+  finishType: 'text',
 });
 // add plugin that converts mongoose to json
 productSchema.plugin(toJSON);

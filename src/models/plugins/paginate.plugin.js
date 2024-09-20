@@ -96,7 +96,6 @@ const paginate = (schema) => {
     if (limit) {
       docsPromise = docsPromise.limit(limit);
     }
-
     if (options.populate) {
       options.populate.split(',').forEach((populateOption) => {
         docsPromise = docsPromise.populate(
