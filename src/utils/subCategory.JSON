@@ -1,0 +1,189 @@
+[
+    {
+        "productType": "Clothing",
+        "gender": "Female",
+        "category": "Western Wear",
+        "subCategory": "Tops"
+    },
+    {
+        "productType": "Clothing",
+        "gender": "Female",
+        "category": "Western Wear",
+        "subCategory": "T-Shirts"
+    },
+    {
+        "productType": "Clothing",
+        "gender": "Female",
+        "category": "Western Wear",
+        "subCategory": "Shirts"
+    },
+    {
+        "productType": "Clothing",
+        "gender": "Female",
+        "category": "Western Wear",
+        "subCategory": "Polos"
+    },
+    {
+        "productType": "Clothing",
+        "gender": "Female",
+        "category": "Western Wear",
+        "subCategory": "Dresses"
+    },
+    {
+        "productType": "Clothing",
+        "gender": "Female",
+        "category": "Western Wear",
+        "subCategory": "Jumpsuits"
+    },
+    {
+        "productType": "Clothing",
+        "gender": "Female",
+        "category": "Western Wear",
+        "subCategory": "Trousers"
+    },
+    {
+        "productType": "Clothing",
+        "gender": "Female",
+        "category": "Western Wear",
+        "subCategory": "Trousers"
+    },
+    {
+        "productType": "Clothing",
+        "gender": "Female",
+        "category": "Western Wear",
+        "subCategory": "Jeans"
+    },
+    {
+        "productType": "Clothing",
+        "gender": "Female",
+        "category": "Western Wear",
+        "subCategory": "Jeggings"
+    },
+    {
+        "productType": "Clothing",
+        "gender": "Female",
+        "category": "Western Wear",
+        "subCategory": "Skirts"
+    },
+    {
+        "productType": "Clothing",
+        "gender": "Female",
+        "category": "Western Wear",
+        "subCategory": "Shorts"
+    },
+    {
+        "productType": "Clothing",
+        "gender": "Female",
+        "category": "Western Wear",
+        "subCategory": "Leggings"
+    },
+    {
+        "productType": "Clothing",
+        "gender": "Female",
+        "category": "Western Wear",
+        "subCategory": "Shrugs"
+    },
+    {
+        "productType": "Clothing",
+        "gender": "Female",
+        "category": "Western Wear",
+        "subCategory": "Rainwear"
+    },
+    {
+        "productType": "Clothing",
+        "gender": "Female",
+        "category": "Western Wear",
+        "subCategory": "Ponchos & Capes"
+    },
+    {
+        "productType": "Clothing",
+        "gender": "Female",
+        "category": "Winter Wear",
+        "subCategory": "Coats"
+    },
+    {
+        "productType": "Clothing",
+        "gender": "Female",
+        "category": "Winter Wear",
+        "subCategory": "Jackets"
+    },
+    {
+        "productType": "Clothing",
+        "gender": "Female",
+        "category": "Winter Wear",
+        "subCategory": "Vests"
+    },
+    {
+        "productType": "Clothing",
+        "gender": "Female",
+        "category": "Winter Wear",
+        "subCategory": "Pullover Sweaters"
+    },
+    {
+        "productType": "Clothing",
+        "gender": "Female",
+        "category": "Winter Wear",
+        "subCategory": "Cardigans"
+    },
+    {
+        "productType": "Clothing",
+        "gender": "Female",
+        "category": "Winter Wear",
+        "subCategory": "Twin-Sets"
+    },
+    {
+        "productType": "Clothing",
+        "gender": "Female",
+        "category": "Ethnic Wear",
+        "subCategory": "Sarees"
+    },
+    {
+        "productType": "Clothing",
+        "gender": "Female",
+        "category": "Ethnic Wear",
+        "subCategory": "Kurtas & Kurtis"
+    },
+    {
+        "productType": "Clothing",
+        "gender": "Female",
+        "category": "Ethnic Wear",
+        "subCategory": "Salwar Kurta Suits"
+    },
+    {
+        "productType": "Clothing",
+        "gender": "Female",
+        "category": "Ethnic Wear",
+        "subCategory": "Gowns"
+    },
+    {
+        "productType": "Clothing",
+        "gender": "Female",
+        "category": "Ethnic Wear",
+        "subCategory": "Bottom Wear"
+    },
+    {
+        "productType": "Clothing",
+        "gender": "Female",
+        "category": "Ethnic Wear",
+        "subCategory": "Blouses"
+    },
+    {
+        "productType": "Clothing",
+        "gender": "Female",
+        "category": "Ethnic Wear",
+        "subCategory": "Chunnis & Dupattas"
+    },
+    {
+        "productType": "Clothing",
+        "gender": "Female",
+        "category": "Ethnic Wear",
+        "subCategory": "Petticoat"
+    },
+    {
+        "productType": "Clothing",
+        "gender": "Female",
+        "category": "Ethnic Wear",
+        "subCategory": "Kaftan"
+
+    }
+]
