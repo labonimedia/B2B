@@ -74,6 +74,11 @@ const updateBrandById = catchAsync(async (req, res) => {
   res.send(user);
 });
 
+const updatevisibility = catchAsync(async (req, res) => {
+  const user = await brandService.updateBrandById(req.params.id, req.body);
+  res.send(user);
+});
+
 const deleteBrandById = catchAsync(async (req, res) => {
   await brandService.deleteBrandById(req.params.id);
   res.status(httpStatus.NO_CONTENT).send();
@@ -96,5 +101,6 @@ module.exports = {
   deleteBrandById,
   searchBrandAndOwnerDetails,
   getBrandByEmail,
-  getBrandByEmailAndVisibility
+  getBrandByEmailAndVisibility,
+  updatevisibility
 };

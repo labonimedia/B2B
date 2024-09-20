@@ -34,4 +34,10 @@ router
 router
   .route('/visible/brandlist/:email/:visibility')
   .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), brandController.getBrandByEmailAndVisibility);
+  router
+  .route('/updatevisibility/:id')
+  .patch(
+    auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
+    brandController.updatevisibility
+  )
 module.exports = router;
