@@ -50,7 +50,7 @@ const getBrandByEmail = async (email) => {
  * @returns {Promise<Brand>}
  */
 const getBrandByEmailAndVisibility = async (email, visibility) => {
-  return Brand.find({ brandOwner: email, visibility: visibility});
+  return Brand.find({ brandOwner: email, visibility: visibility });
 };
 
 /**
@@ -117,5 +117,5 @@ module.exports = {
   deleteBrandById,
   searchBrandAndOwnerDetails,
   getBrandByEmail,
-  getBrandByEmailAndVisibility
+  getBrandByEmailAndVisibility,
 };
