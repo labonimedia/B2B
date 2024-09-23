@@ -149,6 +149,7 @@ const manufactureSchema = mongoose.Schema(
       registerOnFTH: { type: Boolean, default: true },
 
       brandView: [{
+        visibility: { type: Boolean},
         brandName: { type: String},
         brandLogo: { type: String},
       }],
