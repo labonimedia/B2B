@@ -199,7 +199,7 @@ const updateVisibilitySettings = async (manufactureId, payload) => {
     establishDate: payload.establishDate !== undefined ? payload.establishDate : manufacture.visibilitySettings.establishDate,
     turnover: payload.turnover !== undefined ? payload.turnover : manufacture.visibilitySettings.turnover,
     registerOnFTH: payload.registerOnFTH !== undefined ? payload.registerOnFTH : manufacture.visibilitySettings.registerOnFTH,
-    
+    delingInView: payload.delingInView !== undefined ? payload.delingInView : manufacture.visibilitySettings.delingInView,
     // Social Media fields
     'socialMedia.facebook': payload.socialMedia?.facebook !== undefined ? payload.socialMedia.facebook : manufacture.visibilitySettings['socialMedia.facebook'],
     'socialMedia.instagram': payload.socialMedia?.instagram !== undefined ? payload.socialMedia.instagram : manufacture.visibilitySettings['socialMedia.instagram'],
