@@ -243,8 +243,8 @@ const getVisibleProfile = async (manufactureId) => {
   // Check if the manufacture has enabled the `dealingInView`
   if (manufacture.delingInView) {
     // Use distinct to get unique combinations of clothing, gender, category, and subCategory
-    // const uniqueProducts = await Product.find({ productBy: manufacture.email })
-    //   .distinct('productType', 'gender', 'category', 'subCategory');
+    const uniqueProducts = await Product.find({ productBy: manufacture.email })
+      .distinct('productType', 'gender', 'category', 'subCategory');
     
     dealingIn = {
       productType: await Product.distinct('productType', { productBy: manufacture.email }),
@@ -255,7 +255,8 @@ const getVisibleProfile = async (manufactureId) => {
   }
   return {
     ...manufacture.toObject(),
-    dealingIn,  
+    dealingIn,
+    uniqueProducts,
   };
 };
 
