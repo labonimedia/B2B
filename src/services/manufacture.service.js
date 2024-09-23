@@ -230,13 +230,48 @@ const updateVisibilitySettings = async (manufactureId, payload) => {
  * @param {ObjectId} manufactureId
  * @returns {Promise<Object>}
  */
+
 const getVisibleProfile = async (manufactureId) => {
+  // Fetch the manufacturer by ID
   const manufacture = await Manufacture.findById(manufactureId);
+
+  // If the manufacturer is not found, throw an error
   if (!manufacture) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Manufacture not found');
   }
-  return manufacture.getVisibleProfile();
+
+  let dealingIn = {};
+
+  // Check if the manufacture has enabled the `dealingInView`
+  if (manufacture.delingInView) {
+    // Use distinct to get unique combinations of clothing, gender, category, and subCategory
+    // const uniqueProducts = await Product.find({ productBy: manufacture.email })
+    //   .distinct('productType', 'gender', 'category', 'subCategory');
+    
+    dealingIn = {
+      clothing: await Product.distinct('productType', { productBy: manufacture.email }),
+      gender: await Product.distinct('gender', { productBy: manufacture.email }),
+      category: await Product.distinct('category', { productBy: manufacture.email }),
+      subCategory: await Product.distinct('subCategory', { productBy: manufacture.email }),
+    };
+  }
+  return {
+    ...manufacture.toObject(),
+    dealingIn,  
+  };
 };
+
+// const getVisibleProfile = async (manufactureId) => {
+//   const manufacture = await Manufacture.findById(manufactureId);
+//   if (!manufacture) {
+//     throw new ApiError(httpStatus.NOT_FOUND, 'Manufacture not found');
+//   }
+// let delingIn= {}
+//   if(manufacture.delingInView){
+//     delingIn = await Product.find({productBy: manufacture.email}).select('productType, gender, cstegory, subCategory')
+//   }
+//   return manufacture;
+// };
 
 module.exports = {
   createManufacture,
