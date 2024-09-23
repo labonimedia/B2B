@@ -16,6 +16,10 @@ const brandSchema = mongoose.Schema(
     brandOwner: {
       type: String,
     },
+    visibility: {
+      type: Boolean,
+      default: true, // true means visible, false means hidden
+    },
   },
   {
     timestamps: true,

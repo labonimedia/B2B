@@ -40,7 +40,16 @@ const getBrandById = catchAsync(async (req, res) => {
 const getBrandByEmail = catchAsync(async (req, res) => {
   const user = await brandService.getBrandByEmail(req.params.email);
   if (!user) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Care Instruction not found');
+    throw new ApiError(httpStatus.NOT_FOUND, 'Brand Not Found');
+  }
+  res.send(user);
+});
+
+const getBrandByEmailAndVisibility = catchAsync(async (req, res) => {
+  const { email, visibility } = req.params;
+  const user = await brandService.getBrandByEmailAndVisibility(email, visibility);
+  if (!user) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Brand Not Found');
   }
   res.send(user);
 });
@@ -65,6 +74,11 @@ const updateBrandById = catchAsync(async (req, res) => {
   res.send(user);
 });
 
+const updatevisibility = catchAsync(async (req, res) => {
+  const user = await brandService.updateBrandById(req.params.id, req.body);
+  res.send(user);
+});
+
 const deleteBrandById = catchAsync(async (req, res) => {
   await brandService.deleteBrandById(req.params.id);
   res.status(httpStatus.NO_CONTENT).send();
@@ -78,6 +92,7 @@ const searchBrandAndOwnerDetails = catchAsync(async (req, res) => {
   const data = await brandService.searchBrandAndOwnerDetails(brandName);
   res.status(httpStatus.OK).send(data);
 });
+
 module.exports = {
   createBrand,
   queryBrand,
@@ -86,4 +101,6 @@ module.exports = {
   deleteBrandById,
   searchBrandAndOwnerDetails,
   getBrandByEmail,
+  getBrandByEmailAndVisibility,
+  updatevisibility,
 };

@@ -44,6 +44,16 @@ const getBrandByEmail = async (email) => {
 };
 
 /**
+ * Get Brand by id
+ * @param {ObjectId} email
+ * @param {ObjectId} visibility
+ * @returns {Promise<Brand>}
+ */
+const getBrandByEmailAndVisibility = async (email, visibility) => {
+  return Brand.find({ brandOwner: email, visibility: visibility });
+};
+
+/**
  * Update Brand by id
  * @param {ObjectId} Id
  * @param {Object} updateBody
@@ -107,4 +117,5 @@ module.exports = {
   deleteBrandById,
   searchBrandAndOwnerDetails,
   getBrandByEmail,
+  getBrandByEmailAndVisibility,
 };
