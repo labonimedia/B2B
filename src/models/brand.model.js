@@ -19,7 +19,7 @@ const brandSchema = mongoose.Schema(
     visibility: {
       type: Boolean,
       default: true, // true means visible, false means hidden
-    },    
+    },
   },
   {
     timestamps: true,
