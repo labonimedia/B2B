@@ -1,5 +1,5 @@
 const httpStatus = require('http-status');
-const { Manufacture, User, Wholesaler, Retailer } = require('../models');
+const { Manufacture, User, Wholesaler, Retailer, Product } = require('../models');
 const ApiError = require('../utils/ApiError');
 
 /**
@@ -230,12 +230,37 @@ const updateVisibilitySettings = async (manufactureId, payload) => {
  * @param {ObjectId} manufactureId
  * @returns {Promise<Object>}
  */
+
 const getVisibleProfile = async (manufactureId) => {
+  // Fetch the manufacturer by ID
   const manufacture = await Manufacture.findById(manufactureId);
+
+  // If the manufacturer is not found, throw an error
   if (!manufacture) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Manufacture not found');
   }
-  return manufacture.getVisibleProfile();
+  let uniqueProducts;
+  if(manufacture.delingInView){
+   uniqueProducts = await Product.find({ productBy: manufacture.email })
+    .select('productType gender category subCategory')
+    .lean(); // Use lean to get plain JavaScript objects
+
+  // Remove duplicate objects based on 'productType', 'gender', 'category', and 'subCategory'
+  const uniqueSet = new Set();
+  uniqueProducts = uniqueProducts.filter((product) => {
+    const uniqueKey = `${product.productType}-${product.gender}-${product.category}-${product.subCategory}`;
+    if (!uniqueSet.has(uniqueKey)) {
+      uniqueSet.add(uniqueKey);
+      return true; // Include this product in the unique list
+    }
+    return false; 
+  });
+  }
+  // Return the manufacturer object along with the unique products
+  return {
+    ...manufacture.toObject(),
+    uniqueProducts, // List of unique products
+  };
 };
 
 module.exports = {

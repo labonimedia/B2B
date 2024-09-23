@@ -92,7 +92,7 @@ const wholesalerProductSchema = mongoose.Schema(
     womenStyle: { type: String },
     gheraInMTR: { type: String },
     finishType: { type: String },
-    
+
     sizes: { type: [String], default: [] },
     ProductDeimension: [
       {
@@ -119,6 +119,20 @@ const wholesalerProductSchema = mongoose.Schema(
           type: String,
         },
         frontLength: {
+          type: String,
+        },        waistSizeSetStandardSize: {
+          type: String,
+        },
+        waist: {
+          type: String,
+        },
+        inseam: {
+          type: String,
+        },
+        lengthIn: {
+          type: String,
+        },
+        rise: {
           type: String,
         },
         length: { type: String },
