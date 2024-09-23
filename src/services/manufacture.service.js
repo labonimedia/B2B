@@ -1,5 +1,5 @@
 const httpStatus = require('http-status');
-const { Manufacture, User, Wholesaler, Retailer } = require('../models');
+const { Manufacture, User, Wholesaler, Retailer, Product } = require('../models');
 const ApiError = require('../utils/ApiError');
 
 /**
@@ -239,39 +239,29 @@ const getVisibleProfile = async (manufactureId) => {
   if (!manufacture) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Manufacture not found');
   }
-  let dealingIn = {};
   let uniqueProducts;
-  // Check if the manufacture has enabled the `dealingInView`
-  if (manufacture.delingInView) {
-    // Use distinct to get unique combinations of clothing, gender, category, and subCategory
-     uniqueProducts = await Product.find({ productBy: manufacture.email })
-      .distinct('productType', 'gender', 'category', 'subCategory');
-    
-    dealingIn = {
-      productType: await Product.distinct('productType', { productBy: manufacture.email }),
-      gender: await Product.distinct('gender', { productBy: manufacture.email }),
-      category: await Product.distinct('category', { productBy: manufacture.email }),
-      subCategory: await Product.distinct('subCategory', { productBy: manufacture.email }),
-    };
+  if(manufacture.delingInView){
+   uniqueProducts = await Product.find({ productBy: manufacture.email })
+    .select('productType gender category subCategory')
+    .lean(); // Use lean to get plain JavaScript objects
+
+  // Remove duplicate objects based on 'productType', 'gender', 'category', and 'subCategory'
+  const uniqueSet = new Set();
+  uniqueProducts = uniqueProducts.filter((product) => {
+    const uniqueKey = `${product.productType}-${product.gender}-${product.category}-${product.subCategory}`;
+    if (!uniqueSet.has(uniqueKey)) {
+      uniqueSet.add(uniqueKey);
+      return true; // Include this product in the unique list
+    }
+    return false; 
+  });
   }
+  // Return the manufacturer object along with the unique products
   return {
     ...manufacture.toObject(),
-    dealingIn,
-    uniqueProducts,
+    uniqueProducts, // List of unique products
   };
 };
-
-// const getVisibleProfile = async (manufactureId) => {
-//   const manufacture = await Manufacture.findById(manufactureId);
-//   if (!manufacture) {
-//     throw new ApiError(httpStatus.NOT_FOUND, 'Manufacture not found');
-//   }
-// let delingIn= {}
-//   if(manufacture.delingInView){
-//     delingIn = await Product.find({productBy: manufacture.email}).select('productType, gender, cstegory, subCategory')
-//   }
-//   return manufacture;
-// };
 
 module.exports = {
   createManufacture,
