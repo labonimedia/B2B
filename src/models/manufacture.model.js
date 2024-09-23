@@ -149,16 +149,15 @@ const manufactureSchema = mongoose.Schema(
       registerOnFTH: { type: Boolean, default: true },
 
       brandView: [{
-        visibility: { type: Boolean},
-        brandName: { type: String},
-        brandLogo: { type: String},
+        visibility: { type: Boolean },
+        brandName: { type: String },
+        brandLogo: { type: String },
       }],
-      delingInView:[{
-        productType: { type: String,},
-        gender:{ type: String},
-        category: { type: String},
-        subCategory: { type: String},
-      }],
+
+      delingInView: {
+        type: Boolean,
+        default: true
+      },
 
       // Social Media fields
       'socialMedia.facebook': { type: Boolean, default: true },
