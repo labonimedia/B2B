@@ -242,13 +242,13 @@ const getVisibleProfile = async (manufactureId) => {
   let uniqueProducts;
   if(manufacture.delingInView){
    uniqueProducts = await Product.find({ productBy: manufacture.email })
-    .select('productType gender category subCategory')
+    .select('productType gender clothing subCategory')
     .lean(); // Use lean to get plain JavaScript objects
 
   // Remove duplicate objects based on 'productType', 'gender', 'category', and 'subCategory'
   const uniqueSet = new Set();
   uniqueProducts = uniqueProducts.filter((product) => {
-    const uniqueKey = `${product.productType}-${product.gender}-${product.category}-${product.subCategory}`;
+    const uniqueKey = `${product.productType}-${product.gender}-${product.clothing}-${product.subCategory}`;
     if (!uniqueSet.has(uniqueKey)) {
       uniqueSet.add(uniqueKey);
       return true; // Include this product in the unique list
