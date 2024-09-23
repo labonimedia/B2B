@@ -240,10 +240,11 @@ const getVisibleProfile = async (manufactureId) => {
     throw new ApiError(httpStatus.NOT_FOUND, 'Manufacture not found');
   }
   let dealingIn = {};
+  let uniqueProducts;
   // Check if the manufacture has enabled the `dealingInView`
   if (manufacture.delingInView) {
     // Use distinct to get unique combinations of clothing, gender, category, and subCategory
-    const uniqueProducts = await Product.find({ productBy: manufacture.email })
+     uniqueProducts = await Product.find({ productBy: manufacture.email })
       .distinct('productType', 'gender', 'category', 'subCategory');
     
     dealingIn = {
