@@ -60,6 +60,7 @@ const queryProduct = async (filter, options) => {
   return Products;
 };
 
+
 /**
  * Query for products
  * @param {Object} filter - MongoDB filter
@@ -105,14 +106,36 @@ const getProductBydesigneNo = async (designNumber, productBy) => {
  * @returns {Promise<Product>}
  */
 const updateProductById = async (id, updateBody) => {
-  const user = await getProductById(id);
-  if (!user) {
+  // Fetch the product by ID
+  const product = await getProductById(id);
+  if (!product) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Product not found');
   }
-  Object.assign(user, updateBody);
-  await user.save();
-  return user;
+
+  // Handle quantity update if 'newQuantity' is provided in the request
+  if (updateBody.newQuantity !== undefined) {
+    // Check if the new quantity is valid (e.g., non-negative)
+    if (updateBody.newQuantity < 0 && product.quantity + updateBody.newQuantity < 0) {
+      throw new ApiError(httpStatus.BAD_REQUEST, 'Quantity cannot be negative');
+    }
+
+    // Update the product quantity
+    product.quantity += updateBody.newQuantity;
+  }
+
+  // Merge other fields into the product document
+  const fieldsToUpdate = { ...updateBody };
+  delete fieldsToUpdate.newQuantity; // Remove newQuantity as it's already handled
+
+  // Assign other update fields to the product
+  Object.assign(product, fieldsToUpdate);
+
+  // Save the updated product
+  await product.save();
+
+  return product;
 };
+
 
 /**
  * Delete user by id
@@ -162,6 +185,7 @@ const updateColorCollection = async (req, productId) => {
   }
 
   product.colourCollections[collectionIndex] = newColourCollection;
+
   return product.save(); // Removed redundant await
 };
 
