@@ -43,6 +43,7 @@ const fileupload = async (req, productId) => {
  * @returns {Promise<Product>}
  */
 const createProduct = async (reqBody) => {
+  if(reqBody.quantity) reqBody.initialQTY = reqBody.quantity
   return Product.create(reqBody);
 };
 
