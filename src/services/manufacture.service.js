@@ -240,7 +240,7 @@ const getVisibleProfile = async (manufactureId) => {
     throw new ApiError(httpStatus.NOT_FOUND, 'Manufacture not found');
   }
   let uniqueProducts;
-  if(manufacture.delingInView){
+  if(manufacture.visibilitySettings.delingInView){
    uniqueProducts = await Product.find({ productBy: manufacture.email })
     .select('productType gender clothing subCategory')
     .lean(); // Use lean to get plain JavaScript objects

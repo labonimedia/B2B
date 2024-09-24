@@ -23,6 +23,7 @@ const productSchema = mongoose.Schema(
     designNumber: {
       type: String,
     },
+    initialQTY: {type: Number},
     quantity: { type: Number },
     discount: {
       type: String,
