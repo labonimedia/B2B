@@ -78,7 +78,8 @@ const cupSizeRoute = require('./cup.size.route');
 const opacityRoute = require('./opacity.route');
 const entitytypeRoute = require('./entity.type.route');
 const sizeSetRoute = require('./size.set.route');
-
+const layerCompressionRoute = require('./layer.compression.route');
+const waistBandRoute = require('./waistband.route');
 const router = express.Router();
 
 const defaultRoutes = [
@@ -392,6 +393,15 @@ const defaultRoutes = [
     path: '/size-set',
     route: sizeSetRoute,
   },
+  {
+    path: '/layer-compression',
+    route: layerCompressionRoute,
+  },
+  {
+    path: '/waistband',
+    route: waistBandRoute,
+  },
+  
 ];
 
 const devRoutes = [
