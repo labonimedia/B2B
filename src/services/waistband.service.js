@@ -1,18 +1,18 @@
 const httpStatus = require('http-status');
-const { SareeStyle } = require('../models');
+const { WaistBand } = require('../models');
 const ApiError = require('../utils/ApiError');
 
 /**
- * Create a Sareetyle
+ * Create a WaistBand
  * @param {Object} reqBody
- * @returns {Promise<Sareetyle>}
+ * @returns {Promise<WaistBand>}
  */
-const createSareetyle = async (reqBody) => {
-  return SareeStyle.create(reqBody);
+const createWaistBand = async (reqBody) => {
+  return WaistBand.create(reqBody);
 };
 
 /**
- * Query for Sareetyle
+ * Query for WaistBand
  * @param {Object} filter - Mongo filter
  * @param {Object} options - Query options
  * @param {string} [options.sortBy] - Sort option in the format: sortField:(desc|asc)
@@ -20,28 +20,28 @@ const createSareetyle = async (reqBody) => {
  * @param {number} [options.page] - Current page (default = 1)
  * @returns {Promise<QueryResult>}
  */
-const querySareetyle = async (filter, options) => {
-  const sareetyles = await Sareetyle.paginate(filter, options);
-  return sareetyles;
+const queryWaistBand = async (filter, options) => {
+  const waistBand = await WaistBand.paginate(filter, options);
+  return waistBand;
 };
 
 /**
- * Get Sareetyle by id
+ * Get WaistBand by id
  * @param {ObjectId} id
- * @returns {Promise<Sareetyle>}
+ * @returns {Promise<WaistBand>}
  */
-const getSareetyleById = async (id) => {
-  return Sareetyle.findById(id);
+const getWaistBandById = async (id) => {
+  return WaistBand.findById(id);
 };
 
 /**
- * Update Sareetyle by id
+ * Update WaistBand by id
  * @param {ObjectId} Id
  * @param {Object} updateBody
- * @returns {Promise<Sareetyle>}
+ * @returns {Promise<WaistBand>}
  */
-const updateSareetyleById = async (id, updateBody) => {
-  const user = await getSareetyleById(id);
+const updateWaistBandById = async (id, updateBody) => {
+  const user = await getWaistBandById(id);
   if (!user) {
     throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
   }
@@ -53,10 +53,10 @@ const updateSareetyleById = async (id, updateBody) => {
 /**
  * Delete user by id
  * @param {ObjectId} userId
- * @returns {Promise<Sareetyle>}
+ * @returns {Promise<WaistBand>}
  */
-const deleteSareetyleById = async (id) => {
-  const user = await getSareetyleById(id);
+const deleteWaistBandById = async (id) => {
+  const user = await getWaistBandById(id);
   if (!user) {
     throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
   }
@@ -65,9 +65,9 @@ const deleteSareetyleById = async (id) => {
 };
 
 module.exports = {
-  createSareetyle,
-  querySareetyle,
-  getSareetyleById,
-  updateSareetyleById,
-  deleteSareetyleById,
+  createWaistBand,
+  queryWaistBand,
+  getWaistBandById,
+  updateWaistBandById,
+  deleteWaistBandById,
 };
