@@ -37,7 +37,7 @@ const resetPassword = catchAsync(async (req, res) => {
 });
 
 const sendVerificationEmail = catchAsync(async (req, res) => {
-  await emailService.sendVerificationEmail(req.query.email);
+  await emailService.sendVerificationEmail(req.query.email, req.query.fullName);
   res.status(httpStatus.OK).send({ message: 'Otp send successfully' });
 });
 
