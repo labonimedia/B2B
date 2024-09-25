@@ -4,6 +4,12 @@ const { paginate, toJSON } = require('./plugins');
 
 const productSchema = mongoose.Schema(
   {
+    updatedDate: {
+      type: Date,
+    },
+    alertStock: {
+      type: Number,
+    },
     FSIN: {
       type: String,
       unique: true,
@@ -63,7 +69,7 @@ const productSchema = mongoose.Schema(
     Waistband: { type: String },
     includedComponents: { type: String },
     riseStyle: { type: String },
-    trouserFitStyle: { type: String },
+    trouserFitStyle: { type: String },   // is trouser fit type
     troursePocket: { type: String },
     trourseRiseStyle: { type: String },
     trourseStyle: { type: String },
