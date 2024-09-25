@@ -116,11 +116,11 @@ const updateProductById = async (id, updateBody) => {
   // Handle quantity update if 'newQuantity' is provided in the request
   if (updateBody.newQuantity !== undefined) {
     // Check if the new quantity is valid (e.g., non-negative)
-    if (updateBody.newQuantity < 0 && Number(product.quantity) + updateBody.newQuantity < 0) {
+    if (updateBody.newQuantity < 0 && product.quantity + updateBody.newQuantity < 0) {
       throw new ApiError(httpStatus.BAD_REQUEST, 'Quantity cannot be negative');
     }
     // Update the product quantity
-    Number(product.quantity) += Number(updateBody.newQuantity);
+    product.quantity += Number(updateBody.newQuantity);
   }
 
   // Merge other fields into the product document
@@ -135,6 +135,7 @@ const updateProductById = async (id, updateBody) => {
 
   return product;
 };
+
 
 
 /**
