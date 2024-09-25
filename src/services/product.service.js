@@ -119,7 +119,6 @@ const updateProductById = async (id, updateBody) => {
     if (updateBody.newQuantity < 0 && Number(product.quantity) + updateBody.newQuantity < 0) {
       throw new ApiError(httpStatus.BAD_REQUEST, 'Quantity cannot be negative');
     }
-
     // Update the product quantity
     Number(product.quantity) += Number(updateBody.newQuantity);
   }
