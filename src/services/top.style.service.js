@@ -1,5 +1,5 @@
 const httpStatus = require('http-status');
-const { TopType } = require('../models');
+const { TopStyle } = require('../models');
 const ApiError = require('../utils/ApiError');
 
 /**
@@ -8,7 +8,7 @@ const ApiError = require('../utils/ApiError');
  * @returns {Promise<TopType>}
  */
 const createTopType = async (reqBody) => {
-  return TopType.create(reqBody);
+  return TopStyle.create(reqBody);
 };
 
 /**
@@ -21,7 +21,7 @@ const createTopType = async (reqBody) => {
  * @returns {Promise<QueryResult>}
  */
 const queryTopType = async (filter, options) => {
-  const topType = await TopType.paginate(filter, options);
+  const topType = await TopStyle.paginate(filter, options);
   return topType;
 };
 
@@ -31,7 +31,7 @@ const queryTopType = async (filter, options) => {
  * @returns {Promise<TopType>}
  */
 const getTopTypeById = async (id) => {
-  return TopType.findById(id);
+  return TopStyle.findById(id);
 };
 
 /**
@@ -43,7 +43,7 @@ const getTopTypeById = async (id) => {
 const updateTopTypeById = async (id, updateBody) => {
   const user = await getTopTypeById(id);
   if (!user) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'TopType not found');
+    throw new ApiError(httpStatus.NOT_FOUND, 'TopStyle not found');
   }
   Object.assign(user, updateBody);
   await user.save();
@@ -58,7 +58,7 @@ const updateTopTypeById = async (id, updateBody) => {
 const deleteTopTypeById = async (id) => {
   const user = await getTopTypeById(id);
   if (!user) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'TopType not found');
+    throw new ApiError(httpStatus.NOT_FOUND, 'TopStyle not found');
   }
   await user.remove();
   return user;

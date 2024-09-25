@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const { toJSON, paginate } = require('./plugins');
 
-const topTypeSchema = mongoose.Schema(
+const topStyleSchema = mongoose.Schema(
   {
     name: {
       type: String,
@@ -15,9 +15,9 @@ const topTypeSchema = mongoose.Schema(
 );
 
 // add plugin that converts mongoose to json
-topTypeSchema.plugin(toJSON);
-topTypeSchema.plugin(paginate);
+topStyleSchema.plugin(toJSON);
+topStyleSchema.plugin(paginate);
 
-const TopType = mongoose.model('TopType', topTypeSchema);
+const TopStyle = mongoose.model('TopStyle', topStyleSchema);
 
-module.exports = TopType;
+module.exports = TopStyle;

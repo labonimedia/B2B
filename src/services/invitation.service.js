@@ -12,7 +12,7 @@ const bulkUploadInvitations = async (invitations, user) => {
   const results = await Promise.all(
     invitations.map(async (invitation) => {
       const invitedBy = user.email;
-      await emailService.sendInvitationToDistributer(invitation.email);
+      await emailService.sendInvitationToDistributer(invitation.email, invitation.fullName);
       const existingInvitation = await Invitation.findOne({ email: invitation.email });
       if (existingInvitation) {
         existingInvitation.invitedBy.push(invitedBy);
@@ -72,7 +72,7 @@ const bulkUpload = async (invitationArray = [], csvFilePath = null, user) => {
  * @returns {Promise<Invitation>}
  */
 const createInvitation = async (reqBody, user) => {
-  await emailService.sendInvitationToDistributer(reqBody.email);
+  await emailService.sendInvitationToDistributer(reqBody.email, reqBody.fullName );
   reqBody.invitedBy = user.email;
 
   const existingInvitation = await Invitation.findOne({ email: reqBody.email });
@@ -84,19 +84,35 @@ const createInvitation = async (reqBody, user) => {
   reqBody.invitedBy = [reqBody.invitedBy];
   return Invitation.create(reqBody);
 };
-const sendReInvitation = async (email) => {
-  const result = await emailService.sendInvitationToDistributer(email);
+const sendReInvitation = async (email, fullName) => {
+  const result = await emailService.sendInvitationToDistributer(email, fullName);
   return result;
 };
 
-const sendReInvitationBulk = async (emails) => {
+const sendReInvitationBulk = async (emails, fullNames) => {
   const results = [];
-  for (const email of emails) {
-    const result = await emailService.sendInvitationToDistributer(email);
+  for (let i = 0; i < emails.length; i++) {
+    const email = emails[i];
+    const fullName = fullNames[i]; // Ensure the fullName corresponds to the email
+    const result = await emailService.sendInvitationToDistributer(email, fullName);
     results.push(result);
   }
   return results;
 };
+
+// const sendReInvitation = async (email, fullName) => {
+//   const result = await emailService.sendInvitationToDistributer(email, fullName);
+//   return result;
+// };
+
+// const sendReInvitationBulk = async (emails,fullNames) => {
+//   const results = [];
+//   for (const email of emails) {
+//     const result = await emailService.sendInvitationToDistributer(email, fullName);
+//     results.push(result);
+//   }
+//   return results;
+// };
 
 /**
  * Query for Invitation
