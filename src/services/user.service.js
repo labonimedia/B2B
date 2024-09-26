@@ -1,4 +1,5 @@
 const httpStatus = require('http-status');
+const bcrypt = require('bcryptjs');
 const { User, Wholesaler, Manufacture, Retailer, Counter } = require('../models');
 const ApiError = require('../utils/ApiError');
 const { createManufacture } = require('./manufacture.service');
@@ -144,9 +145,13 @@ const updateUserById = async (userId, updateBody) => {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Email already taken');
   }
 
+  if (updateBody.password) {
+    // Hash the new password before updating
+    updateBody.password = await bcrypt.hash(updateBody.password, 8);
+  }
+
   // Update the user document directly in the database
   const user = await User.findByIdAndUpdate(userId, updateBody, { new: true });
-
   if (!user) {
     throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
   }

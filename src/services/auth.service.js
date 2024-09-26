@@ -64,7 +64,8 @@ const resetPassword = async (email, newPassword) => {
     if (!user) {
       throw new ApiError(httpStatus.NOT_FOUND, 'Not found');
     }
-    await userService.updateUserById(user._id, { password: newPassword });
+   const pass =  await userService.updateUserById(user._id, { password: newPassword });
+console.log(pass)
   } catch (error) {
     throw new ApiError(httpStatus.UNAUTHORIZED, 'Password reset failed');
   }
