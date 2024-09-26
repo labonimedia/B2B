@@ -88,3 +88,5 @@ module.exports.CupSize = require('./cup.size.model');
 module.exports.Opacity = require('./opacity.model');
 module.exports.Entity = require('./entity.type.model');
 module.exports.SizeSet = require('./size.sets.model');
+module.exports.LayerCompression = require('./layer.compression.model');
+module.exports.WaistBand = require('./waistband.model');

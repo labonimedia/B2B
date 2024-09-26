@@ -78,3 +78,5 @@ module.exports.cupSizeService = require('./cup.size.service');
 module.exports.opacityService = require('./opacity.service');
 module.exports.entityService = require('./entity.type.service');
 module.exports.sizeSetService = require('./size.set.service');
+module.exports.layerCompressionService = require('./layer.compression.service');
+module.exports.waistBandService = require('./waistband.service');
