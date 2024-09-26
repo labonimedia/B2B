@@ -211,10 +211,36 @@ const getRetailerByEmail = async (refByEmail, searchKeywords = '', options = {})
   return manufactures;
 };
 
+
 const assignOrUpdateDiscount = async (email, discountGivenBy, category, productDiscount, shippingDiscount) => {
   const wholesaler = await Wholesaler.findOne({ email });
   if (!wholesaler) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Wholesaler not found');
+  }
+
+  const existingDiscountIndex = wholesaler.discountGiven.findIndex(
+    (discount) => discount.discountGivenBy === discountGivenBy
+  );
+
+  if (existingDiscountIndex !== -1) {
+    // Update the existing discount
+    wholesaler.discountGiven[existingDiscountIndex].category = category;
+    wholesaler.discountGiven[existingDiscountIndex].productDiscount = productDiscount;
+    wholesaler.discountGiven[existingDiscountIndex].shippingDiscount = shippingDiscount;
+  } else {
+    // Add new discount entry
+    wholesaler.discountGiven.push({ discountGivenBy, category, productDiscount, shippingDiscount });
+  }
+
+  await wholesaler.save();
+  return wholesaler;
+};
+
+
+const assignOrUpdateDiscountToRetailer = async (email, discountGivenBy, category, productDiscount, shippingDiscount) => {
+  const wholesaler = await Retailer.findOne({ email });
+  if (!wholesaler) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Retailer not found');
   }
 
   const existingDiscountIndex = wholesaler.discountGiven.findIndex(
@@ -249,6 +275,20 @@ const getDiscountByGivenBy = async (wholesalerId, discountGivenBy) => {
   return foundDiscount;
 };
 
+const getDiscountByGivenByToRetailer = async (retailerId, discountGivenBy) => {
+  const wholesaler = await Retailer.findById(retailerId);
+  if (!wholesaler) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Retailer not found');
+  }
+  const foundDiscount = wholesaler.discountGiven.find((d) => d.discountGivenBy === discountGivenBy);
+
+  if (!foundDiscount) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Discount not found');
+  }
+
+  return foundDiscount;
+};
+
 module.exports = {
   createWholesaler,
   queryWholesaler,
@@ -263,4 +303,6 @@ module.exports = {
   getUsersByEmails,
   assignOrUpdateDiscount,
   getDiscountByGivenBy,
+  assignOrUpdateDiscountToRetailer,
+  getDiscountByGivenByToRetailer
 };
