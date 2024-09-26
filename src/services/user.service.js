@@ -130,6 +130,8 @@ const getUserByEmail = async (email) => {
   return user;
 };
 
+
+
 /**
  * Update user by id
  * @param {ObjectId} userId
