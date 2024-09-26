@@ -7,11 +7,11 @@ const router = express.Router();
 router
   .route('/')
   .post(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), entityController.createEntity)
-  .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), entityController.queryEntity);
+  .get( entityController.queryEntity);
 
 router
   .route('/:id')
-  .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), entityController.getEntityById)
+  .get( entityController.getEntityById)
   .patch(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), entityController.updateEntityById)
   .delete(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), entityController.deleteEntityById);
 
