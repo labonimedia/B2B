@@ -36,8 +36,15 @@ router
   .post(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), wholesalerController.assignDiscount);
 
 router
+  .route('/retailer/assigndiscount')
+  .post(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), wholesalerController.assignDiscountToRetailer);
+
+router
   .route('/getdiscount/:wholesalerId/:discountGivenBy')
   .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), wholesalerController.getDiscountByGivenBy);
+router
+  .route('/retailer/getdiscount/:retailerId/:discountGivenBy')
+  .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), wholesalerController.getDiscountByGivenByToRetailer);
 
 router
   .route('/get-search/wholesaler-by-address')
