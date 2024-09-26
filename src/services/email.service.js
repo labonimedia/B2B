@@ -30,13 +30,28 @@ const sendEmail = async (to, subject, text) => {
  * @param {string} token
  * @returns {Promise}
  */
-const sendResetPasswordEmail = async (to, token) => {
-  const subject = 'Reset password';
+const sendResetPasswordEmail = async (to) => {
+  const otpCode = await otpService.generateOTP();
+  await otpService.createOtp(to, otpCode);
+  const subject = 'Welcome to Fashion Traders Hub - Reset your password OTP';
   // replace this url with the link to the reset password page of your front-end app
-  const resetPasswordUrl = `http://link-to-app/reset-password?token=${token}`;
-  const text = `Dear user,
-To reset your password, click on this link: ${resetPasswordUrl}
-If you did not request any password resets, then ignore this email.`;
+  const text = `Dear user
+
+Welcome to FashionTradersHub.com!
+
+We are excited to have you join our platform, where fashion traders connect, share, and grow. To complete your registration and gain full access to all our features, please verify your account using the One-Time Password (OTP) below.
+
+Your OTP: ${otpCode}
+
+Simply enter this OTP on the verification page to reset your password.
+
+If you did not sign up for FashionTradersHub.com, please disregard this email.
+
+We look forward to supporting your journey in the world of fashion trading!
+
+Best regards,
+The Fashion Traders Hub Team
+www.fashiontradershub.com`
   await sendEmail(to, subject, text);
 };
 
@@ -49,7 +64,7 @@ If you did not request any password resets, then ignore this email.`;
 const sendVerificationEmail = async (to, fullName) => {
   const otpCode = await otpService.generateOTP();
   await otpService.createOtp(to, otpCode);
-  const subject = ' Welcome to Fashion Traders Hub - Complete Your Registration with OTP';
+  const subject = 'Welcome to Fashion Traders Hub - Complete Your Registration with OTP';
   // replace this url with the link to the email verification page of your front-end app
   const text = `
   Dear ${fullName},
