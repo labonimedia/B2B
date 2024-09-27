@@ -6,21 +6,23 @@ const otpService = require('./otp.service');
 
 const smtpConfig = {
   host: 'smtp.secureserver.net',
-  port: 465,
-  secure: true, // true for 465, false for other ports
+  port: 587,
+  secure: false, // true for 465, false for other ports
   auth: {
     user: 'noreply@fashiontradershub.com',
     pass: 'Goodwill#120', // Hardcoded password
   },
+  logger: true,
+  debug: true,
 };
 const transport = nodemailer.createTransport(smtpConfig);
 /* istanbul ignore next */
-if (config.env !== 'test') {
+// if (config.env !== 'test') {
   transport
     .verify()
     .then(() => logger.info('Connected to email server'))
     .catch(() => logger.warn('Unable to connect to email server. Make sure you have configured the SMTP options in .env'));
-}
+// }
 
 /**
  * Send an email
@@ -33,6 +35,13 @@ const sendEmail = async (to, subject, text) => {
   const msg = { from: config.email.from, to, subject, text };
   await transport.sendMail(msg);
 };
+sendEmail('bhusnarsd@gmail.com', 'Test Subject', 'Test Email Body')
+  .then((data) => {
+    console.log('Email sent successfully:', data);
+  })
+  .catch((err) => {
+    console.error('Error sending email:', err);
+  });
 
 /**
  * Send reset password email
@@ -64,6 +73,8 @@ The Fashion Traders Hub Team
 www.fashiontradershub.com`
   await sendEmail(to, subject, text);
 };
+
+
 
 /**
  * Send verification email
