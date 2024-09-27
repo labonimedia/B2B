@@ -278,192 +278,195 @@
 
 
 
-[
-    {
-        "SizeType": "Size set",
-        "sizeChart": [
-            "Standard Size",
-            "Brand Size",
-            "Chest Size",
-            "Shoulder Size",
-            "Front Length",
-            "Length",
-            "Width",
-            "Height",
-            "Weight",
-            "Manufacturer's Price",
-            "MRP"
-        ],
-        "Sizes": [
-            {
-                "wordSize": "5XS",
-            },
-            {
-                "wordSize": "4XS",
-            },
-            {
-                "wordSize": "3XS",
-            },
-            {
-                "wordSize": "2XS",
-            },
-            {
-                "wordSize": "XS",
-            },
-            {
-                "size": 36,
-                "wordSize": "S",
-            },
-            {
-                "size": 38,
-                "wordSize": "M",
-            },
-            {
-                "size": 40,
-                "wordSize": "L",
-            },
-            {
-                "size": 42,
-                "wordSize": "XL",
-            },
-            {
-                "size": 44,
-                "wordSize": "2XL",
-            },
-            {
-                "size": 46,
-                "wordSize": "3XL",
-            },
-            {
-                "size": 48,
-                "wordSize": "4XL",
-            },
-            {
-                "size": 50,
-                "wordSize": "5XL",
-            },
-            {
-                "size": 52,
-                "wordSize": "6XL",
-            },
-            {
-                "size": 54,
-                "wordSize": "7XL",
-            },
-            {
-                "size": 56,
-                "wordSize": "8XL",
-            },
-            {
-                "wordSize": "Free",
-            }
-        ]
-    },
-    {
-        "sizeType": "Waist Size Set",
-        "sizeChart": [  
-        "Standard Size",
-        "Brand Size",
-        "Waist Size Set (Standard Size)",
-        "Waist (in)",
-        "Inseam (in)",
-        "Length (in)",
-        "Rise (in)",
-        "Length",
-        "Width",
-        "Height",
-        "Weight",
-        "Manufacturer's Price",
-        "MRP"],
-        "Sizes": [
-            {
-                "size": 22,
-            },
-            {
-                "size": 23,
-            },
-            {
-                "size": 24,
-            }
-            {
-                "size": 25,
-            },
-            {
-                "size": 26,
-            },
-            {
-                "size": 27,
-            }
-            {
-                "size": 28,
-            },
-            {
-                "size": 29,
-            },
-            {
-                "size": 30,
-            }
-            {
-                "size": 31,
-            },
-            {
-                "size": 32,
-            },
-            {
-                "size": 33,
-            }
-            {
-                "size": 34,
-            },
-            {
-                "size": 35,
-            },
-            {
-                "size": 36,
-            }
+// [
+//     {
+//         "SizeType": "Size set",
+//         "sizeChart": [
+//             "Standard Size",
+//             "Brand Size",
+//             "Chest Size",
+//             "Shoulder Size",
+//             "Front Length",
+//             "Neck Size"
+//             "Length",
+//             "Width",
+//             "Height",
+//             "Weight",
+//             "W/S Price",
+//             "Rtl Price",
+//             "MRP"
+//         ],
+//         "Sizes": [
+//             {
+//                 "wordSize": "5XS",
+//             },
+//             {
+//                 "wordSize": "4XS",
+//             },
+//             {
+//                 "wordSize": "3XS",
+//             },
+//             {
+//                 "wordSize": "2XS",
+//             },
+//             {
+//                 "wordSize": "XS",
+//             },
+//             {
+//                 "size": 36,
+//                 "wordSize": "S",
+//             },
+//             {
+//                 "size": 38,
+//                 "wordSize": "M",
+//             },
+//             {
+//                 "size": 40,
+//                 "wordSize": "L",
+//             },
+//             {
+//                 "size": 42,
+//                 "wordSize": "XL",
+//             },
+//             {
+//                 "size": 44,
+//                 "wordSize": "2XL",
+//             },
+//             {
+//                 "size": 46,
+//                 "wordSize": "3XL",
+//             },
+//             {
+//                 "size": 48,
+//                 "wordSize": "4XL",
+//             },
+//             {
+//                 "size": 50,
+//                 "wordSize": "5XL",
+//             },
+//             {
+//                 "size": 52,
+//                 "wordSize": "6XL",
+//             },
+//             {
+//                 "size": 54,
+//                 "wordSize": "7XL",
+//             },
+//             {
+//                 "size": 56,
+//                 "wordSize": "8XL",
+//             },
+//             {
+//                 "wordSize": "Free",
+//             }
+//         ]
+//     },
+//     {
+//         "sizeType": "Waist Size Set",
+//         "sizeChart": [  
+//         "Standard Size",
+//         "Brand Size",
+//         "Waist Size Set (Standard Size)",
+//         "Waist (in)",
+//         "Inseam (in)",
+//         "Length (in)",
+//         "Rise (in)",
+//         "Length",
+//         "Width",
+//         "Height",
+//         "Weight",
+//         "W/S Price",
+//         "Rtl Price",
+//         "MRP"],    "Manufacturer's Price",
+//         "Sizes": [
+//             {
+//                 "size": 22,
+//             },
+//             {
+//                 "size": 23,
+//             },
+//             {
+//                 "size": 24,
+//             }
+//             {
+//                 "size": 25,
+//             },
+//             {
+//                 "size": 26,
+//             },
+//             {
+//                 "size": 27,
+//             }
+//             {
+//                 "size": 28,
+//             },
+//             {
+//                 "size": 29,
+//             },
+//             {
+//                 "size": 30,
+//             }
+//             {
+//                 "size": 31,
+//             },
+//             {
+//                 "size": 32,
+//             },
+//             {
+//                 "size": 33,
+//             }
+//             {
+//                 "size": 34,
+//             },
+//             {
+//                 "size": 35,
+//             },
+//             {
+//                 "size": 36,
+//             }
 
-            {
-                "size": 37,
-            },
-            {
-                "size": 38,
-            },
-            {
-                "size": 39,
-            },
-            {
-                "size": 40,
-            },
-            {
-                "size": 41,
-            },
-            {
-                "size": 42,
-            }
-            {
-                "size": 43,
-            },
-            {
-                "size": 44,
-            },
-            {
-                "size": 45,
-            }
-            {
-                "size": 46,
-            },
-            {
-                "size": 47,
-            },
-            {
-                "size": 48,
-            }
-            {
-                "size": 49,
-            },
-            {
-                "size": 50,
-            }
-        ],
-    }
-]
+//             {
+//                 "size": 37,
+//             },
+//             {
+//                 "size": 38,
+//             },
+//             {
+//                 "size": 39,
+//             },
+//             {
+//                 "size": 40,
+//             },
+//             {
+//                 "size": 41,
+//             },
+//             {
+//                 "size": 42,
+//             }
+//             {
+//                 "size": 43,
+//             },
+//             {
+//                 "size": 44,
+//             },
+//             {
+//                 "size": 45,
+//             }
+//             {
+//                 "size": 46,
+//             },
+//             {
+//                 "size": 47,
+//             },
+//             {
+//                 "size": 48,
+//             }
+//             {
+//                 "size": 49,
+//             },
+//             {
+//                 "size": 50,
+//             }
+//         ],
+//     }
+// ]

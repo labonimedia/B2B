@@ -107,34 +107,34 @@ const getProductBydesigneNo = async (designNumber, productBy) => {
  * @returns {Promise<Product>}
  */
 const updateProductById = async (id, updateBody) => {
-  // Fetch the product by ID
   const product = await getProductById(id);
   if (!product) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Product not found');
   }
 
-  // Handle quantity update if 'newQuantity' is provided in the request
   if (updateBody.newQuantity !== undefined) {
-    // Check if the new quantity is valid (e.g., non-negative)
+    const updatedDate = updateBody.updatedDate ? updateBody.updatedDate : new Date();
+
     if (updateBody.newQuantity < 0 && product.quantity + updateBody.newQuantity < 0) {
       throw new ApiError(httpStatus.BAD_REQUEST, 'Quantity cannot be negative');
     }
-    // Update the product quantity
+    product.quantitySummary.push({
+      newQuantity: updateBody.newQuantity,
+      updatedDate: updatedDate,
+    });
     product.quantity += Number(updateBody.newQuantity);
   }
 
-  // Merge other fields into the product document
   const fieldsToUpdate = { ...updateBody };
-  delete fieldsToUpdate.newQuantity; // Remove newQuantity as it's already handled
+  delete fieldsToUpdate.newQuantity;
+  delete fieldsToUpdate.updatedDate;
 
-  // Assign other update fields to the product
   Object.assign(product, fieldsToUpdate);
-
-  // Save the updated product
   await product.save();
-
   return product;
 };
+
+
 
 
 
