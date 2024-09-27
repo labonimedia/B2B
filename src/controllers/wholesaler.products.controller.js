@@ -72,14 +72,36 @@ const deleteProductById = catchAsync(async (req, res) => {
   res.status(httpStatus.NO_CONTENT).send();
 });
 
+// const searchWholesalerProducts = catchAsync(async (req, res) => {
+//   const filter = {};
+//   const options = {};
+//   // Extract filter parameters from req.body
+//   if (req.body.brand) {
+//     filter.brand = req.body.brand;
+//   }
+//   // Extract pagination options from req.query
+//   if (req.query.sortBy) {
+//     options.sortBy = req.query.sortBy;
+//   }
+//   if (req.query.limit) {
+//     options.limit = parseInt(req.query.limit, 10);
+//   }
+//   if (req.query.page) {
+//     options.page = parseInt(req.query.page, 10);
+//   }
+//   const result = await wholesalerProductsService.searchWholesalerProductsByBrand(filter, options);
+//   res.status(httpStatus.OK).send(result);
+// });
 const searchWholesalerProducts = catchAsync(async (req, res) => {
   const filter = {};
   const options = {};
-  // Extract filter parameters from req.body
+
+  // If the brand is provided, use regex to perform partial matching
   if (req.body.brand) {
-    filter.brand = req.body.brand;
+    filter.brand = { $regex: req.body.brand, $options: 'i' }; // 'i' for case-insensitive
   }
-  // Extract pagination options from req.query
+
+  // Handle pagination options
   if (req.query.sortBy) {
     options.sortBy = req.query.sortBy;
   }
@@ -89,6 +111,7 @@ const searchWholesalerProducts = catchAsync(async (req, res) => {
   if (req.query.page) {
     options.page = parseInt(req.query.page, 10);
   }
+
   const result = await wholesalerProductsService.searchWholesalerProductsByBrand(filter, options);
   res.status(httpStatus.OK).send(result);
 });
