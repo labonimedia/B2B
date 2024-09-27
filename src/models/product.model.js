@@ -113,6 +113,7 @@ const productSchema = mongoose.Schema(
         length: { type: String },
         width: { type: String },
         height: { type: String },
+        weight: { type: String },
       },
     ],
     setOFnetWeight: { type: String },
