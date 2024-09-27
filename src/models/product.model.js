@@ -4,9 +4,16 @@ const { paginate, toJSON } = require('./plugins');
 
 const productSchema = mongoose.Schema(
   {
-    updatedDate: {
-      type: Date,
-    },
+    quantitySummary: [
+      {
+        newQuantity: {
+          type: Number,
+        },
+        updatedDate: {
+          type: Date,
+        },
+      }],
+
     alertStock: {
       type: Number,
     },
@@ -29,7 +36,7 @@ const productSchema = mongoose.Schema(
     designNumber: {
       type: String,
     },
-    initialQTY: {type: Number},
+    initialQTY: { type: Number },
     quantity: { type: Number },
     discount: {
       type: String,
@@ -55,7 +62,7 @@ const productSchema = mongoose.Schema(
     pocketDescription: { type: String },
     sleeveCuffStyle: { type: String },
     sleeveLength: { type: String },
-   
+
     careInstructions: { type: String },
     country: { type: String },
     city: { type: String },
@@ -88,13 +95,13 @@ const productSchema = mongoose.Schema(
     embellishmentFeature: { type: String },
     itemStyle: { type: String },
     waistType: { type: String },
-    waistRise: { type: String},
-    weaveType: { type: String},
+    waistRise: { type: String },
+    weaveType: { type: String },
     ethnicDesign: { type: String },
     sareeStyle: { type: String },
     apparelSilhouette: { type: String },
-    bottomIncluded: {type: String},
-    ethnicBottomsStyle: { type: String},
+    bottomIncluded: { type: String },
+    ethnicBottomsStyle: { type: String },
     womenStyle: { type: String },
     gheraInMTR: { type: String },
     finishType: { type: String },
