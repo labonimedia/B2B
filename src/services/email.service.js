@@ -5,18 +5,19 @@ const otpService = require('./otp.service');
 
 
 const smtpConfig = {
-  host: 'smtp.secureserver.net', // GoDaddy SMTP server
-  port: 587, // TLS port
-  secure: false, // false for TLS (587)
+  host: 'smtp.secureserver.net',
+  port: 465, // SSL port
+  secure: true,
   auth: {
     user: 'noreply@fashiontradershub.com',
-    pass: 'Goodwill#120', // Your email password
+    pass: 'Goodwill#120',
   },
-  tls: {
-    // Do not fail on invalid certs
-    rejectUnauthorized: false,
-  },
+  // Optional timeout settings
+  connectionTimeout: 10000, // 10 seconds
+  greetingTimeout: 10000,
+  socketTimeout: 10000,
 };
+
 const transport = nodemailer.createTransport(smtpConfig,{
   logger: true,
   debug: true,
