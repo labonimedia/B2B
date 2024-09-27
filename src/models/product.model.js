@@ -118,6 +118,7 @@ const productSchema = mongoose.Schema(
     setOFnetWeight: { type: String },
     setOfMRP: { type: String },
     setOfManPrice: { type: String },
+    
     sizes: [
       {
         standardSize: {
@@ -131,6 +132,9 @@ const productSchema = mongoose.Schema(
         },
         shoulderSize: {
           type: String,
+        },
+        neckSize: {
+          type: String
         },
         frontLength: {
           type: String,
@@ -155,6 +159,7 @@ const productSchema = mongoose.Schema(
         height: { type: String },
         weight: { type: String },
         manufacturerPrice: { type: String },
+        RtlPrice: { type: Number},
         singleMRP: { type: String },
       },
     ],

@@ -3,7 +3,17 @@ const config = require('../config/config');
 const logger = require('../config/logger');
 const otpService = require('./otp.service');
 
-const transport = nodemailer.createTransport(config.email.smtp);
+
+const smtpConfig = {
+  host: 'smtp.secureserver.net',
+  port: 465,
+  secure: true, // true for 465, false for other ports
+  auth: {
+    user: 'noreply@fashiontradershub.com',
+    pass: 'Goodwill#120', // Hardcoded password
+  },
+};
+const transport = nodemailer.createTransport(smtpConfig);
 /* istanbul ignore next */
 if (config.env !== 'test') {
   transport
