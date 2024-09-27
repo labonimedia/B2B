@@ -6,7 +6,7 @@ const otpService = require('./otp.service');
 
 const smtpConfig = {
   host: 'smtp.secureserver.net',
-  port: 465, // SSL port
+  port: 587, // SSL port
   secure: true,
   auth: {
     user: 'noreply@fashiontradershub.com',
