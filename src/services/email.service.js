@@ -6,7 +6,7 @@ const otpService = require('./otp.service');
 
 const smtpConfig = {
   host: 'smtp.secureserver.net',
-  port: 465, // SSL port
+  port: 587, // SSL port
   secure: true,
   auth: {
     user: 'noreply@fashiontradershub.com',
@@ -18,7 +18,10 @@ const smtpConfig = {
   socketTimeout: 10000,
 };
 
-const transport = nodemailer.createTransport(config.email.smtp
+const transport = nodemailer.createTransport(smtpConfig,{
+  logger: true,
+  debug: true,
+}
 );
 /* istanbul ignore next */
 // if (config.env !== 'test') {
