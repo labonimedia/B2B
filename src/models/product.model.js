@@ -12,7 +12,8 @@ const productSchema = mongoose.Schema(
         updatedDate: {
           type: Date,
         },
-      }],
+      },
+    ],
 
     alertStock: {
       type: Number,
@@ -76,7 +77,7 @@ const productSchema = mongoose.Schema(
     Waistband: { type: String },
     includedComponents: { type: String },
     riseStyle: { type: String },
-    trouserFitStyle: { type: String },   // is trouser fit type
+    trouserFitStyle: { type: String }, // is trouser fit type
     troursePocket: { type: String },
     trourseRiseStyle: { type: String },
     trourseStyle: { type: String },
@@ -106,20 +107,17 @@ const productSchema = mongoose.Schema(
     gheraInMTR: { type: String },
     finishType: { type: String },
 
-
     sizes: { type: [String], default: [] },
-    ProductDeimension: [
-      {
-        length: { type: String },
-        width: { type: String },
-        height: { type: String },
-        weight: { type: String },
-      },
-    ],
+    ProductDeimension: {
+      length: { type: String },
+      width: { type: String },
+      height: { type: String },
+      weight: { type: String },
+    },
     setOFnetWeight: { type: String },
     setOfMRP: { type: String },
     setOfManPrice: { type: String },
-    
+
     sizes: [
       {
         standardSize: {
@@ -135,7 +133,7 @@ const productSchema = mongoose.Schema(
           type: String,
         },
         neckSize: {
-          type: String
+          type: String,
         },
         frontLength: {
           type: String,
@@ -160,7 +158,7 @@ const productSchema = mongoose.Schema(
         height: { type: String },
         weight: { type: String },
         manufacturerPrice: { type: String },
-        RtlPrice: { type: Number},
+        RtlPrice: { type: Number },
         singleMRP: { type: String },
       },
     ],
@@ -204,7 +202,6 @@ productSchema.index({
   sleeveCuffStyle: 'text',
   sleeveLength: 'text',
   careInstructions: 'text',
-
 
   womenSleeveType: 'text',
   fitType: 'text',
