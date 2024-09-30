@@ -108,7 +108,7 @@ const productSchema = mongoose.Schema(
     finishType: { type: String },
 
     sizes: { type: [String], default: [] },
-    ProductDeimension: {
+    productDimension: {
       length: { type: String },
       width: { type: String },
       height: { type: String },
