@@ -4,6 +4,16 @@ const { paginate, toJSON } = require('./plugins');
 
 const productSchema = mongoose.Schema(
   {
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      // required: true,
+    },
+    subscriptionId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Subscription',
+      // required: true,
+    },
     productDimension: {
       length: { type: String },
       width: { type: String },
