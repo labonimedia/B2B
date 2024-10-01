@@ -3,7 +3,7 @@ const nodemailer = require('nodemailer');
 const smtpConfig = {
     host: 'smtp.secureserver.net',
     port: 587,
-    secure: false, // true for 465, false for other ports
+    secure: true, // true for 465, false for other ports
     auth: {
         user: 'noreply@fashiontradershub.com',
         pass: 'Goodwill#120', // Your email password
