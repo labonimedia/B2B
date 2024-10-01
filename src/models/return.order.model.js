@@ -10,7 +10,6 @@ const returnOrderSchema = mongoose.Schema(
     challanDate: {
       type: Date,
     },
-
     companyAddress: {
       type: String,
     },
