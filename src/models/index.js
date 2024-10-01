@@ -90,3 +90,4 @@ module.exports.Entity = require('./entity.type.model');
 module.exports.SizeSet = require('./size.sets.model');
 module.exports.LayerCompression = require('./layer.compression.model');
 module.exports.WaistBand = require('./waistband.model');
+module.exports.ReturnOrder = require('./return.order.model')
