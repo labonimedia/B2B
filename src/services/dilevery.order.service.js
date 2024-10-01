@@ -9,45 +9,76 @@ const ApiError = require('../utils/ApiError');
  * @returns {Promise<Material>}
  */
 
-const createDileveryOrder = async (reqBody) => {
-  // Start a session to ensure transactional consistency
-  const session = await mongoose.startSession();
-  session.startTransaction();
+// const createDileveryOrder = async (reqBody) => {
+//   // Start a session to ensure transactional consistency
+//   const session = await mongoose.startSession();
+//   session.startTransaction();
 
+//   try {
+//     // Create the delivery order
+//     const newOrder = await DileveryOrder.create([reqBody], { session });
+
+//     // Loop through each product in the order and update the product quantity in the Product collection
+//     for (const orderedProduct of reqBody.products) {
+//       const product = await Product.findOne({ designNumber: orderedProduct.designNo, productBy: reqBody.companyEmail,  }).session(session);
+
+//       if (!product) {
+//         throw new ApiError(httpStatus.NOT_FOUND, `Product with design number ${orderedProduct.designNo} not found`);
+//       }
+
+//       // Check if there's enough stock to fulfill the order
+//       if (product.quantity < orderedProduct.qty) {
+//         throw new ApiError(httpStatus.BAD_REQUEST, `Insufficient quantity for product: ${orderedProduct.designNo}`);
+//       }
+
+//       // Reduce the stock by the ordered quantity
+//       product.quantity -= orderedProduct.qty;
+//       await product.save({ session });
+//     }
+
+//     // Commit the transaction after successfully updating product quantities and creating the order
+//     await session.commitTransaction();
+//     session.endSession();
+
+//     return newOrder[0];
+//   } catch (error) {
+//     // Roll back the transaction in case of any errors
+//     await session.abortTransaction();
+//     session.endSession();
+//     throw error;
+//   }
+// };
+
+const createDileveryOrder = async (reqBody) => {
   try {
     // Create the delivery order
-    const newOrder = await DileveryOrder.create([reqBody], { session });
+    const newOrder = await DileveryOrder.create(reqBody);
 
     // Loop through each product in the order and update the product quantity in the Product collection
     for (const orderedProduct of reqBody.products) {
-      const product = await Product.findOne({ designNumber: orderedProduct.designNo, productBy: reqBody.companyEmail,  }).session(session);
+      const product = await Product.findOne({ 
+        designNumber: orderedProduct.designNo, 
+        productBy: reqBody.companyEmail 
+      });
 
       if (!product) {
         throw new ApiError(httpStatus.NOT_FOUND, `Product with design number ${orderedProduct.designNo} not found`);
       }
 
-      // Check if there's enough stock to fulfill the order
       if (product.quantity < orderedProduct.qty) {
         throw new ApiError(httpStatus.BAD_REQUEST, `Insufficient quantity for product: ${orderedProduct.designNo}`);
       }
 
-      // Reduce the stock by the ordered quantity
       product.quantity -= orderedProduct.qty;
-      await product.save({ session });
+      await product.save();
     }
 
-    // Commit the transaction after successfully updating product quantities and creating the order
-    await session.commitTransaction();
-    session.endSession();
-
-    return newOrder[0];
+    return newOrder;
   } catch (error) {
-    // Roll back the transaction in case of any errors
-    await session.abortTransaction();
-    session.endSession();
     throw error;
   }
 };
+
 // const createDileveryOrder = async (reqBody) => {
 
 //   return DileveryOrder.create(reqBody);
