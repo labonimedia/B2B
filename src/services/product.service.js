@@ -47,6 +47,34 @@ const createProduct = async (reqBody) => {
   return Product.create(reqBody);
 };
 
+const addProduct = async (userId, productData) => {
+  const user = await User.findById(userId).populate('subscriptionId');
+  
+  const subscription = user.subscriptionId;
+
+  // Check if the subscription is active and hasn't expired
+  if (subscription.status === 'expired' || new Date() > subscription.endDate) {
+    throw new Error('Subscription expired, please renew');
+  }
+
+  // Check product limit
+  if (subscription.productsUsed >= subscription.productLimit) {
+    throw new Error('Product limit reached, please purchase more product slots');
+  }
+
+  // Add new product
+  const newProduct = new Product({ ...productData, userId, subscriptionId: subscription._id });
+  await newProduct.save();
+
+  // Update the number of products used in the subscription
+  subscription.productsUsed += 1;
+  await subscription.save();
+
+  return newProduct;
+};
+
+
+
 /**
  * Query for Product
  * @param {Object} filter - Mongo filter

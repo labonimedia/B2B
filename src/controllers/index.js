@@ -77,3 +77,5 @@ module.exports.entityController = require('./entity.type.controller');
 module.exports.sizeSetController = require('./size.set.controller');
 module.exports.layerCompressionController = require('./layer.compression.controller');
 module.exports.waistBandController = require('./waistband.controller');
+module.exports.subscriptionController = require('./subscription.controller');
+module.exports.subscriptionPlanController = require('./subscription.plan.controller');
