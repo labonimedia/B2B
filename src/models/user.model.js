@@ -5,6 +5,12 @@ const { toJSON, paginate } = require('./plugins');
 
 const userSchema = mongoose.Schema(
   {
+    userCategory: {
+      type: String,
+      required: true,
+      default: 'type1',
+      enum: ['setwise', 'orderwise'],
+    },
     subscriptionId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Subscription',

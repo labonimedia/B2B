@@ -83,6 +83,9 @@ const waistBandRoute = require('./waistband.route');
 const subscriptionRoute = require('./subsription.route');
 const subscriptionPlanRoute = require('./subscription.plan.route');
 
+
+const type2Produnct = require('./type2.routes/product.route');
+
 const router = express.Router();
 
 const defaultRoutes = [
@@ -411,8 +414,18 @@ const defaultRoutes = [
   {
     path: '/subscription-plan',
     route: subscriptionPlanRoute,
-  }
+  },
   
+
+
+
+
+
+  // routes for type2 products
+  {
+path: '/type2-products',
+route: type2Produnct,
+  }
 ];
 
 const devRoutes = [

@@ -93,3 +93,4 @@ module.exports.WaistBand = require('./waistband.model');
 module.exports.ReturnOrder = require('./return.order.model');
 module.exports.Subscription = require('./subscription.model')
 module.exports.SubscriptionPlan = require('./subcription.plan.model')
+module.exports.ProductType2 = require('./type2.models/product.model');
