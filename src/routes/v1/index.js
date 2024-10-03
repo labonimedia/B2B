@@ -80,6 +80,12 @@ const entitytypeRoute = require('./entity.type.route');
 const sizeSetRoute = require('./size.set.route');
 const layerCompressionRoute = require('./layer.compression.route');
 const waistBandRoute = require('./waistband.route');
+const subscriptionRoute = require('./subsription.route');
+const subscriptionPlanRoute = require('./subscription.plan.route');
+
+
+const type2Produnct = require('./type2.routes/product.route');
+
 const router = express.Router();
 
 const defaultRoutes = [
@@ -401,7 +407,25 @@ const defaultRoutes = [
     path: '/waistband',
     route: waistBandRoute,
   },
+  {
+    path: '/subscription',
+    route: subscriptionRoute,
+  },
+  {
+    path: '/subscription-plan',
+    route: subscriptionPlanRoute,
+  },
   
+
+
+
+
+
+  // routes for type2 products
+  {
+path: '/type2-products',
+route: type2Produnct,
+  }
 ];
 
 const devRoutes = [

@@ -1,25 +1,22 @@
 const httpStatus = require('http-status');
-const { Product, Manufacture } = require('../models');
-const ApiError = require('../utils/ApiError');
-const { deleteFile } = require('../utils/upload');
+const { ProductType2, Manufacture } = require('../../models');
+const ApiError = require('../../utils/ApiError');
+const { deleteFile } = require('../../utils/upload');
 
 /**
  * fileupload
  * @param {Object} reqBody
- * @returns {Promise<Product>}
+ * @returns {Promise<ProductType2>}
  */
 const fileupload = async (req, productId) => {
-  const product = await Product.findById(productId);
+  const product = await ProductType2.findById(productId);
 
   if (!product) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Product not found');
+    throw new ApiError(httpStatus.NOT_FOUND, 'ProductType2 not found');
   }
-
   const { colour, colourName } = req.body;
-
   // Helper function to extract path from URL
   const extractPath = (url) => new URL(url).pathname;
-
   // Extract and trim file paths from req.body
   const colourImage = req.body.colourImage ? extractPath(req.body.colourImage[0]) : null;
   const productImages = req.body.productImages ? req.body.productImages.map(extractPath) : [];
@@ -38,13 +35,13 @@ const fileupload = async (req, productId) => {
 };
 
 /**
- * Create a Product
+ * Create a ProductType2
  * @param {Object} reqBody
- * @returns {Promise<Product>}
+ * @returns {Promise<ProductType2>}
  */
 const createProduct = async (reqBody) => {
   if(reqBody.quantity) reqBody.initialQTY = reqBody.quantity
-  return Product.create(reqBody);
+  return ProductType2.create(reqBody);
 };
 
 const addProduct = async (userId, productData) => {
@@ -63,7 +60,7 @@ const addProduct = async (userId, productData) => {
   }
 
   // Add new product
-  const newProduct = new Product({ ...productData, userId, subscriptionId: subscription._id });
+  const newProduct = new ProductType2({ ...productData, userId, subscriptionId: subscription._id });
   await newProduct.save();
 
   // Update the number of products used in the subscription
@@ -76,7 +73,7 @@ const addProduct = async (userId, productData) => {
 
 
 /**
- * Query for Product
+ * Query for ProductType2
  * @param {Object} filter - Mongo filter
  * @param {Object} options - Query options
  * @param {string} [options.sortBy] - Sort option in the format: sortField:(desc|asc)
@@ -85,7 +82,7 @@ const addProduct = async (userId, productData) => {
  * @returns {Promise<QueryResult>}
  */
 const queryProduct = async (filter, options) => {
-  const Products = await Product.paginate(filter, options);
+  const Products = await ProductType2.paginate(filter, options);
   return Products;
 };
 
@@ -106,33 +103,33 @@ const searchProducts = async (filter, options) => {
     delete filter.search;
   }
 
-  const products = await Product.paginate(filter, options);
+  const products = await ProductType2.paginate(filter, options);
   return products;
 };
 
 /**
- * Get Product by id
+ * Get ProductType2 by id
  * @param {ObjectId} id
- * @returns {Promise<Product>}
+ * @returns {Promise<ProductType2>}
  */
 const getProductById = async (id) => {
-  return Product.findById(id);
+  return ProductType2.findById(id);
 };
 
 /**
- * Get Product by id
+ * Get ProductType2 by id
  * @param {ObjectId} id
- * @returns {Promise<Product>}
+ * @returns {Promise<ProductType2>}
  */
 const getProductBydesigneNo = async (designNumber, productBy) => {
-  return Product.findOne({ designNumber, productBy });
+  return ProductType2.findOne({ designNumber, productBy });
 };
 
 /**
- * Update Product by id
+ * Update ProductType2 by id
  * @param {ObjectId} Id
  * @param {Object} updateBody
- * @returns {Promise<Product>}
+ * @returns {Promise<ProductType2>}
  */
 const updateProductById = async (id, updateBody) => {
   const product = await getProductById(id);
@@ -181,13 +178,13 @@ const deleteProductById = async (id) => {
 };
 
 /**
- * Update Product by id
+ * Update ProductType2 by id
  * @param {ObjectId} Id
  * @param {Object} updateBody
- * @returns {Promise<Product>}
+ * @returns {Promise<ProductType2>}
  */
 const updateColorCollection = async (req, productId) => {
-  const product = await Product.findById(productId);
+  const product = await ProductType2.findById(productId);
 
   if (!product) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Product not found');
@@ -221,10 +218,10 @@ const updateColorCollection = async (req, productId) => {
 /**
  * Delete user by id
  * @param {ObjectId} Id
- * @returns {Promise<Product>}
+ * @returns {Promise<ProductType2>}
  */
 const deleteColorCollection = async (productId, collectionId) => {
-  const product = await Product.findById(productId);
+  const product = await ProductType2.findById(productId);
 
   if (!product) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Product not found');
@@ -295,7 +292,7 @@ const filterProductsAndFetchManufactureDetails = async (filters) => {
   }
 
   // Get filtered products
-  const products = await Product.find(query);
+  const products = await ProductType2.find(query);
 
   // Fetch manufacturer details for each product
   const productManufacturers = await Promise.all(

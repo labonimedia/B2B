@@ -80,3 +80,6 @@ module.exports.entityService = require('./entity.type.service');
 module.exports.sizeSetService = require('./size.set.service');
 module.exports.layerCompressionService = require('./layer.compression.service');
 module.exports.waistBandService = require('./waistband.service');
+module.exports.subcriptionService = require('./subscription.service');
+module.exports.subscriptionPlanService = require('./subscription.plan.service');
+module.exports.productType2Service = require('./type2.services/product.service');
