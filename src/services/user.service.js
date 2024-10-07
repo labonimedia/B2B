@@ -31,7 +31,7 @@ const createUser = async (userBody) => {
   // Increment the sequence for the corresponding role
   const counter = await Counter.findOneAndUpdate({ role: userBody.role }, { $inc: { seq: 1 } }, { new: true, upsert: true });
 
-  // Assign the generated code to the userBody
+  // Assign the generated ccode to userBody
   // eslint-disable-next-line no-param-reassign
   userBody.code = `${prefix}${String(counter.seq).padStart(4, '0')}`;
 
