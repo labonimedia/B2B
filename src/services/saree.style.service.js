@@ -5,7 +5,7 @@ const ApiError = require('../utils/ApiError');
 /**
  * Create a Sareetyle
  * @param {Object} reqBody
- * @returns {Promise<Sareetyle>}
+ * @returns {Promise<SareeStyle>}
  */
 const createSareetyle = async (reqBody) => {
   return SareeStyle.create(reqBody);
@@ -21,17 +21,17 @@ const createSareetyle = async (reqBody) => {
  * @returns {Promise<QueryResult>}
  */
 const querySareetyle = async (filter, options) => {
-  const sareetyles = await Sareetyle.paginate(filter, options);
+  const sareetyles = await SareeStyle.paginate(filter, options);
   return sareetyles;
 };
 
 /**
  * Get Sareetyle by id
  * @param {ObjectId} id
- * @returns {Promise<Sareetyle>}
+ * @returns {Promise<SareeStyle>}
  */
 const getSareetyleById = async (id) => {
-  return Sareetyle.findById(id);
+  return SareeStyle.findById(id);
 };
 
 /**
