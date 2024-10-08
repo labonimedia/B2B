@@ -8,7 +8,7 @@ const ApiError = require('../utils/ApiError');
  * @returns {Promise<SubscriptionPlan>}
  */
 const createSubscriptionPlan = async (reqBody) => {
-    return SubscriptionPlan.create(reqBody);
+  return SubscriptionPlan.create(reqBody);
 };
 
 /**
@@ -21,8 +21,8 @@ const createSubscriptionPlan = async (reqBody) => {
  * @returns {Promise<QueryResult>}
  */
 const querySubscriptionPlan = async (filter, options) => {
-    const topType = await SubscriptionPlan.paginate(filter, options);
-    return topType;
+  const topType = await SubscriptionPlan.paginate(filter, options);
+  return topType;
 };
 
 /**
@@ -31,7 +31,7 @@ const querySubscriptionPlan = async (filter, options) => {
  * @returns {Promise<SubscriptionPlan>}
  */
 const getSubscriptionPlanById = async (id) => {
-    return SubscriptionPlan.findById(id);
+  return SubscriptionPlan.findById(id);
 };
 
 /**
@@ -41,13 +41,13 @@ const getSubscriptionPlanById = async (id) => {
  * @returns {Promise<SubscriptionPlan>}
  */
 const updateSubscriptionPlanById = async (id, updateBody) => {
-    const user = await getSubscriptionPlanById(id);
-    if (!user) {
-        throw new ApiError(httpStatus.NOT_FOUND, 'SubscriptionPlan not found');
-    }
-    Object.assign(user, updateBody);
-    await user.save();
-    return user;
+  const user = await getSubscriptionPlanById(id);
+  if (!user) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'SubscriptionPlan not found');
+  }
+  Object.assign(user, updateBody);
+  await user.save();
+  return user;
 };
 
 /**
@@ -56,18 +56,18 @@ const updateSubscriptionPlanById = async (id, updateBody) => {
  * @returns {Promise<SubscriptionPlan>}
  */
 const deleteSubscriptionPlanById = async (id) => {
-    const user = await getSubscriptionPlanById(id);
-    if (!user) {
-        throw new ApiError(httpStatus.NOT_FOUND, 'SubscriptionPlan not found');
-    }
-    await user.remove();
-    return user;
+  const user = await getSubscriptionPlanById(id);
+  if (!user) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'SubscriptionPlan not found');
+  }
+  await user.remove();
+  return user;
 };
 
 module.exports = {
-    createSubscriptionPlan,
-    querySubscriptionPlan,
-    getSubscriptionPlanById,
-    updateSubscriptionPlanById,
-    deleteSubscriptionPlanById,
+  createSubscriptionPlan,
+  querySubscriptionPlan,
+  getSubscriptionPlanById,
+  updateSubscriptionPlanById,
+  deleteSubscriptionPlanById,
 };

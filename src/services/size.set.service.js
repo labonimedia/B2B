@@ -40,7 +40,7 @@ const getSizeSetById = async (id) => {
  * @returns {Promise<SizeSet>}
  */
 const getSizeSetByType = async (sizeType) => {
-  return SizeSet.findOne({sizeType});
+  return SizeSet.findOne({ sizeType });
 };
 
 /**

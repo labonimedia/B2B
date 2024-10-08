@@ -1,5 +1,5 @@
 const httpStatus = require('http-status');
-const { ProductType2, Manufacture } = require('../../models');
+const { ProductType2, Manufacture, User } = require('../../models');
 const ApiError = require('../../utils/ApiError');
 const { deleteFile } = require('../../utils/upload');
 
@@ -40,13 +40,13 @@ const fileupload = async (req, productId) => {
  * @returns {Promise<ProductType2>}
  */
 const createProduct = async (reqBody) => {
-  if(reqBody.quantity) reqBody.initialQTY = reqBody.quantity
+  if (reqBody.quantity) reqBody.initialQTY = reqBody.quantity;
   return ProductType2.create(reqBody);
 };
 
 const addProduct = async (userId, productData) => {
   const user = await User.findById(userId).populate('subscriptionId');
-  
+
   const subscription = user.subscriptionId;
 
   // Check if the subscription is active and hasn't expired
@@ -70,8 +70,6 @@ const addProduct = async (userId, productData) => {
   return newProduct;
 };
 
-
-
 /**
  * Query for ProductType2
  * @param {Object} filter - Mongo filter
@@ -85,7 +83,6 @@ const queryProduct = async (filter, options) => {
   const Products = await ProductType2.paginate(filter, options);
   return Products;
 };
-
 
 /**
  * Query for products
@@ -141,10 +138,6 @@ const updateProductById = async (id, updateBody) => {
   await product.save();
   return product;
 };
-
-
-
-
 
 /**
  * Delete user by id
