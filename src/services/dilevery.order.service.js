@@ -1,5 +1,4 @@
 const httpStatus = require('http-status');
-const mongoose = require('mongoose');
 const { DileveryOrder, Manufacture, ChallanCounter, Product } = require('../models');
 const ApiError = require('../utils/ApiError');
 
@@ -56,9 +55,9 @@ const createDileveryOrder = async (reqBody) => {
 
     // Loop through each product in the order and update the product quantity in the Product collection
     for (const orderedProduct of reqBody.products) {
-      const product = await Product.findOne({ 
-        designNumber: orderedProduct.designNo, 
-        productBy: reqBody.companyEmail 
+      const product = await Product.findOne({
+        designNumber: orderedProduct.designNo,
+        productBy: reqBody.companyEmail,
       });
 
       if (!product) {

@@ -35,7 +35,7 @@ const deleteSubscriptionById = catchAsync(async (req, res) => {
 });
 
 module.exports = {
-    createSubscription,
+  createSubscription,
   querySubscription,
   getSubscriptionById,
   updateSubscriptionById,

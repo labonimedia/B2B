@@ -25,8 +25,8 @@ const getMappingById = catchAsync(async (req, res) => {
 });
 
 const getMappingByQuery = catchAsync(async (req, res) => {
-  const {productType,gender,category, subCategory} = req.body;
-  const user = await mappingService.getMappingByQuery(productType,gender,category, subCategory);
+  const { productType, gender, category, subCategory } = req.body;
+  const user = await mappingService.getMappingByQuery(productType, gender, category, subCategory);
   if (!user) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Mapping not found');
   }

@@ -35,7 +35,7 @@ const productSchema = mongoose.Schema(
     discount: {
       type: String,
     },
-    quantity: { type: Number },
+    // quantity: { type: Number },
     brand: { type: String },
     productType: { type: String },
     gender: { type: String },
@@ -101,7 +101,7 @@ const productSchema = mongoose.Schema(
     finishType: { type: String },
 
     // sizes: { type: [String], default: [] },
-  
+
     sizes: [
       {
         standardSize: {
@@ -158,14 +158,14 @@ const productSchema = mongoose.Schema(
       },
     ],
     inventory: [
-        {
-            colourName: { type: String },
-            colourImage: { type: String },
-            colour: { type: String },
-            quantity: { type: Number },
-            size: { type: String }
-        }
-      ]
+      {
+        colourName: { type: String },
+        colourImage: { type: String },
+        colour: { type: String },
+        quantity: { type: Number },
+        size: { type: String },
+      },
+    ],
   },
   {
     timestamps: true,

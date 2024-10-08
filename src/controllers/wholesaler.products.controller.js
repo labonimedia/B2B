@@ -143,8 +143,8 @@ const getUniqueBrands = catchAsync(async (req, res) => {
 
 const filterWholesalerProducts = catchAsync(async (req, res) => {
   const filters = req.body; // Filters will be passed in the request body
-  const page = parseInt(req.query.page) || 1; // Default page is 1
-  const limit = parseInt(req.query.limit) || 10; // Default limit is 10
+  const page = parseInt(req.query.page, 10) || 1; // Default page is 1
+  const limit = parseInt(req.query.limit, 10) || 10; // Default limit is 10
 
   const products = await wholesalerProductsService.productTypeFilter(filters, page, limit);
 

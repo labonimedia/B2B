@@ -29,7 +29,7 @@ const wholesalerProductSchema = mongoose.Schema(
     discount: {
       type: String,
     },
-    quantity: { type: Number },
+    // quantity: { type: Number },
     brand: { type: String },
     productType: { type: String },
     gender: { type: String },
@@ -82,13 +82,13 @@ const wholesalerProductSchema = mongoose.Schema(
     embellishmentFeature: { type: String },
     itemStyle: { type: String },
     waistType: { type: String },
-    waistRise: { type: String},
-    weaveType: { type: String},
+    waistRise: { type: String },
+    weaveType: { type: String },
     ethnicDesign: { type: String },
     sareeStyle: { type: String },
     apparelSilhouette: { type: String },
-    bottomIncluded: {type: String},
-    ethnicBottomsStyle: { type: String},
+    bottomIncluded: { type: String },
+    ethnicBottomsStyle: { type: String },
     womenStyle: { type: String },
     gheraInMTR: { type: String },
     finishType: { type: String },
@@ -120,7 +120,8 @@ const wholesalerProductSchema = mongoose.Schema(
         },
         frontLength: {
           type: String,
-        },        waistSizeSetStandardSize: {
+        },
+        waistSizeSetStandardSize: {
           type: String,
         },
         waist: {

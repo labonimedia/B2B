@@ -6,7 +6,7 @@ const router = express.Router();
 
 router
   .route('/filter-subcategory')
-  .post(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), mappingController.getMappingByQuery)
+  .post(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), mappingController.getMappingByQuery);
 router
   .route('/')
   .post(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), mappingController.createMapping)
@@ -19,8 +19,6 @@ router
   .delete(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), mappingController.deleteMappingById);
 
 module.exports = router;
-
-
 
 // {{B2B}}mapping?productType=Clothing&gender=Men&category=T-shirts %26 Polos&subCategory=T-Shirts
 

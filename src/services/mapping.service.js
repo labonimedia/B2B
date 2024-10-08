@@ -34,14 +34,13 @@ const getMappingById = async (id) => {
   return Mapping.findById(id);
 };
 
-
 /**
  * Get Material by id
  * @param {ObjectId} id
  * @returns {Promise<Material>}
  */
-const getMappingByQuery = async (productType,gender,category, subCategory) => {
-  return Mapping.find({productType,gender,category, subCategory});
+const getMappingByQuery = async (productType, gender, category, subCategory) => {
+  return Mapping.find({ productType, gender, category, subCategory });
 };
 
 /**
