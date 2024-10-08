@@ -129,13 +129,6 @@ const productSchema = mongoose.Schema(
     finishType: { type: String },
 
     sizes: { type: [String], default: [] },
-    // productDimension: {
-    //   length: { type: String },
-    //   width: { type: String },
-    //   height: { type: String },
-    //   weight: { type: String },
-    // },
-
     setOFnetWeight: { type: String },
     setOfMRP: { type: String },
     setOfManPrice: { type: String },

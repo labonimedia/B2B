@@ -145,7 +145,7 @@ const updateProductById = async (id, updateBody) => {
     }
     product.quantitySummary.push({
       newQuantity: updateBody.newQuantity,
-      updatedDate: updatedDate,
+      updatedDate,
     });
     product.quantity += Number(updateBody.newQuantity);
   }
