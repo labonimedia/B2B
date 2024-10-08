@@ -151,7 +151,7 @@ const updateProductById = async (id, updateBody) => {
   //   delete fieldsToUpdate.newQuantity;
   //   delete fieldsToUpdate.updatedDate;
 
-  Object.assign(product, fieldsToUpdate);
+  Object.assign(product, updateBody);
   await product.save();
   return product;
 };
