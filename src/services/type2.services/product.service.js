@@ -137,23 +137,6 @@ const updateProductById = async (id, updateBody) => {
     throw new ApiError(httpStatus.NOT_FOUND, 'Product not found');
   }
 
-//   if (updateBody.newQuantity !== undefined) {
-//     const updatedDate = updateBody.updatedDate ? updateBody.updatedDate : new Date();
-
-//     if (updateBody.newQuantity < 0 && product.quantity + updateBody.newQuantity < 0) {
-//       throw new ApiError(httpStatus.BAD_REQUEST, 'Quantity cannot be negative');
-//     }
-//     product.quantitySummary.push({
-//       newQuantity: updateBody.newQuantity,
-//       updatedDate: updatedDate,
-//     });
-//     product.quantity += Number(updateBody.newQuantity);
-//   }
-
-//   const fieldsToUpdate = { ...updateBody };
-//   delete fieldsToUpdate.newQuantity;
-//   delete fieldsToUpdate.updatedDate;
-
   Object.assign(product, updateBody);
   await product.save();
   return product;
