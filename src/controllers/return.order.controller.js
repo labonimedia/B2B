@@ -10,7 +10,7 @@ const createReturnOrder = catchAsync(async (req, res) => {
 });
 
 const queryReturnOrder = catchAsync(async (req, res) => {
-  const filter = pick(req.query, ['name', "companyEmail"]);
+  const filter = pick(req.query, ['name', 'companyEmail']);
   const options = pick(req.query, ['sortBy', 'limit', 'page']);
   const result = await returnOrderService.queryReturnOrder(filter, options);
   res.send(result);

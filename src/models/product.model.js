@@ -63,7 +63,7 @@ const productSchema = mongoose.Schema(
     discount: {
       type: String,
     },
-    quantity: { type: Number },
+    // quantity: { type: Number },
     brand: { type: String },
     productType: { type: String },
     gender: { type: String },
@@ -135,7 +135,7 @@ const productSchema = mongoose.Schema(
     //   height: { type: String },
     //   weight: { type: String },
     // },
-  
+
     setOFnetWeight: { type: String },
     setOfMRP: { type: String },
     setOfManPrice: { type: String },

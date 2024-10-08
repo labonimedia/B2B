@@ -1,5 +1,5 @@
 const httpStatus = require('http-status');
-const { Subscription, User } = require('../models');
+const { Subscription, User, SubscriptionPlan, SubscriptionDetails } = require('../models');
 const ApiError = require('../utils/ApiError');
 
 /**
@@ -8,40 +8,39 @@ const ApiError = require('../utils/ApiError');
  * @returns {Promise<Subscription>}
  */
 const createSubscription = async (reqBody) => {
-    const { userId, planId } = reqBody;
-    // Find the user
-    const user = await User.findById(userId);
-    if (!user) {
-        throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
-    }
-    // Find the subscription plan
-    const plan = await SubscriptionPlan.findById(planId);
-    if (!plan) {
-        throw new ApiError(httpStatus.NOT_FOUND, 'Subscription not found');
-    }
+  const { userId, planId } = reqBody;
+  // Find the user
+  const user = await User.findById(userId);
+  if (!user) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+  }
+  // Find the subscription plan
+  const plan = await SubscriptionPlan.findById(planId);
+  if (!plan) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Subscription not found');
+  }
 
-    // Calculate subscription end date
-    const endDate = new Date();
-    endDate.setDate(endDate.getDate() + plan.durationInDays);
+  // Calculate subscription end date
+  const endDate = new Date();
+  endDate.setDate(endDate.getDate() + plan.durationInDays);
 
-    // Create new subscription details for the user
-    const newSubscription = new SubscriptionDetails({
-        userId: user._id,
-        subscriptionPlan: plan._id,
-        startDate: new Date(),
-        endDate,
-        status: 'active',
-    });
+  // Create new subscription details for the user
+  const newSubscription = new SubscriptionDetails({
+    userId: user._id,
+    subscriptionPlan: plan._id,
+    startDate: new Date(),
+    endDate,
+    status: 'active',
+  });
 
-    // Save subscription details
-    await newSubscription.save();
+  // Save subscription details
+  await newSubscription.save();
 
-    // Save the subscription reference in the user's document
-    user.subscriptionId = newSubscription._id;
-    await user.save();
+  // Save the subscription reference in the user's document
+  user.subscriptionId = newSubscription._id;
+  await user.save();
 
-
-    return newSubscription;
+  return newSubscription;
 };
 // const createSubscription = async (reqBody) => {
 //   return Subscription.create(reqBody);
@@ -57,30 +56,29 @@ const createSubscription = async (reqBody) => {
  * @returns {Promise<QueryResult>}
  */
 const querySubscription = async (filter, options) => {
-    const topType = await Subscription.paginate(filter, options);
-    return topType;
+  const topType = await Subscription.paginate(filter, options);
+  return topType;
 };
 
 // Get user's subscription details
-const getSubscriptionDetail =  async (req, res) => {
-    const { userId } = req.params;
+const getSubscriptionDetail = async (req) => {
+  const { userId } = req.params;
 
-    // Find the user by ID and populate subscription details with the plan
-    const user = await User.findById(userId).populate({
-      path: 'subscriptionId',
-      populate: {
-        path: 'subscriptionPlan',
-        model: 'SubscriptionPlan', // Populate subscription plan details
-      },
-    });
+  // Find the user by ID and populate subscription details with the plan
+  const user = await User.findById(userId).populate({
+    path: 'subscriptionId',
+    populate: {
+      path: 'subscriptionPlan',
+      model: 'SubscriptionPlan', // Populate subscription plan details
+    },
+  });
 
-    if (!user || !user.subscriptionId) {
-        throw new ApiError(httpStatus.NOT_FOUND, 'No subscription found for this user');
-    }
+  if (!user || !user.subscriptionId) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'No subscription found for this user');
+  }
 
-   return user.subscriptionId;
+  return user.subscriptionId;
 };
-
 
 /**
  * Get Subscription by id
@@ -88,7 +86,7 @@ const getSubscriptionDetail =  async (req, res) => {
  * @returns {Promise<Subscription>}
  */
 const getSubscriptionById = async (id) => {
-    return Subscription.findById(id);
+  return Subscription.findById(id);
 };
 
 /**
@@ -98,13 +96,13 @@ const getSubscriptionById = async (id) => {
  * @returns {Promise<Subscription>}
  */
 const updateSubscriptionById = async (id, updateBody) => {
-    const user = await getSubscriptionById(id);
-    if (!user) {
-        throw new ApiError(httpStatus.NOT_FOUND, 'Subscription not found');
-    }
-    Object.assign(user, updateBody);
-    await user.save();
-    return user;
+  const user = await getSubscriptionById(id);
+  if (!user) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Subscription not found');
+  }
+  Object.assign(user, updateBody);
+  await user.save();
+  return user;
 };
 
 /**
@@ -113,19 +111,19 @@ const updateSubscriptionById = async (id, updateBody) => {
  * @returns {Promise<Subscription>}
  */
 const deleteSubscriptionById = async (id) => {
-    const user = await getSubscriptionById(id);
-    if (!user) {
-        throw new ApiError(httpStatus.NOT_FOUND, 'Subscription not found');
-    }
-    await user.remove();
-    return user;
+  const user = await getSubscriptionById(id);
+  if (!user) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Subscription not found');
+  }
+  await user.remove();
+  return user;
 };
 
 module.exports = {
-    createSubscription,
-    querySubscription,
-    getSubscriptionById,
-    getSubscriptionDetail,
-    updateSubscriptionById,
-    deleteSubscriptionById,
+  createSubscription,
+  querySubscription,
+  getSubscriptionById,
+  getSubscriptionDetail,
+  updateSubscriptionById,
+  deleteSubscriptionById,
 };

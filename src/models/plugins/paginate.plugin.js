@@ -116,7 +116,7 @@ const paginate = (schema) => {
       const result = {
         results,
         page,
-        limit: limit || totalResults,  // Return totalResults as limit if no limit is set
+        limit: limit || totalResults, // Return totalResults as limit if no limit is set
         totalPages,
         totalResults,
       };
@@ -126,7 +126,6 @@ const paginate = (schema) => {
 };
 
 module.exports = paginate;
-
 
 //   schema.statics.paginate = async function (filter, options) {
 //     let sort = '';

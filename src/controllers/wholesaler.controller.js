@@ -122,5 +122,5 @@ module.exports = {
   assignDiscount,
   getDiscountByGivenBy,
   assignDiscountToRetailer,
-  getDiscountByGivenByToRetailer
+  getDiscountByGivenByToRetailer,
 };

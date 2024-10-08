@@ -211,7 +211,6 @@ const getRetailerByEmail = async (refByEmail, searchKeywords = '', options = {})
   return manufactures;
 };
 
-
 const assignOrUpdateDiscount = async (email, discountGivenBy, category, productDiscount, shippingDiscount) => {
   const wholesaler = await Wholesaler.findOne({ email });
   if (!wholesaler) {
@@ -235,7 +234,6 @@ const assignOrUpdateDiscount = async (email, discountGivenBy, category, productD
   await wholesaler.save();
   return wholesaler;
 };
-
 
 const assignOrUpdateDiscountToRetailer = async (email, discountGivenBy, category, productDiscount, shippingDiscount) => {
   const wholesaler = await Retailer.findOne({ email });
@@ -304,5 +302,5 @@ module.exports = {
   assignOrUpdateDiscount,
   getDiscountByGivenBy,
   assignOrUpdateDiscountToRetailer,
-  getDiscountByGivenByToRetailer
+  getDiscountByGivenByToRetailer,
 };

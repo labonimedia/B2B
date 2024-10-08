@@ -3,7 +3,6 @@ const config = require('../config/config');
 const logger = require('../config/logger');
 const otpService = require('./otp.service');
 
-
 const smtpConfig = {
   host: 'smtp.secureserver.net',
   port: 587, // SSL port
@@ -21,10 +20,10 @@ const smtpConfig = {
 const transport = nodemailer.createTransport(config.email.smtp);
 /* istanbul ignore next */
 // if (config.env !== 'test') {
-  transport
-    .verify()
-    .then(() => logger.info('Connected to email server'))
-    .catch(() => logger.warn('Unable to connect to email server. Make sure you have configured the SMTP options in .env'));
+transport
+  .verify()
+  .then(() => logger.info('Connected to email server'))
+  .catch(() => logger.warn('Unable to connect to email server. Make sure you have configured the SMTP options in .env'));
 // }
 
 /**
@@ -73,11 +72,9 @@ We look forward to supporting your journey in the world of fashion trading!
 
 Best regards,
 The Fashion Traders Hub Team
-www.fashiontradershub.com`
+www.fashiontradershub.com`;
   await sendEmail(to, subject, text);
 };
-
-
 
 /**
  * Send verification email
@@ -107,7 +104,7 @@ We look forward to supporting your journey in the world of fashion trading!
 
 Best regards,
 The Fashion Traders Hub Team
-www.fashiontradershub.com`
+www.fashiontradershub.com`;
   await sendEmail(to, subject, text);
 };
 

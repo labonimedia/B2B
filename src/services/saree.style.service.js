@@ -38,12 +38,12 @@ const getSareetyleById = async (id) => {
  * Update Sareetyle by id
  * @param {ObjectId} Id
  * @param {Object} updateBody
- * @returns {Promise<Sareetyle>}
+ * @returns {Promise<SareeStyle>}
  */
 const updateSareetyleById = async (id, updateBody) => {
   const user = await getSareetyleById(id);
   if (!user) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+    throw new ApiError(httpStatus.NOT_FOUND, 'SareeStyle not found');
   }
   Object.assign(user, updateBody);
   await user.save();
@@ -53,12 +53,12 @@ const updateSareetyleById = async (id, updateBody) => {
 /**
  * Delete user by id
  * @param {ObjectId} userId
- * @returns {Promise<Sareetyle>}
+ * @returns {Promise<SareeStyle>}
  */
 const deleteSareetyleById = async (id) => {
   const user = await getSareetyleById(id);
   if (!user) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+    throw new ApiError(httpStatus.NOT_FOUND, 'SareeStyle not found');
   }
   await user.remove();
   return user;
