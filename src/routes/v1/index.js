@@ -84,6 +84,7 @@ const subscriptionRoute = require('./subsription.route');
 const subscriptionPlanRoute = require('./subscription.plan.route');
 
 const type2Produnct = require('./type2.routes/product.route');
+const type2CartRoute = require('./type2.routes/cart.route');
 
 const router = express.Router();
 
@@ -419,6 +420,10 @@ const defaultRoutes = [
   {
     path: '/type2-products',
     route: type2Produnct,
+  },
+  {
+    path: '/type2-cart',
+    route: type2CartRoute,
   },
 ];
 
