@@ -9,7 +9,6 @@ const createSubCategory = catchAsync(async (req, res) => {
   res.status(httpStatus.CREATED).send(user);
 });
 
-
 const querySubCategory = catchAsync(async (req, res) => {
   const filter = pick(req.body, ['productType', 'gender', 'category', 'subCategory']); // Filter from req.body
   const options = pick(req.query, ['sortBy', 'limit', 'page']); // Options from req.query
