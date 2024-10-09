@@ -35,7 +35,11 @@ const CartSchema = new mongoose.Schema(
       price: {
         type: String
       }
-    }]
+    }],
+    cartAddedDate: {
+      type: Date,
+      default: Date.now()
+    }
 
   },
   {
