@@ -2,11 +2,6 @@ const mongoose = require('mongoose');
 const crypto = require('crypto');
 const { paginate, toJSON } = require('./plugins');
 
-// Utility function to convert a string to Title Case
-const toTitleCase = (str) => {
-  return str.replace(/\w\S*/g, (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
-};
-
 const productSchema = mongoose.Schema(
   {
     userId: {
@@ -244,18 +239,14 @@ productSchema.index({
 productSchema.plugin(toJSON);
 productSchema.plugin(paginate);
 
-// Add a pre-save hook to ensure colourName is in title case
+
 productSchema.pre('save', function (next) {
-  this.colourCollections.forEach((collection) => {
-    if (collection.colourName) {
-      collection.colourName = toTitleCase(collection.colourName);
-    }
-  });
+  const product = this;
 
   // Generate the unique code if it hasn't been set
-  if (!this.FSIN) {
-    const uniqueCode = crypto.randomBytes(6).toString('hex').toUpperCase();
-    this.FSIN = uniqueCode;
+  if (!product.FSIN) {
+    const uniqueCode = crypto.randomBytes(6).toString('hex').toUpperCase(); // Generates 12 character alphanumeric string
+    product.FSIN = uniqueCode;
   }
 
   next();
