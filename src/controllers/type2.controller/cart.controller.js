@@ -2,20 +2,14 @@ const httpStatus = require('http-status');
 const catchAsync = require('../../utils/catchAsync');
 const { cartType2Service } = require('../../services');
 
-
 const createCartType2 = catchAsync(async (req, res) => {
   const createdItems = await cartType2Service.createCartType2(req.body);
   res.status(httpStatus.CREATED).send(createdItems);
 });
 
 const queryCartType2 = catchAsync(async (req, res) => {
-  const filter = req.query; // Use query params for filtering
-  const options = {
-    limit: parseInt(req.query.limit, 10) || 10,
-    page: parseInt(req.query.page, 10) || 1,
-    sortBy: req.query.sortBy,
-  };
-
+  const filter = pick(req.query, ['productBy', 'email']);
+  const options = pick(req.query, ['sortBy', 'limit', 'page']);
   const cartType2Items = await cartType2Service.queryCartType2(filter, options);
   res.status(httpStatus.OK).send(cartType2Items);
 });

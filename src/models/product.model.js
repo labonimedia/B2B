@@ -239,7 +239,6 @@ productSchema.index({
 productSchema.plugin(toJSON);
 productSchema.plugin(paginate);
 
-
 productSchema.pre('save', function (next) {
   const product = this;
 

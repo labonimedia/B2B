@@ -1,20 +1,50 @@
 const mongoose = require('mongoose');
 const { paginate, toJSON } = require('../plugins');
 
-const SizeSchema = new mongoose.Schema({
-  size: { type: String, required: true },
-  quantity: { type: Number, required: true }
-});
+const CartSchema = new mongoose.Schema(
+  {
+    productBy: {
+      type: String,
+      required: true,
+    },
+    email: {
+      type: String,
+      required: true,
+    },
+    productId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Product',
+      required: true,
+    },
+   set: [{
+      colour: { 
+        type: String
+      },
+      colourImage: { 
+        type: String
+      },
+      colourName: { 
+        type: String
+      },
+      size: { 
+        type: String
+      },
+      quantity: { 
+        type: Number
+      },
+      price: {
+        type: String
+      }
+    }]
 
-const ItemSchema = new mongoose.Schema({
-  colourHex: { type: String, required: true },
-  colourImage: { type: String, required: true },
-  colourName: { type: String, required: true },
-  sizes: [SizeSchema]  // Array of sizes
-}, { timestamps: true });
+  },
+  {
+    timestamps: true,
+  }
+);
 // add plugin that converts mongoose to json
-ItemSchema.plugin(toJSON);
-ItemSchema.plugin(paginate);
+CartSchema.plugin(toJSON);
+CartSchema.plugin(paginate);
 
-const CartType2 = mongoose.model('CartType2', ItemSchema);
+const CartType2 = mongoose.model('CartType2', CartSchema);
 module.exports = CartType2;
