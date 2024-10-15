@@ -177,7 +177,6 @@ const getCartType2ById = async (id) => {
 //   // Convert the object to an array of objects for final output
 //   return Object.values(groupedCart);
 // };
-
 const getCartByEmailToPlaceOrder = async (email, productBy) => {
   // Find the cart by email and productBy, and populate the product details
   const cart = await CartType2.findOne({ email, productBy }).populate('productId');
@@ -191,7 +190,7 @@ const getCartByEmailToPlaceOrder = async (email, productBy) => {
     throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
   }
 
-  // Get wholesaler or retailer details based on user role
+  // Ensure wholesaler or retailer details are fetched based on the user's role
   let wholesaler = null;
   if (user.role === 'wholesaler' || user.role === 'retailer') {
     wholesaler =
@@ -208,40 +207,24 @@ const getCartByEmailToPlaceOrder = async (email, productBy) => {
     }
   }
 
-  // Extract unique manufacturer emails from cart products
-  const productByEmails = [...new Set([cart.productId.productBy])];
+  // Extract the manufacturer email from the product in the cart
+  const productManufacturerEmail = cart.productId.productBy;
 
-  // Fetch manufacturer details for all unique emails
-  const manufacturers = await Manufacture.find({ email: { $in: productByEmails } }).select(
+  // Fetch manufacturer details for the product's manufacturer
+  const manufacturer = await Manufacture.findOne({ email: productManufacturerEmail }).select(
     'fullName companyName email address country state city pinCode mobNumber GSTIN'
   );
 
-  // Map manufacturers by their email for easy lookup
-  const manufacturerMap = new Map(
-    manufacturers.map((manufacturer) => [
-      manufacturer.email,
-      {
-        fullName: manufacturer.fullName,
-        companyName: manufacturer.companyName,
-        email: manufacturer.email,
-        address: manufacturer.address,
-        country: manufacturer.country,
-        state: manufacturer.state,
-        city: manufacturer.city,
-        pinCode: manufacturer.pinCode,
-        mobNumber: manufacturer.mobNumber,
-        GSTIN: manufacturer.GSTIN,
-      },
-    ])
-  );
+  if (!manufacturer) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Manufacturer not found');
+  }
 
   // Determine the financial year based on the current date
   const now = new Date();
-  const currentMonth = now.getMonth(); // 0-based (0 = January, ..., 2 = March)
+  const currentMonth = now.getMonth();
   let financialYear;
 
   if (currentMonth < 2 || (currentMonth === 2 && now.getDate() < 1)) {
-    // Before March 1st
     financialYear = now.getFullYear() - 1;
   } else {
     financialYear = now.getFullYear();
@@ -262,7 +245,6 @@ const getCartByEmailToPlaceOrder = async (email, productBy) => {
     );
   } catch (error) {
     if (error.code === 11000) {
-      // Duplicate key error
       throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'Duplicate order counter entry.');
     }
     throw error;
@@ -270,33 +252,21 @@ const getCartByEmailToPlaceOrder = async (email, productBy) => {
 
   const orderNumber = orderCount.count;
 
-  // Group products by manufacturer email (since cart now has multiple sets for a product)
-  const groupedCart = cart.set.reduce((acc, setItem) => {
-    const { productBy } = cart.productId; // Each cart refers to a single productId with sets
-
-    if (!acc[productBy]) {
-      acc[productBy] = {
-        manufacturer: manufacturerMap.get(productBy) || {
-          fullName: 'Unknown Manufacturer',
-          companyName: 'Unknown Company',
-          email: 'Unknown Email',
-          address: {
-            country: 'Unknown Country',
-            state: 'Unknown State',
-            city: 'Unknown City',
-            pinCode: 'Unknown PinCode',
-          },
-          mobNumber: 'Unknown MobNumber',
-        },
-        products: [],
-        wholesaler,
-        orderNumber,
-        financialYear,
-      };
-    }
-
-    // Add the product set details to the respective manufacturer group
-    acc[productBy].products.push({
+  // Prepare the cart and order details
+  const orderDetails = {
+    manufacturer: {
+      fullName: manufacturer.fullName,
+      companyName: manufacturer.companyName,
+      email: manufacturer.email,
+      address: manufacturer.address,
+      country: manufacturer.country,
+      state: manufacturer.state,
+      city: manufacturer.city,
+      pinCode: manufacturer.pinCode,
+      mobNumber: manufacturer.mobNumber,
+      GSTIN: manufacturer.GSTIN,
+    },
+    products: cart.set.map((setItem) => ({
       set: {
         colour: setItem.colour,
         colourImage: setItem.colourImage,
@@ -319,13 +289,14 @@ const getCartByEmailToPlaceOrder = async (email, productBy) => {
         productBy: cart.productId.productBy,
         id: cart.productId._id,
       },
-    });
+    })),
+    wholesaler,
+    orderNumber,
+    financialYear,
+  };
 
-    return acc;
-  }, {});
-
-  // Convert the object to an array of objects for final output
-  return Object.values(groupedCart);
+  // Return the final order details
+  return orderDetails;
 };
 
 /**
