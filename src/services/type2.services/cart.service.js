@@ -208,7 +208,7 @@ const getCartByEmailToPlaceOrder = async (email, productBy) => {
   }
 
   // Extract the manufacturer email from the product in the cart
-  const productManufacturerEmail = cart.productId.productBy;
+  const productManufacturerEmail = cart.productBy;
 
   // Fetch manufacturer details for the product's manufacturer
   const manufacturer = await Manufacture.findOne({ email: productManufacturerEmail }).select(
@@ -276,7 +276,7 @@ const getCartByEmailToPlaceOrder = async (email, productBy) => {
         price: setItem.price,
       },
       productId: {
-        designNumber: cart.productId.designNumber,
+        designNumber: cart.productId.designNumber,  // Ensure this field is populated
         brand: cart.productId.brand,
         productType: cart.productId.productType,
         productTitle: cart.productId.productTitle,
@@ -294,6 +294,7 @@ const getCartByEmailToPlaceOrder = async (email, productBy) => {
     orderNumber,
     financialYear,
   };
+  
 
   // Return the final order details
   return orderDetails;
