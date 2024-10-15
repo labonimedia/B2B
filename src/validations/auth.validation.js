@@ -9,6 +9,7 @@ const register = {
     companyName: Joi.string().optional(),
     role: Joi.string().required(),
     code: Joi.string().optional(),
+    userCategory: Joi.string().optional(),
     mobileNumber: Joi.string().optional(),
     refByEmail: Joi.string().optional(),
   }),
