@@ -171,6 +171,15 @@ const productSchema = mongoose.Schema(
         size: { type: String },
       },
     ],
+    minimumStock: [
+      {
+        colourName: { type: String },
+        colourImage: { type: String },
+        colour: { type: String },
+        quantity: { type: Number },
+        size: { type: String },
+      },
+    ],
   },
   {
     timestamps: true,

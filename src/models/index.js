@@ -95,3 +95,4 @@ module.exports.Subscription = require('./subscription.model');
 module.exports.SubscriptionPlan = require('./subcription.plan.model');
 module.exports.ProductType2 = require('./type2.models/product.model');
 module.exports.CartType2 = require('./type2.models/cart.model');
+module.exports.POCountertype2 = require('./type2.models/po.counter.model');
