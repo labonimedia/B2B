@@ -1,5 +1,5 @@
 const httpStatus = require('http-status');
-const { Product, Manufacture, User } = require('../models');
+const { Product, Manufacture, User, Request } = require('../models');
 const ApiError = require('../utils/ApiError');
 const { deleteFile } = require('../utils/upload');
 
@@ -245,44 +245,90 @@ const deleteColorCollection = async (productId, collectionId) => {
   await product.save();
 };
 
-/**
- * Filter products and fetch manufacturer details
- * @param {Object} filters
- * @returns {Promise<Object[]>}
- */
+// /**
+//  * Filter products and fetch manufacturer details
+//  * @param {Object} filters
+//  * @returns {Promise<Object[]>}
+//  */
+// const filterProductsAndFetchManufactureDetails = async (filters) => {
+//   const query = {};
+
+//   // Build the query based on the filters provided
+//   // eslint-disable-next-line no-param-reassign
+//   if (filters.productType) {
+//     query.productType = filters.productType;
+//   }
+//   // eslint-disable-next-line no-param-reassign
+//   if (filters.gender) {
+//     query.gender = filters.gender;
+//   }
+//   // eslint-disable-next-line no-param-reassign
+//   if (filters.clothing) {
+//     query.clothing = filters.clothing;
+//   }
+//   // eslint-disable-next-line no-param-reassign
+//   if (filters.subCategory) {
+//     query.subCategory = filters.subCategory;
+//   }
+//   // eslint-disable-next-line no-param-reassign
+//   if (filters.productTitle) {
+//     query.productTitle = { $regex: filters.productTitle, $options: 'i' };
+//   }
+//   // eslint-disable-next-line no-param-reassign
+//   if (filters.country) {
+//     query.country = filters.country;
+//   }
+//   // eslint-disable-next-line no-param-reassign
+//   if (filters.city) {
+//     query.city = filters.city;
+//   }
+//   // eslint-disable-next-line no-param-reassign
+//   if (filters.state) {
+//     query.state = filters.state;
+//   }
+
+//   // Get filtered products
+//   const products = await Product.find(query);
+
+//   // Fetch manufacturer details for each product
+//   const productManufacturers = await Promise.all(
+//     products.map(async (product) => {
+//       const manufacturer = await Manufacture.findOne({ email: product.productBy });
+//       return {
+//         product,
+//         manufacturer,
+//       };
+//     })
+//   );
+
+//   return productManufacturers;
+// };
+
 const filterProductsAndFetchManufactureDetails = async (filters) => {
   const query = {};
 
   // Build the query based on the filters provided
-  // eslint-disable-next-line no-param-reassign
   if (filters.productType) {
     query.productType = filters.productType;
   }
-  // eslint-disable-next-line no-param-reassign
   if (filters.gender) {
     query.gender = filters.gender;
   }
-  // eslint-disable-next-line no-param-reassign
   if (filters.clothing) {
     query.clothing = filters.clothing;
   }
-  // eslint-disable-next-line no-param-reassign
   if (filters.subCategory) {
     query.subCategory = filters.subCategory;
   }
-  // eslint-disable-next-line no-param-reassign
   if (filters.productTitle) {
     query.productTitle = { $regex: filters.productTitle, $options: 'i' };
   }
-  // eslint-disable-next-line no-param-reassign
   if (filters.country) {
     query.country = filters.country;
   }
-  // eslint-disable-next-line no-param-reassign
   if (filters.city) {
     query.city = filters.city;
   }
-  // eslint-disable-next-line no-param-reassign
   if (filters.state) {
     query.state = filters.state;
   }
@@ -290,18 +336,31 @@ const filterProductsAndFetchManufactureDetails = async (filters) => {
   // Get filtered products
   const products = await Product.find(query);
 
-  // Fetch manufacturer details for each product
-  const productManufacturers = await Promise.all(
+  // Fetch manufacturer, brand, and request details for each product
+  const productDetails = await Promise.all(
     products.map(async (product) => {
+      // Fetch manufacturer details
       const manufacturer = await Manufacture.findOne({ email: product.productBy });
+
+      // Fetch brand details by productBy
+      const brand = await Brand.findOne({ brandOwner: product.productBy });
+
+      // Fetch request details by both email and requestByEmail
+      const requestDetails = await Request.findOne({
+        email: product.productBy,               // Match product's productBy email
+        requestByEmail: filters.requestByEmail, // Match filters requestByEmail
+      });
+
       return {
         product,
         manufacturer,
+        brand, // Include the brand object
+        requestDetails, // Include the requestDetails object
       };
     })
   );
 
-  return productManufacturers;
+  return productDetails;
 };
 
 module.exports = {
