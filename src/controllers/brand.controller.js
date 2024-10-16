@@ -84,12 +84,22 @@ const deleteBrandById = catchAsync(async (req, res) => {
   res.status(httpStatus.NO_CONTENT).send();
 });
 
+// const searchBrandAndOwnerDetails = catchAsync(async (req, res) => {
+//   const { brandName } = req.body;
+//   if (!brandName) {
+//     return res.status(httpStatus.BAD_REQUEST).send({ message: 'Brand name is required' });
+//   }
+//   const data = await brandService.searchBrandAndOwnerDetails(brandName);
+//   res.status(httpStatus.OK).send(data);
+// });
 const searchBrandAndOwnerDetails = catchAsync(async (req, res) => {
-  const { brandName } = req.body;
+  const { brandName, requestByEmail } = req.body;
+  
   if (!brandName) {
     return res.status(httpStatus.BAD_REQUEST).send({ message: 'Brand name is required' });
   }
-  const data = await brandService.searchBrandAndOwnerDetails(brandName);
+
+  const data = await brandService.searchBrandAndOwnerDetails(brandName, requestByEmail);
   res.status(httpStatus.OK).send(data);
 });
 
