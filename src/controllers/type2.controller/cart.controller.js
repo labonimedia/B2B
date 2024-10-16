@@ -30,6 +30,13 @@ const getCartByEmailToPlaceOrder = catchAsync(async (req, res) => {
   res.status(httpStatus.OK).send(cart);
 });
 
+const getCartByEmail = catchAsync(async (req, res) => {
+  const { email } = req.query;
+
+  const cart = await cartType2Service.getCartByEmail(email);
+  res.status(httpStatus.OK).send(cart);
+});
+
 const updateCartType2ById = catchAsync(async (req, res) => {
   const updatedCartItem = await cartType2Service.updateCartType2ById(req.params.id, req.body);
   res.status(httpStatus.OK).send(updatedCartItem);
@@ -44,6 +51,7 @@ module.exports = {
   createCartType2,
   queryCartType2,
   getCartType2ById,
+  getCartByEmail,
   getCartByEmailToPlaceOrder,
   updateCartType2ById,
   deleteCartType2ById,
