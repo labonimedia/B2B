@@ -97,3 +97,4 @@ module.exports.ProductType2 = require('./type2.models/product.model');
 module.exports.CartType2 = require('./type2.models/cart.model');
 module.exports.PurchaseOrderType2 = require('./type2.models/purchase.order.model');
 module.exports.POCountertype2 = require('./type2.models/po.counter.model');
+module.exports.Gender = require('./gender.model');

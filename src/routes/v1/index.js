@@ -82,6 +82,7 @@ const layerCompressionRoute = require('./layer.compression.route');
 const waistBandRoute = require('./waistband.route');
 const subscriptionRoute = require('./subsription.route');
 const subscriptionPlanRoute = require('./subscription.plan.route');
+const genderRoute = require('./gender.route');
 
 const type2Produnct = require('./type2.routes/product.route');
 const type2CartRoute = require('./type2.routes/cart.route');
@@ -428,6 +429,10 @@ const defaultRoutes = [
   {
     path: '/type2-purchaseorder',
     route: type2PurchaseOrderRoute,
+  },
+  {
+    path: '/gender',
+    route: genderRoute,
   },
 ];
 
