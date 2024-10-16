@@ -157,6 +157,59 @@ const getCartByEmailToPlaceOrder = async (email, productBy) => {
   return orderDetails;
 };
 
+
+const getCartByEmail = async (email) => {
+  // Find all cart items by email and populate the product details (productId)
+  const cartItems = await CartType2.find({ email }).populate('productId');
+  if (!cartItems || cartItems.length === 0) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'No carts found for this email');
+  }
+
+  // Extract unique manufacturer emails from all cart products (based on productBy)
+  const productByEmails = [...new Set(cartItems.map((item) => item.productBy))];
+
+  // Fetch manufacturers based on the extracted emails
+  const manufacturers = await Manufacture.find({ email: { $in: productByEmails } });
+  const manufacturerMap = new Map(manufacturers.map((manufacturer) => [manufacturer.email, manufacturer.fullName]));
+
+  // Group the cart items by the `productBy` field
+  const groupedCart = cartItems.reduce((acc, item) => {
+    const { productBy } = item;
+
+    if (!acc[productBy]) {
+      acc[productBy] = {
+        fullName: manufacturerMap.get(productBy) || 'Unknown Manufacturer',
+        products: [],
+      };
+    }
+
+    acc[productBy].products.push({
+      set: item.set.map((setItem) => ({
+        colour: setItem.colour,
+        colourImage: setItem.colourImage,
+        colourName: setItem.colourName,
+        size: setItem.size,
+        quantity: setItem.quantity,
+        price: setItem.price,
+      })),
+      _id: item._id,
+      productId: {
+        designNumber: item.productId.designNumber,
+        brand: item.productId.brand,
+        id: item.productId._id,
+      },
+    });
+
+    return acc;
+  }, {});
+
+  // Convert the grouped object to an array of objects
+  const formattedCart = Object.values(groupedCart);
+
+  return formattedCart;
+};
+
+
 /**
  * Update CartType2 by id
  * @param {ObjectId} id
@@ -190,6 +243,7 @@ const deleteCartType2ById = async (id) => {
 module.exports = {
   createCartType2,
   queryCartType2,
+  getCartByEmail,
   getCartByEmailToPlaceOrder,
   getCartType2ById,
   updateCartType2ById,

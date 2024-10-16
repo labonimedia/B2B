@@ -16,7 +16,11 @@ const CartSchema = new mongoose.Schema(
       ref: 'ProductType2',
       required: true,
     },
+    designNumber: {
+      type: String
+    },
    set: [{
+
       colour: { 
         type: String
       },

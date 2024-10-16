@@ -19,12 +19,12 @@ const smtpConfig = {
 
 const transport = nodemailer.createTransport(config.email.smtp);
 /* istanbul ignore next */
-// if (config.env !== 'test') {
+if (config.env !== 'test') {
 transport
   .verify()
   .then(() => logger.info('Connected to email server'))
   .catch(() => logger.warn('Unable to connect to email server. Make sure you have configured the SMTP options in .env'));
-// }
+}
 
 /**
  * Send an email
@@ -34,6 +34,7 @@ transport
  * @returns {Promise}
  */
 const sendEmail = async (to, subject, text) => {
+  console.log(to)
   const msg = { from: config.email.from, to, subject, text };
   await transport.sendMail(msg);
 };
@@ -85,6 +86,7 @@ www.fashiontradershub.com`;
 const sendVerificationEmail = async (to, fullName) => {
   const otpCode = await otpService.generateOTP();
   await otpService.createOtp(to, otpCode);
+  console.log("controler",to)
   const subject = 'Welcome to Fashion Traders Hub - Complete Your Registration with OTP';
   // replace this url with the link to the email verification page of your front-end app
   const text = `
