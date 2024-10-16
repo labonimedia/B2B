@@ -1,5 +1,5 @@
 const httpStatus = require('http-status');
-const { CartType2 } = require('../../models');
+const { CartType2, User, Wholesaler, Retailer, Manufacture, POCountertype2 } = require('../../models');
 const ApiError = require('../../utils/ApiError');
 
 /**
@@ -32,6 +32,129 @@ const queryCartType2 = async (filter, options) => {
  */
 const getCartType2ById = async (id) => {
   return CartType2.findById(id);
+};
+
+const getCartByEmailToPlaceOrder = async (email, productBy) => {
+  // Find the cart by email and productBy, and populate the product details
+  const cart = await CartType2.findOne({ email, productBy }).populate('productId');
+  if (!cart) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Cart not found');
+  }
+
+  // Get user details by email to determine the role
+  const user = await User.findOne({ email }).select('role');
+  if (!user) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+  }
+
+  // Ensure wholesaler or retailer details are fetched based on the user's role
+  let wholesaler = null;
+  if (user.role === 'wholesaler' || user.role === 'retailer') {
+    wholesaler =
+      user.role === 'wholesaler'
+        ? await Wholesaler.findOne({ email }).select(
+            'fullName companyName email address country state city pinCode mobNumber GSTIN code profileImg'
+          )
+        : await Retailer.findOne({ email }).select(
+            'fullName companyName email address country state city pinCode mobNumber GSTIN code profileImg'
+          );
+
+    if (!wholesaler) {
+      throw new ApiError(httpStatus.NOT_FOUND, user.role === 'wholesaler' ? 'Wholesaler not found' : 'Retailer not found');
+    }
+  }
+
+  // Extract the manufacturer email from the product in the cart
+  const productManufacturerEmail = cart.productBy;
+
+  // Fetch manufacturer details for the product's manufacturer
+  const manufacturer = await Manufacture.findOne({ email: productManufacturerEmail }).select(
+    'fullName companyName email address country state city pinCode mobNumber GSTIN'
+  );
+
+  if (!manufacturer) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Manufacturer not found');
+  }
+
+  // Determine the financial year based on the current date
+  const now = new Date();
+  const currentMonth = now.getMonth();
+  let financialYear;
+
+  if (currentMonth < 2 || (currentMonth === 2 && now.getDate() < 1)) {
+    financialYear = now.getFullYear() - 1;
+  } else {
+    financialYear = now.getFullYear();
+  }
+
+  // Ensure wholesaler is present for roles that require it
+  if (!wholesaler) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Wholesaler information is missing.');
+  }
+
+  // Get the current order count for the wholesaler and financial year
+  let orderCount;
+  try {
+    orderCount = await POCountertype2.findOneAndUpdate(
+      { wholesalerEmail: wholesaler.email, year: financialYear },
+      { $inc: { count: 1 } },
+      { new: true, upsert: true, setDefaultsOnInsert: true }
+    );
+  } catch (error) {
+    if (error.code === 11000) {
+      throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'Duplicate order counter entry.');
+    }
+    throw error;
+  }
+
+  const orderNumber = orderCount.count;
+
+  // Prepare the cart and order details
+  const orderDetails = {
+    manufacturer: {
+      fullName: manufacturer.fullName,
+      companyName: manufacturer.companyName,
+      email: manufacturer.email,
+      address: manufacturer.address,
+      country: manufacturer.country,
+      state: manufacturer.state,
+      city: manufacturer.city,
+      pinCode: manufacturer.pinCode,
+      mobNumber: manufacturer.mobNumber,
+      GSTIN: manufacturer.GSTIN,
+    },
+    products: cart.set.map((setItem) => ({
+      set: {
+        colour: setItem.colour,
+        colourImage: setItem.colourImage,
+        colourName: setItem.colourName,
+        size: setItem.size,
+        quantity: setItem.quantity,
+        price: setItem.price,
+      },
+      productId: {
+        designNumber: cart.productId.designNumber,  // Ensure this field is populated
+        brand: cart.productId.brand,
+        productType: cart.productId.productType,
+        productTitle: cart.productId.productTitle,
+        productDescription: cart.productId.productDescription,
+        setOFnetWeight: cart.productId.setOFnetWeight,
+        setOfMRP: cart.productId.setOfMRP,
+        setOfManPrice: cart.productId.setOfManPrice,
+        currency: cart.productId.currency,
+        quantity: cart.productId.quantity,
+        productBy: cart.productId.productBy,
+        id: cart.productId._id,
+      },
+    })),
+    wholesaler,
+    orderNumber,
+    financialYear,
+  };
+  
+
+  // Return the final order details
+  return orderDetails;
 };
 
 /**
@@ -67,6 +190,7 @@ const deleteCartType2ById = async (id) => {
 module.exports = {
   createCartType2,
   queryCartType2,
+  getCartByEmailToPlaceOrder,
   getCartType2ById,
   updateCartType2ById,
   deleteCartType2ById,

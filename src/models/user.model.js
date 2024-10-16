@@ -7,7 +7,7 @@ const userSchema = mongoose.Schema(
   {
     userCategory: {
       type: String,
-      required: true,
+      // required: true,
       // default: 'setwise',
       enum: ['setwise', 'orderwise'],
     },
