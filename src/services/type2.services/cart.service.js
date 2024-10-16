@@ -195,3 +195,5 @@ module.exports = {
   updateCartType2ById,
   deleteCartType2ById,
 };
+
+
