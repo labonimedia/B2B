@@ -84,3 +84,4 @@ module.exports.subcriptionService = require('./subscription.service');
 module.exports.subscriptionPlanService = require('./subscription.plan.service');
 module.exports.productType2Service = require('./type2.services/product.service');
 module.exports.cartType2Service = require('./type2.services/cart.service');
+module.exports.purchaseOrderType2Service = require('./type2.services/purchase.order.service');
