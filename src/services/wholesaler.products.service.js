@@ -1,5 +1,5 @@
 const httpStatus = require('http-status');
-const { WholesalerProducts, Wholesaler } = require('../models');
+const { WholesalerProducts, Wholesaler, Request } = require('../models');
 const ApiError = require('../utils/ApiError');
 
 /**
@@ -197,7 +197,7 @@ const deleteProductById = async (id) => {
 //     results,
 //   };
 // };
-const searchWholesalerProductsByBrand = async (filter, options) => {
+const searchWholesalerProductsByBrand = async (filter, options, requestByEmail) => {
   // Set pagination defaults
   const page = options.page ? parseInt(options.page, 10) : 1;
   const limit = options.limit ? parseInt(options.limit, 10) : 10;
@@ -209,13 +209,22 @@ const searchWholesalerProductsByBrand = async (filter, options) => {
   // Count the total number of documents that match the filter
   const totalDocs = await WholesalerProducts.countDocuments(filter);
 
-  // Fetch wholesaler details for each product
+  // Fetch wholesaler details and request details for each product
   const results = await Promise.all(
     products.map(async (product) => {
+      // Fetch wholesaler details
       const wholesaler = await Wholesaler.findOne({ email: product.wholesalerEmail });
+
+      // Fetch request details based on email and requestByEmail from filters
+      const requestDetails = await Request.findOne({
+        email: product.wholesalerEmail,
+        requestByEmail: requestByEmail,  // This is coming from the body or filters
+      });
+
       return {
         product,
         wholesaler: wholesaler || null,
+        requestDetails: requestDetails || null, // Include requestDetails in the response
       };
     })
   );
@@ -223,7 +232,7 @@ const searchWholesalerProductsByBrand = async (filter, options) => {
   // Calculate total pages
   const totalPages = Math.ceil(totalDocs / limit);
 
-  // Return the paginated product data with wholesaler details
+  // Return the paginated product data with wholesaler and request details
   return {
     totalDocs,
     limit,
@@ -314,9 +323,15 @@ const filterWholesalerProducts = async (filters, options) => {
   const results = await Promise.all(
     products.map(async (product) => {
       const wholesaler = await Wholesaler.findOne({ email: product.wholesalerEmail });
+       // Fetch request details based on email and requestByEmail from filters
+       const requestDetails = await Request.findOne({
+        email: product.wholesalerEmail,
+        requestByEmail: filters.requestByEmail,  // This is coming from the body or filters
+      });
       return {
         product,
-        wholesaler: wholesaler || null, // Handle case where wholesaler is not found
+        wholesaler: wholesaler || null,
+        requestDetails // Handle case where wholesaler is not found
       };
     })
   );
