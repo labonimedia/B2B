@@ -15,6 +15,13 @@ const SizeSchema = new mongoose.Schema({
 
 // Product Schema
 const ProductSchema = new mongoose.Schema({
+  productId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'ProductType2',
+  },
+  designNumber: {
+    type: String,
+  },
   colour: { type: String, required: true },
   colourName: { type: String, required: true },
   colourImage: { type: String },
