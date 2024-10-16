@@ -11,25 +11,28 @@ const CartSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    productId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'ProductType2',
-      required: true,
-    },
-   set: [{
-      colour: { 
+    produncts: [{
+      productId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'ProductType2',
+        required: true,
+      },
+      designNumber: {
+        type: String,
+      },
+      colour: {
         type: String
       },
-      colourImage: { 
+      colourImage: {
         type: String
       },
-      colourName: { 
+      colourName: {
         type: String
       },
-      size: { 
+      size: {
         type: String
       },
-      quantity: { 
+      quantity: {
         type: Number
       },
       price: {
