@@ -116,6 +116,7 @@ const deleteProductById = catchAsync(async (req, res) => {
 //   const result = await wholesalerProductsService.searchWholesalerProductsByBrand(filter, options);
 //   res.status(httpStatus.OK).send(result);
 // });
+
 const searchWholesalerProducts = catchAsync(async (req, res) => {
   const filter = {};
   const options = {};

@@ -197,6 +197,51 @@ const deleteProductById = async (id) => {
 //     results,
 //   };
 // };
+
+// const searchWholesalerProductsByBrand = async (filter, options, requestByEmail) => {
+//   // Set pagination defaults
+//   const page = options.page ? parseInt(options.page, 10) : 1;
+//   const limit = options.limit ? parseInt(options.limit, 10) : 10;
+//   const skip = (page - 1) * limit;
+
+//   // Fetch products based on the filter, limit, and pagination
+//   const products = await WholesalerProducts.find(filter).limit(limit).skip(skip).exec();
+
+//   // Count the total number of documents that match the filter
+//   const totalDocs = await WholesalerProducts.countDocuments(filter);
+
+//   // Fetch wholesaler details and request details for each product
+//   const results = await Promise.all(
+//     products.map(async (product) => {
+//       // Fetch wholesaler details
+//       const wholesaler = await Wholesaler.findOne({ email: product.wholesalerEmail });
+
+//       // Fetch request details based on email and requestByEmail from filters
+//       const requestDetails = await Request.findOne({
+//         email: product.wholesalerEmail,
+//         requestByEmail: requestByEmail,  // This is coming from the body or filters
+//       });
+
+//       return {
+//         product,
+//         wholesaler: wholesaler || null,
+//         requestDetails: requestDetails || null, // Include requestDetails in the response
+//       };
+//     })
+//   );
+
+//   // Calculate total pages
+//   const totalPages = Math.ceil(totalDocs / limit);
+
+//   // Return the paginated product data with wholesaler and request details
+//   return {
+//     totalDocs,
+//     limit,
+//     totalPages,
+//     page,
+//     results,
+//   };
+// };
 const searchWholesalerProductsByBrand = async (filter, options, requestByEmail) => {
   // Set pagination defaults
   const page = options.page ? parseInt(options.page, 10) : 1;
@@ -218,27 +263,35 @@ const searchWholesalerProductsByBrand = async (filter, options, requestByEmail) 
       // Fetch request details based on email and requestByEmail from filters
       const requestDetails = await Request.findOne({
         email: product.wholesalerEmail,
-        requestByEmail: requestByEmail,  // This is coming from the body or filters
+        requestByEmail: requestByEmail,
       });
+
+      // Exclude products where the request status is 'accepted'
+      if (requestDetails && requestDetails.status === 'accepted') {
+        return null; // Skip this product if the request is accepted
+      }
 
       return {
         product,
         wholesaler: wholesaler || null,
-        requestDetails: requestDetails || null, // Include requestDetails in the response
+        requestDetails: requestDetails || null,
       };
     })
   );
+
+  // Filter out null results (where the request was 'accepted')
+  const filteredResults = results.filter(result => result !== null);
 
   // Calculate total pages
   const totalPages = Math.ceil(totalDocs / limit);
 
   // Return the paginated product data with wholesaler and request details
   return {
-    totalDocs,
+    totalDocs: filteredResults.length, // Update totalDocs to match filtered results count
     limit,
     totalPages,
     page,
-    results,
+    results: filteredResults,
   };
 };
 
@@ -292,6 +345,74 @@ const searchWholesalerProductsByBrand = async (filter, options, requestByEmail) 
 //     results: filteredResults,
 //   };
 // };
+
+// /**
+//  * Filter products based on dynamic filters and fetch wholesaler details
+//  * @param {Object} filters - The filter criteria for searching products
+//  * @param {Object} options - Query options (pagination, etc.)
+//  * @returns {Promise<Object>} - A paginated result of products with wholesaler details
+//  */
+// const filterWholesalerProducts = async (filters, options) => {
+//   // Building dynamic filter for products
+//   const productFilter = {};
+
+//   // Apply filters dynamically if they exist
+//   if (filters.productType) productFilter.productType = filters.productType;
+//   if (filters.gender) productFilter.gender = filters.gender;
+//   if (filters.clothing) productFilter.clothing = filters.clothing;
+//   if (filters.subCategory) productFilter.subCategory = filters.subCategory;
+
+//   // Handle pagination options
+//   const page = options.page ? parseInt(options.page, 10) : 1;
+//   const limit = options.limit ? parseInt(options.limit, 10) : 10;
+//   const skip = (page - 1) * limit;
+
+//   // Fetch filtered products with pagination
+//   const products = await WholesalerProducts.find(productFilter).limit(limit).skip(skip).exec();
+
+//   // Count the total number of products that match the filter
+//   const totalDocs = await WholesalerProducts.countDocuments(productFilter);
+
+//   // Fetch wholesaler details for each filtered product
+//   const results = await Promise.all(
+//     products.map(async (product) => {
+//       const wholesaler = await Wholesaler.findOne({ email: product.wholesalerEmail });
+//        // Fetch request details based on email and requestByEmail from filters
+//        const requestDetails = await Request.findOne({
+//         email: product.wholesalerEmail,
+//         requestByEmail: filters.requestByEmail,  // This is coming from the body or filters
+//       });
+//       return {
+//         product,
+//         wholesaler: wholesaler || null,
+//         requestDetails 
+//       };
+//     })
+//   );
+
+//   // Additional filtering by country, state, city if present
+//   let filteredResults = results;
+//   if (filters.country) {
+//     filteredResults = filteredResults.filter((result) => result.wholesaler?.country === filters.country);
+//   }
+//   if (filters.state) {
+//     filteredResults = filteredResults.filter((result) => result.wholesaler?.state === filters.state);
+//   }
+//   if (filters.city) {
+//     filteredResults = filteredResults.filter((result) => result.wholesaler?.city === filters.city);
+//   }
+
+//   // Calculate total pages
+//   const totalPages = Math.ceil(totalDocs / limit);
+
+//   return {
+//     totalDocs,
+//     limit,
+//     totalPages,
+//     page,
+//     results: filteredResults,
+//   };
+// };
 /**
  * Filter products based on dynamic filters and fetch wholesaler details
  * @param {Object} filters - The filter criteria for searching products
@@ -319,25 +440,34 @@ const filterWholesalerProducts = async (filters, options) => {
   // Count the total number of products that match the filter
   const totalDocs = await WholesalerProducts.countDocuments(productFilter);
 
-  // Fetch wholesaler details for each filtered product
+  // Fetch wholesaler details and request details for each filtered product
   const results = await Promise.all(
     products.map(async (product) => {
       const wholesaler = await Wholesaler.findOne({ email: product.wholesalerEmail });
-       // Fetch request details based on email and requestByEmail from filters
-       const requestDetails = await Request.findOne({
+
+      // Fetch request details based on email and requestByEmail from filters
+      const requestDetails = await Request.findOne({
         email: product.wholesalerEmail,
         requestByEmail: filters.requestByEmail,  // This is coming from the body or filters
       });
+
+      // Exclude products where the request status is 'accepted'
+      if (requestDetails && requestDetails.status === 'accepted') {
+        return null; // Skip this product if the request is accepted
+      }
+
       return {
         product,
         wholesaler: wholesaler || null,
-        requestDetails 
+        requestDetails,
       };
     })
   );
 
+  // Remove null entries (i.e., products where request status was 'accepted')
+  let filteredResults = results.filter(result => result !== null);
+
   // Additional filtering by country, state, city if present
-  let filteredResults = results;
   if (filters.country) {
     filteredResults = filteredResults.filter((result) => result.wholesaler?.country === filters.country);
   }
@@ -352,13 +482,14 @@ const filterWholesalerProducts = async (filters, options) => {
   const totalPages = Math.ceil(totalDocs / limit);
 
   return {
-    totalDocs,
+    totalDocs: filteredResults.length, // Update totalDocs to reflect filtered results
     limit,
     totalPages,
     page,
     results: filteredResults,
   };
 };
+
 const getUniqueBrandsByEmail = async (wholesalerEmail) => {
   try {
     // Use aggregation to get unique brands for the given wholesalerEmail
