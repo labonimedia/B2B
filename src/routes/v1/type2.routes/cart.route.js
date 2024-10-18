@@ -19,7 +19,7 @@ router
   .route('/place-order/products')
   .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), cartType2Controller.getCartByEmailToPlaceOrder);
 
-router
+  router
   .route('/catr/products')
   .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), cartType2Controller.getCartByEmail);
 
