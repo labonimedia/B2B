@@ -133,7 +133,7 @@ const getCartByEmailToPlaceOrder = async (email, productBy) => {
         price: setItem.price,
       },
       productId: {
-        designNumber: cart.productId.designNumber,  // Ensure this field is populated
+        designNumber: cart.productId.designNumber, // Ensure this field is populated
         brand: cart.productId.brand,
         productType: cart.productId.productType,
         productTitle: cart.productId.productTitle,
@@ -151,12 +151,10 @@ const getCartByEmailToPlaceOrder = async (email, productBy) => {
     orderNumber,
     financialYear,
   };
-  
 
   // Return the final order details
   return orderDetails;
 };
-
 
 const getCartByEmail = async (email) => {
   // Find all cart items by email and populate the product details (productId)
@@ -210,7 +208,6 @@ const getCartByEmail = async (email) => {
   return formattedCart;
 };
 
-
 /**
  * Update CartType2 by id
  * @param {ObjectId} id
@@ -250,5 +247,3 @@ module.exports = {
   updateCartType2ById,
   deleteCartType2ById,
 };
-
-

@@ -71,5 +71,3 @@ module.exports = {
   updatePurchaseOrderType2ById,
   deletePurchaseOrderType2ById,
 };
-
-

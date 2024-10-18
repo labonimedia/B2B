@@ -17,34 +17,34 @@ const CartSchema = new mongoose.Schema(
       required: true,
     },
     designNumber: {
-      type: String
+      type: String,
     },
-   set: [{
-
-      colour: { 
-        type: String
+    set: [
+      {
+        colour: {
+          type: String,
+        },
+        colourImage: {
+          type: String,
+        },
+        colourName: {
+          type: String,
+        },
+        size: {
+          type: String,
+        },
+        quantity: {
+          type: Number,
+        },
+        price: {
+          type: String,
+        },
       },
-      colourImage: { 
-        type: String
-      },
-      colourName: { 
-        type: String
-      },
-      size: { 
-        type: String
-      },
-      quantity: { 
-        type: Number
-      },
-      price: {
-        type: String
-      }
-    }],
+    ],
     cartAddedDate: {
       type: Date,
       default: Date.now,
-    }
-
+    },
   },
   {
     timestamps: true,

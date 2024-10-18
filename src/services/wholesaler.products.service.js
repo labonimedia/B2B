@@ -331,7 +331,7 @@ const filterWholesalerProducts = async (filters, options) => {
       return {
         product,
         wholesaler: wholesaler || null,
-        requestDetails // Handle case where wholesaler is not found
+        requestDetails 
       };
     })
   );
