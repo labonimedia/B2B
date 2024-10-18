@@ -304,6 +304,64 @@ const deleteColorCollection = async (productId, collectionId) => {
 //   return productManufacturers;
 // };
 
+// const filterProductsAndFetchManufactureDetails = async (filters) => {
+//   const query = {};
+
+//   // Build the query based on the filters provided
+//   if (filters.productType) {
+//     query.productType = filters.productType;
+//   }
+//   if (filters.gender) {
+//     query.gender = filters.gender;
+//   }
+//   if (filters.clothing) {
+//     query.clothing = filters.clothing;
+//   }
+//   if (filters.subCategory) {
+//     query.subCategory = filters.subCategory;
+//   }
+//   if (filters.productTitle) {
+//     query.productTitle = { $regex: filters.productTitle, $options: 'i' };
+//   }
+//   if (filters.country) {
+//     query.country = filters.country;
+//   }
+//   if (filters.city) {
+//     query.city = filters.city;
+//   }
+//   if (filters.state) {
+//     query.state = filters.state;
+//   }
+
+//   // Get filtered products
+//   const products = await Product.find(query);
+
+//   // Fetch manufacturer, brand, and request details for each product
+//   const productDetails = await Promise.all(
+//     products.map(async (product) => {
+//       // Fetch manufacturer details
+//       const manufacturer = await Manufacture.findOne({ email: product.productBy });
+
+//       // Fetch brand details by productBy
+//       const brand = await Brand.findOne({ brandOwner: product.productBy });
+
+//       // Fetch request details by both email and requestByEmail
+//       const requestDetails = await Request.findOne({
+//         email: product.productBy, // Match product's productBy email
+//         requestByEmail: filters.requestByEmail, // Match filters requestByEmail
+//       });
+
+//       return {
+//         product,
+//         manufacturer,
+//         brand, // Include the brand object
+//         requestDetails, // Include the requestDetails object
+//       };
+//     })
+//   );
+
+//   return productDetails;
+// };
 const filterProductsAndFetchManufactureDetails = async (filters) => {
   const query = {};
 
@@ -347,9 +405,14 @@ const filterProductsAndFetchManufactureDetails = async (filters) => {
 
       // Fetch request details by both email and requestByEmail
       const requestDetails = await Request.findOne({
-        email: product.productBy,               // Match product's productBy email
+        email: product.productBy, // Match product's productBy email
         requestByEmail: filters.requestByEmail, // Match filters requestByEmail
       });
+
+      // Only include request if status is not 'accepted'
+      if (requestDetails && requestDetails.status === 'accepted') {
+        return null; // Skip this product if the request is accepted
+      }
 
       return {
         product,
@@ -360,7 +423,8 @@ const filterProductsAndFetchManufactureDetails = async (filters) => {
     })
   );
 
-  return productDetails;
+  // Filter out null results (where the request was 'accepted')
+  return productDetails.filter(detail => detail !== null);
 };
 
 module.exports = {

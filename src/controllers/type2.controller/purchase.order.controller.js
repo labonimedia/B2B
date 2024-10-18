@@ -1,5 +1,5 @@
 const httpStatus = require('http-status');
-const pick = require('../../utils/pick')
+const pick = require('../../utils/pick');
 const catchAsync = require('../../utils/catchAsync');
 const { purchaseOrderType2Service } = require('../../services');
 
@@ -40,5 +40,3 @@ module.exports = {
   updatePurchaseOrderType2ById,
   deletePurchaseOrderType2ById,
 };
-
-

@@ -137,7 +137,7 @@ const searchWholesalerProducts = catchAsync(async (req, res) => {
   }
 
   // Extract requestByEmail from body
-  const requestByEmail = req.body.requestByEmail;
+  const { requestByEmail } = req.body;
 
   // Pass filter, options, and requestByEmail to the service
   const result = await wholesalerProductsService.searchWholesalerProductsByBrand(filter, options, requestByEmail);

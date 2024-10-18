@@ -94,7 +94,7 @@ const deleteBrandById = catchAsync(async (req, res) => {
 // });
 const searchBrandAndOwnerDetails = catchAsync(async (req, res) => {
   const { brandName, requestByEmail } = req.body;
-  
+
   if (!brandName) {
     return res.status(httpStatus.BAD_REQUEST).send({ message: 'Brand name is required' });
   }

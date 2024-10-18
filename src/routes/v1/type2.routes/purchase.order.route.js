@@ -12,7 +12,13 @@ router
 router
   .route('/:id')
   .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), purchaseOrderType2Controller.getPurchaseOrderType2ById) // Get PurchaseOrderType2 by ID
-  .patch(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), purchaseOrderType2Controller.updatePurchaseOrderType2ById) // Update PurchaseOrderType2 by ID
-  .delete(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), purchaseOrderType2Controller.deletePurchaseOrderType2ById); // Delete PurchaseOrderType2 by ID
+  .patch(
+    auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
+    purchaseOrderType2Controller.updatePurchaseOrderType2ById
+  ) // Update PurchaseOrderType2 by ID
+  .delete(
+    auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
+    purchaseOrderType2Controller.deletePurchaseOrderType2ById
+  ); // Delete PurchaseOrderType2 by ID
 
 module.exports = router;
