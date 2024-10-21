@@ -10,7 +10,7 @@ router
   .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), purchaseOrderType2Controller.queryPurchaseOrderType2); // Query PurchaseOrderType2
 
   router
-  .route('/getby-supplier/:supplierEmail')
+  .route('/getby/supplier')
   .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), purchaseOrderType2Controller.getProductOrderBySupplyer);
 
 router
