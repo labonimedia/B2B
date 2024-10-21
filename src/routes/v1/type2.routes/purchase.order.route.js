@@ -21,4 +21,8 @@ router
     purchaseOrderType2Controller.deletePurchaseOrderType2ById
   ); // Delete PurchaseOrderType2 by ID
 
+  router
+  .route('/getby-supplier/:supplierEmail')
+  .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), purchaseOrderType2Controller.getProductOrderBySupplyer)
+
 module.exports = router;

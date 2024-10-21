@@ -23,6 +23,16 @@ const getPurchaseOrderType2ById = catchAsync(async (req, res) => {
   res.status(httpStatus.OK).send(cartItem);
 });
 
+
+const getProductOrderBySupplyer = catchAsync(async (req, res) => {
+  const cartItem = await purchaseOrderType2Service.getProductOrderBySupplyer(req.query.supplierEmail);
+  if (!cartItem) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Cart not found');
+  }
+  res.status(httpStatus.OK).send(cartItem);
+});
+
+
 const updatePurchaseOrderType2ById = catchAsync(async (req, res) => {
   const updatedCartItem = await purchaseOrderType2Service.updatePurchaseOrderType2ById(req.params.id, req.body);
   res.status(httpStatus.OK).send(updatedCartItem);
@@ -37,6 +47,7 @@ module.exports = {
   createPurchaseOrderType2,
   queryPurchaseOrderType2,
   getPurchaseOrderType2ById,
+  getProductOrderBySupplyer,
   updatePurchaseOrderType2ById,
   deletePurchaseOrderType2ById,
 };
