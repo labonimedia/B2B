@@ -3,7 +3,7 @@ const { paginate, toJSON } = require('../plugins');
 
 // Size Schema
 const SizeSchema = new mongoose.Schema({
-  _id: { type: mongoose.Schema.Types.ObjectId, required: true },
+  // _id: { type: mongoose.Schema.Types.ObjectId, required: true },
   colourName: { type: String, required: true },
   colour: { type: String, required: true },
   colourImage: { type: String },
@@ -24,7 +24,7 @@ const ProductSchema = new mongoose.Schema({
   colour: { type: String, required: true },
   colourName: { type: String, required: true },
   colourImage: { type: String },
-  sizes: [SizeSchema], // Array of sizes
+  sizes: [SizeSchema],
 });
 
 // Main Schema for the Purchase Order
