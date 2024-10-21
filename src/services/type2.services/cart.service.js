@@ -124,6 +124,7 @@ const getCartByEmailToPlaceOrder = async (email, productBy) => {
     },
     products: cart.set.map((setItem) => ({
       set: {
+        designNumber: cart.designNumber || "",
         colour: setItem.colour,
         colourImage: setItem.colourImage,
         colourName: setItem.colourName,
@@ -132,7 +133,7 @@ const getCartByEmailToPlaceOrder = async (email, productBy) => {
         price: setItem.price,
       },
       productId: {
-        designNumber: cart.designNumber,
+        designNumber: cart.designNumber || "",
         brand: cart.productId.brand,
         productType: cart.productId.productType,
         productTitle: cart.productId.productTitle,
