@@ -1,5 +1,5 @@
 const httpStatus = require('http-status');
-const { PurchaseOrderType2 } = require('../../models');
+const { PurchaseOrderType2, CartType2 } = require('../../models');
 const ApiError = require('../../utils/ApiError');
 
 /**
@@ -10,6 +10,14 @@ const ApiError = require('../../utils/ApiError');
 const createPurchaseOrderType2 = async (reqBody) => {
   return PurchaseOrderType2.create(reqBody);
 };
+
+const deleteCartType2ById = async (email, productBy) => {
+  const purchaseOrderType2 = await CartType2.findOneAndDelete({email, productBy});
+  if (!purchaseOrderType2) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Cart Order not found');
+  }
+  return purchaseOrderType2;
+}
 
 /**
  * Query for PurchaseOrderType2
@@ -32,6 +40,37 @@ const queryPurchaseOrderType2 = async (filter, options) => {
  */
 const getPurchaseOrderType2ById = async (id) => {
   return PurchaseOrderType2.findById(id);
+};
+
+
+const getProductOrderBySupplyer = async (supplierEmail) => {
+  const productOrders = await PurchaseOrderType2.find({ supplierEmail });
+
+  if (productOrders.length === 0) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'No Product Orders found for this supplier');
+  }
+
+  // const companyEmails = productOrders.map((order) => order.supplierEmail);
+  // // const wholesalers = await Wholesaler.find({
+  // //   'discountGiven.discountGivenBy': { $in: companyEmails },
+  // // });
+
+  // const updatedProductOrders = productOrders.map((order) => {
+  //   const matchedWholesaler = wholesalers.find((wholesaler) =>
+  //     wholesaler.discountGiven.some((discount) => discount.discountGivenBy === order.supplierEmail)
+  //   );
+
+  //   const discounts = matchedWholesaler
+  //     ? matchedWholesaler.discountGiven.filter((discount) => discount.discountGivenBy === order.supplierEmail)
+  //     : [];
+
+  //   return {
+  //     ...order.toObject(),
+  //     discounts, // This will be an empty array if no discounts were found
+  //   };
+  // });
+
+  return productOrders;
 };
 
 /**
@@ -67,6 +106,7 @@ const deletePurchaseOrderType2ById = async (id) => {
 module.exports = {
   createPurchaseOrderType2,
   queryPurchaseOrderType2,
+  getProductOrderBySupplyer,
   getPurchaseOrderType2ById,
   updatePurchaseOrderType2ById,
   deletePurchaseOrderType2ById,
