@@ -109,7 +109,36 @@ const getCartByEmailToPlaceOrder = async (email, productBy) => {
   const orderNumber = orderCount.count;
 
   // Prepare the cart and order details
+
   const orderDetails = carts.map((cart) => ({
+    productId: {
+      designNumber: cart.designNumber || "",
+      brand: cart.productId.brand,
+      productType: cart.productId.productType,
+      productTitle: cart.productId.productTitle,
+      productDescription: cart.productId.productDescription,
+      setOFnetWeight: cart.productId.setOFnetWeight,
+      setOfMRP: cart.productId.setOfMRP,
+      setOfManPrice: cart.productId.setOfManPrice,
+      currency: cart.productId.currency,
+      quantity: cart.productId.quantity,
+      productBy: cart.productId.productBy,
+      id: cart.productId._id,
+    },
+    products: cart.set.map((setItem) => ({
+      set: {
+        designNumber: cart.designNumber || "",
+        colour: setItem.colour,
+        colourImage: setItem.colourImage,
+        colourName: setItem.colourName,
+        size: setItem.size,
+        quantity: setItem.quantity,
+        price: setItem.price,
+      },
+
+    })),
+  }));
+  const result = {
     manufacturer: {
       fullName: manufacturer.fullName,
       companyName: manufacturer.companyName,
@@ -122,34 +151,10 @@ const getCartByEmailToPlaceOrder = async (email, productBy) => {
       mobNumber: manufacturer.mobNumber,
       GSTIN: manufacturer.GSTIN,
     },
-    products: cart.set.map((setItem) => ({
-      set: {
-        designNumber: cart.designNumber || "",
-        colour: setItem.colour,
-        colourImage: setItem.colourImage,
-        colourName: setItem.colourName,
-        size: setItem.size,
-        quantity: setItem.quantity,
-        price: setItem.price,
-      },
-      productId: {
-        designNumber: cart.designNumber || "",
-        brand: cart.productId.brand,
-        productType: cart.productId.productType,
-        productTitle: cart.productId.productTitle,
-        productDescription: cart.productId.productDescription,
-        setOFnetWeight: cart.productId.setOFnetWeight,
-        setOfMRP: cart.productId.setOfMRP,
-        setOfManPrice: cart.productId.setOfManPrice,
-        currency: cart.productId.currency,
-        quantity: cart.productId.quantity,
-        productBy: cart.productId.productBy,
-        id: cart.productId._id,
-      },
-    })),
-  }));
+    orderDetails,
+  }
   
-  return orderDetails;
+  return result;
   
 };
 
