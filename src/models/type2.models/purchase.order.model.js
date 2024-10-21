@@ -100,7 +100,7 @@ const PurchaseOrderSchema = mongoose.Schema(
       type: String,
     },
     products: [{
-      groupedByColur: [{
+      groupedByColor: [{
         colourName: {
           type: String
         },
