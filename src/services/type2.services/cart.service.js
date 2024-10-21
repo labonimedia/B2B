@@ -33,7 +33,6 @@ const queryCartType2 = async (filter, options) => {
 const getCartType2ById = async (id) => {
   return CartType2.findById(id);
 };
-
 const getCartByEmailToPlaceOrder = async (email, productBy) => {
   // Find the cart by email and productBy, and populate the product details
   const cart = await CartType2.findOne({ email, productBy }).populate('productId');
@@ -133,7 +132,7 @@ const getCartByEmailToPlaceOrder = async (email, productBy) => {
         price: setItem.price,
       },
       productId: {
-        designNumber: cart.productId.designNumber, // Ensure this field is populated
+        designNumber: cart.designNumber, // Now directly accessed from the Cart schema
         brand: cart.productId.brand,
         productType: cart.productId.productType,
         productTitle: cart.productId.productTitle,
