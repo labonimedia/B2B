@@ -62,7 +62,7 @@
 
 
 const mongoose = require('mongoose');
-const { toJSON, paginate } = require('./plugins');
+const { paginate, toJSON } = require('../plugins');
 
 const PurchaseOrderSchema = mongoose.Schema(
   {
