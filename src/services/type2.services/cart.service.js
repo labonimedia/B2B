@@ -35,9 +35,9 @@ const getCartType2ById = async (id) => {
 };
 const getCartByEmailToPlaceOrder = async (email, productBy) => {
   // Find the cart by email and productBy, and populate the product details
-  const cart = await CartType2.findOne({ email, productBy }).populate('productId');
-  if (!cart) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Cart not found');
+  const carts = await CartType2.find({ email, productBy }).populate('productId');
+  if (!carts || carts.length === 0) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'No carts found for this email and productBy');
   }
 
   // Get user details by email to determine the role
@@ -64,10 +64,10 @@ const getCartByEmailToPlaceOrder = async (email, productBy) => {
   }
 
   // Extract the manufacturer email from the product in the cart
-  const productManufacturerEmail = cart.productBy;
+  // const productManufacturerEmail = cart.productBy;
 
   // Fetch manufacturer details for the product's manufacturer
-  const manufacturer = await Manufacture.findOne({ email: productManufacturerEmail }).select(
+  const manufacturer = await Manufacture.findOne({ email: productBy }).select(
     'fullName companyName email address country state city pinCode mobNumber GSTIN'
   );
 
@@ -109,7 +109,7 @@ const getCartByEmailToPlaceOrder = async (email, productBy) => {
   const orderNumber = orderCount.count;
 
   // Prepare the cart and order details
-  const orderDetails = {
+  const orderDetails = carts.map((cart) => ({
     manufacturer: {
       fullName: manufacturer.fullName,
       companyName: manufacturer.companyName,
@@ -132,7 +132,7 @@ const getCartByEmailToPlaceOrder = async (email, productBy) => {
         price: setItem.price,
       },
       productId: {
-        designNumber: cart.designNumber, // Now directly accessed from the Cart schema
+        designNumber: cart.designNumber,
         brand: cart.productId.brand,
         productType: cart.productId.productType,
         productTitle: cart.productId.productTitle,
@@ -146,13 +146,10 @@ const getCartByEmailToPlaceOrder = async (email, productBy) => {
         id: cart.productId._id,
       },
     })),
-    wholesaler,
-    orderNumber,
-    financialYear,
-  };
-
-  // Return the final order details
+  }));
+  
   return orderDetails;
+  
 };
 
 
