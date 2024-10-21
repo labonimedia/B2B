@@ -138,6 +138,7 @@ const getCartByEmailToPlaceOrder = async (email, productBy) => {
       GSTIN: manufacturer.GSTIN,
     },
     wholesaler,
+    orderNumber,
     products: orderDetails,
   };
 
