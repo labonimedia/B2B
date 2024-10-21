@@ -99,37 +99,40 @@ const PurchaseOrderSchema = mongoose.Schema(
     poNumber: {
       type: String,
     },
-    products: [
-      {
-        designNo: {
-          type: String,
+    products: [{
+      groupedByColur: [{
+        colourName: {
+          type: String
         },
-        gst: {
-          type: String,
-        },
-        mrp: {
-          type: String,
-        },
-        name: {
-          type: String,
-        },
-        qty: {
-          type: String,
-        },
-        rate: {
-          type: String,
-        },
-        srNo: {
-          type: String,
-        },
-        taxableValue: {
-          type: String,
-        },
-        total: {
-          type: String,
-        },
-      },
-    ],
+        colorImage: { type: String},
+        colour: { type: String},
+        designNumber: { type: String},
+        sizes:[{
+          colourName: {
+            type: String
+          },
+          colorImage: { type: String},
+          designNumber: { type: String},
+          colour: { type: String},
+          size: { type: String },
+          quantity: { type: Number },
+          price: { type: String }
+        }]
+      }],
+      set: [{
+        colorImage: { type: String},
+        designNumber: { type: String},
+        colourName: { type: String},
+        size: { type: String },
+        quantity: { type: Number },
+        price: { type: String }
+      }],
+      sizes: [{
+        price: { type: String },
+        size: { type: String },
+      
+      }]
+  }],
     roundedOffTotal: {
       type: String,
     },
