@@ -33,6 +33,12 @@ const queryCartType2 = async (filter, options) => {
 const getCartType2ById = async (id) => {
   return CartType2.findById(id);
 };
+
+/**
+ * Get cart items for a specific user and productBy
+ * @param {string} email - User's email
+ * @param {string} productBy - Product's manufacturer email
+ */
 const getCartByEmailToPlaceOrder = async (email, productBy) => {
   // Find the cart by email and productBy, and populate the product details
   const carts = await CartType2.find({ email, productBy }).populate('productId');
@@ -131,6 +137,7 @@ const getCartByEmailToPlaceOrder = async (email, productBy) => {
       mobNumber: manufacturer.mobNumber,
       GSTIN: manufacturer.GSTIN,
     },
+    wholesaler,
     products: orderDetails,
   };
 
@@ -191,6 +198,12 @@ const getCartByEmailToPlaceOrder = async (email, productBy) => {
 //   return groupedCart;
 // };
 
+
+/**
+ * 
+ * @param {} email 
+ * @returns 
+ */
 
 const getCartByEmail = async (email) => {
   // Find all cart items by email and populate the product details (productId)
