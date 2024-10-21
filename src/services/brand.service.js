@@ -1,5 +1,5 @@
 const httpStatus = require('http-status');
-const { Brand, Manufacture } = require('../models');
+const { Brand, Manufacture, Request } = require('../models');
 const ApiError = require('../utils/ApiError');
 
 /**
@@ -84,25 +84,105 @@ const deleteBrandById = async (id) => {
   return user;
 };
 
-const searchBrandAndOwnerDetails = async (brandName) => {
+// const searchBrandAndOwnerDetails = async (brandName) => {
+//   const brands = await Brand.find({ brandName: { $regex: brandName, $options: 'i' } });
+
+//   if (brands.length === 0) {
+//     return [];
+//   }
+//   const brandOwners = brands.map((brand) => brand.brandOwner);
+//   const ownersDetails = await Manufacture.find({
+//     email: { $in: brandOwners },
+//   });
+
+//   // Create a map to easily associate each brandOwner email with its corresponding owner details
+//   const ownerDetailsMap = new Map(ownersDetails.map((owner) => [owner.email, owner]));
+//   // Combine brand details with corresponding owner details
+//   const combinedDetails = brands.map((brand) => {
+//     const ownerDetails = ownerDetailsMap.get(brand.brandOwner) || {};
+//     return {
+//       ...brand.toObject(),
+//       ownerDetails: ownerDetails.toObject ? ownerDetails.toObject() : ownerDetails,
+//     };
+//   });
+
+//   return combinedDetails;
+// };
+// const searchBrandAndOwnerDetails = async (brandName, requestByEmail) => {
+//   // Search for brands matching the brandName
+//   const brands = await Brand.find({ brandName: { $regex: brandName, $options: 'i' } });
+
+//   if (brands.length === 0) {
+//     return [];
+//   }
+
+//   // Extract the emails of brand owners
+//   const brandOwners = brands.map((brand) => brand.brandOwner);
+
+//   // Fetch the owner details for the brand owners
+//   const ownersDetails = await Manufacture.find({ email: { $in: brandOwners } });
+
+//   // Fetch the request details based on requestByEmail and brandOwner (email)
+//   const requestDetails = await Request.find({
+//     email: { $in: brandOwners },
+//     requestByEmail,
+//   });
+
+//   // Create a map for owner details and request details
+//   const ownerDetailsMap = new Map(ownersDetails.map((owner) => [owner.email, owner]));
+//   const requestDetailsMap = new Map(requestDetails.map((request) => [request.email, request]));
+
+//   // Combine brand details with corresponding owner and request details
+//   const combinedDetails = brands.map((brand) => {
+//     const ownerDetails = ownerDetailsMap.get(brand.brandOwner) || {};
+//     const requestDetail = requestDetailsMap.get(brand.brandOwner) || {}; // get request by email
+
+//     return {
+//       ...brand.toObject(),
+//       ownerDetails: ownerDetails.toObject ? ownerDetails.toObject() : ownerDetails,
+//       requestDetails: requestDetail.toObject ? requestDetail.toObject() : requestDetail,
+//     };
+//   });
+
+//   return combinedDetails;
+// };
+
+const searchBrandAndOwnerDetails = async (brandName, requestByEmail) => {
+  // Search for brands matching the brandName
   const brands = await Brand.find({ brandName: { $regex: brandName, $options: 'i' } });
 
   if (brands.length === 0) {
     return [];
   }
+
+  // Extract the emails of brand owners
   const brandOwners = brands.map((brand) => brand.brandOwner);
-  const ownersDetails = await Manufacture.find({
+
+  // Fetch the owner details for the brand owners
+  const ownersDetails = await Manufacture.find({ email: { $in: brandOwners } });
+
+  // Fetch the request details based on requestByEmail and brandOwner (email)
+  const requestDetails = await Request.find({
     email: { $in: brandOwners },
+    requestByEmail,
   });
 
-  // Create a map to easily associate each brandOwner email with its corresponding owner details
+  // Filter out request details with status 'accepted'
+  const filteredRequestDetails = requestDetails.filter(request => request.status !== 'accepted');
+
+  // Create a map for owner details and filtered request details
   const ownerDetailsMap = new Map(ownersDetails.map((owner) => [owner.email, owner]));
-  // Combine brand details with corresponding owner details
+  const requestDetailsMap = new Map(filteredRequestDetails.map((request) => [request.email, request]));
+
+  // Combine brand details with corresponding owner and request details
   const combinedDetails = brands.map((brand) => {
     const ownerDetails = ownerDetailsMap.get(brand.brandOwner) || {};
+    const requestDetail = requestDetailsMap.get(brand.brandOwner) || {}; // get request by email
+
     return {
       ...brand.toObject(),
       ownerDetails: ownerDetails.toObject ? ownerDetails.toObject() : ownerDetails,
+      requestDetails: requestDetail.toObject ? requestDetail.toObject() : requestDetail,
     };
   });
 

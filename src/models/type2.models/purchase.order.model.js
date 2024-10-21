@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 const { paginate, toJSON } = require('../plugins');
 
-
 // Size Schema
 const SizeSchema = new mongoose.Schema({
   _id: { type: mongoose.Schema.Types.ObjectId, required: true },
@@ -10,7 +9,7 @@ const SizeSchema = new mongoose.Schema({
   colourImage: { type: String },
   price: { type: Number, required: true },
   quantity: { type: Number, required: true },
-  size: { type: String, required: true }
+  size: { type: String, required: true },
 });
 
 // Product Schema
@@ -25,7 +24,7 @@ const ProductSchema = new mongoose.Schema({
   colour: { type: String, required: true },
   colourName: { type: String, required: true },
   colourImage: { type: String },
-  sizes: [SizeSchema]  // Array of sizes
+  sizes: [SizeSchema], // Array of sizes
 });
 
 // Main Schema for the Purchase Order
@@ -43,14 +42,14 @@ const PurchaseOrderSchema = new mongoose.Schema({
   orderNo: { type: String, required: true },
   poDate: { type: String, required: true },
   poNumber: { type: Number, required: true },
-  product: [ProductSchema],  // Array of products
+  product: [ProductSchema], // Array of products
   supplierAddress: { type: String, required: true },
   supplierContact: { type: String, required: true },
   supplierDetails: { type: String, required: true },
   supplierEmail: { type: String, required: true },
   supplierGSTIN: { type: String, required: true },
   supplierName: { type: String, required: true },
-  totalInWords: { type: String }
+  totalInWords: { type: String },
 });
 
 PurchaseOrderSchema.plugin(toJSON);

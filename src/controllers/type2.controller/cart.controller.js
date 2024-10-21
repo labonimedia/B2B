@@ -1,5 +1,5 @@
 const httpStatus = require('http-status');
-const pick = require('../../utils/pick')
+const pick = require('../../utils/pick');
 const catchAsync = require('../../utils/catchAsync');
 const { cartType2Service } = require('../../services');
 
@@ -56,5 +56,3 @@ module.exports = {
   updateCartType2ById,
   deleteCartType2ById,
 };
-
-

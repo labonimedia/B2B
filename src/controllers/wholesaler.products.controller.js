@@ -92,6 +92,31 @@ const deleteProductById = catchAsync(async (req, res) => {
 //   const result = await wholesalerProductsService.searchWholesalerProductsByBrand(filter, options);
 //   res.status(httpStatus.OK).send(result);
 // });
+
+// const searchWholesalerProducts = catchAsync(async (req, res) => {
+//   const filter = {};
+//   const options = {};
+
+//   // If the brand is provided, use regex to perform partial matching
+//   if (req.body.brand) {
+//     filter.brand = { $regex: req.body.brand, $options: 'i' }; // 'i' for case-insensitive
+//   }
+
+//   // Handle pagination options
+//   if (req.query.sortBy) {
+//     options.sortBy = req.query.sortBy;
+//   }
+//   if (req.query.limit) {
+//     options.limit = parseInt(req.query.limit, 10);
+//   }
+//   if (req.query.page) {
+//     options.page = parseInt(req.query.page, 10);
+//   }
+
+//   const result = await wholesalerProductsService.searchWholesalerProductsByBrand(filter, options);
+//   res.status(httpStatus.OK).send(result);
+// });
+
 const searchWholesalerProducts = catchAsync(async (req, res) => {
   const filter = {};
   const options = {};
@@ -112,7 +137,11 @@ const searchWholesalerProducts = catchAsync(async (req, res) => {
     options.page = parseInt(req.query.page, 10);
   }
 
-  const result = await wholesalerProductsService.searchWholesalerProductsByBrand(filter, options);
+  // Extract requestByEmail from body
+  const { requestByEmail } = req.body;
+
+  // Pass filter, options, and requestByEmail to the service
+  const result = await wholesalerProductsService.searchWholesalerProductsByBrand(filter, options, requestByEmail);
   res.status(httpStatus.OK).send(result);
 });
 
