@@ -119,7 +119,9 @@ const getWholesalersByEmails = async (emails, options) => {
 
   // Query to find wholesalers by emails
   const query = { email: { $in: emails }, role: 'wholesaler' };
-
+  if (userCategory) {
+    query.userCategory = userCategory;
+  }
   const totalDocs = await User.countDocuments(query);
   const docs = await User.find(query).skip(skip).limit(limit);
 

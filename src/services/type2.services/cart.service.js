@@ -183,7 +183,7 @@ const getCartByEmail = async (email) => {
 
     acc[productBy].products.push({
       set: item.set.map((setItem) => ({
-        designNumber: setItem.designNumber || "" ,
+        designNumber: setItem.designNumber || '',
         colour: setItem.colour,
         colourImage: setItem.colourImage,
         colourName: setItem.colourName,
