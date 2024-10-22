@@ -86,3 +86,4 @@ module.exports.productType2Service = require('./type2.services/product.service')
 module.exports.cartType2Service = require('./type2.services/cart.service');
 module.exports.purchaseOrderType2Service = require('./type2.services/purchase.order.service');
 module.exports.genderService = require('./gender.service');
+module.exports.wishListType2Service = require('./type2.services/wishlist.service');
