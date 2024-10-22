@@ -242,6 +242,7 @@ const deleteProductById = async (id) => {
 //     results,
 //   };
 // };
+
 const searchWholesalerProductsByBrand = async (filter, options, requestByEmail) => {
   // Set pagination defaults
   const page = options.page ? parseInt(options.page, 10) : 1;
@@ -413,6 +414,7 @@ const searchWholesalerProductsByBrand = async (filter, options, requestByEmail) 
 //     results: filteredResults,
 //   };
 // };
+
 /**
  * Filter products based on dynamic filters and fetch wholesaler details
  * @param {Object} filters - The filter criteria for searching products

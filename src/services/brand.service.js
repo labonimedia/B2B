@@ -1,5 +1,5 @@
 const httpStatus = require('http-status');
-const { Brand, Manufacture, Request } = require('../models');
+const { Brand, Manufacture, Request, User } = require('../models');
 const ApiError = require('../utils/ApiError');
 
 /**
@@ -147,6 +147,7 @@ const deleteBrandById = async (id) => {
 //   return combinedDetails;
 // };
 
+
 const searchBrandAndOwnerDetails = async (brandName, requestByEmail) => {
   // Search for brands matching the brandName
   const brands = await Brand.find({ brandName: { $regex: brandName, $options: 'i' } });
@@ -168,7 +169,7 @@ const searchBrandAndOwnerDetails = async (brandName, requestByEmail) => {
   });
 
   // Filter out request details with status 'accepted'
-  const filteredRequestDetails = requestDetails.filter(request => request.status !== 'accepted');
+  const filteredRequestDetails = requestDetails.filter((request) => request.status !== 'accepted');
 
   // Create a map for owner details and filtered request details
   const ownerDetailsMap = new Map(ownersDetails.map((owner) => [owner.email, owner]));
@@ -188,6 +189,51 @@ const searchBrandAndOwnerDetails = async (brandName, requestByEmail) => {
 
   return combinedDetails;
 };
+
+// const searchBrandAndOwnerDetails = async (brandName, requestByEmail) => {
+//   // Step 1: Fetch the user based on requestByEmail
+//   const user = await User.findOne({ email: requestByEmail });
+//   if (!user) {
+//     throw new Error('User not found');
+//   }
+//   // Step 2: Get the refByEmail array from the user
+//   const { refByEmail } = user;
+//   // Step 3: Search for brands matching the brandName
+//   const brands = await Brand.find({ brandName: { $regex: brandName, $options: 'i' } });
+//   if (brands.length === 0) {
+//     return [];
+//   }
+//   // Step 4: Extract the emails of brand owners
+//   const brandOwners = brands.map((brand) => brand.brandOwner);
+//   // Step 5: Fetch the owner details for the brand owners
+//   const ownersDetails = await Manufacture.find({ email: { $in: brandOwners } });
+//   // Step 6: Fetch the request details based on requestByEmail and brandOwner (email)
+//   const requestDetails = await Request.find({
+//     email: { $in: brandOwners },
+//     requestByEmail,
+//   });
+
+//   // Step 7: Filter out request details with status 'accepted'
+//   const filteredRequestDetails = requestDetails.filter((request) => request.status !== 'accepted');
+//   // Step 8: Create a map for owner details and filtered request details
+//   const ownerDetailsMap = new Map(ownersDetails.map((owner) => [owner.email, owner]));
+//   const requestDetailsMap = new Map(filteredRequestDetails.map((request) => [request.email, request]));
+//   // Step 9: Combine brand details with corresponding owner and request details
+//   const combinedDetails = brands.map((brand) => {
+//     const ownerDetails = ownerDetailsMap.get(brand.brandOwner) || {};
+//     const requestDetail = requestDetailsMap.get(brand.brandOwner) || {}; // get request by email
+//     if (refByEmail.includes(brand.brandOwner)) {
+//       return null; 
+//     }
+//     return {
+//       ...brand.toObject(),
+//       ownerDetails: ownerDetails.toObject ? ownerDetails.toObject() : ownerDetails,
+//       requestDetails: requestDetail.toObject ? requestDetail.toObject() : requestDetail,
+//     };
+//   });
+//   // Step 11: Filter out null values (those where brandOwner was in refByEmail)
+//   return combinedDetails.filter((detail) => detail !== null);
+// };
 
 module.exports = {
   createBrand,
