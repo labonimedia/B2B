@@ -1,14 +1,14 @@
 const httpStatus = require('http-status');
-const { WishListType2Schema, Product, User } = require('../../models');
+const { WishListType2, Product, User } = require('../../models');
 const ApiError = require('../../utils/ApiError');
 
 /**
  * Create a WishListType2SchemaType2Schema
  * @param {Object} reqBody
- * @returns {Promise<WishListType2SchemaType2Schema>}
+ * @returns {Promise<WishListType2>}
  */
 const createWishListType2Schema = async (reqBody) => {
-  return WishListType2Schema.create(reqBody);
+  return WishListType2.create(reqBody);
 };
 
 /**
@@ -21,21 +21,21 @@ const createWishListType2Schema = async (reqBody) => {
  * @returns {Promise<QueryResult>}
  */
 const queryWishListType2Schema = async (filter, options) => {
-  const WishListType2Schemas = await WishListType2Schema.paginate(filter, options);
-  return WishListType2Schemas;
+  const wishListType2 = await WishListType2.paginate(filter, options);
+  return wishListType2;
 };
 
 /**
  * Get WishListType2Schema by id
  * @param {ObjectId} id
- * @returns {Promise<WishListType2Schema>}
+ * @returns {Promise<WishListType2>}
  */
 const getWishListType2SchemaById = async (id) => {
-  return WishListType2Schema.findById(id);
+  return WishListType2.findById(id);
 };
 
 const getWishListType2SchemaByEmail = async (email) => {
-  const WishListType2SchemaItems = await WishListType2Schema.find({ email }).select('productId _id');
+  const WishListType2SchemaItems = await WishListType2.find({ email }).select('productId _id');
   const productIds = WishListType2SchemaItems.map((item) => item.productId);
   const products = await Product.find({ _id: { $in: productIds } });
   const userEmails = [...new Set(products.map((product) => product.productBy))];
@@ -57,16 +57,16 @@ const getWishListType2SchemaByEmail = async (email) => {
  * Get WishListType2Schema by id
  * @param {ObjectId} productId
  * @param {ObjectId} email
- * @returns {Promise<WishListType2Schema>}
+ * @returns {Promise<WishListType2>}
  */
 const checkWishListType2SchemaById = async (productId, email) => {
-  return WishListType2Schema.findOne({ productId, email });
+  return WishListType2.findOne({ productId, email });
 };
 /**
  * Update WishListType2Schema by id
  * @param {ObjectId} Id
  * @param {Object} updateBody
- * @returns {Promise<WishListType2Schema>}
+ * @returns {Promise<WishListType2>}
  */
 const updateWishListType2SchemaById = async (id, updateBody) => {
   const user = await getWishListType2SchemaById(id);
@@ -81,7 +81,7 @@ const updateWishListType2SchemaById = async (id, updateBody) => {
 /**
  * Delete user by id
  * @param {ObjectId} userId
- * @returns {Promise<WishListType2Schema>}
+ * @returns {Promise<WishListType2>}
  */
 const deleteWishListType2SchemaById = async (id) => {
   const user = await getWishListType2SchemaById(id);
