@@ -1,5 +1,5 @@
 const httpStatus = require('http-status');
-const { WishListType2, Product, User } = require('../../models');
+const { WishListType2, ProductType2, User } = require('../../models');
 const ApiError = require('../../utils/ApiError');
 
 /**
@@ -37,7 +37,7 @@ const getWishListType2SchemaById = async (id) => {
 const getWishListType2SchemaByEmail = async (email) => {
   const WishListType2SchemaItems = await WishListType2.find({ email }).select('productId _id');
   const productIds = WishListType2SchemaItems.map((item) => item.productId);
-  const products = await Product.find({ _id: { $in: productIds } });
+  const products = await ProductType2.find({ _id: { $in: productIds } });
   const userEmails = [...new Set(products.map((product) => product.productBy))];
   const users = await User.find({ email: { $in: userEmails } });
   const userMap = new Map(users.map((user) => [user.email, user.fullName]));
