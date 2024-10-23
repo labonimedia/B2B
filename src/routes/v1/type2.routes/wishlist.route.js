@@ -22,5 +22,7 @@ router
 
 router
   .route('/get/wishlist/:email')
-  .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), wishListType2Controller.getWishListType2SchemaByEmail);
+  .get(
+    //auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), 
+  wishListType2Controller.getWishListType2SchemaByEmail);
 module.exports = router;
