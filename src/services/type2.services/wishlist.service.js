@@ -62,6 +62,7 @@ const getWishListType2SchemaByEmail = async (email) => {
 const checkWishListType2SchemaById = async (productId, email) => {
   return WishListType2.findOne({ productId, email });
 };
+
 /**
  * Update WishListType2Schema by id
  * @param {ObjectId} Id
