@@ -6,7 +6,9 @@ const router = express.Router();
 
 router
   .route('/')
-  .post(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), wishListType2Controller.checkWishListType2SchemaById)
+  .post(
+    auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
+   wishListType2Controller.createWishListType2Schema)
   .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), wishListType2Controller.queryWishListType2Schema);
 
 router
