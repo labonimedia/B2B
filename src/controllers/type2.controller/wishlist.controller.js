@@ -24,9 +24,9 @@ const getWishListType2SchemaById = catchAsync(async (req, res) => {
   res.send(user);
 });
 const checkWishListType2SchemaById = catchAsync(async (req, res) => {
-    const { productId, email } = req.body;
+    const { productId, email } = req.query;
     const user = await wishListType2Service.checkWishListType2SchemaById(productId, email);
-    
+
   if (!user) {
     throw new ApiError(httpStatus.NOT_FOUND, 'WishListType2 not found');
   }
