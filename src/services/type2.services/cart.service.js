@@ -33,10 +33,46 @@ const createCartType2 = async (reqBody) => {
  * @param {number} [options.page] - Current page (default = 1)
  * @returns {Promise<QueryResult>}
  */
+// const queryCartType2 = async (filter, options) => {
+//   const cartType2Items = await CartType2.paginate(filter, options);
+//   return cartType2Items;
+// };
+
 const queryCartType2 = async (filter, options) => {
-  const cartType2Items = await CartType2.paginate(filter, options);
-  return cartType2Items;
+  try {
+    // Paginate the CartType2 items
+    const cartType2Items = await CartType2.paginate(filter, options);
+
+    if (cartType2Items.results.length === 0) {
+      return cartType2Items; // Return directly if no results
+    }
+
+    // Extract unique productBy emails from the paginated results
+    const productByEmails = [...new Set(cartType2Items.results.map((item) => item.productBy))];
+
+    // Fetch manufacturer details based on the productBy emails
+    const manufacturers = await Manufacturer.find({
+      email: { $in: productByEmails },
+    }).select('email name'); // Fetch only necessary fields
+
+    // Create a mapping of email to name
+    const manufacturerMap = manufacturers.reduce((acc, manufacturer) => {
+      acc[manufacturer.email] = manufacturer.name;
+      return acc;
+    }, {});
+
+    // Enrich each item in the results with the manufacturerName
+    cartType2Items.results = cartType2Items.results.map((item) => ({
+      ...item.toObject(), // Convert mongoose document to plain object
+      manufacturerName: manufacturerMap[item.productBy] || null, // Default to null if not found
+    }));
+
+    return cartType2Items;
+  } catch (error) {
+    throw new Error('Failed to query CartType2');
+  }
 };
+
 
 /**
  * Get CartType2 by id
