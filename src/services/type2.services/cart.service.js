@@ -41,9 +41,8 @@ const createCartType2 = async (reqBody) => {
 const queryCartType2 = async (filter, options) => {
     // Paginate the CartType2 items
     const cartType2Items = await CartType2.paginate(filter, options);
-
     if (cartType2Items.results.length === 0) {
-      return cartType2Items; // Return directly if no results
+      return cartType2Items;
     }
 
     // Extract unique productBy emails from the paginated results
@@ -52,11 +51,11 @@ const queryCartType2 = async (filter, options) => {
     // Fetch manufacturer details based on the productBy emails
     const manufacturers = await Manufacture.find({
       email: { $in: productByEmails },
-    }).select('email name'); // Fetch only necessary fields
+    }).select('email fullName');
 
     // Create a mapping of email to name
     const manufacturerMap = manufacturers.reduce((acc, manufacturer) => {
-      acc[manufacturer.email] = manufacturer.name;
+      acc[manufacturer.email] = manufacturer.fullName;
       return acc;
     }, {});
 
