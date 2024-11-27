@@ -39,7 +39,6 @@ const createCartType2 = async (reqBody) => {
 // };
 
 const queryCartType2 = async (filter, options) => {
-  try {
     // Paginate the CartType2 items
     const cartType2Items = await CartType2.paginate(filter, options);
 
@@ -51,7 +50,7 @@ const queryCartType2 = async (filter, options) => {
     const productByEmails = [...new Set(cartType2Items.results.map((item) => item.productBy))];
 
     // Fetch manufacturer details based on the productBy emails
-    const manufacturers = await Manufacturer.find({
+    const manufacturers = await Manufacture.find({
       email: { $in: productByEmails },
     }).select('email name'); // Fetch only necessary fields
 
@@ -66,11 +65,7 @@ const queryCartType2 = async (filter, options) => {
       ...item.toObject(), // Convert mongoose document to plain object
       manufacturerName: manufacturerMap[item.productBy] || null, // Default to null if not found
     }));
-
     return cartType2Items;
-  } catch (error) {
-    throw new Error('Failed to query CartType2');
-  }
 };
 
 
