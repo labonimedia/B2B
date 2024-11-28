@@ -17,11 +17,11 @@ const CartSchema = new mongoose.Schema(
     },
     set: [
       {
-        productId: {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: 'ProductType2',
-          required: true,
-        },
+        // productId: {
+        //   type: mongoose.Schema.Types.ObjectId,
+        //   ref: 'ProductType2',
+        //   required: true,
+        // },
         designNumber: {
           type: String,
         },
