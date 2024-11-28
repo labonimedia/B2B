@@ -1,5 +1,5 @@
 const httpStatus = require('http-status');
-const { CartType2, User, Wholesaler, Retailer, Manufacture, POCountertype2 } = require('../../models');
+const { CartType2, User, Wholesaler, Retailer, Manufacture, POCountertype2, WishListType2 } = require('../../models');
 const ApiError = require('../../utils/ApiError');
 
 /**
@@ -15,10 +15,12 @@ const createCartType2 = async (reqBody) => {
       // Push new set data into the existing cart's set array
       existingCart.set.push(...set);
       await existingCart.save();
+      await WishListType2.findOneAndDelete({productId: reqBody.productId})
       return  existingCart
     } else {
       // If no cart exists, create a new one
       const newCart = await CartType2.create(reqBody);
+      await WishListType2.findOneAndDelete({productId: reqBody.productId})
       return  newCart;
     }
 };
