@@ -118,37 +118,60 @@ const genratePOCartType2 = async (id) => {
 
   // Fetch wholesaler details based on the provided `email` (if any)
   let wholesaler = null;
+  let discountDetails = null;
+
   if (cartItem.email) {
+    // Fetch wholesaler details and discount array
     wholesaler = await Wholesaler.findOne({
       email: cartItem.email,
-    }).select('email fullName companyName address state country pinCode mobNumber GSTIN');
+    }).select(
+      'email fullName companyName address state country pinCode mobNumber GSTIN logo discountGiven'
+    );
+
+    if (wholesaler) {
+      // Find the discount entry for the `productBy` field
+      const discountEntry = wholesaler.discountGiven.find(
+        (discount) => discount.discountGivenBy === cartItem.productBy
+      );
+
+      if (discountEntry) {
+        discountDetails = {
+          productDiscount: discountEntry.productDiscount,
+          category: discountEntry.category,
+        };
+      }
+    }
   }
 
+  // Determine the financial year for the order number
   const now = new Date();
   const currentMonth = now.getMonth();
-  let financialYear = currentMonth < 2 || (currentMonth === 2 && now.getDate() < 1) ? now.getFullYear() - 1 : now.getFullYear();
+  let financialYear =
+    currentMonth < 2 || (currentMonth === 2 && now.getDate() < 1)
+      ? now.getFullYear() - 1
+      : now.getFullYear();
 
-    // Get the current order count for the wholesaler and financial year
-    let orderCount;
-    try {
-      orderCount = await POCountertype2.findOneAndUpdate(
-        { wholesalerEmail: wholesaler.email, year: financialYear },
-        { $inc: { count: 1 } },
-        { new: true, upsert: true, setDefaultsOnInsert: true }
-      );
-    } catch (error) {
-      if (error.code === 11000) {
-        throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'Duplicate order counter entry.');
-      }
-      throw error;
+  // Get the current order count for the wholesaler and financial year
+  let orderCount;
+  try {
+    orderCount = await POCountertype2.findOneAndUpdate(
+      { wholesalerEmail: wholesaler?.email, year: financialYear },
+      { $inc: { count: 1 } },
+      { new: true, upsert: true, setDefaultsOnInsert: true }
+    );
+  } catch (error) {
+    if (error.code === 11000) {
+      throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'Duplicate order counter entry.');
     }
-  
-    const orderNumber = orderCount.count;
-  
+    throw error;
+  }
+
+  const orderNumber = orderCount.count;
+
   // Prepare the enriched response
   const enrichedCartItem = {
     ...cartItem.toObject(),
-    poNumber: orderNumber, // Convert mongoose document to plain object
+    poNumber: orderNumber, // Purchase Order Number
     manufacturer: manufacturer
       ? {
           email: manufacturer.email,
@@ -173,12 +196,15 @@ const genratePOCartType2 = async (id) => {
           pinCode: wholesaler.pinCode,
           mobNumber: wholesaler.mobNumber,
           GSTIN: wholesaler.GSTIN,
+          logo: wholesaler.logo,
+          ...discountDetails, // Include discount details (if found)
         }
       : null, // Default to null if wholesaler not found
   };
 
   return enrichedCartItem;
 };
+
 
 
 
