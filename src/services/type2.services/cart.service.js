@@ -98,6 +98,89 @@ if(filter.email){
 const getCartType2ById = async (id) => {
   return CartType2.findById(id);
 };
+/**
+ * Get cart items for a specific user and productBy
+ * @param {string} email - User's email
+ * @param {string} productBy - Product's manufacturer email
+ */
+
+const genratePOCartType2 = async (id) => {
+  // Fetch the CartType2 document by its ID
+  const cartItem = await CartType2.findById(id);
+  if (!cartItem) {
+    throw new Error("Cart item not found");
+  }
+
+  // Fetch manufacturer details based on the `productBy` email
+  const manufacturer = await Manufacture.findOne({
+    email: cartItem.productBy,
+  }).select('email fullName companyName address state country pinCode mobNumber GSTIN');
+
+  // Fetch wholesaler details based on the provided `email` (if any)
+  let wholesaler = null;
+  if (cartItem.email) {
+    wholesaler = await Wholesaler.findOne({
+      email: cartItem.email,
+    }).select('email fullName companyName address state country pinCode mobNumber GSTIN');
+  }
+
+  const now = new Date();
+  const currentMonth = now.getMonth();
+  let financialYear = currentMonth < 2 || (currentMonth === 2 && now.getDate() < 1) ? now.getFullYear() - 1 : now.getFullYear();
+
+    // Get the current order count for the wholesaler and financial year
+    let orderCount;
+    try {
+      orderCount = await POCountertype2.findOneAndUpdate(
+        { wholesalerEmail: wholesaler.email, year: financialYear },
+        { $inc: { count: 1 } },
+        { new: true, upsert: true, setDefaultsOnInsert: true }
+      );
+    } catch (error) {
+      if (error.code === 11000) {
+        throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'Duplicate order counter entry.');
+      }
+      throw error;
+    }
+  
+    const orderNumber = orderCount.count;
+  
+  // Prepare the enriched response
+  const enrichedCartItem = {
+    ...cartItem.toObject(),
+    poNumber: orderNumber, // Convert mongoose document to plain object
+    manufacturer: manufacturer
+      ? {
+          email: manufacturer.email,
+          fullName: manufacturer.fullName,
+          companyName: manufacturer.companyName,
+          address: manufacturer.address,
+          state: manufacturer.state,
+          country: manufacturer.country,
+          pinCode: manufacturer.pinCode,
+          mobNumber: manufacturer.mobNumber,
+          GSTIN: manufacturer.GSTIN,
+        }
+      : null, // Default to null if manufacturer not found
+    wholesaler: wholesaler
+      ? {
+          email: wholesaler.email,
+          fullName: wholesaler.fullName,
+          companyName: wholesaler.companyName,
+          address: wholesaler.address,
+          state: wholesaler.state,
+          country: wholesaler.country,
+          pinCode: wholesaler.pinCode,
+          mobNumber: wholesaler.mobNumber,
+          GSTIN: wholesaler.GSTIN,
+        }
+      : null, // Default to null if wholesaler not found
+  };
+
+  return enrichedCartItem;
+};
+
+
 
 /**
  * Get cart items for a specific user and productBy
@@ -153,22 +236,6 @@ const getCartByEmailToPlaceOrder = async (email, productBy) => {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Wholesaler information is missing.');
   }
 
-  // Get the current order count for the wholesaler and financial year
-  let orderCount;
-  try {
-    orderCount = await POCountertype2.findOneAndUpdate(
-      { wholesalerEmail: wholesaler.email, year: financialYear },
-      { $inc: { count: 1 } },
-      { new: true, upsert: true, setDefaultsOnInsert: true }
-    );
-  } catch (error) {
-    if (error.code === 11000) {
-      throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'Duplicate order counter entry.');
-    }
-    throw error;
-  }
-
-  const orderNumber = orderCount.count;
 
   // Prepare the cart and order details with the desired format
   const orderDetails = carts.map((cart) => ({
@@ -358,6 +425,7 @@ module.exports = {
   createCartType2,
   queryCartType2,
   getCartByEmail,
+  genratePOCartType2,
   getCartByEmailToPlaceOrder,
   getCartType2ById,
   updateCartType2ById,
