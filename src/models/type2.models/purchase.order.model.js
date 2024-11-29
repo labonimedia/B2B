@@ -63,109 +63,48 @@ const { paginate, toJSON } = require('../plugins');
 
 const PurchaseOrderSchema = mongoose.Schema(
   {
-    buyerEmail: {
-      type: String,
-    },
-    buyerAddress: {
-      type: String,
-    },
-    buyerDetails: {
-      type: String,
-    },
-    buyerGSTIN: {
-      type: String,
-    },
-    buyerName: {
-      type: String,
-    },
-    buyerPhone: {
-      type: String,
-    },
-    deliveryDate: {
-      type: Date,
-    },
-    logoUrl: {
-      type: String,
-    },
-    orderDate: {
-      type: Date,
-    },
-    orderNo: {
-      type: String,
-    },
-    poDate: {
-      type: String,
-    },
-    poNumber: {
-      type: String,
-    },
-    products: [{
-      groupedByColor: [{
-        colourName: {
-          type: String
-        },
-        colorImage: { type: String},
-        colour: { type: String},
-        designNumber: { type: String},
-        sizes:[{
-          colourName: {
-            type: String
+    
+      set: [
+          {
+              designNumber: String,
+              colour: String,
+              colourImage: String,
+              colourName: String,
+              size: String,
+              quantity:  Number,
+              price: String
           },
-          colorImage: { type: String},
-          designNumber: { type: String},
-          colour: { type: String},
-          size: { type: String },
-          quantity: { type: Number },
-          price: { type: String }
-        }]
-      }],
-      set: [{
-        colorImage: { type: String},
-        designNumber: { type: String},
-        colourName: { type: String},
-        size: { type: String },
-        quantity: { type: Number },
-        price: { type: String }
-      }],
-      sizes: [{
-        price: { type: String },
-        size: { type: String },
-      
-      }]
-  }],
-    roundedOffTotal: {
-      type: String,
-    },
-    supplierAddress: {
-      type: String,
-    },
-    supplierContact: {
-      type: String,
-    },
-    supplierDetails: {
-      type: String,
-    },
-    supplierEmail: {
-      type: String,
-    },
-    supplierGSTIN: {
-      type: String,
-    },
-    supplierName: {
-      type: String,
-    },
-    totalAmount: {
-      type: String,
-    },
-    totalGST: {
-      type: String,
-    },
-    totalInWords: {
-      type: String,
-    },
-    totalRate: {
-      type: String,
-    },
+  
+      ],
+      email: String,
+      productBy: String,
+      cartAddedDate: Date,
+      poNumber: Number,
+      manufacturer: {
+          email: String,
+          fullName: String,
+          companyName: String,
+          address: String,
+          state: String,
+          country: String,
+          pinCode: String,
+          mobNumber: String,
+          GSTIN: String
+      },
+      wholesaler: {
+          email: String,
+          fullName: String,
+          companyName: String,
+          address: String,
+          state: String,
+          country: String,
+          pinCode: String,
+          mobNumber: String,
+          GSTIN: String,
+          logo: String,
+          productDiscount: String,
+          category: String
+      }
   },
   {
     timestamps: true,
