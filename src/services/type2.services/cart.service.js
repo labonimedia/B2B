@@ -41,33 +41,53 @@ const createCartType2 = async (reqBody) => {
 // };
 
 const queryCartType2 = async (filter, options) => {
-    // Paginate the CartType2 items
-    const cartType2Items = await CartType2.paginate(filter, options);
-    if (cartType2Items.results.length === 0) {
-      return cartType2Items;
-    }
+  // Paginate the CartType2 items
+  const cartType2Items = await CartType2.paginate(filter, options);
+  if (cartType2Items.results.length === 0) {
+    return cartType2Items; // Return empty results if no items found
+  }
 
-    // Extract unique productBy emails from the paginated results
-    const productByEmails = [...new Set(cartType2Items.results.map((item) => item.productBy))];
+  // Extract unique productBy emails from the paginated results
+  const productByEmails = [...new Set(cartType2Items.results.map((item) => item.productBy))];
 
-    // Fetch manufacturer details based on the productBy emails
-    const manufacturers = await Manufacture.find({
-      email: { $in: productByEmails },
-    }).select('email fullName');
+  // Fetch manufacturer details based on the productBy emails
+  const manufacturers = await Manufacture.find({
+    email: { $in: productByEmails },
+  }).select('email fullName companyName address state country pinCode mobNumber GSTIN');
+  let wholesaler;
+if(filter.email){
+  wholesaler = await Wholesaler.findOne({
+    email: filter.email,
+  }).select('email fullName companyName address state country pinCode mobNumber GSTIN');
 
-    // Create a mapping of email to name
-    const manufacturerMap = manufacturers.reduce((acc, manufacturer) => {
-      acc[manufacturer.email] = manufacturer.fullName;
-      return acc;
-    }, {});
+}
 
-    // Enrich each item in the results with the manufacturerName
-    cartType2Items.results = cartType2Items.results.map((item) => ({
-      ...item.toObject(), // Convert mongoose document to plain object
-      manufacturerName: manufacturerMap[item.productBy] || null, // Default to null if not found
-    }));
-    return cartType2Items;
+  // Create a mapping of email to manufacturer details
+  const manufacturerMap = manufacturers.reduce((acc, manufacturer) => {
+    acc[manufacturer.email] = {
+      email: manufacturer.email,
+      fullName: manufacturer.fullName,
+      companyName: manufacturer.companyName,
+      address: manufacturer.address,
+      state: manufacturer.state,
+      country: manufacturer.country,
+      pinCode: manufacturer.pinCode,
+      mobNumber: manufacturer.mobNumber,
+      GSTIN: manufacturer.GSTIN,
+    };
+    return acc;
+  }, {});
+
+  // Enrich each item in the results with the manufacturer details
+  cartType2Items.results = cartType2Items.results.map((item) => ({
+    ...item.toObject(), // Convert mongoose document to plain object
+    manufacturer: manufacturerMap[item.productBy] || null, // Default to null if not found
+    wholesaler,
+  }));
+
+  return cartType2Items;
 };
+
 
 
 /**
@@ -251,14 +271,12 @@ const getCartByEmailToPlaceOrder = async (email, productBy) => {
  * @param {} email 
  * @returns 
  */
-
 const getCartByEmail = async (email) => {
   // Find all cart items by email and populate the product details (productId)
   const cartItems = await CartType2.find({ email }).populate('productId');
   if (!cartItems || cartItems.length === 0) {
     throw new ApiError(httpStatus.NOT_FOUND, 'No carts found for this email');
   }
-
   // Extract unique manufacturer emails from all cart products (based on productBy)
   const productByEmails = [...new Set(cartItems.map((item) => item.productBy))];
 

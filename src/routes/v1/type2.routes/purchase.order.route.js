@@ -6,8 +6,8 @@ const router = express.Router();
 
 router
   .route('/')
-  .post(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), purchaseOrderType2Controller.createPurchaseOrderType2) // Create PurchaseOrderType2
-  .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), purchaseOrderType2Controller.queryPurchaseOrderType2); // Query PurchaseOrderType2
+  .post(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), purchaseOrderType2Controller.createPurchaseOrderType2)
+  .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), purchaseOrderType2Controller.queryPurchaseOrderType2);
 
   router
   .route('/getby/supplier')
