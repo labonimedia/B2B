@@ -144,6 +144,10 @@ const wholesalerSchema = mongoose.Schema(
       type: Boolean,
       default: true,
     },
+    isVerifyKYC: {
+     type: Boolean,
+     default: false,
+    }
   },
   {
     timestamps: true,
