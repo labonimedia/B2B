@@ -16,8 +16,8 @@ router
   .delete(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), cartType2Controller.deleteCartType2ById); // Delete CartType2 by ID
 
 router
-  .route('/place-order/products')
-  .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), cartType2Controller.getCartByEmailToPlaceOrder);
+  .route('/place-order/products/:id')
+  .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), cartType2Controller.genratePOCartType2);
 
 router
   .route('/catr/products')
