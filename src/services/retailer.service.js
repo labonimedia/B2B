@@ -112,7 +112,7 @@ const getUserById = async (id) => {
  * @param {Object} options - Pagination options (limit, page)
  * @returns {Promise<QueryResult>}
  */
-const getWholesalersByEmails = async (emails, options) => {
+const getWholesalersByEmails = async (emails, options, userCategory) => {
   const limit = options.limit ? parseInt(options.limit, 10) : 10;
   const page = options.page ? parseInt(options.page, 10) : 1;
   const skip = (page - 1) * limit;
