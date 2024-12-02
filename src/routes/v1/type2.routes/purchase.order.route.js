@@ -30,4 +30,5 @@ router
     auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
     purchaseOrderType2Controller.getPurchaseOrdersByManufactureEmail
   );
+
 module.exports = router;
