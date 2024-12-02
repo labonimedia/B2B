@@ -99,3 +99,4 @@ module.exports.PurchaseOrderType2 = require('./type2.models/purchase.order.model
 module.exports.POCountertype2 = require('./type2.models/po.counter.model');
 module.exports.Gender = require('./gender.model');
 module.exports.WishListType2 = require('./type2.models/wishlist.model');
+module.exports.WholesalerPriceType2 = require('./type2.models/wholesaler.product.price');
