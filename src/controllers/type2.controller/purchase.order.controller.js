@@ -49,7 +49,6 @@ const getPurchaseOrdersByManufactureEmail = async (req, res) => {
     limit: parseInt(limit, 10) || 10,
     sortBy: sortBy || '-createdAt', // default sorting by newest first
   };
-
   const data = await purchaseOrderType2Service.getPurchaseOrdersByManufactureEmail(manufacturerEmail, filter, options);
   res.status(200).send({ success: true, data });
 };
@@ -61,5 +60,5 @@ module.exports = {
   getProductOrderBySupplyer,
   updatePurchaseOrderType2ById,
   deletePurchaseOrderType2ById,
-  getPurchaseOrdersByManufactureEmail
+  getPurchaseOrdersByManufactureEmail,
 };
