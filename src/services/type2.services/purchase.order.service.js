@@ -122,6 +122,23 @@ const deletePurchaseOrderType2ById = async (id) => {
   return cart;
 };
 
+const getPurchaseOrdersByManufactureEmail = async (manufacturerEmail, filter, options) => {
+  const query = { 'manufacturer.email': manufacturerEmail };
+
+  // Apply additional filters
+  if (filter) {
+    const parsedFilter = JSON.parse(filter);
+    Object.assign(query, parsedFilter);
+  }
+
+  // Use Mongoose paginate plugin
+  const result = await PurchaseOrderType2.paginate(query, {
+    ...options,
+    customLabels: { docs: 'purchaseOrders' }, // Rename `docs` to `purchaseOrders` in response
+  });
+
+  return result;
+};
 module.exports = {
   createPurchaseOrderType2,
   queryPurchaseOrderType2,
@@ -130,4 +147,5 @@ module.exports = {
   updatePurchaseOrderType2ById,
   deletePurchaseOrderType2ById,
   deleteCartType2ById,
+  getPurchaseOrdersByManufactureEmail
 };

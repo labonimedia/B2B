@@ -42,6 +42,18 @@ const deletePurchaseOrderType2ById = catchAsync(async (req, res) => {
   res.status(httpStatus.NO_CONTENT).send();
 });
 
+const getPurchaseOrdersByManufactureEmail = async (req, res) => {
+  const { manufacturerEmail, page, limit, sortBy, filter } = req.query;
+  const options = {
+    page: parseInt(page, 10) || 1,
+    limit: parseInt(limit, 10) || 10,
+    sortBy: sortBy || '-createdAt', // default sorting by newest first
+  };
+
+  const data = await purchaseOrderType2Service.getPurchaseOrdersByManufactureEmail(manufacturerEmail, filter, options);
+  res.status(200).send({ success: true, data });
+};
+
 module.exports = {
   createPurchaseOrderType2,
   queryPurchaseOrderType2,
@@ -49,4 +61,5 @@ module.exports = {
   getProductOrderBySupplyer,
   updatePurchaseOrderType2ById,
   deletePurchaseOrderType2ById,
+  getPurchaseOrdersByManufactureEmail
 };
