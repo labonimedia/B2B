@@ -104,6 +104,38 @@ const searchProducts = async (filter, options) => {
   return products;
 };
 
+// const searchProducts = async (filter, options) => {
+//   const { WholesalerEmail } = filter;
+
+//   // If there's a search term, add a text search condition
+//   if (filter.search) {
+//     filter.$text = { $search: filter.search };
+//     delete filter.search;
+//   }
+
+//   // Fetch products with pagination
+//   const products = await ProductType2.paginate(filter, options);
+
+//   // Fetch wholesaler prices by WholesalerEmail
+//   const wholesalerPrices = await WholesalerPriceType2.find({ WholesalerEmail }).select('productId');
+
+//   // Extract productIds from wholesalerPrices
+//   const productIdsWithPrice = new Set(wholesalerPrices.map((price) => price.productId.toString()));
+
+//   // Add status to each product in the results
+//   const resultsWithStatus = products.results.map((product) => ({
+//     ...product.toJSON(),
+//     status: productIdsWithPrice.has(product._id.toString()) ? 'Done' : 'Pending',
+//   }));
+
+//   // Return the modified results along with other pagination details
+//   return {
+//     ...products,
+//     results: resultsWithStatus,
+//   };
+// };
+
+
 /**
  * Get ProductType2 by id
  * @param {ObjectId} id
