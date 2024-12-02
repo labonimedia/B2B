@@ -12,12 +12,12 @@ const createPurchaseOrderType2 = async (reqBody) => {
 };
 
 const deleteCartType2ById = async (email, productBy) => {
-  const purchaseOrderType2 = await CartType2.findOneAndDelete({email, productBy});
+  const purchaseOrderType2 = await CartType2.findOneAndDelete({ email, productBy });
   if (!purchaseOrderType2) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Cart Order not found');
   }
   return purchaseOrderType2;
-}
+};
 
 /**
  * Query for PurchaseOrderType2
@@ -41,7 +41,6 @@ const queryPurchaseOrderType2 = async (filter, options) => {
 const getPurchaseOrderType2ById = async (id) => {
   return PurchaseOrderType2.findById(id);
 };
-
 
 const getProductOrderBySupplyer = async (supplierEmail) => {
   const productOrders = await PurchaseOrderType2.find({ supplierEmail });
@@ -110,4 +109,5 @@ module.exports = {
   getPurchaseOrderType2ById,
   updatePurchaseOrderType2ById,
   deletePurchaseOrderType2ById,
+  deleteCartType2ById,
 };

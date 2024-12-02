@@ -1,5 +1,5 @@
 const httpStatus = require('http-status');
-const { Brand, Manufacture, Request, User } = require('../models');
+const { Brand, Manufacture, Request } = require('../models');
 const ApiError = require('../utils/ApiError');
 
 /**
@@ -147,7 +147,6 @@ const deleteBrandById = async (id) => {
 //   return combinedDetails;
 // };
 
-
 const searchBrandAndOwnerDetails = async (brandName, requestByEmail) => {
   // Search for brands matching the brandName
   const brands = await Brand.find({ brandName: { $regex: brandName, $options: 'i' } });
@@ -223,7 +222,7 @@ const searchBrandAndOwnerDetails = async (brandName, requestByEmail) => {
 //     const ownerDetails = ownerDetailsMap.get(brand.brandOwner) || {};
 //     const requestDetail = requestDetailsMap.get(brand.brandOwner) || {}; // get request by email
 //     if (refByEmail.includes(brand.brandOwner)) {
-//       return null; 
+//       return null;
 //     }
 //     return {
 //       ...brand.toObject(),

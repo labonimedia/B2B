@@ -6,9 +6,7 @@ const router = express.Router();
 
 router
   .route('/')
-  .post(
-    auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
-   wishListType2Controller.createWishListType2Schema)
+  .post(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), wishListType2Controller.createWishListType2Schema)
   .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), wishListType2Controller.queryWishListType2Schema);
 
 router
@@ -18,11 +16,13 @@ router
   .route('/:id')
   .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), wishListType2Controller.getWishListType2SchemaById)
   .patch(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), wishListType2Controller.updateWishListType2SchemaById)
-  .delete(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), wishListType2Controller.deleteWishListType2SchemaById);
+  .delete(
+    auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
+    wishListType2Controller.deleteWishListType2SchemaById
+  );
 
-router
-  .route('/get/wishlist/:email')
-  .get(
-    //auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), 
-  wishListType2Controller.getWishListType2SchemaByEmail);
+router.route('/get/wishlist/:email').get(
+  // auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
+  wishListType2Controller.getWishListType2SchemaByEmail
+);
 module.exports = router;

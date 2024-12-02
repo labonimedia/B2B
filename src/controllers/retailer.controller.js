@@ -41,7 +41,7 @@ const deleteRetailerById = catchAsync(async (req, res) => {
 
 const getWholesalersByRetailerId = catchAsync(async (req, res) => {
   const { id } = req.params;
-  const { userCategory } = req.query; 
+  const { userCategory } = req.query;
   const options = pick(req.query, ['limit', 'page']);
   const retailer = await retailerService.getUserById(id);
   if (!retailer) {
