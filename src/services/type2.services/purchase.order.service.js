@@ -12,7 +12,7 @@ const createPurchaseOrderType2 = async (reqBody) => {
 
   // Validate that `email` and `productBy` are provided
   if (!email || !productBy) {
-    throw new ApiError(httpStatus.NOT_FOUND,"Both 'email' and 'productBy' are required.");
+    throw new ApiError(httpStatus.NOT_FOUND, "Both 'email' and 'productBy' are required.");
   }
 
   // Find and delete the cart item(s) matching the given `email` and `productBy`
@@ -20,7 +20,7 @@ const createPurchaseOrderType2 = async (reqBody) => {
 
   // If no matching cart items are found, throw an error
   if (!cartProducts) {
-    throw new ApiError(httpStatus.NOT_FOUND,`No cart items found for email: ${email} and productBy: ${productBy}`);
+    throw new ApiError(httpStatus.NOT_FOUND, `No cart items found for email: ${email} and productBy: ${productBy}`);
   }
 
   // Create a new purchase order using the provided request body
@@ -29,7 +29,6 @@ const createPurchaseOrderType2 = async (reqBody) => {
   // Return the newly created purchase order
   return purchaseOrder;
 };
-
 
 const deleteCartType2ById = async (email, productBy) => {
   const purchaseOrderType2 = await CartType2.findOneAndDelete({ email, productBy });
@@ -147,5 +146,5 @@ module.exports = {
   updatePurchaseOrderType2ById,
   deletePurchaseOrderType2ById,
   deleteCartType2ById,
-  getPurchaseOrdersByManufactureEmail
+  getPurchaseOrdersByManufactureEmail,
 };

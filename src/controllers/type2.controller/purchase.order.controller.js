@@ -61,5 +61,5 @@ module.exports = {
   getProductOrderBySupplyer,
   updatePurchaseOrderType2ById,
   deletePurchaseOrderType2ById,
-  getPurchaseOrdersByManufactureEmail
+  getPurchaseOrdersByManufactureEmail,
 };
