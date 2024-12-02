@@ -88,6 +88,7 @@ const type2Produnct = require('./type2.routes/product.route');
 const type2CartRoute = require('./type2.routes/cart.route');
 const type2PurchaseOrderRoute = require('./type2.routes/purchase.order.route');
 const type2WishListRoute = require('./type2.routes/wishlist.route');
+
 const router = express.Router();
 
 const defaultRoutes = [
@@ -439,7 +440,6 @@ const defaultRoutes = [
     path: '/type2-wishlist',
     route: type2WishListRoute,
   },
-  
 ];
 
 const devRoutes = [

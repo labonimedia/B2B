@@ -424,7 +424,7 @@ const filterProductsAndFetchManufactureDetails = async (filters) => {
   );
 
   // Filter out null results (where the request was 'accepted')
-  return productDetails.filter(detail => detail !== null);
+  return productDetails.filter((detail) => detail !== null);
 };
 
 module.exports = {

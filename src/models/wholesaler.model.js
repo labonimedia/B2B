@@ -145,9 +145,9 @@ const wholesalerSchema = mongoose.Schema(
       default: true,
     },
     isVerifyKYC: {
-     type: Boolean,
-     default: false,
-    }
+      type: Boolean,
+      default: false,
+    },
   },
   {
     timestamps: true,
@@ -165,4 +165,3 @@ wholesalerSchema.plugin(paginate);
 const Wholesaler = mongoose.model('Wholesaler', wholesalerSchema);
 
 module.exports = Wholesaler;
-

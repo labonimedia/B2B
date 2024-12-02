@@ -9,7 +9,7 @@ router
   .post(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), purchaseOrderType2Controller.createPurchaseOrderType2)
   .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), purchaseOrderType2Controller.queryPurchaseOrderType2);
 
-  router
+router
   .route('/getby/supplier')
   .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), purchaseOrderType2Controller.getProductOrderBySupplyer);
 
@@ -24,6 +24,5 @@ router
     auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
     purchaseOrderType2Controller.deletePurchaseOrderType2ById
   ); // Delete PurchaseOrderType2 by ID
-
 
 module.exports = router;

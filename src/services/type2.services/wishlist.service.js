@@ -47,7 +47,8 @@ const getWishListType2SchemaByEmail = async (email) => {
     return {
       ...product.toObject(),
       manufactureName,
-      WishListType2SchemaId: WishListType2SchemaItems.find((item) => item.productId.toString() === product._id.toString())._id,
+      WishListType2SchemaId: WishListType2SchemaItems.find((item) => item.productId.toString() === product._id.toString())
+        ._id,
     };
   });
   return productsWithManufactureName;
