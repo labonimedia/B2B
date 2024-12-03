@@ -10,7 +10,7 @@ router
   .get(wholesalerPriceController.queryWholesalerPrice);
 
 router
-  .route('/:id')
+  .route('/:productId')
   .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), wholesalerPriceController.getWholesalerPriceById)
   .patch(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), wholesalerPriceController.updateWholesalerPriceById)
   .delete(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), wholesalerPriceController.deleteWholesalerPriceById);

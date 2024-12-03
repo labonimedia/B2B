@@ -7,9 +7,22 @@ const ApiError = require('../../utils/ApiError');
  * @param {Object} reqBody
  * @returns {Promise<WholesalerPriceType2>}
  */
-const createWholesalerPriceType2 = async (reqBody) => {
-  return WholesalerPriceType2.create(reqBody);
+const createOrUpdateWholesalerPriceType2 = async (reqBody) => {
+  const { productId, WholesalerEmail } = reqBody; // Extract productId and other fields from request body
+
+  // Find existing record by productId
+  const existingRecord = await WholesalerPriceType2.findOne({ productId , WholesalerEmail});
+
+  if (existingRecord) {
+    // If record exists, update it
+    Object.assign(existingRecord, reqBody); // Merge the update data into the existing record
+    return existingRecord.save(); // Save the updated record
+  } else {
+    // If no record exists, create a new one
+    return WholesalerPriceType2.create(reqBody);
+  }
 };
+
 
 /**
  * Query for WholesalerPriceType2
@@ -39,8 +52,8 @@ const queryWholesalerPriceType2 = async (wholesalerEmail, options) => {
  * @param {ObjectId} id
  * @returns {Promise<WholesalerPriceType2>}
  */
-const getWholesalerPriceType2ById = async (id) => {
-  return WholesalerPriceType2.findById(id);
+const getWholesalerPriceType2ById = async (productId) => {
+  return WholesalerPriceType2.findOne({productId});
 };
 
 
@@ -75,7 +88,7 @@ const deleteWholesalerPriceType2ById = async (id) => {
 };
 
 module.exports = {
-  createWholesalerPriceType2,
+  createOrUpdateWholesalerPriceType2,
   queryWholesalerPriceType2,
   getWholesalerPriceType2ById,
   updateWholesalerPriceType2ById,
