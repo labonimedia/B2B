@@ -1,5 +1,5 @@
 const httpStatus = require('http-status');
-const { WholesalerPriceType2 } = require('../../models');
+const { WholesalerPriceType2, ProductType2 } = require('../../models');
 const ApiError = require('../../utils/ApiError');
 
 /**
@@ -57,6 +57,34 @@ const getWholesalerPriceType2ById = async (productId) => {
 };
 
 
+
+/**
+ * Get WholesalerPriceType2 by id
+ * @param {ObjectId} id
+ * @returns {Promise<WholesalerPriceType2>}
+ */
+const getRetailerPriceById = async (productId) => {
+    // Find the retailer price by productId
+    const retailerPrice = await WholesalerPriceType2.findOne({ productId }).lean();
+    // If no retailer price is found, handle it gracefully
+    if (!retailerPrice) {
+      return { message: "Retailer price not found for the given product ID." };
+    }
+
+    // Find the associated product details
+    const product = await ProductType2.findById(productId).lean();
+    // If no product is found, handle it gracefully
+    if (!product) {
+      return { message: "Product not found for the given product ID." };
+    }
+    // Return combined data
+    return {
+      retailerPrice,
+      product,
+    };
+};
+
+
 /**
  * Update WholesalerPriceType2 by id
  * @param {ObjectId} Id
@@ -91,6 +119,7 @@ module.exports = {
   createOrUpdateWholesalerPriceType2,
   queryWholesalerPriceType2,
   getWholesalerPriceType2ById,
+  getRetailerPriceById,
   updateWholesalerPriceType2ById,
   deleteWholesalerPriceType2ById,
 };
