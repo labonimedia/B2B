@@ -1,13 +1,13 @@
 const httpStatus = require('http-status');
-const { PurchaseOrderType2, CartType2 } = require('../../models');
+const { PurchaseOrderRetailerType2, RetailerCartType2 } = require('../../models');
 const ApiError = require('../../utils/ApiError');
 
 /**
- * Create multiple PurchaseOrderType2 items
+ * Create multiple PurchaseOrderRetailerType2 items
  * @param {Array<Object>} reqBody - Contains an array of item objects
- * @returns {Promise<Array<PurchaseOrderType2>>}
+ * @returns {Promise<Array<PurchaseOrderRetailerType2>>}
  */
-const createPurchaseOrderType2 = async (reqBody) => {
+const createPurchaseOrderRetailerType2 = async (reqBody) => {
   const { email, productBy } = reqBody;
 
   // Validate that `email` and `productBy` are provided
@@ -16,7 +16,7 @@ const createPurchaseOrderType2 = async (reqBody) => {
   }
 
   // Find and delete the cart item(s) matching the given `email` and `productBy`
-  const cartProducts = await CartType2.findOneAndDelete({ email, productBy });
+  const cartProducts = await RetailerCartType2.findOneAndDelete({ email, productBy });
 
   // If no matching cart items are found, throw an error
   if (!cartProducts) {
@@ -24,22 +24,22 @@ const createPurchaseOrderType2 = async (reqBody) => {
   }
 
   // Create a new purchase order using the provided request body
-  const purchaseOrder = await PurchaseOrderType2.create(reqBody);
+  const purchaseOrder = await PurchaseOrderRetailerType2.create(reqBody);
 
   // Return the newly created purchase order
   return purchaseOrder;
 };
 
 const deleteCartType2ById = async (email, productBy) => {
-  const purchaseOrderType2 = await CartType2.findOneAndDelete({ email, productBy });
-  if (!purchaseOrderType2) {
+  const PurchaseOrderRetailerType2 = await RetailerCartType2.findOneAndDelete({ email, productBy });
+  if (!PurchaseOrderRetailerType2) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Cart Order not found');
   }
-  return purchaseOrderType2;
+  return PurchaseOrderRetailerType2;
 };
 
 /**
- * Query for PurchaseOrderType2
+ * Query for PurchaseOrderRetailerType2
  * @param {Object} filter - Mongo filter
  * @param {Object} options - Query options
  * @param {string} [options.sortBy] - Sort option in the format: sortField:(desc|asc)
@@ -47,22 +47,22 @@ const deleteCartType2ById = async (email, productBy) => {
  * @param {number} [options.page] - Current page (default = 1)
  * @returns {Promise<QueryResult>}
  */
-const queryPurchaseOrderType2 = async (filter, options) => {
-  const purchaseOrderType2Items = await PurchaseOrderType2.paginate(filter, options);
-  return purchaseOrderType2Items;
+const queryPurchaseOrderRetailerType2 = async (filter, options) => {
+  const PurchaseOrderRetailerType2Items = await PurchaseOrderRetailerType2.paginate(filter, options);
+  return PurchaseOrderRetailerType2Items;
 };
 
 /**
- * Get PurchaseOrderType2 by id
+ * Get PurchaseOrderRetailerType2 by id
  * @param {ObjectId} id
- * @returns {Promise<PurchaseOrderType2>}
+ * @returns {Promise<PurchaseOrderRetailerType2>}
  */
-const getPurchaseOrderType2ById = async (id) => {
-  return PurchaseOrderType2.findById(id);
+const getPurchaseOrderRetailerType2ById = async (id) => {
+  return PurchaseOrderRetailerType2.findById(id);
 };
 
 const getProductOrderBySupplyer = async (supplierEmail) => {
-  const productOrders = await PurchaseOrderType2.find({ supplierEmail });
+  const productOrders = await PurchaseOrderRetailerType2.find({ supplierEmail });
 
   if (productOrders.length === 0) {
     throw new ApiError(httpStatus.NOT_FOUND, 'No Product Orders found for this supplier');
@@ -92,13 +92,13 @@ const getProductOrderBySupplyer = async (supplierEmail) => {
 };
 
 /**
- * Update PurchaseOrderType2 by id
+ * Update PurchaseOrderRetailerType2 by id
  * @param {ObjectId} id
  * @param {Object} updateBody
- * @returns {Promise<PurchaseOrderType2>}
+ * @returns {Promise<PurchaseOrderRetailerType2>}
  */
-const updatePurchaseOrderType2ById = async (id, updateBody) => {
-  const cart = await getPurchaseOrderType2ById(id);
+const updatePurchaseOrderRetailerType2ById = async (id, updateBody) => {
+  const cart = await getPurchaseOrderRetailerType2ById(id);
   if (!cart) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Purchase Order not found');
   }
@@ -108,12 +108,12 @@ const updatePurchaseOrderType2ById = async (id, updateBody) => {
 };
 
 /**
- * Delete PurchaseOrderType2 by id
+ * Delete PurchaseOrderRetailerType2 by id
  * @param {ObjectId} id
- * @returns {Promise<PurchaseOrderType2>}
+ * @returns {Promise<PurchaseOrderRetailerType2>}
  */
-const deletePurchaseOrderType2ById = async (id) => {
-  const cart = await getPurchaseOrderType2ById(id);
+const deletePurchaseOrderRetailerType2ById = async (id) => {
+  const cart = await getPurchaseOrderRetailerType2ById(id);
   if (!cart) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Purchase Order not found');
   }
@@ -131,7 +131,7 @@ const getPurchaseOrdersByManufactureEmail = async (manufacturerEmail, filter, op
   }
 
   // Use Mongoose paginate plugin
-  const result = await PurchaseOrderType2.paginate(query, {
+  const result = await PurchaseOrderRetailerType2.paginate(query, {
     ...options,
     customLabels: { docs: 'purchaseOrders' }, // Rename `docs` to `purchaseOrders` in response
   });
@@ -139,12 +139,12 @@ const getPurchaseOrdersByManufactureEmail = async (manufacturerEmail, filter, op
   return result;
 };
 module.exports = {
-  createPurchaseOrderType2,
-  queryPurchaseOrderType2,
+  createPurchaseOrderRetailerType2,
+  queryPurchaseOrderRetailerType2,
   getProductOrderBySupplyer,
-  getPurchaseOrderType2ById,
-  updatePurchaseOrderType2ById,
-  deletePurchaseOrderType2ById,
+  getPurchaseOrderRetailerType2ById,
+  updatePurchaseOrderRetailerType2ById,
+  deletePurchaseOrderRetailerType2ById,
   deleteCartType2ById,
   getPurchaseOrdersByManufactureEmail,
 };
