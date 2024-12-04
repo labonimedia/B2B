@@ -90,7 +90,7 @@ const type2PurchaseOrderRoute = require('./type2.routes/purchase.order.route');
 const type2WishListRoute = require('./type2.routes/wishlist.route');
 const type2WholesalerPriceRoute = require('./type2.routes/wholesaler.price.route');
 const retailertype2CartRoute = require('./type2.routes/retailer.cart.route');
-
+const retailePurchaseOrdertype2Route = require('./type2.routes/purchase.order.retailer.route')
 const router = express.Router();
 
 const defaultRoutes = [
@@ -450,7 +450,10 @@ const defaultRoutes = [
     path: '/retailer-cart-type2',
     route: retailertype2CartRoute,
   },
-  
+  {
+    path: '/retailer-purchase-order-type2',
+    route: retailePurchaseOrdertype2Route,
+  },
 ];
 
 const devRoutes = [

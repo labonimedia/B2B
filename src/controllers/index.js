@@ -86,3 +86,4 @@ module.exports.genderController = require('./gender.controller');
 module.exports.wishListType2Controller = require('./type2.controller/wishlist.controller');
 module.exports.wholesalerPriceController = require('./type2.controller/wholesaler.price.controller');
 module.exports.retailerCartType2Controller = require('./type2.controller/retailer.cart.controller');
+module.exports.retailerPurchaseOrderType2Controller = require('./type2.controller/purchase.order.retailer.controller');
