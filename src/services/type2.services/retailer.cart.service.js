@@ -112,26 +112,26 @@ const genratePORetailerCartType2 = async (id) => {
   }
 
   // Fetch manufacturer details based on the `productBy` email
-  const manufacturer = await Wholesaler.findOne({
+  const wholesaler = await Wholesaler.findOne({
     email: cartItem.wholesalerEmail,
   }).select('email fullName companyName address state country pinCode mobNumber GSTIN');
 
   // Fetch wholesaler details based on the provided `email` (if any)
-  let wholesaler = null;
+  let retailer = null;
   let discountDetails = null;
 
   if (cartItem.email) {
     // Fetch wholesaler details and discount array
-    wholesaler = await Wholesaler.findOne({
+    retailer = await Retailer.findOne({
       email: cartItem.email,
     }).select(
       'email fullName companyName address state country pinCode mobNumber GSTIN logo discountGiven'
     );
 
-    if (wholesaler) {
+    if (retailer) {
       // Find the discount entry for the `productBy` field
-      const discountEntry = wholesaler.discountGiven.find(
-        (discount) => discount.discountGivenBy === cartItem.productBy
+      const discountEntry = retailer.discountGiven.find(
+        (discount) => discount.discountGivenBy === cartItem.wholesalerEmail
       );
 
       if (discountEntry) {
@@ -155,7 +155,7 @@ const genratePORetailerCartType2 = async (id) => {
   let orderCount;
   try {
     orderCount = await POCountertype2.findOneAndUpdate(
-      { wholesalerEmail: wholesaler?.email, year: financialYear },
+      { email: retailer?.email, year: financialYear },
       { $inc: { count: 1 } },
       { new: true, upsert: true, setDefaultsOnInsert: true }
     );
@@ -172,19 +172,6 @@ const genratePORetailerCartType2 = async (id) => {
   const enrichedCartItem = {
     ...cartItem.toObject(),
     poNumber: orderNumber, // Purchase Order Number
-    manufacturer: manufacturer
-      ? {
-          email: manufacturer.email,
-          fullName: manufacturer.fullName,
-          companyName: manufacturer.companyName,
-          address: manufacturer.address,
-          state: manufacturer.state,
-          country: manufacturer.country,
-          pinCode: manufacturer.pinCode,
-          mobNumber: manufacturer.mobNumber,
-          GSTIN: manufacturer.GSTIN,
-        }
-      : null, // Default to null if manufacturer not found
     wholesaler: wholesaler
       ? {
           email: wholesaler.email,
@@ -196,7 +183,20 @@ const genratePORetailerCartType2 = async (id) => {
           pinCode: wholesaler.pinCode,
           mobNumber: wholesaler.mobNumber,
           GSTIN: wholesaler.GSTIN,
-          logo: wholesaler.logo,
+        }
+      : null, // Default to null if manufacturer not found
+      retailer: retailer
+      ? {
+          email: retailer.email,
+          fullName: retailer.fullName,
+          companyName: retailer.companyName,
+          address: retailer.address,
+          state: retailer.state,
+          country: retailer.country,
+          pinCode: retailer.pinCode,
+          mobNumber: retailer.mobNumber,
+          GSTIN: retailer.GSTIN,
+          logo: retailer.logo,
           ...discountDetails, // Include discount details (if found)
         }
       : null, // Default to null if wholesaler not found
