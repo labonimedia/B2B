@@ -15,12 +15,12 @@ const createRetailerCartType2 = async (reqBody) => {
       // Push new set data into the existing cart's set array
       existingCart.set.push(...set);
       await existingCart.save();
-      await WishListType2.findOneAndDelete({productId: reqBody.productId})
+      await WishListType2.findOneAndDelete({productId: reqBody.productId, email})
       return  existingCart
     } else {
       // If no cart exists, create a new one
       const newCart = await RetailerCartType2.create(reqBody);
-      await WishListType2.findOneAndDelete({productId: reqBody.productId})
+      await WishListType2.findOneAndDelete({productId: reqBody.productId, email})
       return  newCart;
     }
 };
