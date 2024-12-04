@@ -17,7 +17,7 @@ router
   
 
   router
-.route('/filter-products')
+.route('/filter/products')
 .post(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), wholesalerPriceController.getFilteredProducts)
 router
 .route('/retailer-product/:productId')
