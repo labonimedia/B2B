@@ -48,32 +48,32 @@ const queryRetailerCartType2 = async (filter, options) => {
   }
 
   // Extract unique productBy emails from the paginated results
-  const productByEmails = [...new Set(RetailerCartType2Items.results.map((item) => item.productBy))];
+  const wholesalerEmails = [...new Set(RetailerCartType2Items.results.map((item) => item.wholesalerEmail))];
 
   // Fetch manufacturer details based on the productBy emails
-  const manufacturers = await Manufacture.find({
-    email: { $in: productByEmails },
+  const wholesalers = await Wholesaler.find({
+    email: { $in: wholesalerEmails },
   }).select('email fullName companyName address state country pinCode mobNumber GSTIN');
-  let wholesaler;
+  let retailer;
 if(filter.email){
-  wholesaler = await Wholesaler.findOne({
+  retailer = await Retailer.findOne({
     email: filter.email,
   }).select('email fullName companyName address state country pinCode mobNumber GSTIN');
 
 }
 
   // Create a mapping of email to manufacturer details
-  const manufacturerMap = manufacturers.reduce((acc, manufacturer) => {
-    acc[manufacturer.email] = {
-      email: manufacturer.email,
-      fullName: manufacturer.fullName,
-      companyName: manufacturer.companyName,
-      address: manufacturer.address,
-      state: manufacturer.state,
-      country: manufacturer.country,
-      pinCode: manufacturer.pinCode,
-      mobNumber: manufacturer.mobNumber,
-      GSTIN: manufacturer.GSTIN,
+  const wholesalerMap = wholesalers.reduce((acc, wholesaler) => {
+    acc[wholesaler.email] = {
+      email: wholesaler.email,
+      fullName: wholesaler.fullName,
+      companyName: wholesaler.companyName,
+      address: wholesaler.address,
+      state: wholesaler.state,
+      country: wholesaler.country,
+      pinCode: wholesaler.pinCode,
+      mobNumber: wholesaler.mobNumber,
+      GSTIN: wholesaler.GSTIN,
     };
     return acc;
   }, {});
@@ -81,8 +81,8 @@ if(filter.email){
   // Enrich each item in the results with the manufacturer details
   RetailerCartType2Items.results = RetailerCartType2Items.results.map((item) => ({
     ...item.toObject(), // Convert mongoose document to plain object
-    manufacturer: manufacturerMap[item.productBy] || null, // Default to null if not found
-    wholesaler,
+    wholesaler: wholesalerMap[item.wholesalerEmail] || null, // Default to null if not found
+    retailer,
   }));
 
   return RetailerCartType2Items;
@@ -112,8 +112,8 @@ const genratePORetailerCartType2 = async (id) => {
   }
 
   // Fetch manufacturer details based on the `productBy` email
-  const manufacturer = await Manufacture.findOne({
-    email: cartItem.productBy,
+  const manufacturer = await Wholesaler.findOne({
+    email: cartItem.wholesalerEmail,
   }).select('email fullName companyName address state country pinCode mobNumber GSTIN');
 
   // Fetch wholesaler details based on the provided `email` (if any)
