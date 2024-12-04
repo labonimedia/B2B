@@ -99,7 +99,6 @@ const queryWholesalerPriceType2 = async (wholesalerEmail, options) => {
         totalPages,
       };
     } catch (error) {
-      console.error('Error fetching filtered products:', error);
       throw new Error('Failed to retrieve products');
     }
   };

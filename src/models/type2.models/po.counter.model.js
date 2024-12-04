@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const orderCounterSchema = new mongoose.Schema(
   {
-    wholesalerEmail: {
+    email: {
       type: String,
       required: true,
     },

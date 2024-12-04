@@ -155,7 +155,7 @@ const genratePOCartType2 = async (id) => {
   let orderCount;
   try {
     orderCount = await POCountertype2.findOneAndUpdate(
-      { wholesalerEmail: wholesaler?.email, year: financialYear },
+      { email: wholesaler?.email, year: financialYear },
       { $inc: { count: 1 } },
       { new: true, upsert: true, setDefaultsOnInsert: true }
     );
