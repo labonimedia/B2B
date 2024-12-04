@@ -46,6 +46,65 @@ const queryWholesalerPriceType2 = async (wholesalerEmail, options) => {
     return wholesalerPrice;
   };
   
+  const getFilteredProducts = async (body) => {
+    try {
+      const { wholesalerEmail, limit = 10, page = 1, ...productFilters } = body;
+  
+      // Calculate pagination parameters
+      const parsedLimit = parseInt(limit, 10) || 10; // Default limit to 10 if not provided
+      const parsedPage = parseInt(page, 10) || 1; // Default page to 1 if not provided
+      const skip = (parsedPage - 1) * parsedLimit;
+  
+      // Step 1: Fetch productIds from WholesalerPriceType2 using wholesalerEmail
+      const wholesalerPrices = await WholesalerPriceType2.find(
+        { WholesalerEmail: wholesalerEmail },
+        { productId: 1 } // Only select productId
+      );
+  
+      // If no matching productIds found, return an empty result with pagination metadata
+      if (!wholesalerPrices.length) {
+        return {
+          products: [],
+          total: 0,
+          page: parsedPage,
+          totalPages: 0,
+        };
+      }
+  
+      // Extract productIds from the wholesalerPrices
+      const productIds = wholesalerPrices.map((price) => price.productId);
+  
+      // Step 2: Fetch ProductType2 data using the productIds and additional filters
+      const [products, total] = await Promise.all([
+        ProductType2.find({
+          _id: { $in: productIds },
+          ...productFilters, // Apply additional filters (e.g., brand, productType, etc.)
+        })
+          .skip(skip)
+          .limit(parsedLimit),
+        ProductType2.countDocuments({
+          _id: { $in: productIds },
+          ...productFilters,
+        }),
+      ]);
+  
+      // Calculate total pages
+      const totalPages = Math.ceil(total / parsedLimit);
+  
+      // Return paginated results with metadata
+      return {
+        products,
+        total,
+        page: parsedPage,
+        totalPages,
+      };
+    } catch (error) {
+      console.error('Error fetching filtered products:', error);
+      throw new Error('Failed to retrieve products');
+    }
+  };
+  
+  
 
 /**
  * Get WholesalerPriceType2 by id
@@ -118,6 +177,7 @@ const deleteWholesalerPriceType2ById = async (id) => {
 module.exports = {
   createOrUpdateWholesalerPriceType2,
   queryWholesalerPriceType2,
+  getFilteredProducts,
   getWholesalerPriceType2ById,
   getRetailerPriceById,
   updateWholesalerPriceType2ById,

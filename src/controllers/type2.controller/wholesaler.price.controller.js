@@ -25,6 +25,14 @@ const getWholesalerPriceById = catchAsync(async (req, res) => {
   res.status(httpStatus.OK).send(cartItem);
 });
 
+const getFilteredProducts = catchAsync(async (req, res) => {
+  const cartItem = await wholesalerPriceService.getFilteredProducts(req.body);
+  if (!cartItem) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'wholesaler price not found');
+  }
+  res.status(httpStatus.OK).send(cartItem);
+});
+
 const getRetailerPriceById = catchAsync(async (req, res) => {
   const cartItem = await wholesalerPriceService.getRetailerPriceById(req.params.productId);
   if (!cartItem) {
@@ -46,6 +54,7 @@ const deleteWholesalerPriceById = catchAsync(async (req, res) => {
 module.exports = {
   createWholesalerPrice,
   queryWholesalerPrice,
+  getFilteredProducts,
   getWholesalerPriceById,
   getRetailerPriceById,
   updateWholesalerPriceById,
