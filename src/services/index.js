@@ -88,3 +88,4 @@ module.exports.purchaseOrderType2Service = require('./type2.services/purchase.or
 module.exports.genderService = require('./gender.service');
 module.exports.wishListType2Service = require('./type2.services/wishlist.service');
 module.exports.wholesalerPriceService = require('./type2.services/wholesaler.product.price.service')
+module.exports.RetailerCartType2Service = require('./type2.services/retailer.cart.service');

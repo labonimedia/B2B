@@ -89,6 +89,7 @@ const type2CartRoute = require('./type2.routes/cart.route');
 const type2PurchaseOrderRoute = require('./type2.routes/purchase.order.route');
 const type2WishListRoute = require('./type2.routes/wishlist.route');
 const type2WholesalerPriceRoute = require('./type2.routes/wholesaler.price.route');
+const retailertype2CartRoute = require('./type2.routes/retailer.cart.route');
 
 const router = express.Router();
 
@@ -444,7 +445,12 @@ const defaultRoutes = [
   {
     path: '/wholesaler-price-type2',
     route: type2WholesalerPriceRoute,
-  }
+  },
+  {
+    path: '/retailer-cart-type2',
+    route: retailertype2CartRoute,
+  },
+  
 ];
 
 const devRoutes = [
