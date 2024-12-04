@@ -1,5 +1,5 @@
 const httpStatus = require('http-status');
-const { ProductType2, Manufacture, User } = require('../../models');
+const { ProductType2, Manufacture, User, WholesalerPriceType2 } = require('../../models');
 const ApiError = require('../../utils/ApiError');
 const { deleteFile } = require('../../utils/upload');
 
@@ -103,6 +103,37 @@ const searchProducts = async (filter, options) => {
   const products = await ProductType2.paginate(filter, options);
   return products;
 };
+
+const searchForWSProducts = async (filter, options, WholesalerEmail) => {
+
+  // If there's a search term, add a text search condition
+  if (filter.search) {
+    filter.$text = { $search: filter.search };
+    delete filter.search;
+  }
+
+  // Fetch products with pagination
+  const products = await ProductType2.paginate(filter, options);
+
+  // Fetch wholesaler prices by WholesalerEmail
+  const wholesalerPrices = await WholesalerPriceType2.find({ WholesalerEmail }).select('productId');
+
+  // Extract productIds from wholesalerPrices
+  const productIdsWithPrice = new Set(wholesalerPrices.map((price) => price.productId.toString()));
+
+  // Add status to each product in the results
+  const resultsWithStatus = products.results.map((product) => ({
+    ...product.toJSON(),
+    status: productIdsWithPrice.has(product._id.toString()) ? 'Done' : 'Pending',
+  }));
+
+  // Return the modified results along with other pagination details
+  return {
+    ...products,
+    results: resultsWithStatus,
+  };
+};
+
 
 /**
  * Get ProductType2 by id
@@ -289,6 +320,7 @@ module.exports = {
   createProduct,
   queryProduct,
   searchProducts,
+  searchForWSProducts,
   getProductById,
   getProductBydesigneNo,
   updateProductById,

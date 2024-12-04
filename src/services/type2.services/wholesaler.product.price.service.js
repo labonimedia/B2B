@@ -1,5 +1,5 @@
 const httpStatus = require('http-status');
-const { WholesalerPriceType2 } = require('../../models');
+const { WholesalerPriceType2, ProductType2 } = require('../../models');
 const ApiError = require('../../utils/ApiError');
 
 /**
@@ -7,9 +7,22 @@ const ApiError = require('../../utils/ApiError');
  * @param {Object} reqBody
  * @returns {Promise<WholesalerPriceType2>}
  */
-const createWholesalerPriceType2 = async (reqBody) => {
-  return WholesalerPriceType2.create(reqBody);
+const createOrUpdateWholesalerPriceType2 = async (reqBody) => {
+  const { productId, WholesalerEmail } = reqBody; // Extract productId and other fields from request body
+
+  // Find existing record by productId
+  const existingRecord = await WholesalerPriceType2.findOne({ productId , WholesalerEmail});
+
+  if (existingRecord) {
+    // If record exists, update it
+    Object.assign(existingRecord, reqBody); // Merge the update data into the existing record
+    return existingRecord.save(); // Save the updated record
+  } else {
+    // If no record exists, create a new one
+    return WholesalerPriceType2.create(reqBody);
+  }
 };
+
 
 /**
  * Query for WholesalerPriceType2
@@ -33,14 +46,101 @@ const queryWholesalerPriceType2 = async (wholesalerEmail, options) => {
     return wholesalerPrice;
   };
   
+  const getFilteredProducts = async (body) => {
+    try {
+      const { wholesalerEmail, limit = 10, page = 1, ...productFilters } = body;
+  
+      // Calculate pagination parameters
+      const parsedLimit = parseInt(limit, 10) || 10; // Default limit to 10 if not provided
+      const parsedPage = parseInt(page, 10) || 1; // Default page to 1 if not provided
+      const skip = (parsedPage - 1) * parsedLimit;
+  
+      // Step 1: Fetch productIds from WholesalerPriceType2 using wholesalerEmail
+      const wholesalerPrices = await WholesalerPriceType2.find(
+        { WholesalerEmail: wholesalerEmail },
+        { productId: 1 } // Only select productId
+      );
+  
+      // If no matching productIds found, return an empty result with pagination metadata
+      if (!wholesalerPrices.length) {
+        return {
+          products: [],
+          total: 0,
+          page: parsedPage,
+          totalPages: 0,
+        };
+      }
+  
+      // Extract productIds from the wholesalerPrices
+      const productIds = wholesalerPrices.map((price) => price.productId);
+  
+      // Step 2: Fetch ProductType2 data using the productIds and additional filters
+      const [products, total] = await Promise.all([
+        ProductType2.find({
+          _id: { $in: productIds },
+          ...productFilters, // Apply additional filters (e.g., brand, productType, etc.)
+        })
+          .skip(skip)
+          .limit(parsedLimit),
+        ProductType2.countDocuments({
+          _id: { $in: productIds },
+          ...productFilters,
+        }),
+      ]);
+  
+      // Calculate total pages
+      const totalPages = Math.ceil(total / parsedLimit);
+  
+      // Return paginated results with metadata
+      return {
+        products,
+        total,
+        page: parsedPage,
+        totalPages,
+      };
+    } catch (error) {
+      console.error('Error fetching filtered products:', error);
+      throw new Error('Failed to retrieve products');
+    }
+  };
+  
+  
 
 /**
  * Get WholesalerPriceType2 by id
  * @param {ObjectId} id
  * @returns {Promise<WholesalerPriceType2>}
  */
-const getWholesalerPriceType2ById = async (id) => {
-  return WholesalerPriceType2.findById(id);
+const getWholesalerPriceType2ById = async (productId) => {
+  return WholesalerPriceType2.findOne({productId});
+};
+
+
+
+/**
+ * Get WholesalerPriceType2 by id
+ * @param {ObjectId} id
+ * @returns {Promise<WholesalerPriceType2>}
+ */
+const getRetailerPriceById = async (productId) => {
+    // Find the retailer price by productId
+    const retailerPrice = await WholesalerPriceType2.findOne({ productId }).lean();
+    // If no retailer price is found, handle it gracefully
+    if (!retailerPrice) {
+      return { message: "Retailer price not found for the given product ID." };
+    }
+
+    // Find the associated product details
+    const product = await ProductType2.findById(productId).lean();
+    // If no product is found, handle it gracefully
+    if (!product) {
+      return { message: "Product not found for the given product ID." };
+    }
+    // Return combined data
+    return {
+      retailerPrice,
+      product,
+    };
 };
 
 
@@ -75,9 +175,11 @@ const deleteWholesalerPriceType2ById = async (id) => {
 };
 
 module.exports = {
-  createWholesalerPriceType2,
+  createOrUpdateWholesalerPriceType2,
   queryWholesalerPriceType2,
+  getFilteredProducts,
   getWholesalerPriceType2ById,
+  getRetailerPriceById,
   updateWholesalerPriceType2ById,
   deleteWholesalerPriceType2ById,
 };
