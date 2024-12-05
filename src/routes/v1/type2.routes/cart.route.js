@@ -7,7 +7,7 @@ const router = express.Router();
 router
   .route('/')
   .post(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), cartType2Controller.createCartType2) // Create CartType2
-  .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), cartType2Controller.queryCartType2); // Query CartType2
+  .get( cartType2Controller.queryCartType2); // Query CartType2  auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
 
 router
   .route('/:id')
@@ -17,7 +17,7 @@ router
 
 router
   .route('/place-order/products/:id')
-  .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), cartType2Controller.genratePOCartType2);
+  .get( cartType2Controller.genratePOCartType2); // auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
 
 router
   .route('/catr/products')
