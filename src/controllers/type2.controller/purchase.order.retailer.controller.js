@@ -24,6 +24,14 @@ const getRetailerPurchaseOrderType2ById = catchAsync(async (req, res) => {
   res.status(httpStatus.OK).send(cartItem);
 });
 
+const combinePurchaseOrders = catchAsync(async (req, res) => {
+  const cartItem = await RetailerPurchaseOrderType2Service.combinePurchaseOrders(req.query.wholesaleremail);
+  if (!cartItem) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Cart not found');
+  }
+  res.status(httpStatus.OK).send(cartItem);
+});
+
 const getProductOrderBySupplyer = catchAsync(async (req, res) => {
   const cartItem = await RetailerPurchaseOrderType2Service.getProductOrderBySupplyer(req.query.supplierEmail);
   if (!cartItem) {
@@ -58,6 +66,7 @@ module.exports = {
   queryRetailerPurchaseOrderType2,
   getRetailerPurchaseOrderType2ById,
   getProductOrderBySupplyer,
+  combinePurchaseOrders,
   updateRetailerPurchaseOrderType2ById,
   deleteRetailerPurchaseOrderType2ById,
   getPurchaseOrdersByManufactureEmail,

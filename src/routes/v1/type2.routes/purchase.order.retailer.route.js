@@ -35,4 +35,11 @@ router
     retailerPurchaseOrderType2Controller.getPurchaseOrdersByManufactureEmail
   );
 
+  router
+  .route('/purchase-orders/wholesaler-email/combined-order')
+  .get(
+    auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
+    retailerPurchaseOrderType2Controller.combinePurchaseOrders
+  );
+
 module.exports = router;

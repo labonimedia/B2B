@@ -1,5 +1,5 @@
 const httpStatus = require('http-status');
-const { PurchaseOrderType2, CartType2 } = require('../../models');
+const { PurchaseOrderType2, CartType2, PurchaseOrderRetailerType2 } = require('../../models');
 const ApiError = require('../../utils/ApiError');
 
 /**
@@ -138,6 +138,7 @@ const getPurchaseOrdersByManufactureEmail = async (manufacturerEmail, filter, op
 
   return result;
 };
+// Create combined PO for wholesaler
 module.exports = {
   createPurchaseOrderType2,
   queryPurchaseOrderType2,
