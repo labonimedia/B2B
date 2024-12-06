@@ -19,36 +19,37 @@ const searchProducts = catchAsync(async (req, res) => {
   const options = {};
 
   // Ensure 'productBy' is mandatory
-  if (!req.query.productBy) {
+  if (!req.body.productBy) {
     return res.status(httpStatus.BAD_REQUEST).send({ message: "'productBy' is required." });
   }
-  filter.productBy = req.query.productBy;
+  filter.productBy = req.body.productBy;
 
   // Add optional filters only if they have values
   ['brand', 'clothing', 'gender', 'productType', 'subCategory'].forEach((key) => {
-    if (req.query[key] && req.query[key].trim() !== '') {
-      filter[key] = req.query[key].trim();
+    if (req.body[key] && req.body[key].trim() !== '') {
+      filter[key] = req.body[key].trim();
     }
   });
 
-  // Handle pagination and sorting options
-  if (req.query.sortBy) {
-    options.sortBy = req.query.sortBy;
+  // Handle pagination and sorting options from the body
+  if (req.body.sortBy) {
+    options.sortBy = req.body.sortBy;
   }
-  if (req.query.populate) {
-    options.populate = req.query.populate;
+  if (req.body.populate) {
+    options.populate = req.body.populate;
   }
-  if (req.query.limit) {
-    options.limit = parseInt(req.query.limit, 10);
+  if (req.body.limit) {
+    options.limit = parseInt(req.body.limit, 10);
   }
-  if (req.query.page) {
-    options.page = parseInt(req.query.page, 10);
+  if (req.body.page) {
+    options.page = parseInt(req.body.page, 10);
   }
 
   // Fetch products based on the filter and options
   const products = await productType2Service.searchProducts(filter, options);
   res.status(httpStatus.OK).send(products);
 });
+
 
 
 
