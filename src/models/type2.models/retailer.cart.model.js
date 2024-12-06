@@ -40,6 +40,7 @@ const CartSchema = new mongoose.Schema(
         quantity: {
           type: Number,
         },
+        manufacturerPrice: String,
         price: {
           type: String,
         },

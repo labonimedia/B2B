@@ -9,6 +9,7 @@ const wholesalerPriceSchema = mongoose.Schema(
         designNumber: String,
         size: String,
         wholesalerPrice: String,
+        manufacturerPrice: String,
       },
     ],
     brandName: {
