@@ -155,6 +155,15 @@ const combinePurchaseOrders = async (wholesalerEmail) => {
       throw new ApiError(httpStatus.NOT_FOUND, 'Cart Order not found.');
     }
 
+    // Fetch manufacturer details for the first productBy in the purchase orders
+    const manufacturer = await Manufacture.findOne({ email: retailerPOs[0].set[0].productBy }).select(
+      'email fullName companyName address state country pinCode mobNumber GSTIN logo discountGiven'
+    );
+
+    if (!manufacturer) {
+      throw new ApiError(httpStatus.NOT_FOUND, 'Manufacturer details not found.');
+    }
+
     const now = new Date();
     const currentMonth = now.getMonth();
     let financialYear =
@@ -179,76 +188,66 @@ const combinePurchaseOrders = async (wholesalerEmail) => {
 
     const orderNumber = orderCount.count;
 
-    // Step 2: Sort and group by `productBy` from `set` array
-    const groupedByProduct = {};
-    retailerPOs.forEach((po) => {
+    // Step 2: Sort and group by productBy
+    const groupedByProduct = retailerPOs.reduce((acc, po) => {
       po.set.forEach((item) => {
-        if (!groupedByProduct[item.productBy]) {
-          groupedByProduct[item.productBy] = [];
+        const key = item.productBy;
+        if (!acc[key]) {
+          acc[key] = [];
         }
-        groupedByProduct[item.productBy].push({ ...item, wholesaler: po.wholesaler });
+        acc[key].push(item);
       });
-    });
+      return acc;
+    }, {});
 
-    // Step 3: Process each group and merge the `set` arrays
-    const combinedPOs = await Promise.all(
-      Object.keys(groupedByProduct).map(async (productBy) => {
-        const poGroup = groupedByProduct[productBy];
+    // Step 3: Process each group and merge the 'set' arrays
+    const combinedPOs = Object.keys(groupedByProduct).map((productBy) => {
+      const poGroup = groupedByProduct[productBy];
 
-        // Fetch manufacturer details for the current `productBy`
-        const manufacturer = await Manufacture.findOne({ email: productBy }).select(
-          'email fullName companyName address state country pinCode mobNumber GSTIN logo discountGiven'
-        );
+      // Merge 'set' arrays and exclude wholesaler and manufacturer
+      const mergedSet = [];
+      const setMap = new Map(); // To track unique combinations
 
-        if (!manufacturer) {
-          throw new ApiError(httpStatus.NOT_FOUND, `Manufacturer details not found for ${productBy}.`);
+      poGroup.forEach((item) => {
+        const key = `${item.designNumber}_${item.colour}_${item.size}`;
+        if (setMap.has(key)) {
+          // If the combination exists, add the quantity
+          setMap.get(key).quantity += item.quantity;
+        } else {
+          // Add new combination without wholesaler and manufacturer
+          const { wholesaler, manufacturer, ...sanitizedItem } = item;
+          setMap.set(key, { ...sanitizedItem });
         }
+      });
 
-        // Merge `set` arrays
-        const mergedSet = [];
-        const setMap = new Map(); // To track unique combinations
+      // Convert map to array
+      setMap.forEach((value) => mergedSet.push(value));
 
-        poGroup.forEach((item) => {
-          const key = `${item.productBy}_${item.designNumber}_${item.colour}_${item.size}`;
-          if (setMap.has(key)) {
-            // If the combination exists, add the quantity
-            setMap.get(key).quantity += item.quantity;
-          } else {
-            // Add new combination
-            setMap.set(key, { ...item });
-          }
-        });
+      // Prepare retailerPOs array
+      const retailerPOsArray = retailerPOs
+        .filter((po) => po.set.some((s) => s.productBy === productBy))
+        .map((po) => ({
+          email: po.email,
+          poNumber: po.poNumber,
+        }));
 
-        // Convert map to array
-        setMap.forEach((value) => mergedSet.push(value));
-
-        // Prepare retailerPOs array (unique POs for the current `productBy`)
-        const retailerPOsArray = retailerPOs
-          .filter((po) => po.set.some((item) => item.productBy === productBy))
-          .map((po) => ({
-            email: po.email,
-            poNumber: po.poNumber,
-          }));
-
-        // Return combined PO
-        return {
-          set: mergedSet,
-          email: wholesalerEmail,
-          productBy,
-          cartAddedDate: new Date(),
-          poNumber: orderNumber,
-          retailerPOs: retailerPOsArray,
-          wholesaler: poGroup[0].wholesaler, // Use the first item's wholesaler data
-          manufacturer: manufacturer, // Include the manufacturer details
-        };
-      })
-    );
+      // Return combined PO
+      return {
+        set: mergedSet,
+        email: wholesalerEmail,
+        productBy,
+        cartAddedDate: new Date(),
+        poNumber: orderNumber,
+        retailerPOs: retailerPOsArray,
+        wholesaler: retailerPOs[0].wholesaler, // Use the first PO's wholesaler data
+        manufacturer, // Include the manufacturer details
+      };
+    });
 
     // Step 4: Return combined POs
     return combinedPOs;
   } catch (error) {
-    console.error('Error combining purchase orders:', error);
-    throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'Error combining purchase orders');
+    throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'Error combining purchase orders:', error);
   }
 };
 
