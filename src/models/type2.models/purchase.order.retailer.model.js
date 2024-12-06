@@ -11,6 +11,7 @@ const PurchaseOrderRetailerSchema = mongoose.Schema(
         colourName: String,
         size: String,
         quantity: Number,
+        manufacturerPrice: String,
         price: String,
       },
     ],
