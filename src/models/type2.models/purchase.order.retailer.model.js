@@ -5,6 +5,7 @@ const PurchaseOrderRetailerSchema = mongoose.Schema(
   {
     set: [
       {
+        productBy:String,
         designNumber: String,
         colour: String,
         colourImage: String,
@@ -22,7 +23,7 @@ const PurchaseOrderRetailerSchema = mongoose.Schema(
     },
     email: String,
     wholesalerEmail: String,
-    productBy: String,
+    // productBy: String,
     cartAddedDate: Date,
     poNumber: Number,
     wholesaler: {
