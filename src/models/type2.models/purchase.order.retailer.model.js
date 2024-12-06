@@ -23,7 +23,6 @@ const PurchaseOrderRetailerSchema = mongoose.Schema(
     },
     email: String,
     wholesalerEmail: String,
-    // productBy: String,
     cartAddedDate: Date,
     poNumber: Number,
     wholesaler: {
