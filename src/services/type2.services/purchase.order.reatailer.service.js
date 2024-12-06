@@ -243,7 +243,6 @@ const combinePurchaseOrders = async (wholesalerEmail) => {
         manufacturer, // Include the manufacturer details
       };
     });
-
     // Step 4: Return combined POs
     return combinedPOs;
   } catch (error) {

@@ -18,11 +18,20 @@ const searchProducts = catchAsync(async (req, res) => {
   const filter = {};
   const options = {};
 
-  Object.keys(req.query).forEach((key) => {
-    if (req.query[key] && !['sortBy', 'populate', 'limit', 'page'].includes(key)) {
-      filter[key] = req.query[key];
+  // Ensure 'productBy' is mandatory
+  if (!req.query.productBy) {
+    return res.status(httpStatus.BAD_REQUEST).send({ message: "'productBy' is required." });
+  }
+  filter.productBy = req.query.productBy;
+
+  // Add optional filters only if they have values
+  ['brand', 'clothing', 'gender', 'productType', 'subCategory'].forEach((key) => {
+    if (req.query[key] && req.query[key].trim() !== '') {
+      filter[key] = req.query[key].trim();
     }
   });
+
+  // Handle pagination and sorting options
   if (req.query.sortBy) {
     options.sortBy = req.query.sortBy;
   }
@@ -35,9 +44,15 @@ const searchProducts = catchAsync(async (req, res) => {
   if (req.query.page) {
     options.page = parseInt(req.query.page, 10);
   }
+
+  // Fetch products based on the filter and options
   const products = await productType2Service.searchProducts(filter, options);
   res.status(httpStatus.OK).send(products);
 });
+
+
+
+
 const searchForWSProducts = catchAsync(async (req, res) => {
   const filter = {};
   const options = {};

@@ -91,18 +91,15 @@ const queryProduct = async (filter, options) => {
  * @returns {Promise<QueryResult>}
  */
 const searchProducts = async (filter, options) => {
-  // If there's a search term, add a text search condition
-  // eslint-disable-next-line no-param-reassign
   if (filter.search) {
-    // eslint-disable-next-line no-param-reassign
-    filter.$text = { $search: filter.search };
-    // eslint-disable-next-line no-param-reassign
+    filter.$text = { $search: filter.search }; // Add text search condition if search term is present
     delete filter.search;
   }
 
-  const products = await ProductType2.paginate(filter, options);
+  const products = await ProductType2.paginate(filter, options); // Paginate with the filtered criteria
   return products;
 };
+
 
 const searchForWSProducts = async (filter, options, WholesalerEmail) => {
 
