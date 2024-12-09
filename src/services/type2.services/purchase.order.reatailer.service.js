@@ -250,11 +250,6 @@ const combinePurchaseOrders = async (wholesalerEmail) => {
   }
 };
 
-
-
-
-
-
 module.exports = {
   createPurchaseOrderRetailerType2,
   queryPurchaseOrderRetailerType2,
