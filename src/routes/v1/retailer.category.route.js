@@ -6,13 +6,13 @@ const router = express.Router();
 
 router
   .route('/')
-  .post(auth('superadmin', 'manufacture'), retailerCategoryController.createDiscountCategory)
-  .get(auth('superadmin', 'manufacture'), retailerCategoryController.queryDiscountCategory);
+  .post(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), retailerCategoryController.createDiscountCategory)
+  .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), retailerCategoryController.queryDiscountCategory);
 
 router
   .route('/:id')
-  .get(auth('superadmin', 'manufacture'), retailerCategoryController.getDiscountCategoryById)
-  .patch(auth('superadmin', 'manufacture'), retailerCategoryController.updateDiscountCategoryById)
-  .delete(auth('superadmin', 'manufacture'), retailerCategoryController.deleteDiscountCategoryById);
+  .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), retailerCategoryController.getDiscountCategoryById)
+  .patch(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), retailerCategoryController.updateDiscountCategoryById)
+  .delete(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), retailerCategoryController.deleteDiscountCategoryById);
 
 module.exports = router;
