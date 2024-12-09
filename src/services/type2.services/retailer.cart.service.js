@@ -8,9 +8,9 @@ const ApiError = require('../../utils/ApiError');
  * @returns {Promise<Array<RetailerCartType2>>}
  */
 const createRetailerCartType2 = async (reqBody) => {
-  const { email, productBy, set } = reqBody;
+  const { email, wholesalerEmail, set } = reqBody;
     // Check if a cart already exists with the same email and productBy
-    const existingCart = await RetailerCartType2.findOne({ email, productBy });
+    const existingCart = await RetailerCartType2.findOne({ email, wholesalerEmail });
     if (existingCart) {
       // Push new set data into the existing cart's set array
       existingCart.set.push(...set);
