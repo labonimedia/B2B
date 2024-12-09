@@ -22,6 +22,10 @@ const CartSchema = new mongoose.Schema(
         //   ref: 'ProductType2',
         //   required: true,
         // },
+        productBy: {
+          type: String,
+          
+        },
         designNumber: {
           type: String,
         },
