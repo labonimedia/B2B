@@ -16,12 +16,12 @@ const createPurchaseOrderType2 = async (reqBody) => {
   }
 
   // Find and delete the cart item(s) matching the given `email` and `productBy`
-  const cartProducts = await CartType2.findOneAndDelete({ email, productBy });
+  // const cartProducts = await CartType2.findOneAndDelete({ email, productBy });
 
   // If no matching cart items are found, throw an error
-  if (!cartProducts) {
-    throw new ApiError(httpStatus.NOT_FOUND, `No cart items found for email: ${email} and productBy: ${productBy}`);
-  }
+  // if (!cartProducts) {
+  //   throw new ApiError(httpStatus.NOT_FOUND, `No cart items found for email: ${email} and productBy: ${productBy}`);
+  // }
 
   // Create a new purchase order using the provided request body
   const purchaseOrder = await PurchaseOrderType2.create(reqBody);
