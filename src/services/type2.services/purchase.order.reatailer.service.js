@@ -202,7 +202,7 @@ const getPurchaseOrdersByManufactureEmail = async (manufacturerEmail, filter, op
           const setMap = new Map(); // To track unique combinations
   
           poGroup.forEach((item) => {
-            const key = `${item.designNumber}_${item.colour}_${item.size}`;
+            const key = `${item.productBy}_${item.designNumber}_${item.colour}_${item.size}`;
             if (setMap.has(key)) {
               // If the combination exists, add the quantity
               setMap.get(key).quantity += item.quantity;
