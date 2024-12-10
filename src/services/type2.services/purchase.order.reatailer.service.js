@@ -183,7 +183,7 @@ const getPurchaseOrdersByManufactureEmail = async (manufacturerEmail, filter, op
   
           // Generate a unique PO number for this manufacturer
           const orderCount = await POCountertype2.findOneAndUpdate(
-            { email: wholesalerEmail, productBy, year: financialYear },
+            { email: wholesalerEmail, year: financialYear },
             { $inc: { count: 1 } },
             { new: true, upsert: true, setDefaultsOnInsert: true }
           );
