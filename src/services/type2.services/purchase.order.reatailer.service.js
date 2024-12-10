@@ -155,8 +155,9 @@ const combinePurchaseOrders = async (wholesalerEmail) => {
       throw new ApiError(httpStatus.NOT_FOUND, 'Cart Order not found.');
     }
 
-    // Fetch manufacturer details for the first productBy in the purchase orders
-    const manufacturer = await Manufacture.findOne({ email: retailerPOs[0].set[0].productBy }).select(
+    // Fetch manufacturer details for the first product in the purchase orders
+    const manufacturerEmail = retailerPOs[0].set[0]?.productBy;
+    const manufacturer = await Manufacture.findOne({ email: manufacturerEmail }).select(
       'email fullName companyName address state country pinCode mobNumber GSTIN logo discountGiven'
     );
 
@@ -201,14 +202,11 @@ const combinePurchaseOrders = async (wholesalerEmail) => {
     }, {});
 
     // Step 3: Process each group and merge the 'set' arrays
-    const combinedPOs = Object.keys(groupedByProduct).map((productBy) => {
-      const poGroup = groupedByProduct[productBy];
+    const combinedSet = [];
+    const setMap = new Map(); // To track unique combinations
 
-      // Merge 'set' arrays and exclude wholesaler and manufacturer
-      const mergedSet = [];
-      const setMap = new Map(); // To track unique combinations
-
-      poGroup.forEach((item) => {
+    retailerPOs.forEach((po) => {
+      po.set.forEach((item) => {
         const key = `${item.designNumber}_${item.colour}_${item.size}`;
         if (setMap.has(key)) {
           // If the combination exists, add the quantity
@@ -219,36 +217,34 @@ const combinePurchaseOrders = async (wholesalerEmail) => {
           setMap.set(key, { ...sanitizedItem });
         }
       });
-
-      // Convert map to array
-      setMap.forEach((value) => mergedSet.push(value));
-
-      // Prepare retailerPOs array
-      const retailerPOsArray = retailerPOs
-        .filter((po) => po.set.some((s) => s.productBy === productBy))
-        .map((po) => ({
-          email: po.email,
-          poNumber: po.poNumber,
-        }));
-
-      // Return combined PO
-      return {
-        set: mergedSet,
-        email: wholesalerEmail,
-        productBy,
-        cartAddedDate: new Date(),
-        poNumber: orderNumber,
-        retailerPOs: retailerPOsArray,
-        wholesaler: retailerPOs[0].wholesaler, // Use the first PO's wholesaler data
-        manufacturer, // Include the manufacturer details
-      };
     });
-    // Step 4: Return combined POs
-    return combinedPOs;
+
+    // Convert map to array
+    setMap.forEach((value) => combinedSet.push(value));
+
+    // Prepare retailerPOs array
+    const retailerPOsArray = retailerPOs.map((po) => ({
+      email: po.email,
+      poNumber: po.poNumber,
+    }));
+
+    // Step 4: Return combined PO with single manufacturer details
+    const combinedPO = {
+      set: combinedSet,
+      email: wholesalerEmail,
+      cartAddedDate: new Date(),
+      poNumber: orderNumber,
+      retailerPOs: retailerPOsArray,
+      wholesaler: retailerPOs[0].wholesaler, // Use the first PO's wholesaler data
+      manufacturer, // Include the single manufacturer details
+    };
+
+    return combinedPO;
   } catch (error) {
     throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'Error combining purchase orders:', error);
   }
 };
+
 
 module.exports = {
   createPurchaseOrderRetailerType2,
