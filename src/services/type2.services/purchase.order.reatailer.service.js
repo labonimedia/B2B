@@ -171,7 +171,7 @@ const getPurchaseOrdersByManufactureEmail = async (manufacturerEmail, filter, op
           if (!acc[key]) {
             acc[key] = [];
           }
-          acc[key].push(item);
+          acc[key].push({ ...item, retailerPoId: po._id }); // Include the PO ID for context
         });
         return acc;
       }, {});
@@ -183,7 +183,7 @@ const getPurchaseOrdersByManufactureEmail = async (manufacturerEmail, filter, op
   
           // Generate a unique PO number for this manufacturer
           const orderCount = await POCountertype2.findOneAndUpdate(
-            { email: wholesalerEmail, year: financialYear },
+            { email: wholesalerEmail, productBy, year: financialYear },
             { $inc: { count: 1 } },
             { new: true, upsert: true, setDefaultsOnInsert: true }
           );
@@ -202,12 +202,12 @@ const getPurchaseOrdersByManufactureEmail = async (manufacturerEmail, filter, op
           const setMap = new Map(); // To track unique combinations
   
           poGroup.forEach((item) => {
-            const key = `${item.productBy}_${item.designNumber}_${item.colour}_${item.size}`;
+            const key = `${item.designNumber}_${item.colour}_${item.size}`;
             if (setMap.has(key)) {
               // If the combination exists, add the quantity
               setMap.get(key).quantity += item.quantity;
             } else {
-              // Add new combination without wholesaler
+              // Add a new combination
               const { wholesaler, ...sanitizedItem } = item;
               setMap.set(key, { ...sanitizedItem });
             }
@@ -241,7 +241,7 @@ const getPurchaseOrdersByManufactureEmail = async (manufacturerEmail, filter, op
             cartAddedDate: new Date(),
             poNumber: orderNumber, // Unique PO number for this manufacturer
             retailerPOs: retailerPOsArray,
-            wholesaler: retailerPOs[0].wholesaler, // Use the first PO's wholesaler data
+            wholesaler: retailerPOs.find((po) => po.set.some((s) => s.productBy === productBy)).wholesaler,
             manufacturer, // Include the manufacturer details
           };
         })
@@ -256,6 +256,7 @@ const getPurchaseOrdersByManufactureEmail = async (manufacturerEmail, filter, op
       throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, `Error combining purchase orders: ${error.message}`);
     }
   };
+  
   
   
 
