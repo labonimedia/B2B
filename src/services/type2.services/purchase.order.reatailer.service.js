@@ -164,18 +164,6 @@ const getPurchaseOrdersByManufactureEmail = async (manufacturerEmail, filter, op
           ? now.getFullYear() - 1
           : now.getFullYear();
   
-      // Get the current order count for the wholesaler and financial year
-      const orderCount = await POCountertype2.findOneAndUpdate(
-        { email: wholesalerEmail, year: financialYear },
-        { $inc: { count: 1 } },
-        { new: true, upsert: true, setDefaultsOnInsert: true }
-      );
-      if (!orderCount) {
-        throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'Failed to retrieve or update order count.');
-      }
-  
-      const orderNumber = orderCount.count;
-  
       // Step 2: Sort and group by productBy
       const groupedByProduct = retailerPOs.reduce((acc, po) => {
         po.set.forEach((item) => {
@@ -192,6 +180,22 @@ const getPurchaseOrdersByManufactureEmail = async (manufacturerEmail, filter, op
       const combinedPOs = await Promise.all(
         Object.keys(groupedByProduct).map(async (productBy) => {
           const poGroup = groupedByProduct[productBy];
+  
+          // Generate a unique PO number for this manufacturer
+          const orderCount = await POCountertype2.findOneAndUpdate(
+            { email: wholesalerEmail, productBy, year: financialYear },
+            { $inc: { count: 1 } },
+            { new: true, upsert: true, setDefaultsOnInsert: true }
+          );
+  
+          if (!orderCount) {
+            throw new ApiError(
+              httpStatus.INTERNAL_SERVER_ERROR,
+              `Failed to retrieve or update order count for manufacturer: ${productBy}`
+            );
+          }
+  
+          const orderNumber = orderCount.count;
   
           // Merge 'set' arrays
           const mergedSet = [];
@@ -235,7 +239,7 @@ const getPurchaseOrdersByManufactureEmail = async (manufacturerEmail, filter, op
             email: wholesalerEmail,
             productBy,
             cartAddedDate: new Date(),
-            poNumber: orderNumber,
+            poNumber: orderNumber, // Unique PO number for this manufacturer
             retailerPOs: retailerPOsArray,
             wholesaler: retailerPOs[0].wholesaler, // Use the first PO's wholesaler data
             manufacturer, // Include the manufacturer details
@@ -252,6 +256,7 @@ const getPurchaseOrdersByManufactureEmail = async (manufacturerEmail, filter, op
       throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, `Error combining purchase orders: ${error.message}`);
     }
   };
+  
   
 
 
