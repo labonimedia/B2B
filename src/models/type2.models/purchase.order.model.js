@@ -12,6 +12,7 @@ const PurchaseOrderSchema = mongoose.Schema(
         size: String,
         quantity: Number,
         price: String,
+        productBy: String,
       },
     ],
     email: String,
