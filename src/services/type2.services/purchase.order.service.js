@@ -62,7 +62,7 @@ const getPurchaseOrderType2ById = async (id) => {
 };
 
 const getProductOrderBySupplyer = async (supplierEmail) => {
-  const productOrders = await PurchaseOrderType2.find({ supplierEmail });
+  const productOrders = await PurchaseOrderType2.find({ productBy:supplierEmail });
 
   if (productOrders.length === 0) {
     throw new ApiError(httpStatus.NOT_FOUND, 'No Product Orders found for this supplier');
