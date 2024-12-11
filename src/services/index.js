@@ -90,3 +90,4 @@ module.exports.wishListType2Service = require('./type2.services/wishlist.service
 module.exports.wholesalerPriceService = require('./type2.services/wholesaler.product.price.service')
 module.exports.RetailerCartType2Service = require('./type2.services/retailer.cart.service');
 module.exports.RetailerPurchaseOrderType2Service = require('./type2.services/purchase.order.reatailer.service');
+module.exports.mnfDeliveryChallanService = require('./type2.services/mnf.delivery.challan.service')
