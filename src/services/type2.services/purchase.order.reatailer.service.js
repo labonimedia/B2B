@@ -188,8 +188,8 @@ const combinePurchaseOrders = async (wholesalerEmail) => {
         //   { new: true, upsert: true, setDefaultsOnInsert: true }
         // );
 
-        const lastPO = await PurchaseOrderRetailerType2.findOne({
-          'set.productBy': manufacturerEmail
+        const lastPO = await PurchaseOrderType2.findOne({
+          email: wholesalerEmail
         }).sort({ poNumber: -1 }).lean();
 
         const orderNumber = lastPO ? lastPO.poNumber + 1 : 1;
