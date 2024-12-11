@@ -143,233 +143,230 @@ const getPurchaseOrdersByManufactureEmail = async (manufacturerEmail, filter, op
 // const PurchaseOrderRetailerType2 = require('../models/PurchaseOrderRetailerType2'); // Adjust path as needed
 
 // const combinePurchaseOrders = async (wholesalerEmail) => {
-  const combinePurchaseOrders = async (wholesalerEmail) => {
-    try {
-      if (!wholesalerEmail) {
-        throw new ApiError(httpStatus.BAD_REQUEST, 'Wholesaler email is required.');
-      }
-  
-      // Step 1: Fetch purchase orders by wholesalerEmail
-      const retailerPOs = await PurchaseOrderRetailerType2.find({ wholesalerEmail }).lean();
-  
-      if (!retailerPOs.length) {
-        throw new ApiError(httpStatus.NOT_FOUND, 'Cart Order not found.');
-      }
-  
-      // Calculate financial year
-      const now = new Date();
-      const currentMonth = now.getMonth();
-      const financialYear =
-        currentMonth < 2 || (currentMonth === 2 && now.getDate() < 1)
-          ? now.getFullYear() - 1
-          : now.getFullYear();
-  
-      // Step 2: Sort and group by productBy
-      const groupedByProduct = retailerPOs.reduce((acc, po) => {
-        po.set.forEach((item) => {
-          const key = item.productBy;
-          if (!acc[key]) {
-            acc[key] = [];
-          }
-          acc[key].push({ ...item, retailerPoId: po._id }); // Include the PO ID for context
-        });
-        return acc;
-      }, {});
-  
-      // Step 3: Process each group and merge the 'set' arrays
-      const combinedPOs = await Promise.all(
-        Object.keys(groupedByProduct).map(async (productBy) => {
-          const poGroup = groupedByProduct[productBy];
-  
-          // Generate a unique PO number for this manufacturer
-          const orderCount = await POCountertype2.findOneAndUpdate(
-            { email: wholesalerEmail, year: financialYear },
-            { $inc: { count: 1 } },
-            { new: true, upsert: true, setDefaultsOnInsert: true }
-          );
-  
-          if (!orderCount) {
-            throw new ApiError(
-              httpStatus.INTERNAL_SERVER_ERROR,
-              `Failed to retrieve or update order count for manufacturer: ${productBy}`
-            );
-          }
-  
-          const orderNumber = orderCount.count;
-  
-          // Merge 'set' arrays
-          const mergedSet = [];
-          const setMap = new Map(); // To track unique combinations
-  
-          poGroup.forEach((item) => {
-            const key = `${item.designNumber}_${item.colour}_${item.size}`;
-            if (setMap.has(key)) {
-              // If the combination exists, add the quantity
-              setMap.get(key).quantity += item.quantity;
-            } else {
-              // Add a new combination
-              const { wholesaler, ...sanitizedItem } = item;
-              setMap.set(key, { ...sanitizedItem });
-            }
-          });
-  
-          // Convert map to array
-          setMap.forEach((value) => mergedSet.push(value));
-  
-          // Prepare retailerPOs array
-          const retailerPOsArray = retailerPOs
-            .filter((po) => po.set.some((s) => s.productBy === productBy))
-            .map((po) => ({
-              email: po.email,
-              poNumber: po.poNumber,
-            }));
-  
-          // Fetch manufacturer details for the productBy
-          const manufacturer = await Manufacture.findOne({ email: productBy }).select(
-            'email fullName companyName address state country pinCode mobNumber GSTIN logo discountGiven'
-          );
-  
-          if (!manufacturer) {
-            throw new ApiError(httpStatus.NOT_FOUND, `Manufacturer details not found for productBy: ${productBy}`);
-          }
-  
-          // Return combined PO
-          return {
-            set: mergedSet,
-            email: wholesalerEmail,
-            productBy,
-            cartAddedDate: new Date(),
-            poNumber: orderNumber, // Unique PO number for this manufacturer
-            retailerPOs: retailerPOsArray,
-            wholesaler: retailerPOs.find((po) => po.set.some((s) => s.productBy === productBy)).wholesaler,
-            manufacturer, // Include the manufacturer details
-          };
-        })
-      );
-  
-      // Step 4: Return combined POs
-      return combinedPOs;
-    } catch (error) {
-      if (error instanceof ApiError) {
-        throw error;
-      }
-      throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, `Error combining purchase orders: ${error.message}`);
+const combinePurchaseOrders = async (wholesalerEmail) => {
+  try {
+    if (!wholesalerEmail) {
+      throw new ApiError(httpStatus.BAD_REQUEST, 'Wholesaler email is required.');
     }
-  };
-  
-  
-  
-  const combinePurchaseOrdersForManufacturer = async (wholesalerEmail, manufacturerEmail) => {
-    try {
-      console.log("Starting combinePurchaseOrders for email:", wholesalerEmail, "and manufacturer:", manufacturerEmail);
-  
-      if (!wholesalerEmail) {
-        throw new ApiError(httpStatus.BAD_REQUEST, 'Wholesaler email is required.');
-      }
-  
-      if (!manufacturerEmail) {
-        throw new ApiError(httpStatus.BAD_REQUEST, 'Manufacturer email is required.');
-      }
-  
-      // Step 1: Fetch purchase orders by wholesalerEmail
-      const retailerPOs = await PurchaseOrderRetailerType2.find({
-        wholesalerEmail,
-        'set.productBy': manufacturerEmail,
-      }).lean();
-      console.log("Fetched retailer POs:", JSON.stringify(retailerPOs, null, 2));
-  
-      if (!retailerPOs.length) {
-        throw new ApiError(httpStatus.NOT_FOUND, 'Cart Order not found.');
-      }
-  
-      // Calculate financial year
-      const now = new Date();
-      const currentMonth = now.getMonth();
-      const financialYear =
-        currentMonth < 2 || (currentMonth === 2 && now.getDate() < 1)
-          ? now.getFullYear() - 1
-          : now.getFullYear();
-      console.log("Calculated financial year:", financialYear);
-  
-      // Step 2: Filter and group data for the specific manufacturer
-      const groupedByProduct = retailerPOs.reduce((acc, po) => {
-        po.set.forEach((item) => {
-          if (item.productBy === manufacturerEmail) {
-            const key = `${item.designNumber}_${item.colour}_${item.size}`;
-            if (!acc[key]) {
-              acc[key] = { ...item, retailerPoId: po._id, quantity: 0 };
-            }
-            acc[key].quantity += item.quantity;
+
+    // Step 1: Fetch purchase orders by wholesalerEmail
+    const retailerPOs = await PurchaseOrderRetailerType2.find({ wholesalerEmail }).lean();
+
+    if (!retailerPOs.length) {
+      throw new ApiError(httpStatus.NOT_FOUND, 'Cart Order not found.');
+    }
+
+    // Calculate financial year
+    const now = new Date();
+    const currentMonth = now.getMonth();
+    const financialYear =
+      currentMonth < 2 || (currentMonth === 2 && now.getDate() < 1)
+        ? now.getFullYear() - 1
+        : now.getFullYear();
+
+    // Step 2: Sort and group by productBy
+    const groupedByProduct = retailerPOs.reduce((acc, po) => {
+      po.set.forEach((item) => {
+        const key = item.productBy;
+        if (!acc[key]) {
+          acc[key] = [];
+        }
+        acc[key].push({ ...item, retailerPoId: po._id }); // Include the PO ID for context
+      });
+      return acc;
+    }, {});
+
+    // Step 3: Process each group and merge the 'set' arrays
+    const combinedPOs = await Promise.all(
+      Object.keys(groupedByProduct).map(async (productBy) => {
+        const poGroup = groupedByProduct[productBy];
+
+        // Generate a unique PO number for this manufacturer
+        // const orderCount = await POCountertype2.findOneAndUpdate(
+        //   { email: wholesalerEmail, year: financialYear },
+        //   { $inc: { count: 1 } },
+        //   { new: true, upsert: true, setDefaultsOnInsert: true }
+        // );
+
+        const lastPO = await PurchaseOrderRetailerType2.findOne({
+          'set.productBy': manufacturerEmail
+        }).sort({ poNumber: -1 }).lean();
+
+        const orderNumber = lastPO ? lastPO.poNumber + 1 : 1;
+
+        // Merge 'set' arrays
+        const mergedSet = [];
+        const setMap = new Map(); // To track unique combinations
+
+        poGroup.forEach((item) => {
+          const key = `${item.designNumber}_${item.colour}_${item.size}`;
+          if (setMap.has(key)) {
+            // If the combination exists, add the quantity
+            setMap.get(key).quantity += item.quantity;
+          } else {
+            // Add a new combination
+            const { wholesaler, ...sanitizedItem } = item;
+            setMap.set(key, { ...sanitizedItem });
           }
         });
-        return acc;
-      }, {});
-      console.log("Grouped data for manufacturer:", JSON.stringify(groupedByProduct, null, 2));
-  
-      // Generate a unique PO number for this manufacturer
-      const orderCount = await POCountertype2.findOneAndUpdate(
-        { email: wholesalerEmail, year: financialYear },
-        { $inc: { count: 1 } },
-        { new: true, upsert: true, setDefaultsOnInsert: true }
-      );
-  
-      console.log("Order count for manufacturer:", manufacturerEmail, orderCount);
-  
-      if (!orderCount) {
-        throw new ApiError(
-          httpStatus.INTERNAL_SERVER_ERROR,
-          `Failed to retrieve or update order count for manufacturer: ${manufacturerEmail}`
+
+        // Convert map to array
+        setMap.forEach((value) => mergedSet.push(value));
+
+        // Prepare retailerPOs array
+        const retailerPOsArray = retailerPOs
+          .filter((po) => po.set.some((s) => s.productBy === productBy))
+          .map((po) => ({
+            email: po.email,
+            poNumber: po.poNumber,
+          }));
+
+        // Fetch manufacturer details for the productBy
+        const manufacturer = await Manufacture.findOne({ email: productBy }).select(
+          'email fullName companyName address state country pinCode mobNumber GSTIN logo discountGiven'
         );
-      }
-  
-      const orderNumber = orderCount.count;
-  
-      // Convert grouped data to an array
-      const mergedSet = Object.values(groupedByProduct);
-      console.log("Merged set for manufacturer:", manufacturerEmail, mergedSet);
-  
-      // Prepare retailerPOs array
-      const retailerPOsArray = retailerPOs.map((po) => ({
-        email: po.email,
-        poNumber: po.poNumber,
-      }));
-      console.log("Retailer POs array for manufacturer:", manufacturerEmail, retailerPOsArray);
-  
-      // Fetch manufacturer details
-      const manufacturer = await Manufacture.findOne({ email: manufacturerEmail }).select(
-        'email fullName companyName address state country pinCode mobNumber GSTIN logo discountGiven'
-      );
-  
-      console.log("Manufacturer details:", manufacturer);
-  
-      if (!manufacturer) {
-        throw new ApiError(httpStatus.NOT_FOUND, `Manufacturer details not found for: ${manufacturerEmail}`);
-      }
-  
-      // Prepare and return combined PO
-      const combinedPO = {
-        set: mergedSet,
-        email: wholesalerEmail,
-        productBy: manufacturerEmail,
-        cartAddedDate: new Date(),
-        poNumber: orderNumber, // Unique PO number for this manufacturer
-        retailerPOs: retailerPOsArray,
-        wholesaler: retailerPOs[0]?.wholesaler || {},
-        manufacturer, // Include the manufacturer details
-      };
-  
-      console.log("Combined PO:", JSON.stringify(combinedPO, null, 2));
-      return combinedPO;
-    } catch (error) {
-      console.error("Error in combinePurchaseOrdersForManufacturer:", error);
-  
-      if (error instanceof ApiError) {
-        throw error;
-      }
-      throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, `Error combining purchase orders: ${error.message}`);
+
+        if (!manufacturer) {
+          throw new ApiError(httpStatus.NOT_FOUND, `Manufacturer details not found for productBy: ${productBy}`);
+        }
+
+        // Return combined PO
+        return {
+          set: mergedSet,
+          email: wholesalerEmail,
+          productBy,
+          cartAddedDate: new Date(),
+          poNumber: orderNumber, // Unique PO number for this manufacturer
+          retailerPOs: retailerPOsArray,
+          wholesaler: retailerPOs.find((po) => po.set.some((s) => s.productBy === productBy)).wholesaler,
+          manufacturer, // Include the manufacturer details
+        };
+      })
+    );
+
+    // Step 4: Return combined POs
+    return combinedPOs;
+  } catch (error) {
+    if (error instanceof ApiError) {
+      throw error;
     }
-  };
-  
+    throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, `Error combining purchase orders: ${error.message}`);
+  }
+};
+
+
+
+const combinePurchaseOrdersForManufacturer = async (wholesalerEmail, manufacturerEmail) => {
+  try {
+    console.log("Starting combinePurchaseOrders for email:", wholesalerEmail, "and manufacturer:", manufacturerEmail);
+
+    if (!wholesalerEmail) {
+      throw new ApiError(httpStatus.BAD_REQUEST, 'Wholesaler email is required.');
+    }
+
+    if (!manufacturerEmail) {
+      throw new ApiError(httpStatus.BAD_REQUEST, 'Manufacturer email is required.');
+    }
+
+    // Step 1: Fetch purchase orders by wholesalerEmail
+    const retailerPOs = await PurchaseOrderRetailerType2.find({
+      wholesalerEmail,
+      'set.productBy': manufacturerEmail,
+    }).lean();
+    console.log("Fetched retailer POs:", JSON.stringify(retailerPOs, null, 2));
+
+    if (!retailerPOs.length) {
+      throw new ApiError(httpStatus.NOT_FOUND, 'Cart Order not found.');
+    }
+
+    // Calculate financial year
+    const now = new Date();
+    const currentMonth = now.getMonth();
+    const financialYear =
+      currentMonth < 2 || (currentMonth === 2 && now.getDate() < 1)
+        ? now.getFullYear() - 1
+        : now.getFullYear();
+    console.log("Calculated financial year:", financialYear);
+
+    // Step 2: Filter and group data for the specific manufacturer
+    const groupedByProduct = retailerPOs.reduce((acc, po) => {
+      po.set.forEach((item) => {
+        if (item.productBy === manufacturerEmail) {
+          const key = `${item.designNumber}_${item.colour}_${item.size}`;
+          if (!acc[key]) {
+            acc[key] = { ...item, retailerPoId: po._id, quantity: 0 };
+          }
+          acc[key].quantity += item.quantity;
+        }
+      });
+      return acc;
+    }, {});
+    console.log("Grouped data for manufacturer:", JSON.stringify(groupedByProduct, null, 2));
+
+    // Generate a unique PO number for this manufacturer
+    const orderCount = await POCountertype2.findOneAndUpdate(
+      { email: wholesalerEmail, year: financialYear },
+      { $inc: { count: 1 } },
+      { new: true, upsert: true, setDefaultsOnInsert: true }
+    );
+
+    console.log("Order count for manufacturer:", manufacturerEmail, orderCount);
+
+    if (!orderCount) {
+      throw new ApiError(
+        httpStatus.INTERNAL_SERVER_ERROR,
+        `Failed to retrieve or update order count for manufacturer: ${manufacturerEmail}`
+      );
+    }
+
+    const orderNumber = orderCount.count;
+
+    // Convert grouped data to an array
+    const mergedSet = Object.values(groupedByProduct);
+    console.log("Merged set for manufacturer:", manufacturerEmail, mergedSet);
+
+    // Prepare retailerPOs array
+    const retailerPOsArray = retailerPOs.map((po) => ({
+      email: po.email,
+      poNumber: po.poNumber,
+    }));
+    console.log("Retailer POs array for manufacturer:", manufacturerEmail, retailerPOsArray);
+
+    // Fetch manufacturer details
+    const manufacturer = await Manufacture.findOne({ email: manufacturerEmail }).select(
+      'email fullName companyName address state country pinCode mobNumber GSTIN logo discountGiven'
+    );
+
+    console.log("Manufacturer details:", manufacturer);
+
+    if (!manufacturer) {
+      throw new ApiError(httpStatus.NOT_FOUND, `Manufacturer details not found for: ${manufacturerEmail}`);
+    }
+
+    // Prepare and return combined PO
+    const combinedPO = {
+      set: mergedSet,
+      email: wholesalerEmail,
+      productBy: manufacturerEmail,
+      cartAddedDate: new Date(),
+      poNumber: orderNumber, // Unique PO number for this manufacturer
+      retailerPOs: retailerPOsArray,
+      wholesaler: retailerPOs[0]?.wholesaler || {},
+      manufacturer, // Include the manufacturer details
+    };
+
+    console.log("Combined PO:", JSON.stringify(combinedPO, null, 2));
+    return combinedPO;
+  } catch (error) {
+    console.error("Error in combinePurchaseOrdersForManufacturer:", error);
+
+    if (error instanceof ApiError) {
+      throw error;
+    }
+    throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, `Error combining purchase orders: ${error.message}`);
+  }
+};
+
 
 
 

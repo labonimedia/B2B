@@ -102,3 +102,4 @@ module.exports.WishListType2 = require('./type2.models/wishlist.model');
 module.exports.WholesalerPriceType2 = require('./type2.models/wholesaler.product.price');
 module.exports.RetailerCartType2 = require('./type2.models/retailer.cart.model');
 module.exports.PurchaseOrderRetailerType2 = require('./type2.models/purchase.order.retailer.model');
+module.exports.MnfDeliveryChallan = require('./type2.models/mnf.delivery.challan.model');

@@ -26,6 +26,7 @@ const createPurchaseOrderType2 = async (reqBody) => {
   // Create a new purchase order using the provided request body
   const purchaseOrder = await PurchaseOrderType2.create(reqBody);
 
+  const retailerPoStatus = await PurchaseOrderRetailerType2.findOneAndUpdate({ email: reqBody, poNumber })
   // Return the newly created purchase order
   return purchaseOrder;
 };
@@ -62,7 +63,7 @@ const getPurchaseOrderType2ById = async (id) => {
 };
 
 const getProductOrderBySupplyer = async (supplierEmail) => {
-  const productOrders = await PurchaseOrderType2.find({ productBy:supplierEmail });
+  const productOrders = await PurchaseOrderType2.find({ productBy: supplierEmail });
 
   if (productOrders.length === 0) {
     throw new ApiError(httpStatus.NOT_FOUND, 'No Product Orders found for this supplier');
