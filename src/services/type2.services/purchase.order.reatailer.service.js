@@ -230,9 +230,7 @@ const combinePurchaseOrders = async (wholesalerEmail) => {
         retailerPOs: retailerPOsArray,
         wholesaler: retailerPOs.find((po) => po.set.some((s) => s.productBy === productBy)).wholesaler,
         manufacturer,
-        discounts: discounts || [],
-        discountGiven: wholesaler.discountGiven,
-
+        discounts: discounts,
       };
     })
   );
