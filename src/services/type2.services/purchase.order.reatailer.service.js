@@ -16,13 +16,7 @@ const createPurchaseOrderRetailerType2 = async (reqBody) => {
   }
 
   // Find and delete the cart item(s) matching the given `email` and `productBy`
-  const cartProducts = await RetailerCartType2.findOneAndDelete({ email, productBy });
-
-  // If no matching cart items are found, throw an error
-  if (!cartProducts) {
-    throw new ApiError(httpStatus.NOT_FOUND, `No cart items found for email: ${email} and productBy: ${productBy}`);
-  }
-
+  await RetailerCartType2.findOneAndDelete({ email, productBy })
   // Create a new purchase order using the provided request body
   const purchaseOrder = await PurchaseOrderRetailerType2.create(reqBody);
 
@@ -219,10 +213,6 @@ const combinePurchaseOrders = async (wholesalerEmail) => {
       }
       const wholesaler = await Wholesaler.findOne({ email: wholesalerEmail });
 
-      if (!wholesaler) {
-        throw new Error('Wholesaler not found.');
-      }
-
       // Filter discounts given by the specified productBy
       const discounts = wholesaler.discountGiven.filter(
         (discount) => discount.discountGivenBy === productBy
@@ -236,12 +226,13 @@ const combinePurchaseOrders = async (wholesalerEmail) => {
         set: mergedSet,
         email: wholesalerEmail,
         productBy,
-        cartAddedDate: new Date(),
-        poNumber: currentPoNumber, // Unique PO number for this manufacturer
+        poNumber: currentPoNumber,
         retailerPOs: retailerPOsArray,
         wholesaler: retailerPOs.find((po) => po.set.some((s) => s.productBy === productBy)).wholesaler,
-        manufacturer, // Include the manufacturer details
+        manufacturer,
         discounts: discounts || [],
+        discountGiven,
+
       };
     })
   );
