@@ -1,5 +1,5 @@
 const httpStatus = require('http-status');
-const { PurchaseOrderRetailerType2, RetailerCartType2, POCountertype2, Manufacture, PurchaseOrderType2 } = require('../../models');
+const { PurchaseOrderRetailerType2, RetailerCartType2, POCountertype2, Manufacture, PurchaseOrderType2, Wholesaler } = require('../../models');
 const ApiError = require('../../utils/ApiError');
 
 /**
@@ -159,14 +159,6 @@ const combinePurchaseOrders = async (wholesalerEmail) => {
     throw new ApiError(httpStatus.NOT_FOUND, 'Cart Order not found.');
   }
 
-  // Calculate financial year
-  const now = new Date();
-  const currentMonth = now.getMonth();
-  const financialYear =
-    currentMonth < 2 || (currentMonth === 2 && now.getDate() < 1)
-      ? now.getFullYear() - 1
-      : now.getFullYear();
-
   // Step 2: Sort and group by productBy
   const groupedByProduct = retailerPOs.reduce((acc, po) => {
     po.set.forEach((item) => {
@@ -225,7 +217,16 @@ const combinePurchaseOrders = async (wholesalerEmail) => {
       if (!manufacturer) {
         throw new ApiError(httpStatus.NOT_FOUND, `Manufacturer details not found for productBy: ${productBy}`);
       }
+      const wholesaler = await Wholesaler.findOne({ email: wholesalerEmail });
 
+      if (!wholesaler) {
+        throw new Error('Wholesaler not found.');
+      }
+
+      // Filter discounts given by the specified productBy
+      const discounts = wholesaler.discountGiven.filter(
+        (discount) => discount.discountGivenBy === productBy
+      );
       // Create a new PO number for this group
       const currentPoNumber = nextPoNumber;
       nextPoNumber += 1;
@@ -240,6 +241,7 @@ const combinePurchaseOrders = async (wholesalerEmail) => {
         retailerPOs: retailerPOsArray,
         wholesaler: retailerPOs.find((po) => po.set.some((s) => s.productBy === productBy)).wholesaler,
         manufacturer, // Include the manufacturer details
+        discounts: discounts || [],
       };
     })
   );
