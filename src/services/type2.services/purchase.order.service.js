@@ -13,9 +13,6 @@ const createPurchaseOrderType2 = async (reqBody) => {
   if (!email || !productBy) {
     throw new ApiError(httpStatus.BAD_REQUEST, "Both 'email' and 'productBy' are required.");
   }
-  if (!poNumber) {
-    throw new ApiError(httpStatus.BAD_REQUEST, "'poNumber' is required.");
-  }
   // Create a new purchase order using the provided request body
   const purchaseOrder = await PurchaseOrderType2.create(reqBody);
 
