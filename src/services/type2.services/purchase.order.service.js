@@ -8,28 +8,33 @@ const ApiError = require('../../utils/ApiError');
  * @returns {Promise<Array<PurchaseOrderType2>>}
  */
 const createPurchaseOrderType2 = async (reqBody) => {
-  const { email, productBy } = reqBody;
-
-  // Validate that `email` and `productBy` are provided
+  const { email, productBy, poNumber } = reqBody;
+  // Validate that required fields are provided
   if (!email || !productBy) {
-    throw new ApiError(httpStatus.NOT_FOUND, "Both 'email' and 'productBy' are required.");
+    throw new ApiError(httpStatus.BAD_REQUEST, "Both 'email' and 'productBy' are required.");
   }
-
-  // Find and delete the cart item(s) matching the given `email` and `productBy`
-  // const cartProducts = await CartType2.findOneAndDelete({ email, productBy });
-
-  // If no matching cart items are found, throw an error
-  // if (!cartProducts) {
-  //   throw new ApiError(httpStatus.NOT_FOUND, `No cart items found for email: ${email} and productBy: ${productBy}`);
-  // }
-
+  if (!poNumber) {
+    throw new ApiError(httpStatus.BAD_REQUEST, "'poNumber' is required.");
+  }
   // Create a new purchase order using the provided request body
   const purchaseOrder = await PurchaseOrderType2.create(reqBody);
 
-  const retailerPoStatus = await PurchaseOrderRetailerType2.findOneAndUpdate({ email: reqBody, poNumber })
-  // Return the newly created purchase order
+  if (!purchaseOrder) {
+    throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, "Failed to create the purchase order.");
+  }
+  // Update the status of the retailer's purchase order to 'processing'
+  const updatedRetailerOrder = await PurchaseOrderRetailerType2.findOneAndUpdate(
+    { email, poNumber },
+    { $set: { status: 'processing' } },
+    { new: true }
+  );
+
+  if (!updatedRetailerOrder) {
+    throw new ApiError(httpStatus.NOT_FOUND, "Retailer order not found or failed to update.");
+  }
   return purchaseOrder;
 };
+
 
 const deleteCartType2ById = async (email, productBy) => {
   const purchaseOrderType2 = await CartType2.findOneAndDelete({ email, productBy });

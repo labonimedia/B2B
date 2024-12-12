@@ -150,7 +150,7 @@ const combinePurchaseOrders = async (wholesalerEmail) => {
     }
 
     // Step 1: Fetch purchase orders by wholesalerEmail
-    const retailerPOs = await PurchaseOrderRetailerType2.find({ wholesalerEmail }).lean();
+    const retailerPOs = await PurchaseOrderRetailerType2.find({ wholesalerEmail, status: 'pending', }).lean();
 
     if (!retailerPOs.length) {
       throw new ApiError(httpStatus.NOT_FOUND, 'Cart Order not found.');
@@ -257,82 +257,68 @@ const combinePurchaseOrders = async (wholesalerEmail) => {
 
 
 const combinePurchaseOrdersForManufacturer = async (wholesalerEmail, manufacturerEmail) => {
-  try {
-    if (!wholesalerEmail) {
-      throw new ApiError(httpStatus.BAD_REQUEST, 'Wholesaler email is required.');
-    }
-
-    if (!manufacturerEmail) {
-      throw new ApiError(httpStatus.BAD_REQUEST, 'Manufacturer email is required.');
-    }
-
-    // Step 1: Fetch purchase orders by wholesalerEmail
-    const retailerPOs = await PurchaseOrderRetailerType2.find({
-      wholesalerEmail,
-      'set.productBy': manufacturerEmail,
-    }).lean();
-
-    if (!retailerPOs.length) {
-      throw new ApiError(httpStatus.NOT_FOUND, 'Cart Order not found.');
-    }
-
-    // Calculate financial year
-
-    // Step 2: Filter and group data for the specific manufacturer
-    const groupedByProduct = retailerPOs.reduce((acc, po) => {
-      po.set.forEach((item) => {
-        if (item.productBy === manufacturerEmail) {
-          const key = `${item.designNumber}_${item.colour}_${item.size}`;
-          if (!acc[key]) {
-            acc[key] = { ...item, retailerPoId: po._id, quantity: 0 };
-          }
-          acc[key].quantity += item.quantity;
-        }
-      });
-      return acc;
-    }, {});
-
-    // Generate a unique PO number for this manufacturer
-
-    // Convert grouped data to an array
-    const mergedSet = Object.values(groupedByProduct);
-
-    // Prepare retailerPOs array
-    const retailerPOsArray = retailerPOs.map((po) => ({
-      email: po.email,
-      poNumber: po.poNumber,
-    }));
-
-    // Fetch manufacturer details
-    const manufacturer = await Manufacture.findOne({ email: manufacturerEmail }).select(
-      'email fullName companyName address state country pinCode mobNumber GSTIN logo discountGiven'
-    );
-
-    if (!manufacturer) {
-      throw new ApiError(httpStatus.NOT_FOUND, `Manufacturer details not found for: ${manufacturerEmail}`);
-    }
-
-    // Prepare and return combined PO
-    const combinedPO = {
-      set: mergedSet,
-      email: wholesalerEmail,
-      productBy: manufacturerEmail,
-      cartAddedDate: new Date(),
-      poNumber: orderNumber, // Unique PO number for this manufacturer
-      retailerPOs: retailerPOsArray,
-      wholesaler: retailerPOs[0]?.wholesaler || {},
-      manufacturer, // Include the manufacturer details
-    };
-    return combinedPO;
-  } catch (error) {
-    if (error instanceof ApiError) {
-      throw error;
-    }
-    throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, `Error combining purchase orders: ${error.message}`);
+  if (!wholesalerEmail) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Wholesaler email is required.');
   }
+
+  if (!manufacturerEmail) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Manufacturer email is required.');
+  }
+
+  // Step 1: Fetch purchase orders by wholesalerEmail
+  const retailerPOs = await PurchaseOrderRetailerType2.find({
+    wholesalerEmail,
+    status: 'pending',
+    'set.productBy': manufacturerEmail,
+  }).lean();
+
+  if (!retailerPOs.length) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Cart Order not found.');
+  }
+  // Step 2: Filter and group data for the specific manufacturer
+  const groupedByProduct = retailerPOs.reduce((acc, po) => {
+    po.set.forEach((item) => {
+      if (item.productBy === manufacturerEmail) {
+        const key = `${item.designNumber}_${item.colour}_${item.size}`;
+        if (!acc[key]) {
+          acc[key] = { ...item, retailerPoId: po._id, quantity: 0 };
+        }
+        acc[key].quantity += item.quantity;
+      }
+    });
+    return acc;
+  }, {});
+  // Convert grouped data to an array
+  const mergedSet = Object.values(groupedByProduct);
+
+  // Prepare retailerPOs array
+  const retailerPOsArray = retailerPOs.map((po) => ({
+    email: po.email,
+    poNumber: po.poNumber,
+  }));
+
+  // Fetch manufacturer details
+  const manufacturer = await Manufacture.findOne({ email: manufacturerEmail }).select(
+    'email fullName companyName address state country pinCode mobNumber GSTIN logo discountGiven'
+  );
+
+  if (!manufacturer) {
+    throw new ApiError(httpStatus.NOT_FOUND, `Manufacturer details not found for: ${manufacturerEmail}`);
+  }
+
+  // Prepare and return combined PO
+  const combinedPO = {
+    set: mergedSet,
+    email: wholesalerEmail,
+    productBy: manufacturerEmail,
+    cartAddedDate: new Date(),
+    poNumber: orderNumber, // Unique PO number for this manufacturer
+    retailerPOs: retailerPOsArray,
+    wholesaler: retailerPOs[0]?.wholesaler || {},
+    manufacturer, // Include the manufacturer details
+  };
+  return combinedPO;
 };
-
-
 
 
 module.exports = {
