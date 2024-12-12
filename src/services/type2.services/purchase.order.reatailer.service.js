@@ -231,7 +231,7 @@ const combinePurchaseOrders = async (wholesalerEmail) => {
         wholesaler: retailerPOs.find((po) => po.set.some((s) => s.productBy === productBy)).wholesaler,
         manufacturer,
         discounts: discounts || [],
-        discountGiven,
+        discountGiven: wholesaler.discountGiven,
 
       };
     })
