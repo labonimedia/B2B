@@ -15,6 +15,11 @@ const PurchaseOrderSchema = mongoose.Schema(
         productBy: String,
       },
     ],
+    status: {
+      type: String,
+      enum: ['pending', 'processing', 'shipped', 'delivered', 'cancelled'],
+      default: 'pending',
+    },
     email: String,
     productBy: String,
     cartAddedDate: Date,
@@ -23,6 +28,7 @@ const PurchaseOrderSchema = mongoose.Schema(
       email: String,
       poNumber: Number,
     }],
+
     manufacturer: {
       email: String,
       fullName: String,

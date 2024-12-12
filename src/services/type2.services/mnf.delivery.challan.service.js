@@ -1,5 +1,5 @@
 const httpStatus = require('http-status');
-const { MnfDeliveryChallan } = require('../../models');
+const { MnfDeliveryChallan, PurchaseOrderType2 } = require('../../models');
 const ApiError = require('../../utils/ApiError');
 
 /**
@@ -8,6 +8,12 @@ const ApiError = require('../../utils/ApiError');
  * @returns {Promise<Array<PurchaseOrderType2>>}
  */
 const createMnfDeliveryChallan = async (reqBody) => {
+    const { email, poNumber } = reqBody;
+    await PurchaseOrderType2.findOneAndUpdate(
+        { email: email, poNumber: poNumber },
+        { $set: { status: 'shipped' } },
+        { new: true })
+
     return await MnfDeliveryChallan.create(reqBody);
 };
 
@@ -33,15 +39,6 @@ const queryMnfDeliveryChallan = async (filter, options) => {
  */
 const getMnfDeliveryChallanById = async (id) => {
     return MnfDeliveryChallan.findById(id);
-};
-
-const getProductOrderBySupplyer = async (supplierEmail) => {
-    const productOrders = await MnfDeliveryChallan.find({ productBy: supplierEmail });
-
-    if (productOrders.length === 0) {
-        throw new ApiError(httpStatus.NOT_FOUND, 'No Product Orders found for this supplier');
-    }
-    return productOrders;
 };
 
 /**
@@ -74,9 +71,7 @@ const deleteMnfDeliveryChallanById = async (id) => {
     return cart;
 };
 
-const getPurchaseOrdersByManufactureEmail = async (manufacturerEmail, filter, options) => {
-    const query = { 'manufacturer.email': manufacturerEmail };
-
+const getDeliveryChallanByManufactureEmail = async (manufacturerEmail, filter, options) => {
     // Apply additional filters
     if (filter) {
         const parsedFilter = JSON.parse(filter);
@@ -86,7 +81,7 @@ const getPurchaseOrdersByManufactureEmail = async (manufacturerEmail, filter, op
     // Use Mongoose paginate plugin
     const result = await MnfDeliveryChallan.paginate(query, {
         ...options,
-        customLabels: { docs: 'purchaseOrders' },
+        customLabels: { docs: 'mnfdeliverychallans' },
     });
 
     return result;
@@ -95,9 +90,8 @@ const getPurchaseOrdersByManufactureEmail = async (manufacturerEmail, filter, op
 module.exports = {
     createMnfDeliveryChallan,
     queryMnfDeliveryChallan,
-    getProductOrderBySupplyer,
     getMnfDeliveryChallanById,
     updateMnfDeliveryChallanById,
     deleteMnfDeliveryChallanById,
-    getPurchaseOrdersByManufactureEmail,
+    getDeliveryChallanByManufactureEmail,
 };
