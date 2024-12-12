@@ -213,10 +213,6 @@ const combinePurchaseOrders = async (wholesalerEmail) => {
       }
       const wholesaler = await Wholesaler.findOne({ email: wholesalerEmail });
 
-      if (!wholesaler) {
-        throw new Error('Wholesaler not found.');
-      }
-
       // Filter discounts given by the specified productBy
       const discounts = wholesaler.discountGiven.filter(
         (discount) => discount.discountGivenBy === productBy
@@ -235,6 +231,8 @@ const combinePurchaseOrders = async (wholesalerEmail) => {
         wholesaler: retailerPOs.find((po) => po.set.some((s) => s.productBy === productBy)).wholesaler,
         manufacturer,
         discounts: discounts || [],
+        discountGiven,
+
       };
     })
   );
