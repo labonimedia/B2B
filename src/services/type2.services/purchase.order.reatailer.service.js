@@ -258,8 +258,6 @@ const combinePurchaseOrders = async (wholesalerEmail) => {
 
 const combinePurchaseOrdersForManufacturer = async (wholesalerEmail, manufacturerEmail) => {
   try {
-    console.log("Starting combinePurchaseOrders for email:", wholesalerEmail, "and manufacturer:", manufacturerEmail);
-
     if (!wholesalerEmail) {
       throw new ApiError(httpStatus.BAD_REQUEST, 'Wholesaler email is required.');
     }
@@ -273,20 +271,12 @@ const combinePurchaseOrdersForManufacturer = async (wholesalerEmail, manufacture
       wholesalerEmail,
       'set.productBy': manufacturerEmail,
     }).lean();
-    console.log("Fetched retailer POs:", JSON.stringify(retailerPOs, null, 2));
 
     if (!retailerPOs.length) {
       throw new ApiError(httpStatus.NOT_FOUND, 'Cart Order not found.');
     }
 
     // Calculate financial year
-    const now = new Date();
-    const currentMonth = now.getMonth();
-    const financialYear =
-      currentMonth < 2 || (currentMonth === 2 && now.getDate() < 1)
-        ? now.getFullYear() - 1
-        : now.getFullYear();
-    console.log("Calculated financial year:", financialYear);
 
     // Step 2: Filter and group data for the specific manufacturer
     const groupedByProduct = retailerPOs.reduce((acc, po) => {
@@ -301,43 +291,22 @@ const combinePurchaseOrdersForManufacturer = async (wholesalerEmail, manufacture
       });
       return acc;
     }, {});
-    console.log("Grouped data for manufacturer:", JSON.stringify(groupedByProduct, null, 2));
 
     // Generate a unique PO number for this manufacturer
-    const orderCount = await POCountertype2.findOneAndUpdate(
-      { email: wholesalerEmail, year: financialYear },
-      { $inc: { count: 1 } },
-      { new: true, upsert: true, setDefaultsOnInsert: true }
-    );
-
-    console.log("Order count for manufacturer:", manufacturerEmail, orderCount);
-
-    if (!orderCount) {
-      throw new ApiError(
-        httpStatus.INTERNAL_SERVER_ERROR,
-        `Failed to retrieve or update order count for manufacturer: ${manufacturerEmail}`
-      );
-    }
-
-    const orderNumber = orderCount.count;
 
     // Convert grouped data to an array
     const mergedSet = Object.values(groupedByProduct);
-    console.log("Merged set for manufacturer:", manufacturerEmail, mergedSet);
 
     // Prepare retailerPOs array
     const retailerPOsArray = retailerPOs.map((po) => ({
       email: po.email,
       poNumber: po.poNumber,
     }));
-    console.log("Retailer POs array for manufacturer:", manufacturerEmail, retailerPOsArray);
 
     // Fetch manufacturer details
     const manufacturer = await Manufacture.findOne({ email: manufacturerEmail }).select(
       'email fullName companyName address state country pinCode mobNumber GSTIN logo discountGiven'
     );
-
-    console.log("Manufacturer details:", manufacturer);
 
     if (!manufacturer) {
       throw new ApiError(httpStatus.NOT_FOUND, `Manufacturer details not found for: ${manufacturerEmail}`);
@@ -354,12 +323,8 @@ const combinePurchaseOrdersForManufacturer = async (wholesalerEmail, manufacture
       wholesaler: retailerPOs[0]?.wholesaler || {},
       manufacturer, // Include the manufacturer details
     };
-
-    console.log("Combined PO:", JSON.stringify(combinedPO, null, 2));
     return combinedPO;
   } catch (error) {
-    console.error("Error in combinePurchaseOrdersForManufacturer:", error);
-
     if (error instanceof ApiError) {
       throw error;
     }
