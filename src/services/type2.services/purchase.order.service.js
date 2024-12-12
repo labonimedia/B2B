@@ -24,7 +24,7 @@ const createPurchaseOrderType2 = async (reqBody) => {
   }
   // Update the status of the retailer's purchase order to 'processing'
   const updatedRetailerOrder = await PurchaseOrderRetailerType2.findOneAndUpdate(
-    { email, poNumber },
+    { email: retailerPOs.email, poNumber: retailerPOs.poNumber },
     { $set: { status: 'processing' } },
     { new: true }
   );
