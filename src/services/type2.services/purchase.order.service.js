@@ -8,29 +8,44 @@ const ApiError = require('../../utils/ApiError');
  * @returns {Promise<Array<PurchaseOrderType2>>}
  */
 const createPurchaseOrderType2 = async (reqBody) => {
-  const { email, productBy } = reqBody;
+  const { email, productBy, retailerPOs } = reqBody;
+
   // Validate that required fields are provided
   if (!email || !productBy) {
     throw new ApiError(httpStatus.BAD_REQUEST, "Both 'email' and 'productBy' are required.");
   }
+
+  if (!Array.isArray(retailerPOs) || retailerPOs.length === 0) {
+    throw new ApiError(httpStatus.BAD_REQUEST, "'poNumber' and valid 'retailerPOs' are required.");
+  }
+
   // Create a new purchase order using the provided request body
   const purchaseOrder = await PurchaseOrderType2.create(reqBody);
 
   if (!purchaseOrder) {
     throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, "Failed to create the purchase order.");
   }
-  // Update the status of the retailer's purchase order to 'processing'
-  const updatedRetailerOrder = await PurchaseOrderRetailerType2.findOneAndUpdate(
-    { email: reqBody.retailerPOs.email, poNumber: reqBody.retailerPOs.poNumber },
-    { $set: { status: 'processing' } },
-    { new: true }
-  );
 
-  if (!updatedRetailerOrder) {
-    throw new ApiError(httpStatus.NOT_FOUND, "Retailer order not found or failed to update.");
+  // Update the status of each retailer's purchase order in the array to 'processing'
+  for (const retailerPO of retailerPOs) {
+    const updatedRetailerOrder = await PurchaseOrderRetailerType2.findOneAndUpdate(
+      { email: retailerPO.email, poNumber: retailerPO.poNumber },
+      { $set: { status: 'processing' } },
+      { new: true } // Return the updated document
+    );
+
+    if (!updatedRetailerOrder) {
+      throw new ApiError(
+        httpStatus.NOT_FOUND,
+        `Retailer order not found or failed to update for email: ${retailerPO.email}, poNumber: ${retailerPO.poNumber}`
+      );
+    }
   }
+
+  // Return the newly created purchase order
   return purchaseOrder;
 };
+
 
 
 const deleteCartType2ById = async (email, productBy) => {
