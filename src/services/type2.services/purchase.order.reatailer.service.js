@@ -312,7 +312,7 @@ const combinePurchaseOrdersForManufacturer = async (wholesalerEmail, manufacture
     email: wholesalerEmail,
     productBy: manufacturerEmail,
     cartAddedDate: new Date(),
-    poNumber: orderNumber, // Unique PO number for this manufacturer
+    // poNumber: orderNumber, // Unique PO number for this manufacturer
     retailerPOs: retailerPOsArray,
     wholesaler: retailerPOs[0]?.wholesaler || {},
     manufacturer, // Include the manufacturer details
