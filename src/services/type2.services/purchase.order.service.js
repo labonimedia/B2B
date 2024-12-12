@@ -8,7 +8,7 @@ const ApiError = require('../../utils/ApiError');
  * @returns {Promise<Array<PurchaseOrderType2>>}
  */
 const createPurchaseOrderType2 = async (reqBody) => {
-  const { email, productBy, poNumber } = reqBody;
+  const { email, productBy } = reqBody;
   // Validate that required fields are provided
   if (!email || !productBy) {
     throw new ApiError(httpStatus.BAD_REQUEST, "Both 'email' and 'productBy' are required.");
@@ -24,7 +24,7 @@ const createPurchaseOrderType2 = async (reqBody) => {
   }
   // Update the status of the retailer's purchase order to 'processing'
   const updatedRetailerOrder = await PurchaseOrderRetailerType2.findOneAndUpdate(
-    { email: retailerPOs.email, poNumber: retailerPOs.poNumber },
+    { email: reqBody.retailerPOs.email, poNumber: reqBody.retailerPOs.poNumber },
     { $set: { status: 'processing' } },
     { new: true }
   );
