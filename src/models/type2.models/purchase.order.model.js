@@ -22,7 +22,10 @@ const PurchaseOrderSchema = mongoose.Schema(
     },
     email: String,
     productBy: String,
-    cartAddedDate: Date,
+    wholesalerPoDate: {
+      type: Date,
+      default: Date.now,
+    },
     poNumber: Number,
     retailerPOs: [{
       email: String,

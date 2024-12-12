@@ -17,7 +17,10 @@ const mnfDeliveryChallanSchema = mongoose.Schema(
         ],
         email: String,
         productBy: String,
-        cartAddedDate: Date,
+        mnfDileveryClallnDate: {
+            type: Date,
+            default: Date.now,
+        },
         poNumber: Number,
         retailerPOs: [{
             email: String,
