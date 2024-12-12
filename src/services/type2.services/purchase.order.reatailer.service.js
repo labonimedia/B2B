@@ -1,5 +1,5 @@
 const httpStatus = require('http-status');
-const { PurchaseOrderRetailerType2, RetailerCartType2, POCountertype2, Manufacture } = require('../../models');
+const { PurchaseOrderRetailerType2, RetailerCartType2, POCountertype2, Manufacture, PurchaseOrderType2 } = require('../../models');
 const ApiError = require('../../utils/ApiError');
 
 /**
