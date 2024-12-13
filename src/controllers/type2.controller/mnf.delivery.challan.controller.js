@@ -24,6 +24,14 @@ const getMnfDeliveryChallanById = catchAsync(async (req, res) => {
     res.status(httpStatus.OK).send(cartItem);
 });
 
+const genratedeChallNO = catchAsync(async (req, res) => {
+    const cartItem = await mnfDeliveryChallanService.genratedeChallNO(req.params.manufacturerEmail);
+    if (!cartItem) {
+        throw new ApiError(httpStatus.NOT_FOUND, 'Cart not found');
+    }
+    res.status(httpStatus.OK).send(cartItem);
+});
+
 const updateMnfDeliveryChallanById = catchAsync(async (req, res) => {
     const updatedCartItem = await mnfDeliveryChallanService.updateMnfDeliveryChallanById(req.params.id, req.body);
     res.status(httpStatus.OK).send(updatedCartItem);
@@ -49,6 +57,7 @@ module.exports = {
     createMnfDeliveryChallan,
     queryMnfDeliveryChallan,
     getMnfDeliveryChallanById,
+    genratedeChallNO,
     updateMnfDeliveryChallanById,
     deleteMnfDeliveryChallanById,
     getDeliveryChallanByManufactureEmail,

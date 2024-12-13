@@ -24,7 +24,7 @@ const mnfDeliveryChallanSchema = mongoose.Schema(
         status: {
             type: String,
             enum: ['pending', 'delivered'],
-            default: 'pending',
+            // default: 'pending',
         },
         poNumber: Number,
         retailerPOs: [{
