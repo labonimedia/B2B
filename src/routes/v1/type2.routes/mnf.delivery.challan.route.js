@@ -26,5 +26,11 @@ router
         auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
         mnfDeliveryChallanController.getDeliveryChallanByManufactureEmail
     );
+router
+    .route('/purchase-orders/genrate-chall-no')
+    .get(
+        auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
+        mnfDeliveryChallanController.genratedeChallNO
+    );
 
 module.exports = router;

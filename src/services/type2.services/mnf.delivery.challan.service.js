@@ -42,6 +42,22 @@ const getMnfDeliveryChallanById = async (id) => {
 };
 
 /**
+ * genrate delivery challan number 
+ * @param {params} manufacturerEmail 
+ * @returns {Promise<MnfDeliveryChallan>}
+ */
+const genratedeChallNO = async (manufacturerEmail) => {
+    const lastPO = await MnfDeliveryChallan.findOne({ productBy: manufacturerEmail })
+        .sort({ poNumber: -1 })
+        .lean();
+    let nextPoNumber = lastPO ? lastPO.poNumber + 1 : 1;
+    return {
+        poNumber: nextPoNumber,
+        poNumberPending: nextPoNumber + 1
+    }
+};
+
+/**
  * Update PurchaseOrderType2 by id
  * @param {ObjectId} id
  * @param {Object} updateBody
@@ -91,6 +107,7 @@ module.exports = {
     createMnfDeliveryChallan,
     queryMnfDeliveryChallan,
     getMnfDeliveryChallanById,
+    genratedeChallNO,
     updateMnfDeliveryChallanById,
     deleteMnfDeliveryChallanById,
     getDeliveryChallanByManufactureEmail,
