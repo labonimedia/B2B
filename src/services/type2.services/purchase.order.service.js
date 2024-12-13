@@ -28,23 +28,27 @@ const createPurchaseOrderType2 = async (reqBody) => {
 
   // Update the status of each retailer's purchase order in the array to 'processing'
   for (const retailerPO of retailerPOs) {
-    const updatedRetailerOrder = await PurchaseOrderRetailerType2.findOneAndUpdate(
-      { email: retailerPO.email, poNumber: retailerPO.poNumber },
-      { $set: { status: 'processing' } },
-      { new: true } // Return the updated document
-    );
+    const retailerOrder = await PurchaseOrderRetailerType2.findOne({ email: retailerPO.email, poNumber: retailerPO.poNumber });
 
-    if (!updatedRetailerOrder) {
-      throw new ApiError(
-        httpStatus.NOT_FOUND,
-        `Retailer order not found or failed to update for email: ${retailerPO.email}, poNumber: ${retailerPO.poNumber}`
-      );
+    if (!retailerOrder) {
+      throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, "Retailer purchase order not found.");
     }
+
+    // Update the status in the `set` array where `designNumber` matches
+    retailerOrder.set.forEach((item) => {
+      if (reqBody.set.some((reqItem) => reqItem.designNumber === item.designNumber)) {
+        item.status = 'processing'; // Update status to 'processing'
+      }
+    });
+
+    // Save the updated retailer order
+    await retailerOrder.save();
   }
 
   // Return the newly created purchase order
   return purchaseOrder;
 };
+
 
 
 

@@ -166,10 +166,7 @@ const combinePurchaseOrders = async (wholesalerEmail) => {
   }, {});
 
   // Step 3: Get the last `poNumber` from the database
-  const lastPO = await PurchaseOrderType2.findOne({ email: wholesalerEmail })
-    .sort({ poNumber: -1 })
-    .lean();
-  let nextPoNumber = lastPO ? lastPO.poNumber + 1 : 1;
+
 
   // Step 4: Process each group and merge the 'set' arrays
   const combinedPOs = await Promise.all(
@@ -218,15 +215,15 @@ const combinePurchaseOrders = async (wholesalerEmail) => {
         (discount) => discount.discountGivenBy === productBy
       );
       // Create a new PO number for this group
-      const currentPoNumber = nextPoNumber;
-      nextPoNumber += 1;
+      // const currentPoNumber = nextPoNumber;
+      // nextPoNumber += 1;
 
       // Return combined PO
       return {
         set: mergedSet,
         email: wholesalerEmail,
         productBy,
-        poNumber: currentPoNumber,
+        // poNumber: currentPoNumber,
         retailerPOs: retailerPOsArray,
         wholesaler: retailerPOs.find((po) => po.set.some((s) => s.productBy === productBy)).wholesaler,
         manufacturer,
@@ -277,6 +274,10 @@ const combinePurchaseOrdersForManufacturer = async (wholesalerEmail, manufacture
   // Convert grouped data to an array
   const mergedSet = Object.values(groupedByProduct);
 
+  const lastPO = await PurchaseOrderType2.findOne({ email: wholesalerEmail })
+    .sort({ poNumber: -1 })
+    .lean();
+  let nextPoNumber = lastPO ? lastPO.poNumber + 1 : 1;
   // Prepare retailerPOs array
   const retailerPOsArray = retailerPOs.map((po) => ({
     email: po.email,
@@ -297,8 +298,9 @@ const combinePurchaseOrdersForManufacturer = async (wholesalerEmail, manufacture
     set: mergedSet,
     email: wholesalerEmail,
     productBy: manufacturerEmail,
-    cartAddedDate: new Date(),
-    // poNumber: orderNumber, // Unique PO number for this manufacturer
+    // cartAddedDate: new Date(),
+    poNumber: nextPoNumber, // Unique PO number for this manufacturer
+
     retailerPOs: retailerPOsArray,
     wholesaler: retailerPOs[0]?.wholesaler || {},
     manufacturer, // Include the manufacturer details

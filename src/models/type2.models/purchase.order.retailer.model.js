@@ -5,6 +5,11 @@ const PurchaseOrderRetailerSchema = mongoose.Schema(
   {
     set: [
       {
+        status: {
+          type: String,
+          enum: ['pending', 'processing', 'shipped', 'delivered', 'cancelled'],
+          default: 'pending',
+        },
         productBy: String,
         designNumber: String,
         colour: String,
@@ -16,9 +21,9 @@ const PurchaseOrderRetailerSchema = mongoose.Schema(
         price: String,
       },
     ],
-    status: {
+    statusAll: {
       type: String,
-      enum: ['pending', 'processing', 'shipped', 'delivered', 'cancelled'],
+      enum: ['pending', 'delivered', 'cancelled'],
       default: 'pending',
     },
     email: String,
