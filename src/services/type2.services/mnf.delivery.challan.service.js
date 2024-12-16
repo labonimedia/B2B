@@ -17,7 +17,6 @@ const createMnfDeliveryChallan = async (reqBody) => {
     return await MnfDeliveryChallan.create(reqBody);
 };
 
-
 /**
  * Query for PurchaseOrderType2
  * @param {Object} filter - Mongo filter
