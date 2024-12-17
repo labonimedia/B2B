@@ -10,7 +10,7 @@ const createMnfDeliveryChallan = catchAsync(async (req, res) => {
 });
 
 const queryMnfDeliveryChallan = catchAsync(async (req, res) => {
-    const filter = pick(req.query, ['productBy', 'email']);
+    const filter = pick(req.query, ['productBy', 'email', 'status']);
     const options = pick(req.query, ['sortBy', 'limit', 'page']);
     const PurchaseOrderType2Items = await mnfDeliveryChallanService.queryMnfDeliveryChallan(filter, options);
     res.status(httpStatus.OK).send(PurchaseOrderType2Items);
