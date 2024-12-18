@@ -37,7 +37,7 @@ const createPurchaseOrderType2 = async (reqBody) => {
     // Update the status in the `set` array where `designNumber` matches
     retailerOrder.set.forEach((item) => {
       if (reqBody.set.some((reqItem) => reqItem.designNumber === item.designNumber)) {
-        item.status = 'processing'; // Update status to 'processing'
+        item.status = 'processing';
       }
     });
 
