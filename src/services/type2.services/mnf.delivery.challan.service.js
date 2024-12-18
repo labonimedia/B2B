@@ -52,7 +52,6 @@ const genratedeChallNO = async (manufacturerEmail) => {
     let nextPoNumber = lastPO ? lastPO.poNumber + 1 : 1;
     return {
         poNumber: nextPoNumber,
-        poNumberPending: nextPoNumber + 1
     }
 };
 
