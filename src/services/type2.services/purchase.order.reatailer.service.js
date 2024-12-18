@@ -135,107 +135,7 @@ const getPurchaseOrdersByManufactureEmail = async (manufacturerEmail, filter, op
 
 
 
-const combinePurchaseOrders = async (wholesalerEmail) => {
-  if (!wholesalerEmail) {
-    throw new ApiError(httpStatus.BAD_REQUEST, 'Wholesaler email is required.');
-  }
-
-  // Step 1: Fetch purchase orders by wholesalerEmail
-  const retailerPOs = await PurchaseOrderRetailerType2.find({
-    wholesalerEmail,
-    statusAll: 'pending',
-  }).lean();
-
-  if (!retailerPOs.length) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Cart Order not found.');
-  }
-
-  // Step 2: Sort and group by productBy
-  const groupedByProduct = retailerPOs.reduce((acc, po) => {
-    // Filter only pending items in the set array
-    const pendingItems = po.set.filter((item) => item.status === 'pending');
-
-    pendingItems.forEach((item) => {
-      const key = item.productBy;
-      if (!acc[key]) {
-        acc[key] = [];
-      }
-      acc[key].push({ ...item, retailerPoId: po._id }); // Include the PO ID for context
-    });
-    return acc;
-  }, {});
-
-  // Step 3: Process each group and merge the 'set' arrays
-  const combinedPOs = await Promise.all(
-    Object.keys(groupedByProduct).map(async (productBy) => {
-      const poGroup = groupedByProduct[productBy];
-
-      // Merge 'set' arrays
-      const mergedSet = [];
-      const setMap = new Map(); // To track unique combinations
-
-      poGroup.forEach((item) => {
-        const key = `${item.designNumber}_${item.colour}_${item.size}`;
-        if (setMap.has(key)) {
-          // If the combination exists, add the quantity
-          setMap.get(key).quantity += item.quantity;
-        } else {
-          // Add a new combination
-          const { wholesaler, ...sanitizedItem } = item;
-          setMap.set(key, { ...sanitizedItem });
-        }
-      });
-
-      // Convert map to array
-      setMap.forEach((value) => mergedSet.push(value));
-
-      // Prepare retailerPOs array
-      const retailerPOsArray = retailerPOs
-        .filter((po) =>
-          po.set.some((s) => s.productBy === productBy && s.status === 'pending')
-        )
-        .map((po) => ({
-          email: po.email,
-          poNumber: po.poNumber,
-        }));
-
-      // Fetch manufacturer details for the productBy
-      const manufacturer = await Manufacture.findOne({ email: productBy }).select(
-        'email fullName companyName address state country pinCode mobNumber GSTIN logo discountGiven'
-      );
-
-      if (!manufacturer) {
-        throw new ApiError(httpStatus.NOT_FOUND, `Manufacturer details not found for productBy: ${productBy}`);
-      }
-
-      const wholesaler = await Wholesaler.findOne({ email: wholesalerEmail });
-
-      // Filter discounts given by the specified productBy
-      const discounts = wholesaler.discountGiven.filter(
-        (discount) => discount.discountGivenBy === productBy
-      );
-
-      // Return combined PO
-      return {
-        set: mergedSet,
-        email: wholesalerEmail,
-        productBy,
-        retailerPOs: retailerPOsArray,
-        wholesaler: retailerPOs.find((po) =>
-          po.set.some((s) => s.productBy === productBy)
-        ).wholesaler,
-        manufacturer,
-        discounts,
-      };
-    })
-  );
-
-  // Step 5: Return combined POs
-  return combinedPOs;
-};
-
 // const combinePurchaseOrders = async (wholesalerEmail) => {
-
 //   if (!wholesalerEmail) {
 //     throw new ApiError(httpStatus.BAD_REQUEST, 'Wholesaler email is required.');
 //   }
@@ -243,7 +143,7 @@ const combinePurchaseOrders = async (wholesalerEmail) => {
 //   // Step 1: Fetch purchase orders by wholesalerEmail
 //   const retailerPOs = await PurchaseOrderRetailerType2.find({
 //     wholesalerEmail,
-//     status: 'pending',
+//     statusAll: 'pending',
 //   }).lean();
 
 //   if (!retailerPOs.length) {
@@ -252,7 +152,10 @@ const combinePurchaseOrders = async (wholesalerEmail) => {
 
 //   // Step 2: Sort and group by productBy
 //   const groupedByProduct = retailerPOs.reduce((acc, po) => {
-//     po.set.forEach((item) => {
+//     // Filter only pending items in the set array
+//     const pendingItems = po.set.filter((item) => item.status === 'pending');
+
+//     pendingItems.forEach((item) => {
 //       const key = item.productBy;
 //       if (!acc[key]) {
 //         acc[key] = [];
@@ -262,10 +165,7 @@ const combinePurchaseOrders = async (wholesalerEmail) => {
 //     return acc;
 //   }, {});
 
-//   // Step 3: Get the last `poNumber` from the database
-
-
-//   // Step 4: Process each group and merge the 'set' arrays
+//   // Step 3: Process each group and merge the 'set' arrays
 //   const combinedPOs = await Promise.all(
 //     Object.keys(groupedByProduct).map(async (productBy) => {
 //       const poGroup = groupedByProduct[productBy];
@@ -291,7 +191,9 @@ const combinePurchaseOrders = async (wholesalerEmail) => {
 
 //       // Prepare retailerPOs array
 //       const retailerPOsArray = retailerPOs
-//         .filter((po) => po.set.some((s) => s.productBy === productBy))
+//         .filter((po) =>
+//           po.set.some((s) => s.productBy === productBy && s.status === 'pending')
+//         )
 //         .map((po) => ({
 //           email: po.email,
 //           poNumber: po.poNumber,
@@ -305,26 +207,25 @@ const combinePurchaseOrders = async (wholesalerEmail) => {
 //       if (!manufacturer) {
 //         throw new ApiError(httpStatus.NOT_FOUND, `Manufacturer details not found for productBy: ${productBy}`);
 //       }
+
 //       const wholesaler = await Wholesaler.findOne({ email: wholesalerEmail });
 
 //       // Filter discounts given by the specified productBy
 //       const discounts = wholesaler.discountGiven.filter(
 //         (discount) => discount.discountGivenBy === productBy
 //       );
-//       // Create a new PO number for this group
-//       // const currentPoNumber = nextPoNumber;
-//       // nextPoNumber += 1;
 
 //       // Return combined PO
 //       return {
 //         set: mergedSet,
 //         email: wholesalerEmail,
 //         productBy,
-//         // poNumber: currentPoNumber,
 //         retailerPOs: retailerPOsArray,
-//         wholesaler: retailerPOs.find((po) => po.set.some((s) => s.productBy === productBy)).wholesaler,
+//         wholesaler: retailerPOs.find((po) =>
+//           po.set.some((s) => s.productBy === productBy)
+//         ).wholesaler,
 //         manufacturer,
-//         discounts: discounts,
+//         discounts,
 //       };
 //     })
 //   );
@@ -332,6 +233,105 @@ const combinePurchaseOrders = async (wholesalerEmail) => {
 //   // Step 5: Return combined POs
 //   return combinedPOs;
 // };
+
+const combinePurchaseOrders = async (wholesalerEmail) => {
+
+  if (!wholesalerEmail) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Wholesaler email is required.');
+  }
+
+  // Step 1: Fetch purchase orders by wholesalerEmail
+  const retailerPOs = await PurchaseOrderRetailerType2.find({
+    wholesalerEmail,
+    status: 'pending',
+  }).lean();
+
+  if (!retailerPOs.length) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Cart Order not found.');
+  }
+
+  // Step 2: Sort and group by productBy
+  const groupedByProduct = retailerPOs.reduce((acc, po) => {
+    po.set.forEach((item) => {
+      const key = item.productBy;
+      if (!acc[key]) {
+        acc[key] = [];
+      }
+      acc[key].push({ ...item, retailerPoId: po._id }); // Include the PO ID for context
+    });
+    return acc;
+  }, {});
+
+  // Step 3: Get the last `poNumber` from the database
+
+
+  // Step 4: Process each group and merge the 'set' arrays
+  const combinedPOs = await Promise.all(
+    Object.keys(groupedByProduct).map(async (productBy) => {
+      const poGroup = groupedByProduct[productBy];
+
+      // Merge 'set' arrays
+      const mergedSet = [];
+      const setMap = new Map(); // To track unique combinations
+
+      poGroup.forEach((item) => {
+        const key = `${item.designNumber}_${item.colour}_${item.size}`;
+        if (setMap.has(key)) {
+          // If the combination exists, add the quantity
+          setMap.get(key).quantity += item.quantity;
+        } else {
+          // Add a new combination
+          const { wholesaler, ...sanitizedItem } = item;
+          setMap.set(key, { ...sanitizedItem });
+        }
+      });
+
+      // Convert map to array
+      setMap.forEach((value) => mergedSet.push(value));
+
+      // Prepare retailerPOs array
+      const retailerPOsArray = retailerPOs
+        .filter((po) => po.set.some((s) => s.productBy === productBy))
+        .map((po) => ({
+          email: po.email,
+          poNumber: po.poNumber,
+        }));
+
+      // Fetch manufacturer details for the productBy
+      const manufacturer = await Manufacture.findOne({ email: productBy }).select(
+        'email fullName companyName address state country pinCode mobNumber GSTIN logo discountGiven'
+      );
+
+      if (!manufacturer) {
+        throw new ApiError(httpStatus.NOT_FOUND, `Manufacturer details not found for productBy: ${productBy}`);
+      }
+      const wholesaler = await Wholesaler.findOne({ email: wholesalerEmail });
+
+      // Filter discounts given by the specified productBy
+      const discounts = wholesaler.discountGiven.filter(
+        (discount) => discount.discountGivenBy === productBy
+      );
+      // Create a new PO number for this group
+      // const currentPoNumber = nextPoNumber;
+      // nextPoNumber += 1;
+
+      // Return combined PO
+      return {
+        set: mergedSet,
+        email: wholesalerEmail,
+        productBy,
+        // poNumber: currentPoNumber,
+        retailerPOs: retailerPOsArray,
+        wholesaler: retailerPOs.find((po) => po.set.some((s) => s.productBy === productBy)).wholesaler,
+        manufacturer,
+        discounts: discounts,
+      };
+    })
+  );
+
+  // Step 5: Return combined POs
+  return combinedPOs;
+};
 
 
 
