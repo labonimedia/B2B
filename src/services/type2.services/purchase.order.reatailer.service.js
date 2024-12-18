@@ -243,7 +243,6 @@ const combinePurchaseOrders = async (wholesalerEmail) => {
   // Step 1: Fetch purchase orders by wholesalerEmail
   const retailerPOs = await PurchaseOrderRetailerType2.find({
     wholesalerEmail,
-    status: 'pending',
   }).lean();
 
   if (!retailerPOs.length) {
