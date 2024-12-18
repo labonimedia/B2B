@@ -47,11 +47,11 @@ const getMnfDeliveryChallanById = async (id) => {
  */
 const genratedeChallNO = async (manufacturerEmail) => {
     const lastPO = await MnfDeliveryChallan.findOne({ productBy: manufacturerEmail })
-        .sort({ poNumber: -1 })
+        .sort({ deliveryChallanNumber: -1 })
         .lean();
-    let nextPoNumber = lastPO ? lastPO.poNumber + 1 : 1;
+    let nextdeliveryChallanNumber = lastPO ? lastPO.deliveryChallanNumber + 1 : 1;
     return {
-        poNumber: nextPoNumber,
+        deliveryChallanNumber: nextdeliveryChallanNumber,
     }
 };
 
