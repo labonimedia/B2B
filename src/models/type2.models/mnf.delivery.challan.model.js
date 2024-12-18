@@ -27,6 +27,7 @@ const mnfDeliveryChallanSchema = mongoose.Schema(
             // default: 'pending',
         },
         poNumber: Number,
+        deliveryChallanNumber: Number,
         retailerPOs: [{
             email: String,
             poNumber: Number,
