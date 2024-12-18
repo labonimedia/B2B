@@ -10,7 +10,7 @@ const createPurchaseOrderType2 = catchAsync(async (req, res) => {
 });
 
 const queryPurchaseOrderType2 = catchAsync(async (req, res) => {
-  const filter = pick(req.query, ['productBy', 'email']);
+  const filter = pick(req.query, ['productBy', 'email', 'status']);
   const options = pick(req.query, ['sortBy', 'limit', 'page']);
   const PurchaseOrderType2Items = await purchaseOrderType2Service.queryPurchaseOrderType2(filter, options);
   res.status(httpStatus.OK).send(PurchaseOrderType2Items);
