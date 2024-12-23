@@ -88,3 +88,5 @@ module.exports.wholesalerPriceController = require('./type2.controller/wholesale
 module.exports.retailerCartType2Controller = require('./type2.controller/retailer.cart.controller');
 module.exports.retailerPurchaseOrderType2Controller = require('./type2.controller/purchase.order.retailer.controller');
 module.exports.mnfDeliveryChallanController = require('./type2.controller/mnf.delivery.challan.controller');
+module.exports.wholesalerReturnController = require('./type2.controller/wholesaler.return.controller');
+module.exports.finalProductWController = require('./type2.controller/final.product.w.controller');

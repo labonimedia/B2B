@@ -91,7 +91,9 @@ const type2WishListRoute = require('./type2.routes/wishlist.route');
 const type2WholesalerPriceRoute = require('./type2.routes/wholesaler.price.route');
 const retailertype2CartRoute = require('./type2.routes/retailer.cart.route');
 const retailePurchaseOrdertype2Route = require('./type2.routes/purchase.order.retailer.route');
-const mnfDeliveryChallanRoute = require('./type2.routes/mnf.delivery.challan.route')
+const mnfDeliveryChallanRoute = require('./type2.routes/mnf.delivery.challan.route');
+const wholesalerReturnRoute = require('./type2.routes/wholesaler.return.route');
+const finalProductWRoute = require('./type2.routes/final.product.w.route');
 const router = express.Router();
 
 const defaultRoutes = [
@@ -458,6 +460,14 @@ const defaultRoutes = [
   {
     path: '/mnf-delivery-challan',
     route: mnfDeliveryChallanRoute,
+  },
+  {
+    path: '/wholesaler-return',
+    route: wholesalerReturnRoute,
+  },
+  {
+    path: '/final-product',
+    route: finalProductWRoute,
   }
 ];
 

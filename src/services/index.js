@@ -91,3 +91,5 @@ module.exports.wholesalerPriceService = require('./type2.services/wholesaler.pro
 module.exports.RetailerCartType2Service = require('./type2.services/retailer.cart.service');
 module.exports.RetailerPurchaseOrderType2Service = require('./type2.services/purchase.order.reatailer.service');
 module.exports.mnfDeliveryChallanService = require('./type2.services/mnf.delivery.challan.service')
+module.exports.wholesalerReturnService = require('./type2.services/wholesaler.return.service');
+module.exports.finalProductWService = require('./type2.services/final.product.w.service');
