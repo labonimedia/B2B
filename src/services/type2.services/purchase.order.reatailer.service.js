@@ -1,5 +1,5 @@
 const httpStatus = require('http-status');
-const { PurchaseOrderRetailerType2, RetailerCartType2, POCountertype2, Manufacture, PurchaseOrderType2, Wholesaler } = require('../../models');
+const { PurchaseOrderRetailerType2, RetailerCartType2, Manufacture, PurchaseOrderType2, Wholesaler } = require('../../models');
 const ApiError = require('../../utils/ApiError');
 
 /**
@@ -133,8 +133,6 @@ const getPurchaseOrdersByManufactureEmail = async (manufacturerEmail, filter, op
   return result;
 };
 
-
-
 const combinePurchaseOrders = async (wholesalerEmail) => {
   if (!wholesalerEmail) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Wholesaler email is required.');
@@ -150,27 +148,32 @@ const combinePurchaseOrders = async (wholesalerEmail) => {
     throw new ApiError(httpStatus.NOT_FOUND, 'Cart Order not found.');
   }
 
-  // Step 2: Sort and group by productBy
-  const groupedByProduct = retailerPOs.reduce((acc, po) => {
-    // Filter only pending items in the set array
-    const pendingItems = po.set.filter((item) => item.status === 'pending');
-
-    pendingItems.forEach((item) => {
-      const key = item.productBy;
-      if (!acc[key]) {
-        acc[key] = [];
+  // Step 2: Create groups by `productBy` from the set array
+  const groupedByProduct = {};
+  retailerPOs.forEach((po) => {
+    po.set.forEach((item) => {
+      if (item.status === 'pending') {
+        const key = item.productBy;
+        if (!groupedByProduct[key]) {
+          groupedByProduct[key] = [];
+        }
+        groupedByProduct[key].push({
+          ...item,
+          retailerPoId: po._id,
+          poEmail: po.email,
+          poNumber: po.poNumber,
+          wholesaler: po.wholesaler,
+        });
       }
-      acc[key].push({ ...item, retailerPoId: po._id }); // Include the PO ID for context
     });
-    return acc;
-  }, {});
+  });
 
-  // Step 3: Process each group and merge the 'set' arrays
+  // Step 3: Process each group to combine items and prepare final structure
   const combinedPOs = await Promise.all(
     Object.keys(groupedByProduct).map(async (productBy) => {
       const poGroup = groupedByProduct[productBy];
 
-      // Merge 'set' arrays
+      // Merge `set` arrays with unique combinations
       const mergedSet = [];
       const setMap = new Map(); // To track unique combinations
 
@@ -190,14 +193,10 @@ const combinePurchaseOrders = async (wholesalerEmail) => {
       setMap.forEach((value) => mergedSet.push(value));
 
       // Prepare retailerPOs array
-      const retailerPOsArray = retailerPOs
-        .filter((po) =>
-          po.set.some((s) => s.productBy === productBy && s.status === 'pending')
-        )
-        .map((po) => ({
-          email: po.email,
-          poNumber: po.poNumber,
-        }));
+      const retailerPOsArray = poGroup.map((item) => ({
+        email: item.poEmail,
+        poNumber: item.poNumber,
+      }));
 
       // Fetch manufacturer details for the productBy
       const manufacturer = await Manufacture.findOne({ email: productBy }).select(
@@ -207,13 +206,15 @@ const combinePurchaseOrders = async (wholesalerEmail) => {
       if (!manufacturer) {
         throw new ApiError(httpStatus.NOT_FOUND, `Manufacturer details not found for productBy: ${productBy}`);
       }
-
+      let discounts;
       const wholesaler = await Wholesaler.findOne({ email: wholesalerEmail });
+      if (wholesaler) {
+        // Filter discounts given by the specified productBy
+        discounts = wholesaler?.discountGiven?.filter(
+          (discount) => discount.discountGivenBy === productBy
+        );
 
-      // Filter discounts given by the specified productBy
-      const discounts = wholesaler.discountGiven.filter(
-        (discount) => discount.discountGivenBy === productBy
-      );
+      }
 
       // Return combined PO
       return {
@@ -221,18 +222,17 @@ const combinePurchaseOrders = async (wholesalerEmail) => {
         email: wholesalerEmail,
         productBy,
         retailerPOs: retailerPOsArray,
-        wholesaler: retailerPOs.find((po) =>
-          po.set.some((s) => s.productBy === productBy)
-        ).wholesaler,
+        wholesaler: poGroup[0]?.wholesaler,
         manufacturer,
-        discounts,
+        discounts: discounts || [],
       };
     })
   );
 
-  // Step 5: Return combined POs
+  // Step 4: Return combined POs
   return combinedPOs;
 };
+
 
 // const combinePurchaseOrders = async (wholesalerEmail) => {
 
@@ -339,7 +339,6 @@ const combinePurchaseOrdersForManufacturer = async (wholesalerEmail, manufacture
   if (!wholesalerEmail) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Wholesaler email is required.');
   }
-
   if (!manufacturerEmail) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Manufacturer email is required.');
   }

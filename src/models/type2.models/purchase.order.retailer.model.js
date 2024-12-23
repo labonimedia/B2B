@@ -28,6 +28,7 @@ const PurchaseOrderRetailerSchema = mongoose.Schema(
     },
     email: String,
     wholesalerEmail: String,
+    discount: Number,
     retailerPoDate: {
       type: Date,
       default: Date.now,
