@@ -5,6 +5,7 @@ const finalProductWSchema = mongoose.Schema(
     {
         set: [
             {
+                _id: false,
                 designNumber: String,
                 colour: String,
                 colourImage: String,

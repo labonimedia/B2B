@@ -34,8 +34,18 @@ const getWholesalerReturnById = async (id) => {
     return WholesalerReturn.findById(id);
 };
 
+/**
+ * Get WholesalerReturn by email
+ * @param {string} email
+ * @returns {Promise<WholesalerReturn>}
+ */
+const getWholesalerReturnByEmail = async (email) => {
+    return WholesalerReturn.findOne({ email });
+};
+
 module.exports = {
     createWholesalerReturn,
     queryWholesalerReturn,
     getWholesalerReturnById,
+    getWholesalerReturnByEmail,
 };

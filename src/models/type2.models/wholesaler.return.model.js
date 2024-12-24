@@ -5,6 +5,7 @@ const wholesalerReturnSchema = mongoose.Schema(
     {
         set: [
             {
+                _id: false,
                 returnReason: String,
                 designNumber: String,
                 colour: String,

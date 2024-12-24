@@ -5,6 +5,7 @@ const mnfDeliveryChallanSchema = mongoose.Schema(
     {
         set: [
             {
+                _id: false,
                 designNumber: String,
                 colour: String,
                 colourImage: String,

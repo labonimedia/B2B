@@ -6,6 +6,7 @@ const wholesalerPriceSchema = mongoose.Schema(
   {
     set: [
       {
+        _id: false,
         designNumber: String,
         size: String,
         wholesalerPrice: String,
@@ -13,19 +14,19 @@ const wholesalerPriceSchema = mongoose.Schema(
       },
     ],
     brandName: {
-        type: String,
-        
+      type: String,
+
     },
-    productId:{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'ProductType2',
-        required: true,
+    productId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'ProductType2',
+      required: true,
     },
     WholesalerEmail: String,
     manufacturerEmail: String,
     priceAddedDate: {
-        type: Date,
-        default: Date.now,
+      type: Date,
+      default: Date.now,
     }
   },
   {
