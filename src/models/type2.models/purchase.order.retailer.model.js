@@ -10,6 +10,7 @@ const PurchaseOrderRetailerSchema = mongoose.Schema(
           enum: ['pending', 'processing', 'shipped', 'delivered', 'cancelled'],
           default: 'pending',
         },
+        _id: false,
         productBy: String,
         designNumber: String,
         colour: String,

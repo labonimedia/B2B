@@ -5,6 +5,7 @@ const PurchaseOrderSchema = mongoose.Schema(
   {
     set: [
       {
+        _id: false,
         designNumber: String,
         colour: String,
         colourImage: String,
