@@ -1,5 +1,5 @@
 const httpStatus = require('http-status');
-const { FinalProductW } = require('../../models');
+const { FinalProductW, PurchaseOrderRetailerType2 } = require('../../models');
 const ApiError = require('../../utils/ApiError');
 
 /**
@@ -49,7 +49,7 @@ const disctributeProductToRetailer = async (finalProductId) => {
 
     // Step 3: Fetch data from RetailerPO collection for each retailerPO
     const retailerDataPromises = retailerPOs.map(async (po) => {
-        const retailerData = await RetailerPO.findOne({
+        const retailerData = await PurchaseOrderRetailerType2.findOne({
             email: po.email,
             poNumber: po.poNumber,
         }).lean();
