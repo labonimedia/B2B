@@ -31,7 +31,7 @@ const queryFinalProductW = async (filter, options) => {
  * @returns {Promise<WholesalerReturn>}
  */
 const getFinalProductWById = async (id) => {
-    return FinalProductW.findById(id);
+    return FinalProductW.findById(id).lean();
 };
 
 
