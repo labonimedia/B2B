@@ -36,7 +36,7 @@ const getFinalProductWById = async (id) => {
 
 
 const disctributeProductToRetailer = async (finalProductId) => {
-    const finalProduct = await getFinalProductWById(finalProductId).lean();
+    const finalProduct = await getFinalProductWById(finalProductId);
     if (!finalProduct) {
         throw new Error('FinalProduct not found');
     }
