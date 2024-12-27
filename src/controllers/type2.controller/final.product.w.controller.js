@@ -25,7 +25,7 @@ const getFinalProductWById = catchAsync(async (req, res) => {
 });
 
 const disctributeProductToRetailer = catchAsync(async (req, res) => {
-    const finalProduct = await finalProductWService.getFinalProductWById(req.params.Id);
+    const finalProduct = await finalProductWService.disctributeProductToRetailer(req.params.Id);
     if (!finalProduct) {
         throw new ApiError(httpStatus.NOT_FOUND, 'product not found');
     }
