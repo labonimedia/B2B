@@ -13,4 +13,9 @@ router
     .route('/:id')
     .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), finalProductWController.getFinalProductWById)
 
+
+router
+    .route('/distribute/:Id')
+    .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), finalProductWController.disctributeProductToRetailer)
+
 module.exports = router;

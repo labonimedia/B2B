@@ -24,9 +24,17 @@ const getFinalProductWById = catchAsync(async (req, res) => {
     res.status(httpStatus.OK).send(returnOrder);
 });
 
+const disctributeProductToRetailer = catchAsync(async (req, res) => {
+    const finalProduct = await finalProductWService.getFinalProductWById(req.params.Id);
+    if (!finalProduct) {
+        throw new ApiError(httpStatus.NOT_FOUND, 'product not found');
+    }
+    res.status(httpStatus.OK).send(finalProduct);
+});
 
 module.exports = {
     createFinalProductW,
     queryFinalProductW,
     getFinalProductWById,
+    disctributeProductToRetailer
 };

@@ -34,8 +34,42 @@ const getFinalProductWById = async (id) => {
     return FinalProductW.findById(id);
 };
 
+
+const disctributeProductToRetailer = async (finalProductId) => {
+    const finalProduct = await getFinalProductWById(finalProductId).lean();
+    if (!finalProduct) {
+        throw new Error('FinalProduct not found');
+    }
+
+    // Step 2: Extract the retailerPOs array
+    const retailerPOs = finalProduct.retailerPOs;
+    if (!retailerPOs || retailerPOs.length === 0) {
+        throw new Error('No retailerPOs associated with this FinalProduct');
+    }
+
+    // Step 3: Fetch data from RetailerPO collection for each retailerPO
+    const retailerDataPromises = retailerPOs.map(async (po) => {
+        const retailerData = await RetailerPO.findOne({
+            email: po.email,
+            poNumber: po.poNumber,
+        }).lean();
+        return retailerData || { email: po.email, poNumber: po.poNumber, notFound: true };
+    });
+
+    // Wait for all promises to resolve
+    const retailerData = await Promise.all(retailerDataPromises);
+
+    // Step 4: Return the combined data
+    return {
+        ...finalProduct,
+        retailerDetails: retailerData,
+    };
+}
+
+
 module.exports = {
     createFinalProductW,
     queryFinalProductW,
     getFinalProductWById,
+    disctributeProductToRetailer
 };
