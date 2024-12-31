@@ -66,10 +66,26 @@ const disctributeProductToRetailer = async (finalProductId) => {
     };
 }
 
+/**
+ * Update PurchaseOrderType2 by id
+ * @param {ObjectId} id
+ * @param {Object} updateBody
+ * @returns {Promise<PurchaseOrderType2>}
+ */
+const updateFinalProductsById = async (id, updateBody) => {
+    const finalProducts = await getFinalProductWById(id);
+    if (!finalProducts) {
+        throw new ApiError(httpStatus.NOT_FOUND, 'Final Products not found');
+    }
+    Object.assign(finalProducts, updateBody);
+    await finalProducts.save();
+    return finalProducts;
+};
 
 module.exports = {
     createFinalProductW,
     queryFinalProductW,
     getFinalProductWById,
-    disctributeProductToRetailer
+    disctributeProductToRetailer,
+    updateFinalProductsById,
 };
