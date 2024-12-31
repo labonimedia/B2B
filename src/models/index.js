@@ -105,3 +105,4 @@ module.exports.PurchaseOrderRetailerType2 = require('./type2.models/purchase.ord
 module.exports.MnfDeliveryChallan = require('./type2.models/mnf.delivery.challan.model');
 module.exports.WholesalerReturn = require('./type2.models/wholesaler.return.model');
 module.exports.FinalProductW = require('./type2.models/final.products.model');
+module.exports.WhDeliveryChallan = require('./type2.models/wh.delivery.challan')

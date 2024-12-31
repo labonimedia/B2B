@@ -94,6 +94,8 @@ const retailePurchaseOrdertype2Route = require('./type2.routes/purchase.order.re
 const mnfDeliveryChallanRoute = require('./type2.routes/mnf.delivery.challan.route');
 const wholesalerReturnRoute = require('./type2.routes/wholesaler.return.route');
 const finalProductWRoute = require('./type2.routes/final.product.w.route');
+const whDeliveryChallanRoute = require('./type2.routes/wh.delivery.challan.route');
+
 const router = express.Router();
 
 const defaultRoutes = [
@@ -468,6 +470,10 @@ const defaultRoutes = [
   {
     path: '/final-product',
     route: finalProductWRoute,
+  },
+  {
+    path: '/wh-delivery-challan',
+    route: whDeliveryChallanRoute,
   }
 ];
 
