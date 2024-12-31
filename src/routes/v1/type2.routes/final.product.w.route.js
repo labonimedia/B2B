@@ -12,7 +12,7 @@ router
 router
     .route('/:id')
     .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), finalProductWController.getFinalProductWById)
-
+    .patch(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), finalProductWController.updateFinalProductsById)
 
 router
     .route('/distribute/:Id')

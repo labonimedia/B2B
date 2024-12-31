@@ -32,9 +32,15 @@ const disctributeProductToRetailer = catchAsync(async (req, res) => {
     res.status(httpStatus.OK).send(finalProduct);
 });
 
+const updateFinalProductsById = catchAsync(async (req, res) => {
+    const updatedProduct = await finalProductWService.updateFinalProductsById(req.params.id, req.body);
+    res.status(httpStatus.OK).send(updatedProduct);
+});
+
 module.exports = {
     createFinalProductW,
     queryFinalProductW,
     getFinalProductWById,
-    disctributeProductToRetailer
+    disctributeProductToRetailer,
+    updateFinalProductsById,
 };
