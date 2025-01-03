@@ -110,6 +110,7 @@ const updateColorCollection = catchAsync(async (req, res) => {
 
 // Delete
 const deleteColorCollection = catchAsync(async (req, res) => {
+
   await productService.deleteColorCollection(req.query.id, req.query.collectionId);
   res.status(httpStatus.NO_CONTENT).send();
 });
