@@ -91,3 +91,4 @@ module.exports.mnfDeliveryChallanController = require('./type2.controller/mnf.de
 module.exports.wholesalerReturnController = require('./type2.controller/wholesaler.return.controller');
 module.exports.finalProductWController = require('./type2.controller/final.product.w.controller');
 module.exports.whDeliveryChallanController = require('./type2.controller/wh.delivery.challan.controller');
+module.exports.countryCodeController = require('./country.code.controller');
