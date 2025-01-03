@@ -44,6 +44,7 @@ const createUser = async (userBody) => {
       mobNumber: userBody.mobileNumber,
       category: userBody.category,
       code: userBody.code, // Pass the generated code
+      contryCode: userBody.code,
     };
     await createManufacture(data);
   } else if (userBody.role === 'wholesaler') {
@@ -54,6 +55,7 @@ const createUser = async (userBody) => {
       mobNumber: userBody.mobileNumber,
       category: userBody.category,
       code: userBody.code, // Pass the generated code
+      contryCode: userBody.code,
     };
     await createWholesaler(data);
   } else if (userBody.role === 'retailer') {
@@ -64,6 +66,7 @@ const createUser = async (userBody) => {
       mobNumber: userBody.mobileNumber,
       category: userBody.category,
       code: userBody.code, // Pass the generated code
+      contryCode: userBody.code,
     };
     await createRetailer(data);
   }
