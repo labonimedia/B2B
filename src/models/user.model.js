@@ -64,6 +64,9 @@ const userSchema = mongoose.Schema(
       type: String,
       unique: true, // Ensure that codes are unique
     },
+    contryCode: {
+      type: String,
+    },
     mobileNumber: {
       type: String,
       required: true,
