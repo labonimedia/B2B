@@ -25,7 +25,7 @@ const getWhDeliveryChallanById = catchAsync(async (req, res) => {
 });
 
 const genratedeChallNO = catchAsync(async (req, res) => {
-    const cartItem = await whDeliveryChallanService.genratedeChallNO(req.params.wholesalerEmail);
+    const cartItem = await whDeliveryChallanService.genratedeChallNO(req.query.wholesalerEmail);
     if (!cartItem) {
         throw new ApiError(httpStatus.NOT_FOUND, 'delivery challan not found');
     }
