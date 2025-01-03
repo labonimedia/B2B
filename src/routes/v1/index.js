@@ -83,7 +83,7 @@ const waistBandRoute = require('./waistband.route');
 const subscriptionRoute = require('./subsription.route');
 const subscriptionPlanRoute = require('./subscription.plan.route');
 const genderRoute = require('./gender.route');
-
+const countryCodeRoute = require('./country.code.route');
 const type2Produnct = require('./type2.routes/product.route');
 const type2CartRoute = require('./type2.routes/cart.route');
 const type2PurchaseOrderRoute = require('./type2.routes/purchase.order.route');
@@ -474,6 +474,10 @@ const defaultRoutes = [
   {
     path: '/wh-delivery-challan',
     route: whDeliveryChallanRoute,
+  },
+  {
+    path: '/countrycode',
+    route: countryCodeRoute,
   }
 ];
 
