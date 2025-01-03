@@ -65,7 +65,10 @@ const manufactureSchema = mongoose.Schema(
     pan: {
       type: String,
     },
-    code: {
+    userCode: {
+      type: String,
+    },
+    contryCode: {
       type: String,
     },
     altCode: {
