@@ -97,7 +97,10 @@ const wholesalerSchema = mongoose.Schema(
       type: Date,
       default: Date.now,
     },
-    code: {
+    userCode: {
+      type: String,
+    },
+    contryCode: {
       type: String,
     },
     leagalStatusOfFirm: {

@@ -43,8 +43,8 @@ const createUser = async (userBody) => {
       email: userBody.email,
       mobNumber: userBody.mobileNumber,
       category: userBody.category,
-      code: userBody.code, // Pass the generated code
-      contryCode: userBody.code,
+      userCode: userBody.code, // Pass the generated code
+      contryCode: userBody.contryCode,
     };
     await createManufacture(data);
   } else if (userBody.role === 'wholesaler') {
@@ -54,8 +54,8 @@ const createUser = async (userBody) => {
       email: userBody.email,
       mobNumber: userBody.mobileNumber,
       category: userBody.category,
-      code: userBody.code, // Pass the generated code
-      contryCode: userBody.code,
+      userCode: userBody.code, // Pass the generated code
+      contryCode: userBody.contryCode,
     };
     await createWholesaler(data);
   } else if (userBody.role === 'retailer') {
@@ -65,8 +65,8 @@ const createUser = async (userBody) => {
       email: userBody.email,
       mobNumber: userBody.mobileNumber,
       category: userBody.category,
-      code: userBody.code, // Pass the generated code
-      contryCode: userBody.code,
+      userCode: userBody.code, // Pass the generated code
+      contryCode: userBody.contryCode,
     };
     await createRetailer(data);
   }
