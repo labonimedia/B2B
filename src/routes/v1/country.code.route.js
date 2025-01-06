@@ -7,7 +7,7 @@ const router = express.Router();
 router
   .route('/')
   .post(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), countryCodeController.createCountryCode)
-  .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), countryCodeController.queryCountryCode);
+  .get(countryCodeController.queryCountryCode);
 
 router
   .route('/:id')
