@@ -188,28 +188,32 @@ const updateColorCollection = async (req, productId) => {
 
   const { colour, colourName } = req.body;
   const extractPath = (url) => new URL(url).pathname;
+
   // Extract and trim file paths from req.body
   const colourImage = req.body.colourImage ? extractPath(req.body.colourImage[0]) : null;
   const productImages = req.body.productImages ? req.body.productImages.map(extractPath) : [];
   const productVideo = req.body.productVideo ? extractPath(req.body.productVideo[0]) : null;
 
-  const newColourCollection = {
-    colour,
-    colourName,
-    colourImage,
-    productImages,
-    productVideo,
-  };
   // Find the existing collection and update it
   const collectionIndex = product.colourCollections.findIndex((c) => c._id.toString() === req.query.collectionId);
   if (collectionIndex === -1) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Colour collection not found');
   }
 
-  product.colourCollections[collectionIndex] = newColourCollection;
+  const collectionToUpdate = product.colourCollections[collectionIndex];
 
-  return product.save(); // Removed redundant await
+  // Update only the fields that are provided
+  if (colour) collectionToUpdate.colour = colour;
+  if (colourName) collectionToUpdate.colourName = colourName;
+  if (colourImage) collectionToUpdate.colourImage = colourImage;
+  if (productImages.length > 0) collectionToUpdate.productImages = productImages;
+  if (productVideo) collectionToUpdate.productVideo = productVideo;
+
+  product.colourCollections[collectionIndex] = collectionToUpdate;
+
+  return product.save();
 };
+
 
 /**
  * Delete user by id
