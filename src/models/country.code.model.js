@@ -30,6 +30,6 @@ const countrySchema = new mongoose.Schema({
 countrySchema.plugin(toJSON);
 countrySchema.plugin(paginate);
 
-const Country = mongoose.model('Country', countrySchema);
+const Country = mongoose.model('countrie', countrySchema);
 
 module.exports = Country;
