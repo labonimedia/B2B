@@ -92,3 +92,6 @@ module.exports.wholesalerReturnController = require('./type2.controller/wholesal
 module.exports.finalProductWController = require('./type2.controller/final.product.w.controller');
 module.exports.whDeliveryChallanController = require('./type2.controller/wh.delivery.challan.controller');
 module.exports.countryCodeController = require('./country.code.controller');
+module.exports.newCountryController = require('./new.country.controller');
+module.exports.stateController = require('./state.controller');
+module.exports.cityController = require('./city.controller');

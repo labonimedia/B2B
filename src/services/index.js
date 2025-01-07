@@ -95,3 +95,6 @@ module.exports.wholesalerReturnService = require('./type2.services/wholesaler.re
 module.exports.finalProductWService = require('./type2.services/final.product.w.service');
 module.exports.whDeliveryChallanService = require('./type2.services/wh.delivery.challan.service');
 module.exports.countryCodeService = require('./country.code.service');
+module.exports.newCountryCodeService = require('./new.country.service');
+module.exports.stateService = require('./state.service');
+module.exports.cityService = require('./city.service');
