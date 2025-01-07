@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
+const validator = require('validator');
 const { toJSON, paginate } = require('./plugins');
 
 const manufactureSchema = mongoose.Schema(
@@ -31,6 +32,14 @@ const manufactureSchema = mongoose.Schema(
     },
     email: {
       type: String,
+      // required: true,
+      trim: true,
+      lowercase: true,
+      validate(value) {
+        if (!validator.isEmail(value)) {
+          throw new Error('Invalid email');
+        }
+      },
     },
     address: {
       type: String,
