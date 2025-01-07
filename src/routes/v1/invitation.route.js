@@ -21,7 +21,7 @@ router.post('/array-upload', auth('superadmin', 'manufacture', 'wholesaler'), in
 router
   .route('/')
   .post(auth('superadmin', 'manufacture', 'wholesaler'), invitationController.createInvitation)
-  .get(auth('superadmin', 'manufacture', 'wholesaler'), invitationController.queryInvitation);
+  .get(invitationController.queryInvitation); //auth('superadmin', 'manufacture', 'wholesaler'),
 
 router
   .route('/:email')
