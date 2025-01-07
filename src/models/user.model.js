@@ -60,10 +60,10 @@ const userSchema = mongoose.Schema(
     code: {
       type: String,
     },
-    userId: {
-      type: String,
-      unique: true, // Ensure that codes are unique
-    },
+    // userId: {
+    //   type: String,
+    //   unique: true, // Ensure that codes are unique
+    // },
     contryCode: {
       type: String,
     },
