@@ -107,3 +107,6 @@ module.exports.WholesalerReturn = require('./type2.models/wholesaler.return.mode
 module.exports.FinalProductW = require('./type2.models/final.products.model');
 module.exports.WhDeliveryChallan = require('./type2.models/wh.delivery.challan');
 module.exports.CountryCode = require('./country.code.model');
+module.exports.NewCountry = require('./new.country.model');
+module.exports.State = require('./state.model');
+module.exports.City = require('./city.model');

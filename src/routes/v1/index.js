@@ -84,6 +84,9 @@ const subscriptionRoute = require('./subsription.route');
 const subscriptionPlanRoute = require('./subscription.plan.route');
 const genderRoute = require('./gender.route');
 const countryCodeRoute = require('./country.code.route');
+const newCountryRoute = require('./new.country.route');
+const stateroute = require('./state.route');
+const cityroute = require('./city.route');
 const type2Produnct = require('./type2.routes/product.route');
 const type2CartRoute = require('./type2.routes/cart.route');
 const type2PurchaseOrderRoute = require('./type2.routes/purchase.order.route');
@@ -478,7 +481,20 @@ const defaultRoutes = [
   {
     path: '/countrycode',
     route: countryCodeRoute,
+  },
+  {
+    path: '/newcountry',
+    route: newCountryRoute,
+  },
+  {
+    path: '/state',
+    route: stateroute,
+  },
+  {
+    path: '/city',
+    route: cityroute,
   }
+  
 ];
 
 const devRoutes = [
