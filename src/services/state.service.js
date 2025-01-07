@@ -69,8 +69,9 @@ const findStates = async (country_name, limit, page) => {
   if (country_name) filter.country_name = country_name;
 
   const options = {
-    limit: parseInt(limit, 10),
-    page: parseInt(page, 10),
+    // limit: parseInt(limit, 10),
+    // page: parseInt(page, 10),
+    sort: { name: 1 },
   };
 
   const result = await State.paginate(filter, options); // Using the `paginate` plugin
