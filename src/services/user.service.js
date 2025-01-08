@@ -72,7 +72,7 @@ const createUser = async (userBody) => {
   }
 
   // Finally, create the user in the User collection
-  const createdUser = User.create(userBody);
+  const createdUser = await User.create(userBody);
   await Invitation.findOneAndUpdate(
     { email: createdUser.email },
     { $set: { status: 'accepted' } },
