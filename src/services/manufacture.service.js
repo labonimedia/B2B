@@ -177,6 +177,7 @@ const updateVisibilitySettings = async (manufactureId, payload) => {
 
   // Map the payload fields to the visibilitySettings structure
   const visibilitySettings = {
+    leagalStatusOfFirm: payload.leagalStatusOfFirm !== undefined ? payload.leagalStatusOfFirm : manufacture.visibilitySettings.leagalStatusOfFirm,
     logo: payload.logo !== undefined ? payload.logo : manufacture.visibilitySettings.logo,
     file: payload.file !== undefined ? payload.file : manufacture.visibilitySettings.file,
     fileName: payload.fileName !== undefined ? payload.fileName : manufacture.visibilitySettings.fileName,
@@ -240,21 +241,21 @@ const getVisibleProfile = async (manufactureId) => {
     throw new ApiError(httpStatus.NOT_FOUND, 'Manufacture not found');
   }
   let uniqueProducts;
-  if(manufacture.visibilitySettings.delingInView){
-   uniqueProducts = await Product.find({ productBy: manufacture.email })
-    .select('productType gender clothing subCategory')
-    .lean(); // Use lean to get plain JavaScript objects
+  if (manufacture.visibilitySettings.delingInView) {
+    uniqueProducts = await Product.find({ productBy: manufacture.email })
+      .select('productType gender clothing subCategory')
+      .lean(); // Use lean to get plain JavaScript objects
 
-  // Remove duplicate objects based on 'productType', 'gender', 'category', and 'subCategory'
-  const uniqueSet = new Set();
-  uniqueProducts = uniqueProducts.filter((product) => {
-    const uniqueKey = `${product.productType}-${product.gender}-${product.clothing}-${product.subCategory}`;
-    if (!uniqueSet.has(uniqueKey)) {
-      uniqueSet.add(uniqueKey);
-      return true; // Include this product in the unique list
-    }
-    return false; 
-  });
+    // Remove duplicate objects based on 'productType', 'gender', 'category', and 'subCategory'
+    const uniqueSet = new Set();
+    uniqueProducts = uniqueProducts.filter((product) => {
+      const uniqueKey = `${product.productType}-${product.gender}-${product.clothing}-${product.subCategory}`;
+      if (!uniqueSet.has(uniqueKey)) {
+        uniqueSet.add(uniqueKey);
+        return true; // Include this product in the unique list
+      }
+      return false;
+    });
   }
   // Return the manufacturer object along with the unique products
   return {
