@@ -8,7 +8,7 @@ const userSchema = mongoose.Schema(
     userCategory: {
       type: String,
       // required: true,
-      // default: 'setwise',
+      default: 'orderwise',
       enum: ['setwise', 'orderwise'],
     },
     subscriptionId: {
