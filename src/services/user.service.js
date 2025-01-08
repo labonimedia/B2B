@@ -1,6 +1,6 @@
 const httpStatus = require('http-status');
 const bcrypt = require('bcryptjs');
-const { User, Wholesaler, Manufacture, Retailer, Counter } = require('../models');
+const { User, Wholesaler, Manufacture, Retailer, Counter, Invitation } = require('../models');
 const ApiError = require('../utils/ApiError');
 const { createManufacture } = require('./manufacture.service');
 const { createWholesaler } = require('./wholesaler.service');
@@ -72,7 +72,13 @@ const createUser = async (userBody) => {
   }
 
   // Finally, create the user in the User collection
-  return User.create(userBody);
+  const createdUser = User.create(userBody);
+  await Invitation.findOneAndUpdate(
+    { email: createdUser.email },
+    { $set: { status: 'accepted' } },
+    { new: true }
+  );
+  return createdUser
 };
 
 /**
