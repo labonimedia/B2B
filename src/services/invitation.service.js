@@ -47,7 +47,7 @@ const bulkUpload = async (invitationArray = [], csvFilePath = null, user) => {
         existingInvitation.invitedBy.push(invitedBy);
         return existingInvitation.save();
       }
-      await emailService.sendInvitationToDistributer(invitation.email, invitation.fullName);
+      await emailService.sendInvitationToDistributer(invitation.Email, invitation.Full_Name);
       // Create new invitation
       return Invitation.create({
         fullName: invitation.Full_Name,
