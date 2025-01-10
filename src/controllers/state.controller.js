@@ -34,11 +34,12 @@ const deleteStateById = catchAsync(async (req, res) => {
   res.status(httpStatus.NO_CONTENT).send();
 });
 const getState = catchAsync(async (req, res) => {
-  const {limit = 10, page = 1 } = req.query; // Query parameters
+  // const {limit = 10, page = 1 } = req.query; // Query parameters
   const {country_name} = req.body;
-  const cities = await stateService.findStates(country_name, limit, page);
+  const cities = await stateService.findStates(country_name);
   res.status(httpStatus.OK).send({ success: true, data: cities });
 });
+
 module.exports = {
   createState,
   queryState,
