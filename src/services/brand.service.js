@@ -1,5 +1,5 @@
 const httpStatus = require('http-status');
-const { Brand, Manufacture, Request } = require('../models');
+const { Brand, Manufacture, Request, User, Wholesaler } = require('../models');
 const ApiError = require('../utils/ApiError');
 
 /**
@@ -234,10 +234,47 @@ const searchBrandAndOwnerDetails = async (brandName, requestByEmail) => {
 //   return combinedDetails.filter((detail) => detail !== null);
 // };
 
+const getBrandsAndWholesalers = async (brandNamePattern) => {
+  // Step 1: Find brands matching the pattern
+  const brands = await Brand.find({ brandName: { $regex: brandNamePattern, $options: 'i' } }).exec();
+  if (!brands || brands.length === 0) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'No brands found matching the criteria');
+  }
+  // Extract brand owners' emails
+  const brandOwnerEmails = brands.map((brand) => brand.brandOwner);
+
+  // Step 2: Find users with the specified criteria
+  const users = await User.find({
+    refByEmail: { $in: brandOwnerEmails },
+    role: 'wholesaler',
+    userCategory: 'orderwise',
+  }).exec();
+
+  if (!users || users.length === 0) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'No wholesalers found for the specified brands');
+  }
+
+  // Step 3: Get wholesalers' details from the Wholesaler collection
+  const wholesalerEmails = users.map((user) => user.email);
+  const wholesalers = await Wholesaler.find({ email: { $in: wholesalerEmails } }).exec();
+
+  // Step 4: Combine brands with their associated wholesalers
+  const result = brands.map((brand) => ({
+    brand,
+    wholesalers: users
+      .filter((user) => user.refByEmail.includes(brand.brandOwner))
+      .map((user) => wholesalers.find((wholesaler) => wholesaler.email === user.email)),
+  }));
+
+  return result;
+
+};
+
 module.exports = {
   createBrand,
   queryBrand,
   getBrandById,
+  getBrandsAndWholesalers,
   updateBrandById,
   deleteBrandById,
   searchBrandAndOwnerDetails,

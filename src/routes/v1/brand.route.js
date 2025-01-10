@@ -28,6 +28,12 @@ router.post(
   auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
   brandController.searchBrandAndOwnerDetails
 );
+
+router.post(
+  '/search/brands-connected-to-wholesalers',
+  auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
+  brandController.getBrandsAndWholesalers
+);
 router
   .route('/brandlist/:email')
   .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), brandController.getBrandByEmail);
