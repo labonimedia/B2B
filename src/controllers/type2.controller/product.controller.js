@@ -79,7 +79,7 @@ const searchForWSProducts = catchAsync(async (req, res) => {
     options.page = parseInt(req.query.page, 10);
   }
   // Call the service to search products
-  const products = await productType2Service.searchForWSProducts(filter, options);
+  const products = await productType2Service.searchForWSProducts(filter, options, req.query.wholesalerEmail);
   res.status(httpStatus.OK).send(products);
 });
 
