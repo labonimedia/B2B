@@ -8,6 +8,11 @@ const ApiError = require('../utils/ApiError');
  * @returns {Promise<Manufacture>}
  */
 const createManufacture = async (reqBody) => {
+  if (reqBody.GSTIN) {
+    if (await Manufacture.findOne({ GSTIN: reqBody.GSTIN })) {
+      throw new ApiError(httpStatus.BAD_REQUEST, 'GSTIN already exists');
+    }
+  }
   return Manufacture.create(reqBody);
 };
 
