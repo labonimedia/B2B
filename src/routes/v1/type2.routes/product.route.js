@@ -50,4 +50,8 @@ router
 router
   .route('/manufracturelist/byproduct')
   .post(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), productType2Controller.getFilteredProducts);
+
+router
+  .route('/filter-products/for-wholesaler')
+  .post(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), productType2Controller.searchForWSProducts);
 module.exports = router;
