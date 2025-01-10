@@ -33,6 +33,11 @@ const fileupload = async (req, id) => {
  * @returns {Promise<Wholesaler>}
  */
 const createWholesaler = async (reqBody) => {
+  if (reqBody.GSTIN) {
+    if (await Wholesaler.findOne({ GSTIN: reqBody.GSTIN })) {
+      throw new ApiError(httpStatus.BAD_REQUEST, 'GSTIN already exists');
+    }
+  }
   return Wholesaler.create(reqBody);
 };
 
