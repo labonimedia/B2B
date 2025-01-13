@@ -261,7 +261,7 @@ const getBrandsAndWholesalers = async (brandNamePattern, requestByEmail) => {
 
   // Step 4: Fetch request details based on `requestByEmail` and brandOwner
   const requestDetails = await Request.find({
-    // email: { $in: brandOwnerEmails },
+    email: { $in: wholesalerEmails },
     requestByEmail,
   });
   console.log('brandOwnerEmails', brandOwnerEmails);
