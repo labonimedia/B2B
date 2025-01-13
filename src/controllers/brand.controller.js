@@ -104,11 +104,11 @@ const searchBrandAndOwnerDetails = catchAsync(async (req, res) => {
 });
 
 const getBrandsAndWholesalers = catchAsync(async (req, res) => {
-  const { brandName } = req.body;
+  const { brandName, requestByEmail } = req.body;
   if (!brandName) {
     return res.status(httpStatus.BAD_REQUEST).send({ message: 'Brand name is required' });
   }
-  const data = await brandService.getBrandsAndWholesalers(brandName);
+  const data = await brandService.getBrandsAndWholesalers(brandName, requestByEmail);
   res.status(httpStatus.OK).send(data);
 });
 
