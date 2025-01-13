@@ -123,6 +123,16 @@ const getRequestById = async (id) => {
 };
 
 /**
+ * Get request by id
+ * @param {ObjectId} id
+ * @returns {Promise<Request>}
+ */
+const getRequestStatus = async (email, requestByEmail) => {
+  return Request.findOne(email, requestByEmail);
+};
+
+
+/**
  * Query for requests
  * @param {Object} filter
  * @param {Object} options
@@ -166,6 +176,7 @@ const deleteRequestById = async (requestId) => {
 module.exports = {
   createRequest,
   acceptRequest,
+  getRequestStatus,
   getRequestById,
   queryRequests,
   updateRequestById,

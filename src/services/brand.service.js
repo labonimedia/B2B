@@ -264,8 +264,7 @@ const getBrandsAndWholesalers = async (brandNamePattern, requestByEmail) => {
     email: { $in: wholesalerEmails },
     requestByEmail,
   });
-  console.log('brandOwnerEmails', brandOwnerEmails);
-  console.log('requestDetails', requestDetails);
+
   // Filter out request details with status 'accepted'
   const filteredRequestDetails = requestDetails.filter((request) => request.status !== 'accepted');
 
@@ -279,9 +278,7 @@ const getBrandsAndWholesalers = async (brandNamePattern, requestByEmail) => {
     const associatedWholesalers = users
       .filter((user) => user.refByEmail.includes(brand.brandOwner))
       .map((user) => wholesalers.find((wholesaler) => wholesaler.email === user.email));
-
     const requestDetail = requestDetailsMap.get(brand.brandOwner) || {};
-    console.log('requestDetailsMap', requestDetail)
     return {
       brand: brand.toObject(),
       wholesalers: associatedWholesalers.map((wholesaler) =>
