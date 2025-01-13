@@ -73,7 +73,7 @@ const queryRetailerCartType2 = async (filter, options) => {
       country: wholesaler.country,
       pinCode: wholesaler.pinCode,
       mobNumber: wholesaler.mobNumber,
-      profileImg: wholesaler.profileImg,
+      logo: wholesaler.profileImg,
       GSTIN: wholesaler.GSTIN,
     };
     return acc;
@@ -183,7 +183,7 @@ const genratePORetailerCartType2 = async (id) => {
         country: wholesaler.country,
         pinCode: wholesaler.pinCode,
         mobNumber: wholesaler.mobNumber,
-        profileImg: wholesaler.profileImg,
+        logo: wholesaler.profileImg,
         GSTIN: wholesaler.GSTIN,
       }
       : null, // Default to null if manufacturer not found
@@ -198,8 +198,7 @@ const genratePORetailerCartType2 = async (id) => {
         pinCode: retailer.pinCode,
         mobNumber: retailer.mobNumber,
         GSTIN: retailer.GSTIN,
-        logo: retailer.logo,
-        profileImg: retailer.profileImg,
+        logo: retailer.profileImg,
         ...discountDetails, // Include discount details (if found)
       }
       : null, // Default to null if wholesaler not found
