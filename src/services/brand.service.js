@@ -264,7 +264,7 @@ const getBrandsAndWholesalers = async (brandNamePattern, requestByEmail) => {
     email: { $in: brandOwnerEmails },
     requestByEmail,
   });
-
+  console.log('brandOwnerEmails', brandOwnerEmails);
   console.log('requestDetails', requestDetails);
   // Filter out request details with status 'accepted'
   const filteredRequestDetails = requestDetails.filter((request) => request.status !== 'accepted');
