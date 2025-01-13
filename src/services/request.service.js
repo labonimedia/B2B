@@ -128,7 +128,7 @@ const getRequestById = async (id) => {
  * @returns {Promise<Request>}
  */
 const getRequestStatus = async (email, requestByEmail) => {
-  return Request.findOne(email, requestByEmail);
+  return Request.findOne({ email, requestByEmail });
 };
 
 
