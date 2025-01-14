@@ -1,8 +1,126 @@
+// const multer = require('multer');
+// const { PutObjectCommand, DeleteObjectCommand } = require('@aws-sdk/client-s3');
+// const ffmpegPath = require('ffmpeg-static');
+// const ffmpeg = require('fluent-ffmpeg');
+// const fs = require('fs');
+// const httpStatus = require('http-status');
+// const path = require('path');
+// const { v4: uuidv4 } = require('uuid');
+// const ApiError = require('./ApiError');
+// const s3Client = require('./s3');
+
+// ffmpeg.setFfmpegPath(ffmpegPath);
+
+// const storage = multer.memoryStorage();
+// const upload = multer({ storage });
+
+// const compressVideo = async (fileBuffer) => {
+//   const inputFileName = `${uuidv4()}-input.mp4`;
+//   const outputFileName = `${uuidv4()}-output.mp4`;
+//   const inputFilePath = path.join('/tmp', inputFileName);
+//   const outputFilePath = path.join('/tmp', outputFileName);
+//   // eslint-disable-next-line security/detect-non-literal-fs-filename
+//   await fs.promises.writeFile(inputFilePath, fileBuffer);
+
+//   await new Promise((resolve, reject) => {
+//     ffmpeg(inputFilePath)
+//       .output(outputFilePath)
+//       .videoCodec('libx264')
+//       .size('640x?')
+//       .on('end', resolve)
+//       .on('error', reject)
+//       .run();
+//   });
+//   // eslint-disable-next-line security/detect-non-literal-fs-filename
+//   const compressedBuffer = await fs.promises.readFile(outputFilePath);
+//   // eslint-disable-next-line security/detect-non-literal-fs-filename
+//   await fs.promises.unlink(inputFilePath);
+//   // eslint-disable-next-line security/detect-non-literal-fs-filename
+//   await fs.promises.unlink(outputFilePath);
+
+//   return compressedBuffer;
+// };
+
+// const uploadFile = async (file) => {
+//   const params = {
+//     Bucket: 'b2b',
+//     Key: `${Date.now().toString()}-${file.originalname}`,
+//     Body: file.buffer,
+//     ACL: 'public-read',
+//   };
+
+//   if (file.mimetype.startsWith('video')) {
+//     params.Body = await compressVideo(file.buffer);
+//   }
+
+//   const command = new PutObjectCommand(params);
+//   // eslint-disable-next-line no-useless-catch
+//   try {
+//     await s3Client.send(command);
+//     return `https://lmscontent-cdn.blr1.digitaloceanspaces.com/b2b/${params.Key}`;
+//   } catch (err) {
+//     throw err; // Rethrow the error after logging it
+//   }
+// };
+
+// const uploadFiles = async (req, res, next) => {
+//   const uploadPromises = [];
+
+//   Object.keys(req.files).forEach((field) => {
+//     req.files[field].forEach((file) => {
+//       uploadPromises.push(
+//         uploadFile(file).then((url) => {
+//           req.body[field] = req.body[field] || [];
+//           req.body[field].push(url);
+//         })
+//       );
+//     });
+//   });
+
+//   try {
+//     await Promise.all(uploadPromises);
+//     next();
+//   } catch (err) {
+//     res.status(500).send({ error: 'Failed to upload files', details: err.message });
+//     throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'Failed to upload files');
+//   }
+// };
+
+// const commonUploadMiddleware = (fields) => [upload.fields(fields), uploadFiles];
+
+// /**
+//  * Delete a file from S3 bucket
+//  * @param {string} filePath - The path of the file to delete
+//  * @returns {Promise<void>}
+//  */
+// const deleteFile = async (filePath) => {
+//   const bucketKey = filePath.replace('https://lmscontent-cdn.blr1.digitaloceanspaces.com', '');
+
+//   const params = {
+//     Bucket: 'b2b',
+//     Key: bucketKey,
+//   };
+
+//   const command = new DeleteObjectCommand(params);
+//   // eslint-disable-next-line no-useless-catch
+//   try {
+//     await s3Client.send(command);
+//   } catch (err) {
+//     throw err; // Rethrow the error after logging it
+//   }
+// };
+
+
+
+// module.exports = { commonUploadMiddleware, deleteFile, listFilesInSpace };
+
+
 const multer = require('multer');
 const { PutObjectCommand, DeleteObjectCommand } = require('@aws-sdk/client-s3');
 const ffmpegPath = require('ffmpeg-static');
 const ffmpeg = require('fluent-ffmpeg');
 const fs = require('fs');
+const sharp = require('sharp'); // Import sharp for image compression
 const httpStatus = require('http-status');
 const path = require('path');
 const { v4: uuidv4 } = require('uuid');
@@ -14,12 +132,17 @@ ffmpeg.setFfmpegPath(ffmpegPath);
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
+/**
+ * Compress videos to a smaller size
+ * @param {Buffer} fileBuffer - The video file buffer
+ * @returns {Promise<Buffer>} - The compressed video buffer
+ */
 const compressVideo = async (fileBuffer) => {
   const inputFileName = `${uuidv4()}-input.mp4`;
   const outputFileName = `${uuidv4()}-output.mp4`;
   const inputFilePath = path.join('/tmp', inputFileName);
   const outputFilePath = path.join('/tmp', outputFileName);
-  // eslint-disable-next-line security/detect-non-literal-fs-filename
+
   await fs.promises.writeFile(inputFilePath, fileBuffer);
 
   await new Promise((resolve, reject) => {
@@ -31,12 +154,30 @@ const compressVideo = async (fileBuffer) => {
       .on('error', reject)
       .run();
   });
-  // eslint-disable-next-line security/detect-non-literal-fs-filename
+
   const compressedBuffer = await fs.promises.readFile(outputFilePath);
-  // eslint-disable-next-line security/detect-non-literal-fs-filename
   await fs.promises.unlink(inputFilePath);
-  // eslint-disable-next-line security/detect-non-literal-fs-filename
   await fs.promises.unlink(outputFilePath);
+
+  return compressedBuffer;
+};
+
+/**
+ * Compress images to a maximum of 1 MB
+ * @param {Buffer} fileBuffer - The image file buffer
+ * @returns {Promise<Buffer>} - The compressed image buffer
+ */
+const compressImage = async (fileBuffer) => {
+  let compressedBuffer = fileBuffer;
+  let quality = 80; // Start with high quality for compression
+
+  do {
+    compressedBuffer = await sharp(fileBuffer)
+      .jpeg({ quality })
+      .toBuffer();
+
+    quality -= 10; // Decrease quality incrementally if size exceeds 1 MB
+  } while (compressedBuffer.length > 1 * 1024 * 1024 && quality > 10); // Stop if size <= 1 MB or quality < 10
 
   return compressedBuffer;
 };
@@ -51,10 +192,11 @@ const uploadFile = async (file) => {
 
   if (file.mimetype.startsWith('video')) {
     params.Body = await compressVideo(file.buffer);
+  } else if (file.mimetype.startsWith('image')) {
+    params.Body = await compressImage(file.buffer);
   }
 
   const command = new PutObjectCommand(params);
-  // eslint-disable-next-line no-useless-catch
   try {
     await s3Client.send(command);
     return `https://lmscontent-cdn.blr1.digitaloceanspaces.com/b2b/${params.Key}`;
@@ -102,7 +244,6 @@ const deleteFile = async (filePath) => {
   };
 
   const command = new DeleteObjectCommand(params);
-  // eslint-disable-next-line no-useless-catch
   try {
     await s3Client.send(command);
   } catch (err) {
@@ -111,6 +252,8 @@ const deleteFile = async (filePath) => {
 };
 
 module.exports = { commonUploadMiddleware, deleteFile };
+
+
 
 // const multer = require('multer');
 // const { PutObjectCommand } = require("@aws-sdk/client-s3");

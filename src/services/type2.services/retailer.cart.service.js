@@ -89,8 +89,6 @@ const queryRetailerCartType2 = async (filter, options) => {
   return RetailerCartType2Items;
 };
 
-
-
 /**
  * Get RetailerCartType2 by id
  * @param {ObjectId} id
