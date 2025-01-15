@@ -110,3 +110,4 @@ module.exports.CountryCode = require('./country.code.model');
 module.exports.NewCountry = require('./new.country.model');
 module.exports.State = require('./state.model');
 module.exports.City = require('./city.model');
+module.exports.CDNPath = require('./cdn.path.model');

@@ -95,3 +95,4 @@ module.exports.countryCodeController = require('./country.code.controller');
 module.exports.newCountryController = require('./new.country.controller');
 module.exports.stateController = require('./state.controller');
 module.exports.cityController = require('./city.controller');
+module.exports.cdnPathController = require('./cdn.path.controller');
