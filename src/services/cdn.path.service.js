@@ -8,6 +8,10 @@ const ApiError = require('../utils/ApiError');
  * @returns {Promise<CDNPath>}
  */
 const createCDNPath = async (reqBody) => {
+    const existingCDNPath = await CDNPath.findOne({ name: reqBody.name });
+    if (existingCDNPath) {
+        throw new ApiError(httpStatus.UNAUTHORIZED, `CDNPath with name '${reqBody.name}' already exists`);
+    }
     return CDNPath.create(reqBody);
 };
 
