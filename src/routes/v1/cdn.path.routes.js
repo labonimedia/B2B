@@ -18,4 +18,8 @@ router
     .patch(auth('superadmin'), cdnPathController.updateCDNPathById)
     .delete(auth('superadmin'), cdnPathController.deleteCDNPathById);
 
+router
+    .route('/space-usage/bucket')
+    .get(cdnPathController.getSpaceUsagecontroller) //auth('superadmin'),
+
 module.exports = router;

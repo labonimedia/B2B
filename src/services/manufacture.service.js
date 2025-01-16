@@ -24,14 +24,13 @@ const fileupload = async (req, id) => {
     throw new ApiError(httpStatus.NOT_FOUND, 'Manufacture not found');
   }
 
-  const extractPath = (url) => new URL(url).pathname;
+  // const extractPath = (url) => new URL(url).pathname;
   if (req.body.file) {
-    const file = req.body.file ? extractPath(req.body.file[0]) : null;
-    manufacture.file = file;
+    manufacture.file = req.body.file ? req.body.file[0] : null
   }
   if (req.body.profileImg) {
-    const profileImg = req.body.profileImg ? extractPath(req.body.profileImg[0]) : null;
-    manufacture.profileImg = profileImg;
+    // const profileImg = req.body.profileImg ? extractPath(req.body.profileImg[0]) : null;
+    manufacture.profileImg = req.body.profileImg ? req.body.profileImg[0] : null;
   }
   if (req.body.fileName) {
     const fileName = req.body.fileName || '';

@@ -26,6 +26,7 @@ const envVarsSchema = Joi.object()
     AWS_ACCESS_KEY_ID: Joi.string(),
     AWS_SECRETE_ACCESS_KEY: Joi.string(),
     REGION: Joi.string(),
+    BUCKET_NAME: Joi.string(),
   })
   .unknown();
 
@@ -68,5 +69,6 @@ module.exports = {
     accessKey: envVars.AWS_ACCESS_KEY_ID,
     secreteKey: envVars.AWS_SECRETE_ACCESS_KEY,
     region: envVars.REGION,
+    bucketName: envVars.BUCKET_NAME,
   },
 };

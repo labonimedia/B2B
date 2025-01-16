@@ -3,6 +3,7 @@ const pick = require('../utils/pick');
 const ApiError = require('../utils/ApiError');
 const catchAsync = require('../utils/catchAsync');
 const { cdnPathService } = require('../services');
+const { getSpaceUsage } = require('../utils/upload');
 
 const createCDNPath = catchAsync(async (req, res) => {
     const path = await cdnPathService.createCDNPath(req.body);
@@ -34,10 +35,22 @@ const deleteCDNPathById = catchAsync(async (req, res) => {
     res.status(httpStatus.NO_CONTENT).send();
 });
 
+
+const getSpaceUsagecontroller = catchAsync(async (req, res) => {
+    const path = await getSpaceUsage(req.query.bucketName);
+    if (!path) {
+        throw new ApiError(httpStatus.NOT_FOUND, 'path not found');
+    }
+    res.send(path);
+});
+
+
+
 module.exports = {
     createCDNPath,
     queryCDNPath,
     getCDNPathById,
     updateCDNPathById,
     deleteCDNPathById,
+    getSpaceUsagecontroller,
 };
