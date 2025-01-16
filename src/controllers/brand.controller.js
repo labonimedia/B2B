@@ -9,10 +9,10 @@ const createBrand = catchAsync(async (req, res) => {
   if (!req.body.brandLogo || req.body.brandLogo.length === 0) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'No brand logo provided');
   }
-  const brandLogoUrl = req.body.brandLogo[0];
-  const brandLogoPath = new URL(brandLogoUrl).pathname;
+  // const brandLogoUrl = req.body.brandLogo[0] ;
+  // const brandLogoPath = new URL(brandLogoUrl).pathname;
 
-  req.body.brandLogo = brandLogoPath;
+  req.body.brandLogo = req.body.brandLogo[0];
   const user = await brandService.createBrand(req.body);
   res.status(httpStatus.CREATED).send(user);
 });
@@ -66,9 +66,9 @@ const updateBrandById = catchAsync(async (req, res) => {
       await deleteFile(brand.brandLogo);
     }
     // Upload new brand logo
-    const brandLogoUrl = req.body.brandLogo[0];
-    const brandLogoPath = new URL(brandLogoUrl).pathname;
-    req.body.brandLogo = brandLogoPath;
+    // const brandLogoUrl = req.body.brandLogo[0];
+    // const brandLogoPath = new URL(brandLogoUrl).pathname;
+    req.body.brandLogo = req.body.brandLogo[0];
   }
   const user = await brandService.updateBrandById(req.params.id, req.body);
   res.send(user);
