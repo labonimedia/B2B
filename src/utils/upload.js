@@ -182,16 +182,16 @@ const initializeS3Client = async () => {
   }
 
   s3Client = new S3Client({
-    region: config.cdn.region,
-    endpoint: `https://${cdnConfig.name}.blr1.digitaloceanspaces.com`,
+    region: cdnConfig.region,
+    endpoint: `https://${cdnConfig.bucketName}.${region}.digitaloceanspaces.com`,
     credentials: {
-      accessKeyId: config.cdn.accessKey,
-      secretAccessKey: config.cdn.secreteKey,
+      accessKeyId: cdnConfig.accessKey,
+      secretAccessKey: cdnConfig.secreteKey,
     },
     forcePathStyle: true,
   });
 
-  return `https://${cdnConfig.name}.blr1.digitaloceanspaces.com`;
+  return `https://${cdnConfig.bucketName}.blr1.digitaloceanspaces.com`;
 };
 
 /**
@@ -259,7 +259,7 @@ const uploadFile = async (file) => {
   const command = new PutObjectCommand(params);
   try {
     await s3Client.send(command);
-    return `${cdnConfig}/${config.cdn.bucketName}/${params.Key}`;
+    return `${cdnConfig.bucketName}/${config.cdn.bucketName}/${params.Key}`;
   } catch (err) {
     throw err;
   }
@@ -303,14 +303,15 @@ const getBasePath = (fullUrl) => {
  */
 const deleteFile = async (filePath) => {
   try {
+    const cdnconfig = initializeS3Client();
     const basePath = getBasePath(filePath);
     // Initialize the S3 client dynamically
     s3ClientDelete = new S3Client({
-      region: config.cdn.region,
+      region: cdnconfig.region,
       endpoint: basePath,
       credentials: {
-        accessKeyId: config.cdn.accessKey,
-        secretAccessKey: config.cdn.secreteKey,
+        accessKeyId: cdnconfig.accessKey,
+        secretAccessKey: cdnconfig.secreteKey,
       },
       forcePathStyle: true,
     });
@@ -340,12 +341,13 @@ const deleteFile = async (filePath) => {
 
 
 const getSpaceUsage = async (bucketName) => {
+  const cdnconfig = initializeS3Client();
   const s3Client = new S3Client({
-    region: config.cdn.region,
+    region: cdnconfig.region,
     endpoint: `https://blr1.digitaloceanspaces.com`,
     credentials: {
-      accessKeyId: config.cdn.accessKey,
-      secretAccessKey: config.cdn.secreteKey,
+      accessKeyId: cdnconfig.accessKey,
+      secretAccessKey: cdnconfig.secreteKey,
     },
     // forcePathStyle: true,  // Uncomment if needed
   });
@@ -364,7 +366,6 @@ const getSpaceUsage = async (bucketName) => {
       if (response.Contents) {
         totalSize += response.Contents.reduce((sum, obj) => sum + obj.Size, 0);
       }
-
       continuationToken = response.NextContinuationToken; // Check for more pages
     } while (continuationToken);
 
