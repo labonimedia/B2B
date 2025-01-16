@@ -183,7 +183,7 @@ const initializeS3Client = async () => {
 
   s3Client = new S3Client({
     region: config.cdn.region,
-    endpoint: `https://${cdnConfig.name}.digitaloceanspaces.com`,
+    endpoint: `https://${cdnConfig.name}.blr1.digitaloceanspaces.com`,
     credentials: {
       accessKeyId: config.cdn.accessKey,
       secretAccessKey: config.cdn.secreteKey,
@@ -191,7 +191,7 @@ const initializeS3Client = async () => {
     forcePathStyle: true,
   });
 
-  return `https://${cdnConfig.name}.digitaloceanspaces.com`;
+  return `https://${cdnConfig.name}.blr1.digitaloceanspaces.com`;
 };
 
 /**
@@ -383,7 +383,7 @@ const getSpaceUsage = async (bucketName) => {
       availableSizeInGB,
     };
 
-    console.log(`Total space usage: ${totalSizeInMB} MB`);
+    // console.log(`Total space usage: ${totalSizeInMB} MB`);
   } catch (err) {
     // console.error('Error fetching space usage:', err);
     throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'path not found');
