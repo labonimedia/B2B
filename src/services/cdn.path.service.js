@@ -8,7 +8,7 @@ const ApiError = require('../utils/ApiError');
  * @returns {Promise<CDNPath>}
  */
 const createCDNPath = async (reqBody) => {
-    const existingCDNPath = await CDNPath.findOne({ name: reqBody.name });
+    const existingCDNPath = await CDNPath.findOne({ bucketName: reqBody.bucketName });
     if (existingCDNPath) {
         throw new ApiError(httpStatus.UNAUTHORIZED, `CDNPath with name '${reqBody.name}' already exists`);
     }
@@ -67,6 +67,7 @@ const deleteCDNPathById = async (id) => {
     await user.remove();
     return user;
 };
+
 
 module.exports = {
     createCDNPath,
