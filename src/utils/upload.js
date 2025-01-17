@@ -176,7 +176,10 @@ let s3Client;
 
 // Function to initialize the S3 client dynamically
 const initializeS3Client = async () => {
-  const cdnConfig = await CDNPath.findOne({ status: 'active' }).lean();
+  const cdnConfig = await CDNPath.findOne({ status: 'active' }).lean().maxTimeMS(30000).exec();  // Increase to 30 seconds
+  const explanation = await query.explain();
+  console.log(explanation);
+
   if (!cdnConfig) {
     throw new Error('No active CDN configuration found');
   }
@@ -259,7 +262,9 @@ const uploadFile = async (file) => {
   const command = new PutObjectCommand(params);
   try {
     await s3Client.send(command);
-    return `${cdnConfig.bucketName}/${config.cdn.bucketName}/${params.Key}`;
+
+
+    return `https://${cdnConfig.bucketName}.${cdnConfig.region}.digitaloceanspaces.com/${config.cdn.bucketName}/${params.Key}`;
   } catch (err) {
     throw err;
   }
@@ -341,10 +346,19 @@ const deleteFile = async (filePath) => {
 
 
 const getSpaceUsage = async (bucketName) => {
-  const cdn = await initializeS3Client();
+  let cdn
+  try {
+    cdn = await CDNPath.findOne({ status: 'active' }).lean()
+  } catch (err) {
+    console.log(err)
+  }
+
+  // console.log(activeCdn)
+  // const cdn = await initializeS3Client();
+  console.log('cheking in space function')
   const s3Client = new S3Client({
     region: cdn.region,
-    endpoint: `https://blr1.digitaloceanspaces.com`,
+    endpoint: `https://${cdn.region}.digitaloceanspaces.com`,
     credentials: {
       accessKeyId: cdn.accessKey,
       secretAccessKey: cdn.secreteKey,
