@@ -104,7 +104,7 @@ async function handleCdnSwitching() {
     const spaceUsed = await getSpaceUsage(activeCdn.bucketName);
     console.log(`Space usage for bucket (${activeCdn.bucketName}): ${spaceUsed.usedSizeInGB} GB`);
 
-    if (spaceUsed.usedSizeInGB >= 1) {
+    if (spaceUsed.usedSizeInGB >= 2) {
         console.log(`Active CDN (${activeCdn.bucketName}) is nearing full capacity. Searching for an alternative...`);
 
         // Fetch all inactive CDNs from the database
@@ -118,7 +118,7 @@ async function handleCdnSwitching() {
             const cdnSpaceUsed = await getSpaceUsage(cdn.bucketName);
             console.log(`Checking CDN (${cdn.bucketName}): ${cdnSpaceUsed.usedSizeInGB} GB used`);
 
-            if (cdnSpaceUsed.usedSizeInGB < 1) {
+            if (cdnSpaceUsed.usedSizeInGB < 2) {
                 console.log(`Switching to CDN: ${cdn.bucketName}`);
 
                 // Update database to set the new CDN as active
