@@ -10,18 +10,17 @@ const fileupload = async (req, id) => {
     throw new ApiError(httpStatus.NOT_FOUND, 'Wholesaler not found');
   }
 
-  const extractPath = (url) => new URL(url).pathname;
+  // const extractPath = (url) => new URL(url).pathname;
   if (req.body.file) {
-    const file = req.body.file ? extractPath(req.body.file[0]) : null;
-    wholesaler.file = file;
+    manufacture.file = req.body.file ? req.body.file[0] : null
   }
   if (req.body.profileImg) {
-    const profileImg = req.body.profileImg ? extractPath(req.body.profileImg[0]) : null;
-    wholesaler.profileImg = profileImg;
+    // const profileImg = req.body.profileImg ? extractPath(req.body.profileImg[0]) : null;
+    manufacture.profileImg = req.body.profileImg ? req.body.profileImg[0] : null;
   }
   if (req.body.fileName) {
     const fileName = req.body.fileName || '';
-    wholesaler.fileName = fileName;
+    manufacture.fileName = fileName;
   }
 
   await wholesaler.save();
@@ -33,6 +32,11 @@ const fileupload = async (req, id) => {
  * @returns {Promise<Wholesaler>}
  */
 const createWholesaler = async (reqBody) => {
+  if (reqBody.GSTIN) {
+    if (await Wholesaler.findOne({ GSTIN: reqBody.GSTIN })) {
+      throw new ApiError(httpStatus.BAD_REQUEST, 'GSTIN already exists');
+    }
+  }
   return Wholesaler.create(reqBody);
 };
 

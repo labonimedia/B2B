@@ -1,5 +1,5 @@
 const httpStatus = require('http-status');
-const { Brand, Manufacture, Request } = require('../models');
+const { Brand, Manufacture, Request, User, Wholesaler } = require('../models');
 const ApiError = require('../utils/ApiError');
 
 /**
@@ -234,10 +234,69 @@ const searchBrandAndOwnerDetails = async (brandName, requestByEmail) => {
 //   return combinedDetails.filter((detail) => detail !== null);
 // };
 
+const getBrandsAndWholesalers = async (brandNamePattern, requestByEmail) => {
+  // Step 1: Find brands matching the pattern
+  const brands = await Brand.find({ brandName: { $regex: brandNamePattern, $options: 'i' } }).exec();
+  if (!brands || brands.length === 0) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'No brands found matching the criteria');
+  }
+
+  // Extract brand owners' emails
+  const brandOwnerEmails = brands.map((brand) => brand.brandOwner);
+
+  // Step 2: Find users with the specified criteria
+  const users = await User.find({
+    refByEmail: { $in: brandOwnerEmails },
+    role: 'wholesaler',
+    userCategory: 'orderwise',
+  }).exec();
+
+  if (!users || users.length === 0) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'No wholesalers found for the specified brands');
+  }
+
+  // Step 3: Get wholesalers' details from the Wholesaler collection
+  const wholesalerEmails = users.map((user) => user.email);
+  const wholesalers = await Wholesaler.find({ email: { $in: wholesalerEmails } }).exec();
+
+  // Step 4: Fetch request details based on `requestByEmail` and brandOwner
+  const requestDetails = await Request.find({
+    email: { $in: wholesalerEmails },
+    requestByEmail,
+  });
+
+  // Filter out request details with status 'accepted'
+  const filteredRequestDetails = requestDetails.filter((request) => request.status !== 'accepted');
+
+  // Create a map for request details
+  const requestDetailsMap = new Map(
+    filteredRequestDetails.map((request) => [request.email, request])
+  );
+
+  // Step 5: Combine brands with their associated wholesalers and request details
+  const result = brands.map((brand) => {
+    const associatedWholesalers = users
+      .filter((user) => user.refByEmail.includes(brand.brandOwner))
+      .map((user) => wholesalers.find((wholesaler) => wholesaler.email === user.email));
+    const requestDetail = requestDetailsMap.get(brand.brandOwner) || {};
+    return {
+      brand: brand.toObject(),
+      wholesalers: associatedWholesalers.map((wholesaler) =>
+        wholesaler ? wholesaler.toObject() : null
+      ),
+      requestDetails: requestDetail.toObject ? requestDetail.toObject() : requestDetail,
+    };
+  });
+
+  return result;
+};
+
+
 module.exports = {
   createBrand,
   queryBrand,
   getBrandById,
+  getBrandsAndWholesalers,
   updateBrandById,
   deleteBrandById,
   searchBrandAndOwnerDetails,

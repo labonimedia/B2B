@@ -50,7 +50,8 @@
   ],
   "dependencies": {
     "@aws-sdk/client-s3": "^3.614.0",
-    "aws-sdk": "^2.1659.0",
+    "aws-sdk": "^2.1692.0",
+    "axios": "^1.7.9",
     "bcryptjs": "^2.4.3",
     "compression": "^1.7.4",
     "cors": "^2.8.5",
@@ -72,6 +73,7 @@
     "imagemin-mozjpeg": "^10.0.0",
     "imagemin-pngquant": "^10.0.0",
     "imagemin-svgo": "^11.0.1",
+    "ioredis": "^5.4.2",
     "joi": "^17.3.0",
     "jsonwebtoken": "^8.5.1",
     "moment": "^2.24.0",

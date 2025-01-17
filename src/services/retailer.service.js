@@ -10,18 +10,17 @@ const fileupload = async (req, id) => {
     throw new ApiError(httpStatus.NOT_FOUND, 'Retailer not found');
   }
 
-  const extractPath = (url) => new URL(url).pathname;
+  // const extractPath = (url) => new URL(url).pathname;
   if (req.body.file) {
-    const file = req.body.file ? extractPath(req.body.file[0]) : null;
-    retailer.file = file;
+    manufacture.file = req.body.file ? req.body.file[0] : null
   }
   if (req.body.profileImg) {
-    const profileImg = req.body.profileImg ? extractPath(req.body.profileImg[0]) : null;
-    retailer.profileImg = profileImg;
+    // const profileImg = req.body.profileImg ? extractPath(req.body.profileImg[0]) : null;
+    manufacture.profileImg = req.body.profileImg ? req.body.profileImg[0] : null;
   }
   if (req.body.fileName) {
     const fileName = req.body.fileName || '';
-    retailer.fileName = fileName;
+    manufacture.fileName = fileName;
   }
   await retailer.save();
   return retailer;
@@ -32,6 +31,12 @@ const fileupload = async (req, id) => {
  * @returns {Promise<Retailer>}
  */
 const createRetailer = async (reqBody) => {
+  if (reqBody.GSTIN) {
+    if (await Retailer.findOne({ GSTIN: req.body.GSTIN })) {
+      throw new ApiError(httpStatus.BAD_REQUEST, 'GSTIN already exists');
+    }
+  }
+
   return Retailer.create(reqBody);
 };
 

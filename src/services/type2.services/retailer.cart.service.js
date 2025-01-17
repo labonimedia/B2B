@@ -9,20 +9,20 @@ const ApiError = require('../../utils/ApiError');
  */
 const createRetailerCartType2 = async (reqBody) => {
   const { email, wholesalerEmail, set } = reqBody;
-    // Check if a cart already exists with the same email and productBy
-    const existingCart = await RetailerCartType2.findOne({ email, wholesalerEmail });
-    if (existingCart) {
-      // Push new set data into the existing cart's set array
-      existingCart.set.push(...set);
-      await existingCart.save();
-      await WishListType2.findOneAndDelete({productId: reqBody.productId, email})
-      return  existingCart
-    } else {
-      // If no cart exists, create a new one
-      const newCart = await RetailerCartType2.create(reqBody);
-      await WishListType2.findOneAndDelete({productId: reqBody.productId, email})
-      return  newCart;
-    }
+  // Check if a cart already exists with the same email and productBy
+  const existingCart = await RetailerCartType2.findOne({ email, wholesalerEmail });
+  if (existingCart) {
+    // Push new set data into the existing cart's set array
+    existingCart.set.push(...set);
+    await existingCart.save();
+    await WishListType2.findOneAndDelete({ productId: reqBody.productId, email })
+    return existingCart
+  } else {
+    // If no cart exists, create a new one
+    const newCart = await RetailerCartType2.create(reqBody);
+    await WishListType2.findOneAndDelete({ productId: reqBody.productId, email })
+    return newCart;
+  }
 };
 
 
@@ -53,14 +53,14 @@ const queryRetailerCartType2 = async (filter, options) => {
   // Fetch manufacturer details based on the productBy emails
   const wholesalers = await Wholesaler.find({
     email: { $in: wholesalerEmails },
-  }).select('email fullName companyName address state country pinCode mobNumber GSTIN');
+  }).select('email fullName companyName address state country pinCode profileImg mobNumber GSTIN');
   let retailer;
-if(filter.email){
-  retailer = await Retailer.findOne({
-    email: filter.email,
-  }).select('email fullName companyName address state country pinCode mobNumber GSTIN');
+  if (filter.email) {
+    retailer = await Retailer.findOne({
+      email: filter.email,
+    }).select('email fullName companyName address state country pinCode profileImg mobNumber GSTIN');
 
-}
+  }
 
   // Create a mapping of email to manufacturer details
   const wholesalerMap = wholesalers.reduce((acc, wholesaler) => {
@@ -73,6 +73,7 @@ if(filter.email){
       country: wholesaler.country,
       pinCode: wholesaler.pinCode,
       mobNumber: wholesaler.mobNumber,
+      profileImg: wholesaler.profileImg,
       GSTIN: wholesaler.GSTIN,
     };
     return acc;
@@ -87,8 +88,6 @@ if(filter.email){
 
   return RetailerCartType2Items;
 };
-
-
 
 /**
  * Get RetailerCartType2 by id
@@ -114,7 +113,7 @@ const genratePORetailerCartType2 = async (id) => {
   // Fetch manufacturer details based on the `productBy` email
   const wholesaler = await Wholesaler.findOne({
     email: cartItem.wholesalerEmail,
-  }).select('email fullName companyName address state country pinCode mobNumber GSTIN');
+  }).select('email fullName companyName address state country pinCode mobNumber profileImg GSTIN');
 
   // Fetch wholesaler details based on the provided `email` (if any)
   let retailer = null;
@@ -125,7 +124,7 @@ const genratePORetailerCartType2 = async (id) => {
     retailer = await Retailer.findOne({
       email: cartItem.email,
     }).select(
-      'email fullName companyName address state country pinCode mobNumber GSTIN logo discountGiven'
+      'email fullName companyName address state country pinCode mobNumber GSTIN logo profileImg discountGiven'
     );
 
     if (retailer) {
@@ -174,31 +173,33 @@ const genratePORetailerCartType2 = async (id) => {
     poNumber: orderNumber, // Purchase Order Number
     wholesaler: wholesaler
       ? {
-          email: wholesaler.email,
-          fullName: wholesaler.fullName,
-          companyName: wholesaler.companyName,
-          address: wholesaler.address,
-          state: wholesaler.state,
-          country: wholesaler.country,
-          pinCode: wholesaler.pinCode,
-          mobNumber: wholesaler.mobNumber,
-          GSTIN: wholesaler.GSTIN,
-        }
+        email: wholesaler.email,
+        fullName: wholesaler.fullName,
+        companyName: wholesaler.companyName,
+        address: wholesaler.address,
+        state: wholesaler.state,
+        country: wholesaler.country,
+        pinCode: wholesaler.pinCode,
+        mobNumber: wholesaler.mobNumber,
+        profileImg: wholesaler.profileImg,
+        GSTIN: wholesaler.GSTIN,
+      }
       : null, // Default to null if manufacturer not found
-      retailer: retailer
+    retailer: retailer
       ? {
-          email: retailer.email,
-          fullName: retailer.fullName,
-          companyName: retailer.companyName,
-          address: retailer.address,
-          state: retailer.state,
-          country: retailer.country,
-          pinCode: retailer.pinCode,
-          mobNumber: retailer.mobNumber,
-          GSTIN: retailer.GSTIN,
-          logo: retailer.logo,
-          ...discountDetails, // Include discount details (if found)
-        }
+        email: retailer.email,
+        fullName: retailer.fullName,
+        companyName: retailer.companyName,
+        address: retailer.address,
+        state: retailer.state,
+        country: retailer.country,
+        pinCode: retailer.pinCode,
+        mobNumber: retailer.mobNumber,
+        GSTIN: retailer.GSTIN,
+        logo: retailer.logo,
+        profileImg: retailer.profileImg,
+        ...discountDetails, // Include discount details (if found)
+      }
       : null, // Default to null if wholesaler not found
   };
 
@@ -232,11 +233,11 @@ const getCartByEmailToPlaceOrder = async (email, productBy) => {
     wholesaler =
       user.role === 'wholesaler'
         ? await Wholesaler.findOne({ email }).select(
-            'fullName companyName email address country state city pinCode mobNumber GSTIN code profileImg'
-          )
+          'fullName companyName email address country state city pinCode mobNumber GSTIN code profileImg'
+        )
         : await Retailer.findOne({ email }).select(
-            'fullName companyName email address country state city pinCode mobNumber GSTIN code profileImg'
-          );
+          'fullName companyName email address country state city pinCode mobNumber GSTIN code profileImg'
+        );
 
     if (!wholesaler) {
       throw new ApiError(httpStatus.NOT_FOUND, user.role === 'wholesaler' ? 'Wholesaler not found' : 'Retailer not found');
@@ -245,7 +246,7 @@ const getCartByEmailToPlaceOrder = async (email, productBy) => {
 
   // Fetch manufacturer details for the product's manufacturer
   const manufacturer = await Manufacture.findOne({ email: productBy }).select(
-    'fullName companyName email address country state city pinCode mobNumber GSTIN'
+    'fullName companyName email address country state city profileImg pinCode mobNumber GSTIN'
   );
 
   if (!manufacturer) {
@@ -410,7 +411,7 @@ const getCartByEmail = async (email) => {
     return acc;
   }, {});
 
- // Convert the grouped object to an array of objects
+  // Convert the grouped object to an array of objects
   const formattedCart = Object.values(groupedCart);
 
   return formattedCart;

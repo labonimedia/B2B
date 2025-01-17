@@ -14,25 +14,21 @@ const fileupload = async (req, productId) => {
   if (!product) {
     throw new ApiError(httpStatus.NOT_FOUND, 'ProductType2 not found');
   }
-  const { colour, colourName } = req.body;
-  // Helper function to extract path from URL
-  const extractPath = (url) => new URL(url).pathname;
-  // Extract and trim file paths from req.body
-  const colourImage = req.body.colourImage ? extractPath(req.body.colourImage[0]) : null;
-  const productImages = req.body.productImages ? req.body.productImages.map(extractPath) : [];
-  const productVideo = req.body.productVideo ? extractPath(req.body.productVideo[0]) : null;
+
+  const { colour, colourName, colourImage, productImages, productVideo } = req.body;
 
   const newColourCollection = {
     colour,
     colourName,
-    colourImage,
-    productImages,
-    productVideo,
+    colourImage: colourImage ? colourImage[0] : null, // Save as-is
+    productImages: productImages || [], // Save as-is
+    productVideo: productVideo ? productVideo[0] : null, // Save as-is
   };
 
   product.colourCollections.push(newColourCollection);
-  return product.save(); // Removed redundant await
+  return product.save(); // Save the updated product
 };
+
 
 /**
  * Create a ProductType2
@@ -188,36 +184,119 @@ const deleteProductById = async (id) => {
  * @returns {Promise<ProductType2>}
  */
 const updateColorCollection = async (req, productId) => {
-  const product = await ProductType2.findById(productId);
+  const uploadedFiles = []; // To track uploaded files for cleanup
+  try {
+    const product = await ProductType2.findById(productId);
 
-  if (!product) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Product not found');
+    if (!product) {
+      throw new ApiError(httpStatus.NOT_FOUND, 'Product not found');
+    }
+
+    // const { colour, colourName } = req.body;
+
+    const { colour, colourName, colourImage, productImages, productVideo } = req.body;
+
+
+
+    // Track uploaded files for rollback
+    if (colourImage) uploadedFiles.push(colourImage);
+    if (productImages && productImages.length > 0)
+      uploadedFiles.push(...productImages);
+    if (productVideo) uploadedFiles.push(productVideo);
+
+    const newColourCollection = {
+      colour,
+      colourName,
+      colourImage: colourImage ? colourImage[0] : null, // Save as-is
+      productImages: productImages || [], // Save as-is
+      productVideo: productVideo ? productVideo[0] : null, // Save as-is
+    };
+
+    // Find the existing collection and update it
+    const collectionIndex = product.colourCollections.findIndex(
+      (c) => c._id.toString() === req.query.collectionId
+    );
+
+    if (collectionIndex === -1) {
+      throw new ApiError(httpStatus.NOT_FOUND, 'Colour collection not found');
+    }
+
+    // Update the collection
+    product.colourCollections[collectionIndex] = newColourCollection;
+
+    // Save the product
+    await product.save();
+  } catch (err) {
+    console.error('Error occurred:', err.message);
+
+    // Rollback: Delete uploaded files
+    try {
+      if (uploadedFiles.length > 0) {
+        console.log('Rolling back uploaded files:', uploadedFiles);
+        await Promise.all(uploadedFiles.map((file) => deleteFile(file)));
+      }
+    } catch (deleteErr) {
+      console.error('Error during rollback:', deleteErr.message);
+    }
+
+    // Re-throw the original error
+    throw err;
   }
-
-  const { colour, colourName } = req.body;
-  const extractPath = (url) => new URL(url).pathname;
-  // Extract and trim file paths from req.body
-  const colourImage = req.body.colourImage ? extractPath(req.body.colourImage[0]) : null;
-  const productImages = req.body.productImages ? req.body.productImages.map(extractPath) : [];
-  const productVideo = req.body.productVideo ? extractPath(req.body.productVideo[0]) : null;
-
-  const newColourCollection = {
-    colour,
-    colourName,
-    colourImage,
-    productImages,
-    productVideo,
-  };
-  // Find the existing collection and update it
-  const collectionIndex = product.colourCollections.findIndex((c) => c._id.toString() === req.query.collectionId);
-  if (collectionIndex === -1) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Colour collection not found');
-  }
-
-  product.colourCollections[collectionIndex] = newColourCollection;
-
-  return product.save(); // Removed redundant await
 };
+
+// const updateColorCollection = async (req, productId) => {
+//   const product = await ProductType2.findById(productId);
+
+//   if (!product) {
+//     throw new ApiError(httpStatus.NOT_FOUND, 'Product not found');
+//   }
+
+//   const { colour, colourName } = req.body;
+//   const extractPath = (url) => new URL(url).pathname;
+
+//   // Extract and trim file paths from req.body
+//   const colourImage = req.body.colourImage ? extractPath(req.body.colourImage[0]) : null;
+//   const productImages = req.body.productImages ? req.body.productImages.map(extractPath) : [];
+//   const productVideo = req.body.productVideo ? extractPath(req.body.productVideo[0]) : null;
+
+//   const newColourCollection = {
+//     colour,
+//     colourName,
+//     colourImage,
+//     productImages,
+//     productVideo,
+//   };
+
+//   const collectionIndex = product.colourCollections.findIndex(
+//     (c) => c._id.toString() === req.query.collectionId
+//   );
+
+//   if (collectionIndex === -1) {
+//     try {
+//       // Attempt to delete uploaded files
+//       if (colourImage) {
+//         await deleteFile(colourImage);
+//       }
+//       if (productImages && productImages.length > 0) {
+//         await Promise.all(productImages.map((image) => deleteFile(image)));
+//       }
+//       if (productVideo) {
+//         await deleteFile(productVideo);
+//       }
+//     } catch (deleteError) {
+//       console.error('Error deleting files:', deleteError.message);
+//     }
+
+//     // Throw the error after cleanup
+//     throw new ApiError(httpStatus.NOT_FOUND, 'Colour collection not found');
+//   }
+
+//   // Update the existing collection
+//   product.colourCollections[collectionIndex] = newColourCollection;
+
+//   return product.save();
+// };
+
 
 /**
  * Delete user by id

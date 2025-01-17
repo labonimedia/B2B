@@ -7,7 +7,7 @@ const router = express.Router();
 router
   .route('/')
   .post(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), noOfPocketsController.createNoOfPockets)
-  .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), noOfPocketsController.queryTopType);
+  .get(noOfPocketsController.queryTopType); //auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
 
 router
   .route('/:id')

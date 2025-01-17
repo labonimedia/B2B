@@ -91,10 +91,20 @@ const deleteRequestById = catchAsync(async (req, res) => {
   res.status(httpStatus.NO_CONTENT).send();
 });
 
+const getRequestStatus = catchAsync(async (req, res) => {
+  console.log(req.query);
+  const request = await requestService.getRequestStatus(req.query.wholsalerEmail, req.query.requestByEmail);
+  if (!request) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Request not found');
+  }
+  res.send(request);
+});
+
 module.exports = {
   createRequest,
   acceptRequest,
   getRequestById,
+  getRequestStatus,
   queryRequests,
   updateRequestById,
   deleteRequestById,
