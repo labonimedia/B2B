@@ -176,14 +176,14 @@ let s3Client;
 
 // Function to initialize the S3 client dynamically
 const initializeS3Client = async () => {
-  const cdnConfig = await CDNPath.findOne({ status: 'active' });
+  const cdnConfig = await CDNPath.findOne({ status: 'active' }).lean();
   if (!cdnConfig) {
     throw new Error('No active CDN configuration found');
   }
 
   s3Client = new S3Client({
     region: cdnConfig.region,
-    endpoint: `https://${cdnConfig.bucketName}.${region}.digitaloceanspaces.com`,
+    endpoint: `https://${cdnConfig.bucketName}.${cdnConfig.region}.digitaloceanspaces.com`,
     credentials: {
       accessKeyId: cdnConfig.accessKey,
       secretAccessKey: cdnConfig.secreteKey,
@@ -191,7 +191,7 @@ const initializeS3Client = async () => {
     forcePathStyle: true,
   });
 
-  return `https://${cdnConfig.bucketName}.blr1.digitaloceanspaces.com`;
+  return cdnConfig;
 };
 
 /**
@@ -341,13 +341,13 @@ const deleteFile = async (filePath) => {
 
 
 const getSpaceUsage = async (bucketName) => {
-  const cdnconfig = initializeS3Client();
+  const cdn = await initializeS3Client();
   const s3Client = new S3Client({
-    region: cdnconfig.region,
+    region: cdn.region,
     endpoint: `https://blr1.digitaloceanspaces.com`,
     credentials: {
-      accessKeyId: cdnconfig.accessKey,
-      secretAccessKey: cdnconfig.secreteKey,
+      accessKeyId: cdn.accessKey,
+      secretAccessKey: cdn.secreteKey,
     },
     // forcePathStyle: true,  // Uncomment if needed
   });
@@ -391,6 +391,8 @@ const getSpaceUsage = async (bucketName) => {
     // res.status(500).send({ message: 'Error fetching space usage' });
   }
 };
+
+
 // fetchUsage();
 module.exports = {
   uploadFiles,

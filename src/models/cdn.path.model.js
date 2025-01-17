@@ -42,17 +42,11 @@ const cdnPathSchema = mongoose.Schema(
             type: String,
             required: true,
             trim: true,
-            select: false, // Do not return this field when querying
-            set: encrypt, // Automatically encrypt before saving
-            get: decrypt, // Automatically decrypt when retrieving
         },
         secreteKey: {
             type: String,
             required: true,
             trim: true,
-            select: false,
-            set: encrypt,
-            get: decrypt,
         },
         status: {
             type: String,
@@ -62,27 +56,54 @@ const cdnPathSchema = mongoose.Schema(
     },
     {
         timestamps: true,
-        toJSON: { getters: true },
-        toObject: { getters: true },
+        toJSON: { virtuals: true },
+        toObject: { virtuals: true },
     }
 );
 
-// Middleware to ensure only one active bucket
-cdnPathSchema.pre('save', async function (next) {
-    const currentBucket = this;
-
-    // If the status is set to 'active'
-    if (currentBucket.status === 'active') {
-        // Update all other documents to 'inactive'
-        await mongoose.model('CdnPath').updateMany(
-            { status: 'active', _id: { $ne: currentBucket._id } },
-            { $set: { status: 'inactive' } }
-        );
+// Middleware to encrypt fields before saving to MongoDB
+cdnPathSchema.pre('save', function (next) {
+    if (this.isModified('accessKey')) {
+        this.accessKey = encrypt(this.accessKey);
     }
-
+    if (this.isModified('secreteKey')) {
+        this.secreteKey = encrypt(this.secreteKey);
+    }
     next();
 });
 
+// Middleware to decrypt fields after retrieval from MongoDB
+cdnPathSchema.post('find', function (docs) {
+    if (Array.isArray(docs)) {
+        docs.forEach(doc => {
+            if (doc.accessKey) {
+                doc.accessKey = decrypt(doc.accessKey);
+            }
+            if (doc.secreteKey) {
+                doc.secreteKey = decrypt(doc.secreteKey);
+            }
+        });
+    } else {
+        if (docs.accessKey) {
+            docs.accessKey = decrypt(docs.accessKey);
+        }
+        if (docs.secreteKey) {
+            docs.secreteKey = decrypt(docs.secreteKey);
+        }
+    }
+});
+
+// Middleware to decrypt fields after retrieving single document
+cdnPathSchema.post('findOne', function (doc) {
+    if (doc) {
+        if (doc.accessKey) {
+            doc.accessKey = decrypt(doc.accessKey);
+        }
+        if (doc.secreteKey) {
+            doc.secreteKey = decrypt(doc.secreteKey);
+        }
+    }
+});
 
 // Add plugins for pagination and toJSON
 cdnPathSchema.plugin(toJSON);

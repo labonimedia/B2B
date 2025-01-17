@@ -69,6 +69,8 @@ const deleteCDNPathById = async (id) => {
 };
 
 
+
+
 module.exports = {
     createCDNPath,
     queryCDNPath,
