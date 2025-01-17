@@ -22,7 +22,7 @@ const invitationSchema = mongoose.Schema(
         }
       },
     },
-    code: {
+    contryCode: {
       type: String,
     },
     mobileNumber: {
