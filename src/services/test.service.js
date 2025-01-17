@@ -151,7 +151,7 @@ async function startSwitchingProcess() {
 }
 
 // Start the process
-startSwitchingProcess();
+// startSwitchingProcess();
 
 
 
