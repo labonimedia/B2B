@@ -42,7 +42,7 @@ const getFilteredProducts = catchAsync(async (req, res) => {
 });
 
 const getRetailerPriceById = catchAsync(async (req, res) => {
-  const cartItem = await wholesalerPriceService.getRetailerPriceById(req.params.productId, req.params.wholesalerEmail);
+  const cartItem = await wholesalerPriceService.getRetailerPriceById(req.query.productId, req.query.wholesalerEmail);
   if (!cartItem) {
     throw new ApiError(httpStatus.NOT_FOUND, 'wholesaler price not found');
   }
