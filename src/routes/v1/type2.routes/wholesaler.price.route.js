@@ -24,7 +24,7 @@ router
   .route('/filter/products')
   .post(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), wholesalerPriceController.getFilteredProducts)
 router
-  .route('/retailer-product/:productId/:wholesalerEmail')
+  .route('/retailer-product')
   .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), wholesalerPriceController.getRetailerPriceById)
 
 
