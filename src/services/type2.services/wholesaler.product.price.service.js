@@ -126,15 +126,16 @@ const getWholesalerPriceType2ByIdWholesaler = async (productId, WholesalerEmail)
  * @returns {Promise<WholesalerPriceType2>}
  */
 const getRetailerPriceById = async (productId, WholesalerEmail) => {
-  // Find the retailer price by productId
-  const retailerPrice = await WholesalerPriceType2.findOne({ productId, WholesalerEmail }).lean();
+  // Find the retailer price by productId  
+  const objectId = mongoose.Types.ObjectId(productId);
+  const retailerPrice = await WholesalerPriceType2.findOne({ productId: objectId, WholesalerEmail }).lean();
   // If no retailer price is found, handle it gracefully
   if (!retailerPrice) {
     return { message: "Retailer price not found for the given product ID." };
   }
 
   // Find the associated product details
-  const product = await ProductType2.findById(productId).lean();
+  const product = await ProductType2.findById(objectId).lean();
   // If no product is found, handle it gracefully
   if (!product) {
     return { message: "Product not found for the given product ID." };
