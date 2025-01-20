@@ -78,7 +78,7 @@ async function startSwitchingProcess() {
         } catch (err) {
             console.error("Error in CDN switching process:", err);
         }
-    }, 30000); // Check every 30 seconds
+    }, 60000); // Check every 30 seconds
 }
 
 // Start the process
