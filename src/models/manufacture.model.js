@@ -30,6 +30,10 @@ const manufactureSchema = mongoose.Schema(
     companyName: {
       type: String,
     },
+    kycVerified: {
+      type: Boolean,
+      default: false,
+    },
     email: {
       type: String,
       // required: true,
