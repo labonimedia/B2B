@@ -7,49 +7,102 @@ const ApiError = require('../../utils/ApiError');
  * @param {Array<Object>} reqBody - Contains an array of item objects
  * @returns {Promise<Array<PurchaseOrderType2>>}
  */
+// const createPurchaseOrderType2 = async (reqBody) => {
+//   const { email, productBy, retailerPOs } = reqBody;
+
+//   // Validate that required fields are provided
+//   if (!email || !productBy) {
+//     throw new ApiError(httpStatus.BAD_REQUEST, "Both 'email' and 'productBy' are required.");
+//   }
+
+//   if (!Array.isArray(retailerPOs) || retailerPOs.length === 0) {
+//     // throw new ApiError(httpStatus.BAD_REQUEST, "'poNumber' and valid 'retailerPOs' are required.");
+
+
+//   }
+
+//   // Create a new purchase order using the provided request body
+//   const purchaseOrder = await PurchaseOrderType2.create(reqBody);
+
+//   if (!purchaseOrder) {
+//     throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, "Failed to create the purchase order.");
+//   }
+
+//   // Update the status of each retailer's purchase order in the array to 'processing'
+//   for (const retailerPO of retailerPOs) {
+//     const retailerOrder = await PurchaseOrderRetailerType2.findOne({ email: retailerPO.email, poNumber: retailerPO.poNumber });
+
+//     if (!retailerOrder) {
+//       throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, "Retailer purchase order not found.");
+//     }
+
+//     // Update the status in the `set` array where `designNumber` matches
+//     retailerOrder.set.forEach((item) => {
+//       if (reqBody.set.some((reqItem) => reqItem.designNumber === item.designNumber)) {
+//         item.status = 'processing';
+//       }
+//     });
+
+//     // Save the updated retailer order
+//     await retailerOrder.save();
+//   }
+
+//   // Return the newly created purchase order
+//   return purchaseOrder;
+// };
+
+
+
 const createPurchaseOrderType2 = async (reqBody) => {
   const { email, productBy, retailerPOs } = reqBody;
-
   // Validate that required fields are provided
   if (!email || !productBy) {
     throw new ApiError(httpStatus.BAD_REQUEST, "Both 'email' and 'productBy' are required.");
   }
 
+  let createdPurchaseOrder;
+
   if (!Array.isArray(retailerPOs) || retailerPOs.length === 0) {
-    throw new ApiError(httpStatus.BAD_REQUEST, "'poNumber' and valid 'retailerPOs' are required.");
-  }
+    // Handle case where `retailerPOs` is not provided
+    console.warn("'retailerPOs' not provided. Creating purchase order without retailer-specific processing.");
 
-  // Create a new purchase order using the provided request body
-  const purchaseOrder = await PurchaseOrderType2.create(reqBody);
+    // Create a purchase order without processing `retailerPOs`
+    createdPurchaseOrder = await PurchaseOrderType2.create(reqBody);
+  } else {
+    // Handle case where `retailerPOs` are provided
+    // Create a new purchase order using the provided request body
+    createdPurchaseOrder = await PurchaseOrderType2.create(reqBody);
 
-  if (!purchaseOrder) {
-    throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, "Failed to create the purchase order.");
-  }
-
-  // Update the status of each retailer's purchase order in the array to 'processing'
-  for (const retailerPO of retailerPOs) {
-    const retailerOrder = await PurchaseOrderRetailerType2.findOne({ email: retailerPO.email, poNumber: retailerPO.poNumber });
-
-    if (!retailerOrder) {
-      throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, "Retailer purchase order not found.");
+    if (!createdPurchaseOrder) {
+      throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, "Failed to create the purchase order.");
     }
 
-    // Update the status in the `set` array where `designNumber` matches
-    retailerOrder.set.forEach((item) => {
-      if (reqBody.set.some((reqItem) => reqItem.designNumber === item.designNumber)) {
-        item.status = 'processing';
-      }
-    });
+    // Update the status of each retailer's purchase order in the array to 'processing'
+    for (const retailerPO of retailerPOs) {
+      const retailerOrder = await PurchaseOrderRetailerType2.findOne({
+        email: retailerPO.email,
+        poNumber: retailerPO.poNumber
+      });
 
-    // Save the updated retailer order
-    await retailerOrder.save();
+      if (!retailerOrder) {
+        throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, "Retailer purchase order not found.");
+      }
+
+      // Update the status in the `set` array where `designNumber` matches
+      retailerOrder.set.forEach((item) => {
+        if (reqBody.set.some((reqItem) => reqItem.designNumber === item.designNumber)) {
+          item.status = 'processing';
+        }
+      });
+
+      // Save the updated retailer order
+      await retailerOrder.save();
+    }
   }
 
   // Return the newly created purchase order
-  return purchaseOrder;
+  return createdPurchaseOrder;
 };
-
-
 
 
 const deleteCartType2ById = async (email, productBy) => {
