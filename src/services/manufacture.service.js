@@ -181,6 +181,8 @@ const updateVisibilitySettings = async (manufactureId, payload) => {
 
   // Map the payload fields to the visibilitySettings structure
   const visibilitySettings = {
+    
+    kycVerified: payload.kycVerified !== undefined ? payload.kycVerified : manufacture.visibilitySettings.kycVerified,
     leagalStatusOfFirm: payload.leagalStatusOfFirm !== undefined ? payload.leagalStatusOfFirm : manufacture.visibilitySettings.leagalStatusOfFirm,
     logo: payload.logo !== undefined ? payload.logo : manufacture.visibilitySettings.logo,
     file: payload.file !== undefined ? payload.file : manufacture.visibilitySettings.file,
