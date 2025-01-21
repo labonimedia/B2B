@@ -125,9 +125,9 @@ const getWholesalerPriceType2ByIdWholesaler = async (productId, WholesalerEmail)
  * @param {ObjectId} id
  * @returns {Promise<WholesalerPriceType2>}
  */
-const getRetailerPriceById = async (productId) => {
-  // Find the retailer price by productId
-  const retailerPrice = await WholesalerPriceType2.findOne({ productId }).lean();
+const getRetailerPriceById = async (productId, WholesalerEmail) => {
+  // Find the retailer price by productId  
+  const retailerPrice = await WholesalerPriceType2.findOne({ productId, WholesalerEmail }).lean();
   // If no retailer price is found, handle it gracefully
   if (!retailerPrice) {
     return { message: "Retailer price not found for the given product ID." };

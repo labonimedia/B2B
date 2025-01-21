@@ -177,8 +177,6 @@ let s3Client;
 // Function to initialize the S3 client dynamically
 const initializeS3Client = async () => {
   const cdnConfig = await CDNPath.findOne({ status: 'active' }).lean().maxTimeMS(30000).exec();  // Increase to 30 seconds
-  const explanation = await query.explain();
-  console.log(explanation);
 
   if (!cdnConfig) {
     throw new Error('No active CDN configuration found');
@@ -243,16 +241,73 @@ const compressImage = async (fileBuffer) => {
   return compressedBuffer;
 };
 
+// const uploadFile = async (file) => {
+//   const cdnConfig = await initializeS3Client();
+
+//   const params = {
+//     Bucket: config.cdn.bucketName,
+//     Key: `${Date.now().toString()}-${file.originalname}`,
+//     Body: file.buffer,
+//     ACL: 'public-read',
+//   };
+
+//   if (file.mimetype.startsWith('video')) {
+//     params.Body = await compressVideo(file.buffer);
+//   } else if (file.mimetype.startsWith('image')) {
+//     params.Body = await compressImage(file.buffer);
+//   }
+
+//   const command = new PutObjectCommand(params);
+//   try {
+//     await s3Client.send(command);
+
+
+//     return `${cdnConfig.bucketName}/${config.cdn.bucketName}/${params.Key}`
+//     //`https://${cdnConfig.bucketName}.${cdnConfig.region}.digitaloceanspaces.com/${config.cdn.bucketName}/${params.Key}`;
+//   } catch (err) {
+//     throw err;
+//   }
+// };
+
+// const uploadFiles = async (req, res, next) => {
+//   const uploadPromises = [];
+
+//   Object.keys(req.files).forEach((field) => {
+//     req.files[field].forEach((file) => {
+//       uploadPromises.push(
+//         uploadFile(file).then((url) => {
+//           req.body[field] = req.body[field] || [];
+//           req.body[field].push(url);
+//         })
+//       );
+//     });
+//   });
+
+//   try {
+//     await Promise.all(uploadPromises);
+//     next();
+//   } catch (err) {
+//     res.status(500).send({ error: 'Failed to upload files', details: err.message });
+//     throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'Failed to upload files');
+//   }
+// };
+
 const uploadFile = async (file) => {
   const cdnConfig = await initializeS3Client();
+  console.log(`Uploading file: ${file.originalname}`);
 
+  // Constructing a unique file key
+  const fileKey = `${Date.now().toString()}-${file.originalname}`;
+
+  // Setting S3 upload parameters
   const params = {
     Bucket: config.cdn.bucketName,
-    Key: `${Date.now().toString()}-${file.originalname}`,
+    Key: fileKey,
     Body: file.buffer,
     ACL: 'public-read',
   };
 
+  // Compress video or image if necessary
   if (file.mimetype.startsWith('video')) {
     params.Body = await compressVideo(file.buffer);
   } else if (file.mimetype.startsWith('image')) {
@@ -261,14 +316,19 @@ const uploadFile = async (file) => {
 
   const command = new PutObjectCommand(params);
   try {
+    console.log('Uploading to S3...');
     await s3Client.send(command);
+    console.log('Upload successful');
 
-
-    return `https://${cdnConfig.bucketName}.${cdnConfig.region}.digitaloceanspaces.com/${config.cdn.bucketName}/${params.Key}`;
+    // Generate the full URL for the uploaded file
+    const fileUrl = `https://${cdnConfig.bucketName}.${cdnConfig.region}.digitaloceanspaces.com/${config.cdn.bucketName}/${fileKey}`;
+    return fileUrl;
   } catch (err) {
+    console.error('Error during file upload:', err);
     throw err;
   }
 };
+
 
 const uploadFiles = async (req, res, next) => {
   const uploadPromises = [];
@@ -279,6 +339,9 @@ const uploadFiles = async (req, res, next) => {
         uploadFile(file).then((url) => {
           req.body[field] = req.body[field] || [];
           req.body[field].push(url);
+        }).catch(err => {
+          console.error(`Error uploading file for field ${field}:`, err);
+          throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, `Error uploading file for field ${field}`);
         })
       );
     });
@@ -288,10 +351,12 @@ const uploadFiles = async (req, res, next) => {
     await Promise.all(uploadPromises);
     next();
   } catch (err) {
+    console.error('Error in uploading files:', err);
     res.status(500).send({ error: 'Failed to upload files', details: err.message });
     throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'Failed to upload files');
   }
 };
+
 
 const commonUploadMiddleware = (fields) => [upload.fields(fields), uploadFiles];
 
