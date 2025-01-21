@@ -420,7 +420,7 @@ const getSpaceUsage = async (bucketName) => {
 
   // console.log(activeCdn)
   // const cdn = await initializeS3Client();
-  console.log('cheking in space function')
+
   const s3Client = new S3Client({
     region: cdn.region,
     endpoint: `https://${cdn.region}.digitaloceanspaces.com`,
