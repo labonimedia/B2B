@@ -122,6 +122,10 @@ const retailerSchema = mongoose.Schema(
         type: String,
       },
     },
+    kycVerified: {
+      type: Boolean,
+      default: false,
+    },
     BankDetails: {
       accountNumber: {
         type: Number,

@@ -89,6 +89,10 @@ const wholesalerSchema = mongoose.Schema(
     pan: {
       type: String,
     },
+    kycVerified: {
+      type: Boolean,
+      default: false,
+    },
     establishDate: {
       type: Date,
     },
