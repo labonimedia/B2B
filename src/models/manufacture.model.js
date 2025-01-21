@@ -161,6 +161,7 @@ const manufactureSchema = mongoose.Schema(
       email2: { type: Boolean, default: true },
       GSTIN: { type: Boolean, default: true },
       pan: { type: Boolean, default: true },
+      kycVerified: { type: Boolean, default: true },
       code: { type: Boolean, default: true },
       establishDate: { type: Boolean, default: true },
       turnover: { type: Boolean, default: true },
