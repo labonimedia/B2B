@@ -1,4 +1,4 @@
-const redisClient = require('../utils/redis');
+// const redisClient = require('../utils/redis');
 const { CDNPath } = require('../models');
 const { getSpaceUsage } = require('../utils/upload');
 const logger = require('../config/logger');
