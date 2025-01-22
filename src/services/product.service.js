@@ -1,5 +1,5 @@
 const httpStatus = require('http-status');
-const { Product, Manufacture, User, Request, Brand } = require('../models');
+const { Product, Manufacture, User, Request, Brand, ProductType2 } = require('../models');
 const ApiError = require('../utils/ApiError');
 const { deleteFile } = require('../utils/upload');
 
@@ -392,7 +392,7 @@ const filterProductsAndFetchManufactureDetails = async (filters) => {
   }
 
   // Get filtered products
-  const products = await Product.find(query);
+  const products = await ProductType2.find(query);
 
   // Fetch manufacturer, brand, and request details for each product
   const productDetails = await Promise.all(
