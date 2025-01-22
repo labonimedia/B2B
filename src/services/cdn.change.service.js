@@ -125,7 +125,7 @@ const dynamicIntervalCheck = async () => {
 };
 
 // Start dynamic switching process
-dynamicIntervalCheck();
+// dynamicIntervalCheck();
 
 
 
