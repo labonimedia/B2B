@@ -1,5 +1,5 @@
 const httpStatus = require('http-status');
-const { Manufacture, User, Wholesaler, Retailer, Product } = require('../models');
+const { Manufacture, User, Wholesaler, Retailer, ProductType2 } = require('../models');
 const ApiError = require('../utils/ApiError');
 
 /**
@@ -248,7 +248,7 @@ const getVisibleProfile = async (manufactureId) => {
   }
   let uniqueProducts;
   if (manufacture.visibilitySettings.delingInView) {
-    uniqueProducts = await Product.find({ productBy: manufacture.email })
+    uniqueProducts = await ProductType2.find({ productBy: manufacture.email })
       .select('productType gender clothing subCategory')
       .lean(); // Use lean to get plain JavaScript objects
 
