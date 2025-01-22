@@ -1,5 +1,5 @@
 const httpStatus = require('http-status');
-const { ProductType2, Manufacture, User, WholesalerPriceType2 } = require('../../models');
+const { ProductType2, Manufacture, User, WholesalerPriceType2, Brand, Request } = require('../../models');
 const ApiError = require('../../utils/ApiError');
 const { deleteFile } = require('../../utils/upload');
 
