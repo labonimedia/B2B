@@ -65,7 +65,7 @@ const createPurchaseOrderType2 = async (reqBody) => {
   if (!Array.isArray(retailerPOs) || retailerPOs.length === 0) {
     // Handle case where `retailerPOs` is not provided
     console.warn("'retailerPOs' not provided. Creating purchase order without retailer-specific processing.");
-
+    await CartType2.findOneAndDelete({ email, productBy })
     // Create a purchase order without processing `retailerPOs`
     createdPurchaseOrder = await PurchaseOrderType2.create(reqBody);
   } else {
