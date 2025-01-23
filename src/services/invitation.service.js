@@ -58,7 +58,7 @@ const bulkUpload = async (invitationArray = [], csvFilePath = null, user) => {
         status: 'pending', // or other default status
         role: invitation.Role || null,
         category: invitation.Category || null,
-        code: invitation.Code || null,
+        code: invitation.contryCode || null,
       });
     })
   );
