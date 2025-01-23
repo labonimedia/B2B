@@ -13,9 +13,14 @@ router
   .route('/getby/supplier')
   .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), purchaseOrderType2Controller.getProductOrderBySupplyer);
 
+
+router
+  .route('/get-po/by-wholesaler-email')
+  .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), purchaseOrderType2Controller.getPurchanseOrderByEmail);
+
 router
   .route('/:id')
-  .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), purchaseOrderType2Controller.getPurchaseOrderType2ById) // Get PurchaseOrderType2 by ID
+  .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), purchaseOrderType2Controller.getPurchaseOrderType2ById)
   .patch(
     auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
     purchaseOrderType2Controller.updatePurchaseOrderType2ById

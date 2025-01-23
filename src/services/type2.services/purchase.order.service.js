@@ -135,6 +135,14 @@ const queryPurchaseOrderType2 = async (filter, options) => {
 const getPurchaseOrderType2ById = async (id) => {
   return PurchaseOrderType2.findById(id);
 };
+const getPurchanseOrderByEmail = async (email) => {
+  const purchaseOrders = await PurchaseOrderType2.find({
+    email, // Filter by email
+    'retailerPOs.0': { $exists: false }, // Ensure retailerPOs array is empty
+  });
+
+  return purchaseOrders;
+}
 
 const getProductOrderBySupplyer = async (supplierEmail) => {
   const productOrders = await PurchaseOrderType2.find({ productBy: supplierEmail });
@@ -218,6 +226,7 @@ module.exports = {
   createPurchaseOrderType2,
   queryPurchaseOrderType2,
   getProductOrderBySupplyer,
+  getPurchanseOrderByEmail,
   getPurchaseOrderType2ById,
   updatePurchaseOrderType2ById,
   deletePurchaseOrderType2ById,
