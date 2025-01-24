@@ -154,160 +154,103 @@
 //     throw new Error(`File deletion failed for ${filePath}: ${err.message}`);
 //   }
 // };
-// const multer = require('multer');
-// const { PutObjectCommand, DeleteObjectCommand, S3Client, ListObjectsV2Command } = require('@aws-sdk/client-s3');
-// const ffmpegPath = require('ffmpeg-static');
-// const ffmpeg = require('fluent-ffmpeg');
-// const fs = require('fs');
-// const sharp = require('sharp');
-// const httpStatus = require('http-status');
-// const path = require('path');
-// const { v4: uuidv4 } = require('uuid');
-// const ApiError = require('./ApiError');
-// const config = require('../config/config');
-// const CDNPath = require('../models/cdn.path.model'); // MongoDB model for CDNPath collection
+const multer = require('multer');
+const { PutObjectCommand, DeleteObjectCommand, S3Client, ListObjectsV2Command } = require('@aws-sdk/client-s3');
+const ffmpegPath = require('ffmpeg-static');
+const ffmpeg = require('fluent-ffmpeg');
+const fs = require('fs');
+const sharp = require('sharp');
+const httpStatus = require('http-status');
+const path = require('path');
+const { v4: uuidv4 } = require('uuid');
+const ApiError = require('./ApiError');
+const config = require('../config/config');
+const CDNPath = require('../models/cdn.path.model'); // MongoDB model for CDNPath collection
 
-// ffmpeg.setFfmpegPath(ffmpegPath);
+ffmpeg.setFfmpegPath(ffmpegPath);
 
-// const storage = multer.memoryStorage();
-// const upload = multer({ storage });
+const storage = multer.memoryStorage();
+const upload = multer({ storage });
 
-// let s3Client;
+let s3Client;
 
-// // Function to initialize the S3 client dynamically
-// const initializeS3Client = async () => {
-//   const cdnConfig = await CDNPath.findOne({ status: 'active' }).lean().maxTimeMS(30000).exec();  // Increase to 30 seconds
+// Function to initialize the S3 client dynamically
+const initializeS3Client = async () => {
+  const cdnConfig = await CDNPath.findOne({ status: 'active' }).lean().maxTimeMS(30000).exec();  // Increase to 30 seconds
 
-//   if (!cdnConfig) {
-//     throw new Error('No active CDN configuration found');
-//   }
+  if (!cdnConfig) {
+    throw new Error('No active CDN configuration found');
+  }
 
-//   s3Client = new S3Client({
-//     region: cdnConfig.region,
-//     endpoint: `https://${cdnConfig.bucketName}.${cdnConfig.region}.digitaloceanspaces.com`,
-//     credentials: {
-//       accessKeyId: cdnConfig.accessKey,
-//       secretAccessKey: cdnConfig.secreteKey,
-//     },
-//     forcePathStyle: true,
-//   });
+  s3Client = new S3Client({
+    region: cdnConfig.region,
+    endpoint: `https://${cdnConfig.bucketName}.${cdnConfig.region}.digitaloceanspaces.com`,
+    credentials: {
+      accessKeyId: cdnConfig.accessKey,
+      secretAccessKey: cdnConfig.secreteKey,
+    },
+    forcePathStyle: true,
+  });
 
-//   return cdnConfig;
-// };
+  return cdnConfig;
+};
 
-// /**
-//  * Compress videos to a smaller size
-//  */
-// const compressVideo = async (fileBuffer) => {
-//   const inputFileName = `${uuidv4()}-input.mp4`;
-//   const outputFileName = `${uuidv4()}-output.mp4`;
-//   const inputFilePath = path.join('/tmp', inputFileName);
-//   const outputFilePath = path.join('/tmp', outputFileName);
+/**
+ * Compress videos to a smaller size
+ */
+const compressVideo = async (fileBuffer) => {
+  const inputFileName = `${uuidv4()}-input.mp4`;
+  const outputFileName = `${uuidv4()}-output.mp4`;
+  const inputFilePath = path.join('/tmp', inputFileName);
+  const outputFilePath = path.join('/tmp', outputFileName);
 
-//   await fs.promises.writeFile(inputFilePath, fileBuffer);
+  await fs.promises.writeFile(inputFilePath, fileBuffer);
 
-//   await new Promise((resolve, reject) => {
-//     ffmpeg(inputFilePath)
-//       .output(outputFilePath)
-//       .videoCodec('libx264')
-//       .size('640x?')
-//       .on('end', resolve)
-//       .on('error', reject)
-//       .run();
-//   });
+  await new Promise((resolve, reject) => {
+    ffmpeg(inputFilePath)
+      .output(outputFilePath)
+      .videoCodec('libx264')
+      .size('640x?')
+      .on('end', resolve)
+      .on('error', reject)
+      .run();
+  });
 
-//   const compressedBuffer = await fs.promises.readFile(outputFilePath);
-//   await fs.promises.unlink(inputFilePath);
-//   await fs.promises.unlink(outputFilePath);
+  const compressedBuffer = await fs.promises.readFile(outputFilePath);
+  await fs.promises.unlink(inputFilePath);
+  await fs.promises.unlink(outputFilePath);
 
-//   return compressedBuffer;
-// };
+  return compressedBuffer;
+};
 
-// /**
-//  * Compress images to a maximum of 1 MB
-//  */
-// const compressImage = async (fileBuffer) => {
-//   let compressedBuffer = fileBuffer;
-//   let quality = 80;
+/**
+ * Compress images to a maximum of 1 MB
+ */
+const compressImage = async (fileBuffer) => {
+  let compressedBuffer = fileBuffer;
+  let quality = 80;
 
-//   do {
-//     compressedBuffer = await sharp(fileBuffer)
-//       .jpeg({ quality })
-//       .toBuffer();
+  do {
+    compressedBuffer = await sharp(fileBuffer)
+      .jpeg({ quality })
+      .toBuffer();
 
-//     quality -= 10;
-//   } while (compressedBuffer.length > 1 * 1024 * 1024 && quality > 10);
+    quality -= 10;
+  } while (compressedBuffer.length > 1 * 1024 * 1024 && quality > 10);
 
-//   return compressedBuffer;
-// };
-
-// // const uploadFile = async (file) => {
-// //   const cdnConfig = await initializeS3Client();
-
-// //   const params = {
-// //     Bucket: config.cdn.bucketName,
-// //     Key: `${Date.now().toString()}-${file.originalname}`,
-// //     Body: file.buffer,
-// //     ACL: 'public-read',
-// //   };
-
-// //   if (file.mimetype.startsWith('video')) {
-// //     params.Body = await compressVideo(file.buffer);
-// //   } else if (file.mimetype.startsWith('image')) {
-// //     params.Body = await compressImage(file.buffer);
-// //   }
-
-// //   const command = new PutObjectCommand(params);
-// //   try {
-// //     await s3Client.send(command);
-
-
-// //     return `${cdnConfig.bucketName}/${config.cdn.bucketName}/${params.Key}`
-// //     //`https://${cdnConfig.bucketName}.${cdnConfig.region}.digitaloceanspaces.com/${config.cdn.bucketName}/${params.Key}`;
-// //   } catch (err) {
-// //     throw err;
-// //   }
-// // };
-
-// // const uploadFiles = async (req, res, next) => {
-// //   const uploadPromises = [];
-
-// //   Object.keys(req.files).forEach((field) => {
-// //     req.files[field].forEach((file) => {
-// //       uploadPromises.push(
-// //         uploadFile(file).then((url) => {
-// //           req.body[field] = req.body[field] || [];
-// //           req.body[field].push(url);
-// //         })
-// //       );
-// //     });
-// //   });
-
-// //   try {
-// //     await Promise.all(uploadPromises);
-// //     next();
-// //   } catch (err) {
-// //     res.status(500).send({ error: 'Failed to upload files', details: err.message });
-// //     throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'Failed to upload files');
-// //   }
-// // };
+  return compressedBuffer;
+};
 
 // const uploadFile = async (file) => {
 //   const cdnConfig = await initializeS3Client();
-//   console.log(`Uploading file: ${file.originalname}`);
 
-//   // Constructing a unique file key
-//   const fileKey = `${Date.now().toString()}-${file.originalname}`;
-
-//   // Setting S3 upload parameters
 //   const params = {
 //     Bucket: config.cdn.bucketName,
-//     Key: fileKey,
+//     Key: `${Date.now().toString()}-${file.originalname}`,
 //     Body: file.buffer,
 //     ACL: 'public-read',
 //   };
 
-//   // Compress video or image if necessary
 //   if (file.mimetype.startsWith('video')) {
 //     params.Body = await compressVideo(file.buffer);
 //   } else if (file.mimetype.startsWith('image')) {
@@ -316,19 +259,15 @@
 
 //   const command = new PutObjectCommand(params);
 //   try {
-//     console.log('Uploading to S3...');
 //     await s3Client.send(command);
-//     console.log('Upload successful');
 
-//     // Generate the full URL for the uploaded file
-//     const fileUrl = `https://${cdnConfig.bucketName}.${cdnConfig.region}.digitaloceanspaces.com/${config.cdn.bucketName}/${fileKey}`;
-//     return fileUrl;
+
+//     return `${cdnConfig.bucketName}/${config.cdn.bucketName}/${params.Key}`
+//     //`https://${cdnConfig.bucketName}.${cdnConfig.region}.digitaloceanspaces.com/${config.cdn.bucketName}/${params.Key}`;
 //   } catch (err) {
-//     console.error('Error during file upload:', err);
 //     throw err;
 //   }
 // };
-
 
 // const uploadFiles = async (req, res, next) => {
 //   const uploadPromises = [];
@@ -339,9 +278,6 @@
 //         uploadFile(file).then((url) => {
 //           req.body[field] = req.body[field] || [];
 //           req.body[field].push(url);
-//         }).catch(err => {
-//           console.error(`Error uploading file for field ${field}:`, err);
-//           throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, `Error uploading file for field ${field}`);
 //         })
 //       );
 //     });
@@ -351,93 +287,27 @@
 //     await Promise.all(uploadPromises);
 //     next();
 //   } catch (err) {
-//     console.error('Error in uploading files:', err);
 //     res.status(500).send({ error: 'Failed to upload files', details: err.message });
 //     throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'Failed to upload files');
 //   }
 // };
 
+const uploadFile = async (file) => {
+  const cdnConfig = await initializeS3Client();
+  console.log(`Uploading file: ${file.originalname}`);
 
-// const commonUploadMiddleware = (fields) => [upload.fields(fields), uploadFiles];
+  // Constructing a unique file key
+  const fileKey = `${Date.now().toString()}-${file.originalname}`;
 
-const multer = require('multer');
-const { PutObjectCommand, S3Client } = require('@aws-sdk/client-s3');
-const ffmpegPath = require('ffmpeg-static');
-const ffmpeg = require('fluent-ffmpeg');
-const sharp = require('sharp');
-const stream = require('stream');
-const { promisify } = require('util');
-const ApiError = require('./ApiError');
-const config = require('../config/config');
-const CDNPath = require('../models/cdn.path.model');
-
-ffmpeg.setFfmpegPath(ffmpegPath);
-
-const storage = multer.memoryStorage();
-const upload = multer({ storage });
-
-let s3Client;
-
-// Function to initialize S3 client
-const initializeS3Client = async () => {
-  if (!s3Client) {
-    const cdnConfig = await CDNPath.findOne({ status: 'active' }).lean();
-    if (!cdnConfig) {
-      throw new Error('No active CDN configuration found');
-    }
-
-    s3Client = new S3Client({
-      region: cdnConfig.region,
-      endpoint: `https://${cdnConfig.bucketName}.${cdnConfig.region}.digitaloceanspaces.com`,
-      credentials: {
-        accessKeyId: cdnConfig.accessKey,
-        secretAccessKey: cdnConfig.secreteKey,
-      },
-    });
-    s3Client.config = cdnConfig; // Attach config for URL generation
-  }
-  return s3Client;
-};
-
-// Compress video using streams
-const compressVideo = async (fileBuffer) => {
-  const passThrough = new stream.PassThrough();
-  const outputBuffer = [];
-  const outputStream = new stream.Writable({
-    write(chunk, encoding, callback) {
-      outputBuffer.push(chunk);
-      callback();
-    },
-  });
-
-  const ffmpegProcess = ffmpeg(fileBuffer)
-    .outputOptions('-c:v libx264', '-preset slow', '-crf 28', '-movflags +faststart')
-    .pipe(passThrough);
-
-  ffmpegProcess.pipe(outputStream);
-
-  await promisify(stream.finished)(outputStream); // Wait for the stream to finish
-  return Buffer.concat(outputBuffer);
-};
-
-// Compress images
-const compressImage = async (fileBuffer) => {
-  return sharp(fileBuffer)
-    .resize({ width: 1024 }) // Resize if necessary
-    .jpeg({ quality: 80 })
-    .toBuffer();
-};
-
-// Upload file to S3
-const uploadFileToS3 = async (file, cdnConfig) => {
-  const fileKey = `${Date.now()}-${file.originalname}`;
+  // Setting S3 upload parameters
   const params = {
-    Bucket: cdnConfig.bucketName,
+    Bucket: config.cdn.bucketName,
     Key: fileKey,
-    ACL: 'public-read',
     Body: file.buffer,
+    ACL: 'public-read',
   };
 
+  // Compress video or image if necessary
   if (file.mimetype.startsWith('video')) {
     params.Body = await compressVideo(file.buffer);
   } else if (file.mimetype.startsWith('image')) {
@@ -445,37 +315,49 @@ const uploadFileToS3 = async (file, cdnConfig) => {
   }
 
   const command = new PutObjectCommand(params);
-  await s3Client.send(command);
-
-  return `https://${cdnConfig.bucketName}.${cdnConfig.region}.digitaloceanspaces.com/${fileKey}`;
-};
-
-// Middleware to handle file uploads
-const uploadFiles = async (req, res, next) => {
   try {
-    const s3Client = await initializeS3Client();
-    const cdnConfig = s3Client.config;
+    console.log('Uploading to S3...');
+    await s3Client.send(command);
+    console.log('Upload successful');
 
-    const uploadPromises = [];
-    for (const [field, files] of Object.entries(req.files)) {
-      files.forEach((file) => {
-        uploadPromises.push(
-          uploadFileToS3(file, cdnConfig).then((url) => {
-            req.body[field] = req.body[field] || [];
-            req.body[field].push(url);
-          })
-        );
-      });
-    }
-
-    await Promise.all(uploadPromises);
-    next();
+    // Generate the full URL for the uploaded file
+    const fileUrl = `https://${cdnConfig.bucketName}.${cdnConfig.region}.digitaloceanspaces.com/${config.cdn.bucketName}/${fileKey}`;
+    return fileUrl;
   } catch (err) {
-    next(new ApiError(500, 'File upload failed'));
+    console.error('Error during file upload:', err);
+    throw err;
   }
 };
 
-// Middleware helper
+
+const uploadFiles = async (req, res, next) => {
+  const uploadPromises = [];
+
+  Object.keys(req.files).forEach((field) => {
+    req.files[field].forEach((file) => {
+      uploadPromises.push(
+        uploadFile(file).then((url) => {
+          req.body[field] = req.body[field] || [];
+          req.body[field].push(url);
+        }).catch(err => {
+          console.error(`Error uploading file for field ${field}:`, err);
+          throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, `Error uploading file for field ${field}`);
+        })
+      );
+    });
+  });
+
+  try {
+    await Promise.all(uploadPromises);
+    next();
+  } catch (err) {
+    console.error('Error in uploading files:', err);
+    res.status(500).send({ error: 'Failed to upload files', details: err.message });
+    throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'Failed to upload files');
+  }
+};
+
+
 const commonUploadMiddleware = (fields) => [upload.fields(fields), uploadFiles];
 
 
