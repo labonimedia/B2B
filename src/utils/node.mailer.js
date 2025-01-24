@@ -4,7 +4,7 @@ async function sendTestEmail() {
     try {
         // Create the transporter
         const transporter = nodemailer.createTransport({
-            host: 'smtp.secureserver.net',
+            host: 'localhost',                           //'smtp.secureserver.net',
             port: 587,
             secure: false, // Use false for STARTTLS
             auth: {
@@ -31,4 +31,4 @@ async function sendTestEmail() {
 }
 
 // Execute the function
-sendTestEmail();
+// sendTestEmail();
