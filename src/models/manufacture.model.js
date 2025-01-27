@@ -194,6 +194,7 @@ const manufactureSchema = mongoose.Schema(
       'BankDetails.accountType': { type: Boolean, default: true },
       'BankDetails.bankName': { type: Boolean, default: true },
       'BankDetails.IFSCcode': { type: Boolean, default: true },
+      'BankDetails.swiftCode': { type: Boolean, default: true },
       'BankDetails.country': { type: Boolean, default: true },
       'BankDetails.city': { type: Boolean, default: true },
       'BankDetails.branch': { type: Boolean, default: true },

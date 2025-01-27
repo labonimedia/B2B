@@ -218,10 +218,11 @@ const updateVisibilitySettings = async (manufactureId, payload) => {
     'BankDetails.accountType': payload.BankDetails?.accountType !== undefined ? payload.BankDetails.accountType : manufacture.visibilitySettings['BankDetails.accountType'],
     'BankDetails.bankName': payload.BankDetails?.bankName !== undefined ? payload.BankDetails.bankName : manufacture.visibilitySettings['BankDetails.bankName'],
     'BankDetails.IFSCcode': payload.BankDetails?.IFSCcode !== undefined ? payload.BankDetails.IFSCcode : manufacture.visibilitySettings['BankDetails.IFSCcode'],
+    'BankDetails.swiftCode': payload.BankDetails?.swiftCode !== undefined ? payload.BankDetails.swiftCode : manufacture.visibilitySettings['BankDetails.swiftCode'],
     'BankDetails.country': payload.BankDetails?.country !== undefined ? payload.BankDetails.country : manufacture.visibilitySettings['BankDetails.country'],
     'BankDetails.city': payload.BankDetails?.city !== undefined ? payload.BankDetails.city : manufacture.visibilitySettings['BankDetails.city'],
     'BankDetails.branch': payload.BankDetails?.branch !== undefined ? payload.BankDetails.branch : manufacture.visibilitySettings['BankDetails.branch'],
-
+    
     isActive: payload.isActive !== undefined ? payload.isActive : manufacture.visibilitySettings.isActive,
   };
 
