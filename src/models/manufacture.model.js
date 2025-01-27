@@ -126,6 +126,9 @@ const manufactureSchema = mongoose.Schema(
       IFSCcode: {
         type: String,
       },
+      swiftCode: {
+        type: String,
+      },
       country: {
         type: String,
       },
