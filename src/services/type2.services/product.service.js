@@ -29,7 +29,6 @@ const fileupload = async (req, productId) => {
   return product.save(); // Save the updated product
 };
 
-
 /**
  * Create a ProductType2
  * @param {Object} reqBody
@@ -96,9 +95,7 @@ const searchProducts = async (filter, options) => {
   return products;
 };
 
-
 const searchForWSProducts = async (filter, options, WholesalerEmail) => {
-
   // If there's a search term, add a text search condition
   if (filter.search) {
     filter.$text = { $search: filter.search };
@@ -126,7 +123,6 @@ const searchForWSProducts = async (filter, options, WholesalerEmail) => {
     results: resultsWithStatus,
   };
 };
-
 
 /**
  * Get ProductType2 by id
@@ -196,12 +192,9 @@ const updateColorCollection = async (req, productId) => {
 
     const { colour, colourName, colourImage, productImages, productVideo } = req.body;
 
-
-
     // Track uploaded files for rollback
     if (colourImage) uploadedFiles.push(colourImage);
-    if (productImages && productImages.length > 0)
-      uploadedFiles.push(...productImages);
+    if (productImages && productImages.length > 0) uploadedFiles.push(...productImages);
     if (productVideo) uploadedFiles.push(productVideo);
 
     const newColourCollection = {
@@ -213,9 +206,7 @@ const updateColorCollection = async (req, productId) => {
     };
 
     // Find the existing collection and update it
-    const collectionIndex = product.colourCollections.findIndex(
-      (c) => c._id.toString() === req.query.collectionId
-    );
+    const collectionIndex = product.colourCollections.findIndex((c) => c._id.toString() === req.query.collectionId);
 
     if (collectionIndex === -1) {
       throw new ApiError(httpStatus.NOT_FOUND, 'Colour collection not found');
@@ -296,7 +287,6 @@ const updateColorCollection = async (req, productId) => {
 
 //   return product.save();
 // };
-
 
 /**
  * Delete user by id
@@ -391,7 +381,6 @@ const deleteColorCollection = async (productId, collectionId) => {
 //   return productManufacturers;
 // };
 
-
 const filterProductsAndFetchManufactureDetails = async (filters) => {
   const query = {};
 
@@ -456,7 +445,10 @@ const filterProductsAndFetchManufactureDetails = async (filters) => {
   // Filter out null results (where the request was 'accepted')
   return productDetails.filter((detail) => detail !== null);
 };
-
+const checkProductExistence = async (designNumber, brand) => {
+  const product = await ProductType2.findOne({ designNumber, brand });
+  return product;
+};
 module.exports = {
   fileupload,
   createProduct,
@@ -470,4 +462,5 @@ module.exports = {
   updateColorCollection,
   deleteColorCollection,
   filterProductsAndFetchManufactureDetails,
+  checkProductExistence,
 };

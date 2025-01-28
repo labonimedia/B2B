@@ -54,4 +54,6 @@ router
 router
   .route('/filter-products/for-wholesaler')
   .post(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), productType2Controller.searchForWSProducts);
+router.post('/check-product-existence', productType2Controller.checkProductExistence);
+
 module.exports = router;
