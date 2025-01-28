@@ -50,10 +50,6 @@ const searchProducts = catchAsync(async (req, res) => {
   res.status(httpStatus.OK).send(products);
 });
 
-
-
-
-
 const searchForWSProducts = catchAsync(async (req, res) => {
   const filter = {};
   const options = {};
@@ -135,6 +131,26 @@ const getFilteredProducts = catchAsync(async (req, res) => {
   res.status(httpStatus.OK).json(result);
 });
 
+const checkProductExistence = catchAsync(async (req, res) => {
+  try {
+    const { designNumber, brand } = req.body;
+
+    if (!designNumber || !brand) {
+      return res.status(400).json({ message: 'designNumber and brand are required.' });
+    }
+
+    const productExists = await productType2Service.checkProductExistence(designNumber, brand);
+
+    if (productExists) {
+      return res.status(200).json({ message: 'Product exists', product: productExists });
+    } else {
+      return res.status(404).json({ message: 'Product does not exist' });
+    }
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+});
+
 module.exports = {
   fileupload,
   createProduct,
@@ -148,4 +164,5 @@ module.exports = {
   updateColorCollection,
   deleteColorCollection,
   getFilteredProducts,
+  checkProductExistence,
 };
