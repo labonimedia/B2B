@@ -600,6 +600,111 @@
             "selectedOccasion",
             "careInstructions"
         ]
+    },
+    {
+        "productType": "Clothing",
+        "gender": "Men",
+        "category": "Trousers",
+        "subCategory": "Formal Trousers",
+        "inputs": [
+            "material",
+            "fabricPattern",
+            "trouserFitStyle",
+            "closureType",
+            "troursePocket",
+            "trourseRiseStyle",
+            "trourseStyle",
+            "trourseLength",
+            "Waist Size Set",
+            "noOfPockets",
+            "coinPocket",
+            "selectedOccasion",
+            "careInstructions"
+        ]
+    },
+    {
+        "productType": "Clothing",
+        "gender": "Men",
+        "category": "Trousers",
+        "subCategory": "Jeans",
+        "inputs": [
+            "material",
+            "fabricPattern",
+            "trouserFitStyle",
+            "closureType",
+            "troursePocket",
+            "trourseRiseStyle",
+            "trourseStyle",
+            "trourseLength",
+            "Waist Size Set",
+            "noOfPockets",
+            "coinPocket",
+            "selectedOccasion",
+            "careInstructions"
+        ]
+    },
+    {
+        "productType": "Clothing",
+        "gender": "Men",
+        "category": "Trousers",
+        "subCategory": "Jegging",
+        "inputs": [
+            "material",
+            "fabricPattern",
+            "trouserFitStyle",
+            "closureType",
+            "troursePocket",
+            "trourseRiseStyle",
+            "trourseStyle",
+            "trourseLength",
+            "Waist Size Set",
+            "noOfPockets",
+            "coinPocket",
+            "selectedOccasion",
+            "careInstructions"
+        ]
+    },
+    {
+        "productType": "Clothing",
+        "gender": "Men",
+        "category": "Trousers",
+        "subCategory": "Suit Trousers",
+        "inputs": [
+            "material",
+            "fabricPattern",
+            "trouserFitStyle",
+            "closureType",
+            "troursePocket",
+            "trourseRiseStyle",
+            "trourseStyle",
+            "trourseLength",
+            "Waist Size Set",
+            "noOfPockets",
+            "coinPocket",
+            "selectedOccasion",
+            "careInstructions"
+        ]
+    },
+    {
+        "productType": "Clothing",
+        "gender": "Men",
+        "category": "Trousers",
+        "subCategory": "Tuxedo Trousers",
+        "inputs": [
+            "material",
+            "fabricPattern",
+            "trouserFitStyle",
+            "closureType",
+            "troursePocket",
+            "trourseRiseStyle",
+            "trourseStyle",
+            "trourseLength",
+            "Waist Size Set",
+            "noOfPockets",
+            "coinPocket",
+            "selectedOccasion",
+            "careInstructions"
+        ]
     }
 ]
 // [
