@@ -380,6 +380,13 @@ const combinePurchaseOrdersForManufacturer = async (wholesalerEmail, manufacture
     throw new ApiError(httpStatus.NOT_FOUND, `Manufacturer details not found for: ${manufacturerEmail}`);
   }
 
+  const wholesaler = await Wholesaler.findOne({ email: wholesalerEmail });
+
+  // Filter discounts given by the specified productBy
+  const discounts = wholesaler.discountGiven.filter(
+    (discount) => discount.discountGivenBy === manufacturerEmail
+  );
+
   // Prepare and return combined PO
   const combinedPO = {
     set: mergedSet,
@@ -387,7 +394,7 @@ const combinePurchaseOrdersForManufacturer = async (wholesalerEmail, manufacture
     productBy: manufacturerEmail,
     // cartAddedDate: new Date(),
     poNumber: nextPoNumber, // Unique PO number for this manufacturer
-
+    discounts,
     retailerPOs: retailerPOsArray,
     wholesaler: retailerPOs[0]?.wholesaler || {},
     manufacturer, // Include the manufacturer details
