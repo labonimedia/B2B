@@ -222,7 +222,7 @@ const deleteUserByEmail = async (email) => {
     throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
   }
 
-  const { email, role } = user;
+  const { role } = user;
 
   // Delete user from the User collection
   await User.deleteOne({ email });

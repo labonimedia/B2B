@@ -27,4 +27,7 @@ router
 router
   .route('/wholesalerslist/:id')
   .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), retailerController.getWholesalersByRetailerId);
+  router
+  .route('/manufacturelist/:id')
+  .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), retailerController.getManufactureByRetailerId);
 module.exports = router;
