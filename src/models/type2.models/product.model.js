@@ -269,6 +269,13 @@ productSchema.pre('findOne', function (next) {
   next();
 });
 
+productSchema.statics.findUpcomingProducts = function () {
+  const currentDate = new Date();
+
+  return this.find({ dateOfListing: { $gt: currentDate } }); // Filter products where dateOfListing is greater than the current date
+};
+
+
 /**
  * @typedef ProductType2
  */

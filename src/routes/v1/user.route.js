@@ -23,6 +23,8 @@ router.route('/registered-user/:email').get(
   userController.getUserByEmail
 );
 
+router.route('/delete-unwanted-user').delete(userController.deleteUserByEmail);
+
 module.exports = router;
 
 /**

@@ -215,6 +215,37 @@ const deleteUserById = async (userId) => {
   return user;
 };
 
+
+const deleteUserByEmail = async (email) => {
+  const user = await User.findOne({ email });
+  if (!user) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+  }
+
+  const { email, role } = user;
+
+  // Delete user from the User collection
+  await User.deleteOne({ email });
+
+  // Delete user from the respective role-based collection
+  switch (role) {
+    case 'wholesaler':
+      await Wholesaler.deleteOne({ email });
+      break;
+    case 'manufacture':
+      await Manufacture.deleteOne({ email });
+      break;
+    case 'retailer':
+      await Retailer.deleteOne({ email });
+      break;
+    default:
+      break;
+  }
+
+  return { message: 'User deleted successfully' };
+};
+
+
 module.exports = {
   createUser,
   queryUsers,
@@ -223,4 +254,5 @@ module.exports = {
   updateUserByEmail,
   updateUserById,
   deleteUserById,
+  deleteUserByEmail,
 };
