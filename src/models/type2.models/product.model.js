@@ -257,6 +257,18 @@ productSchema.pre('save', function (next) {
 
   next();
 });
+productSchema.pre('find', function (next) {
+  const currentDate = new Date();
+  this.where({ dateOfListing: { $lte: currentDate } }); // Apply filter on every 'find' query
+  next();
+});
+
+productSchema.pre('findOne', function (next) {
+  const currentDate = new Date();
+  this.where({ dateOfListing: { $lte: currentDate } }); // Apply filter on 'findOne' query
+  next();
+});
+
 /**
  * @typedef ProductType2
  */

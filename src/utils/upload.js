@@ -153,7 +153,130 @@
 //     console.error(`Failed to delete file: ${filePath}`, err);
 //     throw new Error(`File deletion failed for ${filePath}: ${err.message}`);
 //   }
+// };""
+
+
+
+// const { PutObjectCommand, DeleteObjectCommand, S3Client, ListObjectsV2Command } = require('@aws-sdk/client-s3');
+// const httpStatus = require('http-status');
+// const ApiError = require('./ApiError');
+// const config = require('../config/config');
+
+// const multer = require('multer');
+// const path = require('path');
+// const fs = require('fs');
+// const { fork } = require('child_process');
+// const sharp = require('sharp');
+// const { initializeS3Client, cdnDtailes } = require('./s3');
+
+// const storage = multer.diskStorage({
+//   destination: (req, file, cb) => {
+//     cb(null, '/tmp');
+//   },
+//   filename: (req, file, cb) => {
+//     cb(null, `${Date.now()}-${file.originalname}`);
+//   },
+// });
+
+// const upload = multer({ storage });
+
+// const compressVideo = (inputFilePath) => {
+//   return new Promise((resolve, reject) => {
+//     const outputFilePath = `/tmp/compressed-${path.basename(inputFilePath)}`;
+//     const worker = fork(path.resolve(__dirname, './compressWorker.js'));
+
+//     worker.send({ inputFilePath, outputFilePath });
+
+//     worker.on('message', (message) => {
+//       if (message.success) {
+//         resolve(outputFilePath);
+//       } else {
+//         reject(new Error(message.error));
+//       }
+//     });
+
+//     worker.on('error', reject);
+//   });
 // };
+
+// const compressImage = async (inputFilePath) => {
+//   const outputFilePath = `/tmp/compressed-${path.basename(inputFilePath)}`;
+//   await sharp(inputFilePath)
+//     .jpeg({ quality: 70 })
+//     .toFile(outputFilePath);
+
+//   return outputFilePath;
+// };
+
+// const uploadFile = async (filePath, fileName, mimeType) => {
+//   let s3Client;
+//   try {
+//     const cdnConfig = await cdnDtailes();
+
+//     if (!cdnConfig || !cdnConfig.region) {
+//       throw new Error('CDN Configuration is missing or region is undefined');
+//     }
+
+
+//     s3Client = new S3Client({
+//       region: cdnConfig.region,
+//       endpoint: `https://${cdnConfig.bucketName}.${cdnConfig.region}.digitaloceanspaces.com`,
+//       credentials: {
+//         accessKeyId: cdnConfig.accessKey,
+//         secretAccessKey: cdnConfig.secreteKey,
+//       },
+//       forcePathStyle: true,
+//     });
+
+//     const fileStream = fs.createReadStream(filePath);
+//     const params = {
+//       Bucket: cdnConfig.bucketName,
+//       Key: fileName,
+//       Body: fileStream,
+//       ACL: 'public-read',
+//       ContentType: mimeType,
+//     };
+
+//     const response = await s3Client.send(new PutObjectCommand(params));
+
+//     return `https://${cdnConfig.bucketName}.${cdnConfig.region}.digitaloceanspaces.com/${fileName}`;
+//   } catch (err) {
+//     console.error('Upload error:', err);
+//     throw new Error(`Failed to upload file: ${err.message}`);
+//   }
+// };
+
+
+// const uploadFiles = async (req, res, next) => {
+//   try {
+//     for (const field in req.files) {
+//       for (const file of req.files[field]) {
+//         let filePath = file.path;
+
+//         if (file.mimetype.startsWith('video')) {
+//           filePath = await compressVideo(filePath);
+//         } else if (file.mimetype.startsWith('image')) {
+//           filePath = await compressImage(filePath);
+//         }
+
+//         const fileUrl = await uploadFile(filePath, file.filename, file.mimetype);
+//         req.body[field] = req.body[field] || [];
+//         req.body[field].push(fileUrl);
+
+//         fs.unlinkSync(filePath);
+//       }
+//     }
+//     next();
+//   } catch (err) {
+//     console.error('Error uploading files:', err);
+//     res.status(500).send({ error: 'Failed to upload files', details: err.message });
+//   }
+// };
+
+// const commonUploadMiddleware = (fields) => [upload.fields(fields), uploadFiles];
+
+
+
 const multer = require('multer');
 const { PutObjectCommand, DeleteObjectCommand, S3Client, ListObjectsV2Command } = require('@aws-sdk/client-s3');
 const ffmpegPath = require('ffmpeg-static');
@@ -176,7 +299,7 @@ let s3Client;
 
 // Function to initialize the S3 client dynamically
 const initializeS3Client = async () => {
-  const cdnConfig = await CDNPath.findOne({ status: 'active' }).lean().maxTimeMS(30000).exec();  // Increase to 30 seconds
+  const cdnConfig = await CDNPath.findOne({ status: 'active' }).lean();
 
   if (!cdnConfig) {
     throw new Error('No active CDN configuration found');
@@ -316,10 +439,7 @@ const uploadFile = async (file) => {
 
   const command = new PutObjectCommand(params);
   try {
-    console.log('Uploading to S3...');
     await s3Client.send(command);
-    console.log('Upload successful');
-
     // Generate the full URL for the uploaded file
     const fileUrl = `https://${cdnConfig.bucketName}.${cdnConfig.region}.digitaloceanspaces.com/${config.cdn.bucketName}/${fileKey}`;
     return fileUrl;
@@ -340,7 +460,6 @@ const uploadFiles = async (req, res, next) => {
           req.body[field] = req.body[field] || [];
           req.body[field].push(url);
         }).catch(err => {
-          console.error(`Error uploading file for field ${field}:`, err);
           throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, `Error uploading file for field ${field}`);
         })
       );
@@ -351,7 +470,6 @@ const uploadFiles = async (req, res, next) => {
     await Promise.all(uploadPromises);
     next();
   } catch (err) {
-    console.error('Error in uploading files:', err);
     res.status(500).send({ error: 'Failed to upload files', details: err.message });
     throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'Failed to upload files');
   }
@@ -373,7 +491,7 @@ const getBasePath = (fullUrl) => {
  */
 const deleteFile = async (filePath) => {
   try {
-    const cdnconfig = initializeS3Client();
+    const cdnconfig = await initializeS3Client();
     const basePath = getBasePath(filePath);
     // Initialize the S3 client dynamically
     s3ClientDelete = new S3Client({
@@ -404,7 +522,6 @@ const deleteFile = async (filePath) => {
     const command = new DeleteObjectCommand(params);
     const response = await s3ClientDelete.send(command);
   } catch (err) {
-    console.error(`Failed to delete file: ${filePath}`, err);
     throw new Error(`File deletion failed for ${filePath}: ${err.message}`);
   }
 };
