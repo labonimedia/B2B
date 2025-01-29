@@ -52,6 +52,18 @@ const getWholesalersByRetailerId = catchAsync(async (req, res) => {
   res.status(httpStatus.OK).send(wholesalers);
 });
 
+const getManufactureByRetailerId = catchAsync(async (req, res) => {
+  const { id } = req.params;
+  const { userCategory } = req.query;
+  const options = pick(req.query, ['limit', 'page']);
+  const retailer = await retailerService.getUserById(id);
+  if (!retailer) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Retailer not found');
+  }
+  const refByEmail = retailer.refByEmail || [];
+  const wholesalers = await retailerService.getManufacturerByEmails(refByEmail, options, userCategory);
+  res.status(httpStatus.OK).send(wholesalers);
+});
 module.exports = {
   createRetailer,
   queryRetailer,
@@ -60,4 +72,5 @@ module.exports = {
   updateRetailerById,
   deleteRetailerById,
   getWholesalersByRetailerId,
+  getManufactureByRetailerId
 };
