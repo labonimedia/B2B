@@ -491,7 +491,7 @@ const getBasePath = (fullUrl) => {
  */
 const deleteFile = async (filePath) => {
   try {
-    const cdnconfig = await cdnDtailes();
+    const cdnconfig = await initializeS3Client();
     const basePath = getBasePath(filePath);
     // Initialize the S3 client dynamically
     s3ClientDelete = new S3Client({
