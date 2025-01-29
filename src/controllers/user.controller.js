@@ -46,6 +46,15 @@ const getUserByEmail = catchAsync(async (req, res) => {
   }
   res.send(user);
 });
+
+
+const deleteUserByEmail = catchAsync(async (req, res) => {
+  const user = await userService.deleteUserByEmail(req.query.email);
+  if (!user) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+  }
+  res.send(user);
+});
 module.exports = {
   createUser,
   getUsers,
@@ -54,4 +63,5 @@ module.exports = {
   updateUserByEmail,
   deleteUser,
   getUserByEmail,
+  deleteUserByEmail,
 };
