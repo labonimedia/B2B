@@ -78,16 +78,67 @@ const getUserByEmail = async (email) => {
  * @param {Object} updateBody
  * @returns {Promise<Retailer>}
  */
+// const updateRetailerById = async (email, updateBody) => {
+//   const user = await getUserByEmail(email);
+//   if (!user) {
+//     throw new ApiError(httpStatus.NOT_FOUND, 'Retailer not found');
+//   }
+//   Object.assign(user, updateBody);
+//   await user.save();
+//   return user;
+// };
+
 const updateRetailerById = async (email, updateBody) => {
-  const user = await getUserByEmail(email);
-  if (!user) {
+  // Get the Retailer document by email
+  const retailer = await Retailer.findOne({ email });
+  if (!retailer) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Retailer not found');
   }
-  Object.assign(user, updateBody);
-  await user.save();
-  return user;
-};
 
+  // Get the corresponding User document by email
+  const user = await User.findOne({ email });
+  if (!user) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+  }
+
+  // Define field mapping between Retailer and User models
+  const fieldMap = {
+    fullName: 'fullName',
+    companyName: 'companyName',
+    email: 'email',
+    mobNumber: 'mobileNumber',
+    // Add other common fields as needed
+  };
+
+  // Prepare user update body
+  const userUpdateBody = {};
+  Object.keys(updateBody).forEach((key) => {
+    const userField = fieldMap[key];
+    if (userField) {
+      userUpdateBody[userField] = updateBody[key];
+    }
+  });
+
+  // Handle email uniqueness check
+  if (userUpdateBody.email) {
+    const isEmailTaken = await User.isEmailTaken(userUpdateBody.email, user._id);
+    if (isEmailTaken) {
+      throw new ApiError(httpStatus.BAD_REQUEST, 'Email already taken');
+    }
+  }
+
+  // Update User document if there are changes
+  if (Object.keys(userUpdateBody).length > 0) {
+    Object.assign(user, userUpdateBody);
+    await user.save();
+  }
+
+  // Update Retailer document
+  Object.assign(retailer, updateBody);
+  await retailer.save();
+
+  return retailer;
+};
 /**
  * Delete user by id
  * @param {ObjectId} userId

@@ -127,16 +127,66 @@ const getSearchWholesaler = async (searchKeywords = '', options = {}) => {
  * @param {Object} updateBody
  * @returns {Promise<Wholesaler>}
  */
+// const updateWholesalerById = async (email, updateBody) => {
+//   const user = await getUserByEmail(email);
+//   if (!user) {
+//     throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+//   }
+//   Object.assign(user, updateBody);
+//   await user.save();
+//   return user;
+// };
 const updateWholesalerById = async (email, updateBody) => {
-  const user = await getUserByEmail(email);
+  // Get the wholesaler document by email
+  const wholesaler = await Wholesaler.findOne({ email });
+  if (!wholesaler) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Wholesaler not found');
+  }
+
+  // Get the corresponding User document by email
+  const user = await User.findOne({ email });
   if (!user) {
     throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
   }
-  Object.assign(user, updateBody);
-  await user.save();
-  return user;
-};
 
+  // Define field mapping between wholesaler and User models
+  const fieldMap = {
+    fullName: 'fullName',
+    companyName: 'companyName',
+    email: 'email',
+    mobNumber: 'mobileNumber',
+    // Add other common fields as needed
+  };
+
+  // Prepare user update body
+  const userUpdateBody = {};
+  Object.keys(updateBody).forEach((key) => {
+    const userField = fieldMap[key];
+    if (userField) {
+      userUpdateBody[userField] = updateBody[key];
+    }
+  });
+
+  // Handle email uniqueness check
+  if (userUpdateBody.email) {
+    const isEmailTaken = await User.isEmailTaken(userUpdateBody.email, user._id);
+    if (isEmailTaken) {
+      throw new ApiError(httpStatus.BAD_REQUEST, 'Email already taken');
+    }
+  }
+
+  // Update User document if there are changes
+  if (Object.keys(userUpdateBody).length > 0) {
+    Object.assign(user, userUpdateBody);
+    await user.save();
+  }
+
+  // Update wholesaler document
+  Object.assign(wholesaler, updateBody);
+  await wholesaler.save();
+
+  return wholesaler;
+};
 /**
  * Delete user by id
  * @param {ObjectId} userId
