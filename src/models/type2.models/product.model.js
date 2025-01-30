@@ -263,11 +263,11 @@ productSchema.pre('find', function (next) {
   next();
 });
 
-productSchema.pre('findOne', function (next) {
-  const currentDate = new Date();
-  this.where({ dateOfListing: { $lte: currentDate } }); // Apply filter on 'findOne' query
-  next();
-});
+// productSchema.pre('findOne', function (next) {
+//   const currentDate = new Date();
+//   this.where({ dateOfListing: { $lte: currentDate } }); // Apply filter on 'findOne' query
+//   next();
+// });
 
 productSchema.statics.findUpcomingProducts = function () {
   const currentDate = new Date();
