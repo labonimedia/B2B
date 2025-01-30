@@ -143,14 +143,67 @@ const getUserByEmail = async (email) => {
  * @param {Object} updateBody
  * @returns {Promise<Manufacture>}
  */
+// const updateManufactureById = async (email, updateBody) => {
+//   const user = await getUserByEmail(email);
+//   if (!user) {
+//     throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+//   }
+//   Object.assign(user, updateBody);
+//   await user.save();
+//   return user;
+// };
+
+
 const updateManufactureById = async (email, updateBody) => {
-  const user = await getUserByEmail(email);
+  // Get the Manufacture document by email
+  const manufacture = await Manufacture.findOne({ email });
+  if (!manufacture) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Manufacture not found');
+  }
+
+  // Get the corresponding User document by email
+  const user = await User.findOne({ email });
   if (!user) {
     throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
   }
-  Object.assign(user, updateBody);
-  await user.save();
-  return user;
+
+  // Define field mapping between Manufacture and User models
+  const fieldMap = {
+    fullName: 'fullName',
+    companyName: 'companyName',
+    email: 'email',
+    mobNumber: 'mobileNumber',
+    // Add other common fields as needed
+  };
+
+  // Prepare user update body
+  const userUpdateBody = {};
+  Object.keys(updateBody).forEach((key) => {
+    const userField = fieldMap[key];
+    if (userField) {
+      userUpdateBody[userField] = updateBody[key];
+    }
+  });
+
+  // Handle email uniqueness check
+  if (userUpdateBody.email) {
+    const isEmailTaken = await User.isEmailTaken(userUpdateBody.email, user._id);
+    if (isEmailTaken) {
+      throw new ApiError(httpStatus.BAD_REQUEST, 'Email already taken');
+    }
+  }
+
+  // Update User document if there are changes
+  if (Object.keys(userUpdateBody).length > 0) {
+    Object.assign(user, userUpdateBody);
+    await user.save();
+  }
+
+  // Update Manufacture document
+  Object.assign(manufacture, updateBody);
+  await manufacture.save();
+
+  return manufacture;
 };
 
 /**
