@@ -315,6 +315,31 @@ const updateProductVideo = async (req, productId) => {
 };
 
 
+const updateProductImages = async (req) => {
+  try {
+    const { productImage } = req.body;
+    const { productId, collectionId } = req.params;
+
+    if (!productImage) {
+      throw new ApiError(httpStatus.BAD_REQUEST, 'No image provided');
+    }
+
+    const updatedProduct = await ProductType2.findOneAndUpdate(
+      { _id: productId, 'colourCollections._id': collectionId },
+      { $set: { 'colourCollections.$.productImages': [productImage] } }, // Replaces existing images with the new one
+      { new: true }
+    );
+
+    if (!updatedProduct) {
+      throw new ApiError(httpStatus.NOT_FOUND, 'Product or Colour Collection not found');
+    }
+
+    return updatedProduct
+  } catch (err) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Error to updateProduct Images update ');
+  }
+}
+
 
 /**
  * Delete user by id
@@ -489,6 +514,7 @@ module.exports = {
   deleteProductById,
   updateColorCollection,
   updateProductVideo,
+  updateProductImages,
   deleteColorCollection,
   filterProductsAndFetchManufactureDetails,
   checkProductExistence,
