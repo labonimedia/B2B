@@ -144,14 +144,44 @@ const getUserByEmail = async (email) => {
  * @returns {Promise<Manufacture>}
  */
 const updateManufactureById = async (email, updateBody) => {
-  const user = await getUserByEmail(email);
-  if (!user) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+  const manufacturer = await getUserByEmail(email);
+  if (!manufacturer) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Manufacturer not found');
   }
-  Object.assign(user, updateBody);
-  await user.save();
-  return user;
+
+  const session = await mongoose.startSession();
+  session.startTransaction();
+
+  try {
+    // Update the user collection
+    const user = await User.findOneAndUpdate(
+      { email },
+      { $set: updateBody },
+      { new: true, session }
+    );
+
+    if (!user) {
+      throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+    }
+
+    // Update manufacturer collection
+    const updatedManufacturer = await Manufacture.findOneAndUpdate(
+      { email },
+      { $set: updateBody },
+      { new: true, session }
+    );
+
+    await session.commitTransaction();
+    session.endSession();
+
+    return updatedManufacturer;
+  } catch (error) {
+    await session.abortTransaction();
+    session.endSession();
+    throw error;
+  }
 };
+
 
 /**
  * Delete user by id
@@ -181,7 +211,7 @@ const updateVisibilitySettings = async (manufactureId, payload) => {
 
   // Map the payload fields to the visibilitySettings structure
   const visibilitySettings = {
-    
+
     kycVerified: payload.kycVerified !== undefined ? payload.kycVerified : manufacture.visibilitySettings.kycVerified,
     leagalStatusOfFirm: payload.leagalStatusOfFirm !== undefined ? payload.leagalStatusOfFirm : manufacture.visibilitySettings.leagalStatusOfFirm,
     logo: payload.logo !== undefined ? payload.logo : manufacture.visibilitySettings.logo,
@@ -222,7 +252,7 @@ const updateVisibilitySettings = async (manufactureId, payload) => {
     'BankDetails.country': payload.BankDetails?.country !== undefined ? payload.BankDetails.country : manufacture.visibilitySettings['BankDetails.country'],
     'BankDetails.city': payload.BankDetails?.city !== undefined ? payload.BankDetails.city : manufacture.visibilitySettings['BankDetails.city'],
     'BankDetails.branch': payload.BankDetails?.branch !== undefined ? payload.BankDetails.branch : manufacture.visibilitySettings['BankDetails.branch'],
-    
+
     isActive: payload.isActive !== undefined ? payload.isActive : manufacture.visibilitySettings.isActive,
   };
 
