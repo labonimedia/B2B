@@ -392,12 +392,11 @@ const combinePurchaseOrdersForManufacturer = async (wholesalerEmail, manufacture
     set: mergedSet,
     email: wholesalerEmail,
     productBy: manufacturerEmail,
-    // cartAddedDate: new Date(),
-    poNumber: nextPoNumber, // Unique PO number for this manufacturer
+    poNumber: nextPoNumber,
     discounts,
     retailerPOs: retailerPOsArray,
     wholesaler: retailerPOs[0]?.wholesaler || {},
-    manufacturer, // Include the manufacturer details
+    manufacturer,
   };
   return combinedPO;
 };
