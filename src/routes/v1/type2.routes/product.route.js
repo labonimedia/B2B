@@ -38,6 +38,14 @@ router.route('/update/colour-collection').patch(
   productType2Controller.updateColorCollection
 );
 
+router.route('/add-product/video/colour-collection').patch(
+  auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
+  commonUploadMiddleware([
+    { name: 'productVideo', maxCount: 1 },
+  ]),
+  productType2Controller.updateProductVideo
+);
+
 router
   .route('/get-product/by-desingnumber')
   .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), productType2Controller.getProductBydesigneNo);

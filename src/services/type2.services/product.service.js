@@ -288,6 +288,54 @@ const updateColorCollection = async (req, productId) => {
 //   return product.save();
 // };
 
+const updateProductVideo = async (req, productId) => {
+  const uploadedFiles = []; // To track uploaded files for cleanup
+  try {
+    const product = await ProductType2.findById(productId);
+
+    if (!product) {
+      throw new ApiError(httpStatus.NOT_FOUND, 'Product not found');
+    }
+
+    // const { colour, colourName } = req.body;
+
+    const { productVideo } = req.body;
+
+    if (productVideo) uploadedFiles.push(productVideo);
+
+    const newColourCollection = {
+      productVideo: productVideo ? productVideo[0] : null, // Save as-is
+    };
+
+    // Find the existing collection and update it
+    const collectionIndex = product.colourCollections.findIndex((c) => c._id.toString() === req.query.collectionId);
+
+    if (collectionIndex === -1) {
+      throw new ApiError(httpStatus.NOT_FOUND, 'Colour collection not found');
+    }
+
+    // Update the collection
+    product.colourCollections[collectionIndex] = newColourCollection;
+
+    // Save the product
+    await product.save();
+  } catch (err) {
+    console.error('Error occurred:', err.message);
+
+    // Rollback: Delete uploaded files
+    try {
+      if (uploadedFiles.length > 0) {
+        await Promise.all(uploadedFiles.map((file) => deleteFile(file)));
+      }
+    } catch (deleteErr) {
+      console.error('Error during rollback:', deleteErr.message);
+    }
+    throw err;
+  }
+};
+
+
+
 /**
  * Delete user by id
  * @param {ObjectId} Id
@@ -460,6 +508,7 @@ module.exports = {
   updateProductById,
   deleteProductById,
   updateColorCollection,
+  updateProductVideo,
   deleteColorCollection,
   filterProductsAndFetchManufactureDetails,
   checkProductExistence,
