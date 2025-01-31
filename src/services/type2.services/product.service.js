@@ -375,11 +375,75 @@ const deleteColorCollection = async (productId, collectionId) => {
   await product.save();
 };
 
+
+
+
+
 /**
  * Filter products and fetch manufacturer details
- * @param {Object} filters
+ * @param {ObjectId} productId
+ *  @param {ObjectId} collectionId
  * @returns {Promise<Object[]>}
  */
+
+const deleteProductImages = async (productId, collectionId) => {
+  const product = await ProductType2.findById(productId);
+
+  if (!product) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Product not found');
+  }
+
+  const collectionIndex = product.colourCollections.findIndex((c) => c._id.toString() === collectionId);
+  if (collectionIndex === -1) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Colour collection not found');
+  }
+
+  const collection = product.colourCollections[collectionIndex];
+
+  // Delete files from S3 only for productImages
+  if (collection.productImages && collection.productImages.length > 0) {
+    await Promise.all(collection.productImages.map((image) => deleteFile(image)));
+  }
+
+  // Remove productImages from the collection (set it to an empty array)
+  product.colourCollections[collectionIndex].productImages = [];
+
+  await product.save();
+};
+
+/**
+ * Delete product video
+ * @param {ObjectId} productId
+ *  @param {ObjectId} collectionId
+ * @returns {Promise<Object[]>}
+ */
+const deleteProductVideo = async (productId, collectionId) => {
+  const product = await ProductType2.findById(productId);
+
+  if (!product) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Product not found');
+  }
+
+  const collectionIndex = product.colourCollections.findIndex((c) => c._id.toString() === collectionId);
+  if (collectionIndex === -1) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Colour collection not found');
+  }
+
+  const collection = product.colourCollections[collectionIndex];
+
+  // Delete file from S3 only for productVideo
+  if (collection.productVideo) {
+    await deleteFile(collection.productVideo);
+  }
+
+  // Remove productVideo from the collection (set it to null)
+  product.colourCollections[collectionIndex].productVideo = null;
+
+  await product.save();
+};
+
+
+
 // const filterProductsAndFetchManufactureDetails = async (filters) => {
 //   const query = {};
 
@@ -516,6 +580,9 @@ module.exports = {
   updateProductVideo,
   updateProductImages,
   deleteColorCollection,
+  deleteProductVideo,
+  deleteProductImages,
+
   filterProductsAndFetchManufactureDetails,
   checkProductExistence,
 };

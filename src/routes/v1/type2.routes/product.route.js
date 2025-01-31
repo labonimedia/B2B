@@ -64,6 +64,10 @@ router
   .delete(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), productType2Controller.deleteColorCollection);
 
 router
+  .route('/delete/colour-collection/product-video')
+  .delete(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), productType2Controller.deleteProductVideo);
+
+router
   .route('/manufracturelist/byproduct')
   .post(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), productType2Controller.getFilteredProducts);
 
