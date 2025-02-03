@@ -144,6 +144,10 @@ const deleteColorCollection = catchAsync(async (req, res) => {
   res.status(httpStatus.NO_CONTENT).send();
 });
 
+const deleteProductImages = catchAsync(async (req, res) => {
+  await productType2Service.deleteProductImages(req.query.id, req.query.collectionId)
+});
+
 const getFilteredProducts = catchAsync(async (req, res) => {
   const filters = req.body;
   const result = await productType2Service.filterProductsAndFetchManufactureDetails(filters);
@@ -180,12 +184,12 @@ module.exports = {
   getProductBydesigneNo,
   updateProductById,
   deleteProductById,
-
   updateColorCollection,
   updateProductVideo,
   updateProductImages,
   deleteProductVideo,
   deleteColorCollection,
   getFilteredProducts,
+  deleteProductImages,
   checkProductExistence,
 };
