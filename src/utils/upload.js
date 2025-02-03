@@ -437,7 +437,7 @@ const uploadFile = async (file) => {
   const command = new PutObjectCommand(params);
   try {
     await s3Client.send(command);
-    return `https://${cdnConfig.bucketName}.${cdnConfig.region}.digitaloceanspaces.com/${fileKey}`;
+    return `https://${cdnConfig.bucketName}.${cdnConfig.region}.digitaloceanspaces.com/${config.cdn.bucketName}/${fileKey}`;
   } catch (err) {
     console.error('Error uploading file:', err);
     throw err;
