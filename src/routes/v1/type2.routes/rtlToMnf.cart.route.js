@@ -1,0 +1,22 @@
+const express = require('express');
+const auth = require('../../../middlewares/auth');
+const { rtlToMnfCartController } = require('../../../controllers');
+
+const router = express.Router();
+
+router
+    .route('/')
+    .post(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), rtlToMnfCartController.createCartType2) // Create CartType2
+    .get(rtlToMnfCartController.queryCartType2); // Query CartType2  auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
+
+router
+    .route('/:id')
+    .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), rtlToMnfCartController.getCartType2ById) // Get CartType2 by ID
+    .patch(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), rtlToMnfCartController.updateCartType2ById) // Update CartType2 by ID
+    .delete(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), rtlToMnfCartController.deleteCartType2ById); // Delete CartType2 by ID
+
+router
+    .route('/catr/products')
+    .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), rtlToMnfCartController.getCartByEmail);
+
+module.exports = router;

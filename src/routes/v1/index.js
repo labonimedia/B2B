@@ -99,6 +99,7 @@ const wholesalerReturnRoute = require('./type2.routes/wholesaler.return.route');
 const finalProductWRoute = require('./type2.routes/final.product.w.route');
 const whDeliveryChallanRoute = require('./type2.routes/wh.delivery.challan.route');
 const cdnPathRoute = require('./cdn.path.routes');
+const rtlToMnfCartRoute = require('./type2.routes/rtlToMnf.cart.route');
 
 const router = express.Router();
 
@@ -498,6 +499,10 @@ const defaultRoutes = [
   {
     path: '/cdn-path',
     route: cdnPathRoute,
+  },
+  {
+    path: 'rtl-toMnf-cart',
+    route: rtlToMnfCartRoute,
   }
 
 ];

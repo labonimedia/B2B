@@ -349,20 +349,6 @@ const compressVideo = async (fileBuffer) => {
 /**
  * Compress images to a maximum of 1 MB
  */
-const compressImage = async (fileBuffer) => {
-  let compressedBuffer = fileBuffer;
-  let quality = 80;
-
-  do {
-    compressedBuffer = await sharp(fileBuffer)
-      .jpeg({ quality })
-      .toBuffer();
-
-    quality -= 10;
-  } while (compressedBuffer.length > 1 * 1024 * 1024 && quality > 10);
-
-  return compressedBuffer;
-};
 
 const compressImageStream = async (fileBuffer) => {
   let quality = 80;

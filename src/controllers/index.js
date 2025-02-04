@@ -96,3 +96,4 @@ module.exports.newCountryController = require('./new.country.controller');
 module.exports.stateController = require('./state.controller');
 module.exports.cityController = require('./city.controller');
 module.exports.cdnPathController = require('./cdn.path.controller');
+module.exports.rtlToMnfCartController = require('./type2.controller/RtlToMnf.cart.controller');
