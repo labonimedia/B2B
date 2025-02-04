@@ -54,9 +54,9 @@ const queryCartType2 = async (filter, options) => {
     const manufacturers = await Manufacture.find({
         email: { $in: productByEmails },
     }).select('email fullName companyName address state country pinCode mobNumber GSTIN');
-    let wholesaler;
+    let retailer;
     if (filter.email) {
-        wholesaler = await Wholesaler.findOne({
+        retailer = await Retailer.findOne({
             email: filter.email,
         }).select('email fullName companyName address state country pinCode mobNumber GSTIN');
 
@@ -80,9 +80,9 @@ const queryCartType2 = async (filter, options) => {
 
     // Enrich each item in the results with the manufacturer details
     cartType2Items.results = cartType2Items.results.map((item) => ({
-        ...item.toObject(), // Convert mongoose document to plain object
+        ...item.toObject(),
         manufacturer: manufacturerMap[item.productBy] || null, // Default to null if not found
-        wholesaler,
+        retailer,
     }));
 
     return cartType2Items;

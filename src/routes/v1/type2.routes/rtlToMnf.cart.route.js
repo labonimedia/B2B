@@ -7,7 +7,7 @@ const router = express.Router();
 router
     .route('/')
     .post(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), rtlToMnfCartController.createCartType2) // Create CartType2
-    .get(rtlToMnfCartController.queryCartType2); // Query CartType2  auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
+    .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), rtlToMnfCartController.queryCartType2); // Query CartType2  auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
 
 router
     .route('/:id')
