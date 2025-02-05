@@ -501,7 +501,7 @@ const defaultRoutes = [
     route: cdnPathRoute,
   },
   {
-    path: 'rtl-toMnf-cart',
+    path: '/rtl-toMnf-cart',
     route: rtlToMnfCartRoute,
   }
 
