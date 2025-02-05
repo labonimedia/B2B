@@ -119,10 +119,33 @@ const updateColorCollection = catchAsync(async (req, res) => {
   res.status(httpStatus.OK).send(user);
 });
 
-// Delete
+// Update
+const updateProductVideo = catchAsync(async (req, res) => {
+  const user = await productType2Service.updateProductVideo(req, req.query.id);
+  res.status(httpStatus.OK).send(user);
+});
+
+//delete
+const deleteProductVideo = catchAsync(async (req, res) => {
+  const user = await productType2Service.deleteProductVideo(req.query.id, req.query.collectionId);
+  res.status(httpStatus.OK).send(user);
+});
+
+
+// const 
+const updateProductImages = catchAsync(async (req, res) => {
+  const user = await productType2Service.updateProductImages(req);
+  res.status(httpStatus.OK).send(user);
+});
+
+// Delete  
 const deleteColorCollection = catchAsync(async (req, res) => {
   await productType2Service.deleteColorCollection(req.query.id, req.query.collectionId);
   res.status(httpStatus.NO_CONTENT).send();
+});
+
+const deleteProductImages = catchAsync(async (req, res) => {
+  await productType2Service.deleteProductImages(req.query.id, req.query.collectionId)
 });
 
 const getFilteredProducts = catchAsync(async (req, res) => {
@@ -162,7 +185,11 @@ module.exports = {
   updateProductById,
   deleteProductById,
   updateColorCollection,
+  updateProductVideo,
+  updateProductImages,
+  deleteProductVideo,
   deleteColorCollection,
   getFilteredProducts,
+  deleteProductImages,
   checkProductExistence,
 };

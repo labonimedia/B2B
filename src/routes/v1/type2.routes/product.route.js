@@ -38,6 +38,22 @@ router.route('/update/colour-collection').patch(
   productType2Controller.updateColorCollection
 );
 
+router.route('/add-product/video/colour-collection').patch(
+  auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
+  commonUploadMiddleware([
+    { name: 'productVideo', maxCount: 1 },
+  ]),
+  productType2Controller.updateProductVideo
+);
+
+router.route('/add-product/images/colour-collection').patch(
+  auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
+  commonUploadMiddleware([
+    { name: 'productImages', maxCount: 10 },
+  ]),
+  productType2Controller.updateProductImages
+);
+
 router
   .route('/get-product/by-desingnumber')
   .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), productType2Controller.getProductBydesigneNo);
@@ -46,6 +62,14 @@ router
 router
   .route('/delete/colour-collection')
   .delete(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), productType2Controller.deleteColorCollection);
+
+router
+  .route('/delete/colour-collection/product-video')
+  .delete(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), productType2Controller.deleteProductVideo);
+
+router
+  .route('/delete/colour-collection/product-images')
+  .delete(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), productType2Controller.deleteProductVideo);
 
 router
   .route('/manufracturelist/byproduct')

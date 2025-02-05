@@ -100,3 +100,4 @@ module.exports.stateService = require('./state.service');
 module.exports.cityService = require('./city.service');
 module.exports.cdnPathService = require('./cdn.path.service');
 module.exports.cdnChangeService = require('./cdn.change.service');
+module.exports.RtlToMnfCartService = require('./type2.services/rtlToMnf.cart.service');
