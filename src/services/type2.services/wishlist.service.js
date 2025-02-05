@@ -60,8 +60,8 @@ const getWishListType2SchemaByEmail = async (email) => {
  * @param {ObjectId} email
  * @returns {Promise<WishListType2>}
  */
-const checkWishListType2SchemaById = async (productId, email) => {
-  return WishListType2.findOne({ productId, email });
+const checkWishListType2SchemaById = async (productId, email, productOwnerEmail) => {
+  return WishListType2.findOne({ productId, email,productOwnerEmail });
 };
 
 /**
