@@ -11,6 +11,10 @@ const wishListType2Schema = mongoose.Schema(
       type: String,
       trim: true,
     },
+    productOwnerEmail: {
+      type: String,
+      trim: true,
+    },
   },
   {
     timestamps: true,
