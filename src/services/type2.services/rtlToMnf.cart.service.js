@@ -99,9 +99,6 @@ const getCartType2ById = async (id) => {
     return RtlToMnfCart.findById(id);
 };
 
-
-
-
 /**
  * Get cart items for a specific user and productBy
  * @param {string} email - User's email
@@ -121,19 +118,13 @@ const getCartByEmailToPlaceOrder = async (email, productBy) => {
     }
 
     // Fetch wholesaler or retailer details based on the user's role
-    let wholesaler = null;
-    if (user.role === 'wholesaler' || user.role === 'retailer') {
-        wholesaler =
-            user.role === 'wholesaler'
-                ? await Wholesaler.findOne({ email }).select(
-                    'fullName companyName email address country state city pinCode mobNumber GSTIN code profileImg'
-                )
-                : await Retailer.findOne({ email }).select(
-                    'fullName companyName email address country state city pinCode mobNumber GSTIN code profileImg'
-                );
+    let retailer = null;
+    if (user.role === 'retailer') {
+        retailer = await Retailer.findOne({ email }).select(
+            'fullName companyName email address country state city pinCode mobNumber GSTIN code profileImg');
 
-        if (!wholesaler) {
-            throw new ApiError(httpStatus.NOT_FOUND, user.role === 'wholesaler' ? 'Wholesaler not found' : 'Retailer not found');
+        if (!retailer) {
+            throw new ApiError(httpStatus.NOT_FOUND, 'Retailer not found');
         }
     }
 
@@ -146,13 +137,8 @@ const getCartByEmailToPlaceOrder = async (email, productBy) => {
         throw new ApiError(httpStatus.NOT_FOUND, 'Manufacturer not found');
     }
 
-    // Determine the financial year based on the current date
-    const now = new Date();
-    const currentMonth = now.getMonth();
-    let financialYear = currentMonth < 2 || (currentMonth === 2 && now.getDate() < 1) ? now.getFullYear() - 1 : now.getFullYear();
-
     // Ensure wholesaler is present for roles that require it
-    if (!wholesaler) {
+    if (!retailer) {
         throw new ApiError(httpStatus.BAD_REQUEST, 'Wholesaler information is missing.');
     }
 
@@ -190,11 +176,10 @@ const getCartByEmailToPlaceOrder = async (email, productBy) => {
             mobNumber: manufacturer.mobNumber,
             GSTIN: manufacturer.GSTIN,
         },
-        wholesaler,
+        retailer,
         orderNumber,
         products: orderDetails,
     };
-
     return result;
 };
 
