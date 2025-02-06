@@ -1,5 +1,5 @@
 const httpStatus = require('http-status');
-const { WishListType2, ProductType2, User, Manufacture, Wholesaler } = require('../../models');
+const { WishListType2, ProductType2, User } = require('../../models');
 const ApiError = require('../../utils/ApiError');
 
 /**
@@ -150,34 +150,16 @@ const getWishListType2SchemaByEmail = async (email) => {
   const users = await User.find({ email: { $in: productOwnerEmails } });
   const userMap = new Map(users.map((user) => [user.email, user.companyName, user.role]));
 
-
-
   // Map products to include manufactureName from userMap and the WishListType2SchemaId
-  const productsWithManufactureName = products.map(async (product) => {
+  const productsWithManufactureName = products.map((product) => {
     const manufactureName = userMap.get(product.productBy) || 'Unknown';
-
-    let wholesaler = null;
-    if (manufactureName.role === 'wholesaler' || manufactureName.role === 'retailer') {
-      wholesaler =
-        manufactureName.role === 'wholesaler'
-          ? await Wholesaler.findOne({ email: manufactureName.email }).select(
-            'fullName companyName email'
-          )
-          : await Manufacture.findOne({ email: manufactureName.email }).select(
-            'fullName companyName email'
-          );
-
-      if (!wholesaler) {
-        throw new ApiError(httpStatus.NOT_FOUND, manufactureName.role === 'wholesaler' ? 'Wholesaler not found' : 'Manufacturer not found');
-      }
-    }
 
     // Get the corresponding WishListType2SchemaId for the product and productOwnerEmail
     const wishlistItem = wishListItems.filter((item) => item.productId.toString() === product._id.toString());
 
     return wishlistItem.map(item => ({
       ...product.toObject(),
-      manufactureName: wholesaler,
+      manufactureName,
       productOwnerEmail: item.productOwnerEmail,
       WishListType2SchemaId: item._id,
       productUser: item.productUser || ''
