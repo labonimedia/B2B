@@ -15,6 +15,10 @@ const wishListType2Schema = mongoose.Schema(
       type: String,
       trim: true,
     },
+    productUser: {
+      type: String,
+      enum: ['wholesaler', 'manufacturer']
+    }
   },
   {
     timestamps: true,

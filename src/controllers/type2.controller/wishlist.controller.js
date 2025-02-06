@@ -10,7 +10,7 @@ const createWishListType2Schema = catchAsync(async (req, res) => {
 });
 
 const queryWishListType2Schema = catchAsync(async (req, res) => {
-  const filter = pick(req.query, ['email', 'productId']);
+  const filter = pick(req.query, ['email', 'productId','productOwnerEmail']);
   const options = pick(req.query, ['sortBy', 'limit', 'page']);
   const result = await wishListType2Service.queryWishListType2Schema(filter, options);
   res.send(result);
