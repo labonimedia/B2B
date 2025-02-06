@@ -110,14 +110,10 @@ const getCartByEmailToPlaceOrder = async (email, productBy) => {
     if (!carts || carts.length === 0) {
         throw new ApiError(httpStatus.NOT_FOUND, 'No carts found for this email and productBy');
     }
-
-    // Get user details by email to determine the role
     const user = await User.findOne({ email }).select('role');
     if (!user) {
         throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
     }
-
-    // Fetch wholesaler or retailer details based on the user's role
     let retailer = null;
     if (user.role === 'retailer') {
         retailer = await Retailer.findOne({ email }).select(
