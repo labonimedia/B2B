@@ -137,7 +137,7 @@ const deleteWishListType2SchemaById = async (id) => {
  */
 const getWishListType2SchemaByEmail = async (email) => {
   // Get all wishlist items for the provided email
-  const wishListItems = await WishListType2.find({ email }).select('productId _id productOwnerEmail');
+  const wishListItems = await WishListType2.find({ email }).select('productId _id productOwnerEmail productUser');
 
   // Extract productIds and productOwnerEmails from the wishlist items
   const productIds = wishListItems.map((item) => item.productId);
