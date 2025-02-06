@@ -35,23 +35,39 @@ const getWishListType2SchemaById = async (id) => {
 };
 
 const getWishListType2SchemaByEmail = async (email) => {
-  const WishListType2SchemaItems = await WishListType2.find({ email }).select('productId _id');
-  const productIds = WishListType2SchemaItems.map((item) => item.productId);
-  const products = await ProductType2.find({ _id: { $in: productIds } });
-  const userEmails = [...new Set(products.map((product) => product.productBy))];
-  const users = await User.find({ email: { $in: userEmails } });
-  const userMap = new Map(users.map((user) => [user.email, user.fullName]));
-  const productsWithManufactureName = products.map((product) => {
-    const manufactureName = userMap.get(product.productBy) || 'Unknown';
-    // const manufactureName = users.fullName || 'Unknown';
-    return {
-      ...product.toObject(),
-      manufactureName,
-      WishListType2SchemaId: WishListType2SchemaItems.find((item) => item.productId.toString() === product._id.toString())
-        ._id,
-    };
-  });
-  return productsWithManufactureName;
+  try {
+    // Fetch wishlisted items and extract product IDs
+    const wishListItems = await WishListType2.find({ email }).select('productId _id').lean();
+    if (!wishListItems.length) return [];
+
+    const productIds = wishListItems.map((item) => item.productId);
+
+    // Fetch products in a single query
+    const products = await ProductType2.find({ _id: { $in: productIds } }).lean();
+    if (!products.length) return [];
+
+    // Extract unique manufacturer emails
+    const userEmails = [...new Set(products.map((product) => product.productBy))];
+
+    // Fetch manufacturer details in a single query
+    const users = await User.find({ email: { $in: userEmails } }).select('email fullName').lean();
+
+    // Create a map for quick lookup
+    const userMap = new Map(users.map((user) => [user.email, user.fullName]));
+
+    // Create a map for wishlist items lookup
+    const wishListMap = new Map(wishListItems.map((item) => [item.productId.toString(), item._id]));
+
+    // Combine data
+    return products.map((product) => ({
+      ...product,
+      manufactureName: userMap.get(product.productBy) || 'Unknown',
+      WishListType2SchemaId: wishListMap.get(product._id.toString()) || null,
+    }));
+  } catch (error) {
+    console.error('Error fetching wishlist items:', error);
+    throw new Error('Failed to fetch wishlist data');
+  }
 };
 
 /**
@@ -61,7 +77,7 @@ const getWishListType2SchemaByEmail = async (email) => {
  * @returns {Promise<WishListType2>}
  */
 const checkWishListType2SchemaById = async (productId, email, productOwnerEmail) => {
-  return WishListType2.findOne({ productId, email,productOwnerEmail });
+  return WishListType2.findOne({ productId, email, productOwnerEmail });
 };
 
 /**
