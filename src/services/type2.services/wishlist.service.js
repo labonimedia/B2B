@@ -148,7 +148,7 @@ const getWishListType2SchemaByEmail = async (email) => {
 
   // Fetch users (manufacturers) based on the productOwnerEmails
   const users = await User.find({ email: { $in: productOwnerEmails } });
-  const userMap = new Map(users.map((user) => [user.email, user.fullName, user.role]));
+  const userMap = new Map(users.map((user) => [user.email, user.companyName, user.role]));
 
   // Map products to include manufactureName from userMap and the WishListType2SchemaId
   const productsWithManufactureName = products.map((product) => {
