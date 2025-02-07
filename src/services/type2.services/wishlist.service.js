@@ -135,79 +135,42 @@ const deleteWishListType2SchemaById = async (id) => {
  * @param {String} email
  * @returns {Promise<Array>}
  */
-// const getWishListType2SchemaByEmail = async (email) => {
-//   // Get all wishlist items for the provided email
-//   const wishListItems = await WishListType2.find({ email }).select('productId _id productOwnerEmail productUser');
-
-//   // Extract productIds and productOwnerEmails from the wishlist items
-//   const productIds = wishListItems.map((item) => item.productId);
-//   const productOwnerEmails = wishListItems.map((item) => item.productOwnerEmail);
-
-//   // Fetch products by the extracted productIds
-//   const products = await ProductType2.find({ _id: { $in: productIds } });
-
-//   // Fetch users (manufacturers) based on the productOwnerEmails
-//   const users = await User.find({ email: { $in: productOwnerEmails } });
-//   const userMap = new Map(users.map((user) => [user.email, user.companyName, user.fullName, user.role]));
-
-//   // Map products to include manufactureName from userMap and the WishListType2SchemaId
-//   const productsWithManufactureName = products.map((product) => {
-//     const manufactureName = userMap.get(product.productBy) || 'Unknown';
-
-//     // Get the corresponding WishListType2SchemaId for the product and productOwnerEmail
-//     const wishlistItem = wishListItems.filter((item) => item.productId.toString() === product._id.toString());
-
-//     return wishlistItem.map(item => ({
-//       ...product.toObject(),
-//       manufactureName,
-//       productOwnerEmail: item.productOwnerEmail,
-//       WishListType2SchemaId: item._id,
-//       productUser: item.productUser || ''
-//     }));
-//   });
-
-//   // Flatten the productsWithManufactureName array as we mapped each product to multiple items if productOwnerEmail differs
-//   const flattenedProducts = [].concat(...productsWithManufactureName);
-
-//   return flattenedProducts;
-// };
-
 const getWishListType2SchemaByEmail = async (email) => {
-  try {
-    // Fetch wishlisted items and extract product IDs
-    const wishListItems = await WishListType2.find({ email }).select('productId _id').lean();
-    if (!wishListItems.length) return [];
+  // Get all wishlist items for the provided email
+  const wishListItems = await WishListType2.find({ email }).select('productId _id productOwnerEmail productUser');
 
-    const productIds = wishListItems.map((item) => item.productId);
+  // Extract productIds and productOwnerEmails from the wishlist items
+  const productIds = wishListItems.map((item) => item.productId);
+  const productOwnerEmails = wishListItems.map((item) => item.productOwnerEmail);
 
-    // Fetch products in a single query
-    const products = await ProductType2.find({ _id: { $in: productIds } }).lean();
-    if (!products.length) return [];
+  // Fetch products by the extracted productIds
+  const products = await ProductType2.find({ _id: { $in: productIds } });
 
-    // Extract unique manufacturer emails
-    const userEmails = [...new Set(products.map((product) => product.productBy))];
+  // Fetch users (manufacturers) based on the productOwnerEmails
+  const users = await User.find({ email: { $in: productOwnerEmails } });
+  const userMap = new Map(users.map((user) => [user.email, user.companyName, user.fullName, user.role]));
 
-    // Fetch manufacturer details in a single query
-    const users = await User.find({ email: { $in: userEmails } }).select('email fullName').lean();
+  // Map products to include manufactureName from userMap and the WishListType2SchemaId
+  const productsWithManufactureName = products.map((product) => {
+    const manufactureName = userMap.get(product.productBy) || 'Unknown';
 
-    // Create a map for quick lookup
-    const userMap = new Map(users.map((user) => [user.email, user.fullName]));
+    // Get the corresponding WishListType2SchemaId for the product and productOwnerEmail
+    const wishlistItem = wishListItems.filter((item) => item.productId.toString() === product._id.toString());
 
-    // Create a map for wishlist items lookup
-    const wishListMap = new Map(wishListItems.map((item) => [item.productId.toString(), item._id]));
-
-    // Combine data
-    return products.map((product) => ({
-      ...product,
-      manufactureName: userMap.get(product.productBy) || 'Unknown',
-      WishListType2SchemaId: wishListMap.get(product._id.toString()) || null,
+    return wishlistItem.map(item => ({
+      ...product.toObject(),
+      manufactureName,
+      productOwnerEmail: item.productOwnerEmail,
+      WishListType2SchemaId: item._id,
+      productUser: item.productUser || ''
     }));
-  } catch (error) {
-    console.error('Error fetching wishlist items:', error);
-    throw new Error('Failed to fetch wishlist data');
-  }
-};
+  });
 
+  // Flatten the productsWithManufactureName array as we mapped each product to multiple items if productOwnerEmail differs
+  const flattenedProducts = [].concat(...productsWithManufactureName);
+
+  return flattenedProducts;
+};
 
 module.exports = {
   createWishListType2Schema,
