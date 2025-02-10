@@ -3,7 +3,20 @@ const { paginate, toJSON } = require('../plugins');
 
 const mnfDeliveryChallanSchema = mongoose.Schema(
     {
-        set: [
+        avilableSet: [
+            {
+                _id: false,
+                designNumber: String,
+                colour: String,
+                colourImage: String,
+                colourName: String,
+                size: String,
+                quantity: Number,
+                price: String,
+                productBy: String,
+            },
+        ],
+        orderedSet: [
             {
                 _id: false,
                 designNumber: String,
@@ -18,14 +31,16 @@ const mnfDeliveryChallanSchema = mongoose.Schema(
         ],
         email: String,
         productBy: String,
+        nextOrderDelivetryDate: {
+            type: Date
+        },
         mnfDileveryClallnDate: {
             type: Date,
             default: Date.now,
         },
         status: {
             type: String,
-            enum: ['pending', 'delivered', 'proceed', 'checked'],
-            // default: 'pending',
+            enum: ["Pending", "Partially-Fulfilled", "Fulfilled", "Rejected", "Auto-Forwarded", "Canceled"],
         },
         poNumber: Number,
         deliveryChallanNumber: Number,

@@ -55,8 +55,8 @@ const getPurchaseOrderRetailerType2ById = async (id) => {
     return RtlToMnfPo.findById(id);
 };
 
-const getProductOrderBySupplyer = async (supplierEmail) => {
-    const productOrders = await RtlToMnfPo.find({ supplierEmail });
+const getProductOrderBySupplyer = async (productBy) => {
+    const productOrders = await RtlToMnfPo.find({ productBy });
 
     if (productOrders.length === 0) {
         throw new ApiError(httpStatus.NOT_FOUND, 'No Product Orders found for this supplier');
