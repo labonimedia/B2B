@@ -1,7 +1,7 @@
 const httpStatus = require('http-status');
-const { RtlToMnfCart, User, Wholesaler, Retailer, Manufacture, WishListType2 } = require('../../models');
+const { RtlToMnfCart, User, RtlToMnfPo, Retailer, Manufacture, WishListType2 } = require('../../models');
 const ApiError = require('../../utils/ApiError');
-
+const { v4: uuidv4 } = require('uuid');
 /**
  * Create multiple RtlToMnfCart items
  * @param {Array<Object>} reqBody - Contains an array of item objects
@@ -178,6 +178,16 @@ const getCartType2ById = async (id) => {
 //     };
 //     return result;
 // };
+const genratedeChallNO = async (email) => {
+    const lastPO = await RtlToMnfPo.findOne({  email })
+    .sort({ poNumber: -1 })
+    .lean();
+ return nextdeliveryChallanNumber = lastPO ? lastPO.poNumber + 1 : 1;
+
+};
+
+
+
 const getCartByEmailToPlaceOrder = async (email, productBy) => {
     // Find the cart by email and productBy, and populate the product details
     const carts = await RtlToMnfCart.find({ email, productBy }).populate('productId');
@@ -233,7 +243,7 @@ const getCartByEmailToPlaceOrder = async (email, productBy) => {
             })),
         };
     });
-
+let orderNumber = await genratedeChallNO(email)
     // Return the final response structure
     const result = {
         manufacturer: {
