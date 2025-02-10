@@ -125,27 +125,26 @@ const updateProductVideo = catchAsync(async (req, res) => {
   res.status(httpStatus.OK).send(user);
 });
 
-//delete
+// delete
 const deleteProductVideo = catchAsync(async (req, res) => {
   const user = await productType2Service.deleteProductVideo(req.query.id, req.query.collectionId);
   res.status(httpStatus.OK).send(user);
 });
 
-
-// const 
+// const
 const updateProductImages = catchAsync(async (req, res) => {
   const user = await productType2Service.updateProductImages(req);
   res.status(httpStatus.OK).send(user);
 });
 
-// Delete  
+// Delete
 const deleteColorCollection = catchAsync(async (req, res) => {
   await productType2Service.deleteColorCollection(req.query.id, req.query.collectionId);
   res.status(httpStatus.NO_CONTENT).send();
 });
 
 const deleteProductImages = catchAsync(async (req, res) => {
-  await productType2Service.deleteProductImages(req.query.id, req.query.collectionId)
+  await productType2Service.deleteProductImages(req.query.id, req.query.collectionId);
 });
 
 const getFilteredProducts = catchAsync(async (req, res) => {
@@ -166,9 +165,8 @@ const checkProductExistence = catchAsync(async (req, res) => {
 
     if (productExists) {
       return res.status(200).json({ message: 'Product exists', product: productExists });
-    } else {
-      return res.status(404).json({ message: 'Product does not exist' });
     }
+    return res.status(404).json({ message: 'Product does not exist' });
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }

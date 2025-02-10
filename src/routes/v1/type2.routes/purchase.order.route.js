@@ -13,7 +13,6 @@ router
   .route('/getby/supplier')
   .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), purchaseOrderType2Controller.getProductOrderBySupplyer);
 
-
 router
   .route('/get-po/by-wholesaler-email')
   .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), purchaseOrderType2Controller.getPurchanseOrderByEmail);

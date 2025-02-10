@@ -6,17 +6,12 @@ const router = express.Router();
 
 router
   .route('/')
-  .post(
-    auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), cityController.createCity)
-  .get(
-    auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
-    cityController.queryCity);
+  .post(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), cityController.createCity)
+  .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), cityController.queryCity);
 
 router
-  .route('/searchby/country/state').
-  post(
-    auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
-    cityController.getCities);
+  .route('/searchby/country/state')
+  .post(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), cityController.getCities);
 router
   .route('/:id')
   .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), cityController.getCityById)

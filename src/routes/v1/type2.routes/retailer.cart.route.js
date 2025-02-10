@@ -12,8 +12,14 @@ router
 router
   .route('/:id')
   .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), retailerCartType2Controller.getRetailerCartType2ById) // Get CartType2 by ID
-  .patch(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),retailerCartType2Controller.updateRetailerCartType2ById ) // Update CartType2 by ID
-  .delete(   auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),retailerCartType2Controller.deleteRetailerCartType2ById); // Delete CartType2 by ID
+  .patch(
+    auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
+    retailerCartType2Controller.updateRetailerCartType2ById
+  ) // Update CartType2 by ID
+  .delete(
+    auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
+    retailerCartType2Controller.deleteRetailerCartType2ById
+  ); // Delete CartType2 by ID
 
 router
   .route('/place-order/products/:id')

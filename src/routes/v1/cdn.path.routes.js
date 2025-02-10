@@ -5,21 +5,16 @@ const { cdnPathController } = require('../../controllers');
 const router = express.Router();
 
 router
-    .route('/')
-    .post(
-        auth('superadmin'), cdnPathController.createCDNPath)
-    .get(
-        auth('superadmin'),
-        cdnPathController.queryCDNPath);
+  .route('/')
+  .post(auth('superadmin'), cdnPathController.createCDNPath)
+  .get(auth('superadmin'), cdnPathController.queryCDNPath);
 
 router
-    .route('/:id')
-    .get(auth('superadmin'), cdnPathController.getCDNPathById)
-    .patch(auth('superadmin'), cdnPathController.updateCDNPathById)
-    .delete(auth('superadmin'), cdnPathController.deleteCDNPathById);
+  .route('/:id')
+  .get(auth('superadmin'), cdnPathController.getCDNPathById)
+  .patch(auth('superadmin'), cdnPathController.updateCDNPathById)
+  .delete(auth('superadmin'), cdnPathController.deleteCDNPathById);
 
-router
-    .route('/space-usage/bucket')
-    .get(cdnPathController.getSpaceUsagecontroller) //auth('superadmin'),
+router.route('/space-usage/bucket').get(cdnPathController.getSpaceUsagecontroller); // auth('superadmin'),
 
 module.exports = router;

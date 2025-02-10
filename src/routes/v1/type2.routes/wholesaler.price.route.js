@@ -6,7 +6,7 @@ const router = express.Router();
 
 router
   .route('/')
-  .post(wholesalerPriceController.createWholesalerPrice) //auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
+  .post(wholesalerPriceController.createWholesalerPrice) // auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
   .get(wholesalerPriceController.queryWholesalerPrice);
 
 router
@@ -15,19 +15,18 @@ router
   .patch(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), wholesalerPriceController.updateWholesalerPriceById)
   .delete(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), wholesalerPriceController.deleteWholesalerPriceById);
 
-
 router
   .route('/retailer-product/wholesaler/wise')
-  .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), wholesalerPriceController.getWholesalerPriceType2ByIdWholesaler)
+  .get(
+    auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
+    wholesalerPriceController.getWholesalerPriceType2ByIdWholesaler
+  );
 
 router
   .route('/filter/products')
-  .post(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), wholesalerPriceController.getFilteredProducts)
+  .post(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), wholesalerPriceController.getFilteredProducts);
 router
   .route('/retailer-product/wholesaler-wise')
-  .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), wholesalerPriceController.getRetailerPriceById)
-
-
-
+  .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), wholesalerPriceController.getRetailerPriceById);
 
 module.exports = router;

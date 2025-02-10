@@ -20,10 +20,9 @@ const logger = require('./config/logger');
 const app = express();
 
 function startCdnWorker() {
-  const workerFilePath = path.resolve(__dirname, 'cdn.worker.js');  // Resolves to an absolute path
-  return new Worker(workerFilePath);  // Pass absolute path to Worker
+  const workerFilePath = path.resolve(__dirname, 'cdn.worker.js'); // Resolves to an absolute path
+  return new Worker(workerFilePath); // Pass absolute path to Worker
 }
-
 
 // // Initialize the worker for CDN switching (starts as soon as the server runs)
 // const worker = startCdnWorker();
@@ -40,7 +39,6 @@ function startCdnWorker() {
 //     logger.error(`Worker stopped with exit code ${code}`);
 //   }
 // });
-
 
 if (config.env !== 'test') {
   app.use(morgan.successHandler);

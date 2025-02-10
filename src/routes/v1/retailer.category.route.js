@@ -13,6 +13,9 @@ router
   .route('/:id')
   .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), retailerCategoryController.getDiscountCategoryById)
   .patch(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), retailerCategoryController.updateDiscountCategoryById)
-  .delete(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), retailerCategoryController.deleteDiscountCategoryById);
+  .delete(
+    auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
+    retailerCategoryController.deleteDiscountCategoryById
+  );
 
 module.exports = router;

@@ -8,11 +8,11 @@ const ApiError = require('../utils/ApiError');
  * @returns {Promise<CDNPath>}
  */
 const createCDNPath = async (reqBody) => {
-    const existingCDNPath = await CDNPath.findOne({ bucketName: reqBody.bucketName });
-    if (existingCDNPath) {
-        throw new ApiError(httpStatus.UNAUTHORIZED, `CDNPath with name '${reqBody.name}' already exists`);
-    }
-    return CDNPath.create(reqBody);
+  const existingCDNPath = await CDNPath.findOne({ bucketName: reqBody.bucketName });
+  if (existingCDNPath) {
+    throw new ApiError(httpStatus.UNAUTHORIZED, `CDNPath with name '${reqBody.name}' already exists`);
+  }
+  return CDNPath.create(reqBody);
 };
 
 /**
@@ -25,8 +25,8 @@ const createCDNPath = async (reqBody) => {
  * @returns {Promise<QueryResult>}
  */
 const queryCDNPath = async (filter, options) => {
-    const citys = await CDNPath.paginate(filter, options);
-    return citys;
+  const citys = await CDNPath.paginate(filter, options);
+  return citys;
 };
 
 /**
@@ -35,7 +35,7 @@ const queryCDNPath = async (filter, options) => {
  * @returns {Promise<CDNPath>}
  */
 const getCDNPathById = async (id) => {
-    return CDNPath.findById(id);
+  return CDNPath.findById(id);
 };
 
 /**
@@ -45,13 +45,13 @@ const getCDNPathById = async (id) => {
  * @returns {Promise<CDNPath>}
  */
 const updateCDNPathById = async (id, updateBody) => {
-    const user = await getCDNPathById(id);
-    if (!user) {
-        throw new ApiError(httpStatus.NOT_FOUND, 'CDNPath not found');
-    }
-    Object.assign(user, updateBody);
-    await user.save();
-    return user;
+  const user = await getCDNPathById(id);
+  if (!user) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'CDNPath not found');
+  }
+  Object.assign(user, updateBody);
+  await user.save();
+  return user;
 };
 
 /**
@@ -60,21 +60,18 @@ const updateCDNPathById = async (id, updateBody) => {
  * @returns {Promise<CDNPath>}
  */
 const deleteCDNPathById = async (id) => {
-    const user = await getCDNPathById(id);
-    if (!user) {
-        throw new ApiError(httpStatus.NOT_FOUND, 'CDNPath not found');
-    }
-    await user.remove();
-    return user;
+  const user = await getCDNPathById(id);
+  if (!user) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'CDNPath not found');
+  }
+  await user.remove();
+  return user;
 };
 
-
-
-
 module.exports = {
-    createCDNPath,
-    queryCDNPath,
-    getCDNPathById,
-    updateCDNPathById,
-    deleteCDNPathById,
+  createCDNPath,
+  queryCDNPath,
+  getCDNPathById,
+  updateCDNPathById,
+  deleteCDNPathById,
 };

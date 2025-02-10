@@ -12,7 +12,7 @@ const fileupload = async (req, id) => {
 
   // const extractPath = (url) => new URL(url).pathname;
   if (req.body.file) {
-    wholesaler.file = req.body.file ? req.body.file[0] : null
+    wholesaler.file = req.body.file ? req.body.file[0] : null;
   }
   if (req.body.profileImg) {
     // const profileImg = req.body.profileImg ? extractPath(req.body.profileImg[0]) : null;

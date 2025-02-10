@@ -8,13 +8,13 @@ const ApiError = require('../../utils/ApiError');
  * @returns {Promise<Array<PurchaseOrderType2>>}
  */
 const createWhDeliveryChallan = async (reqBody) => {
-    // const { email, poNumber } = reqBody;
-    // await PurchaseOrderType2.findOneAndUpdate(
-    //     { email: email, poNumber: poNumber },
-    //     { $set: { status: 'shipped' } },
-    //     { new: true })
+  // const { email, poNumber } = reqBody;
+  // await PurchaseOrderType2.findOneAndUpdate(
+  //     { email: email, poNumber: poNumber },
+  //     { $set: { status: 'shipped' } },
+  //     { new: true })
 
-    return await WhDeliveryChallan.create(reqBody);
+  return await WhDeliveryChallan.create(reqBody);
 };
 
 /**
@@ -27,8 +27,8 @@ const createWhDeliveryChallan = async (reqBody) => {
  * @returns {Promise<QueryResult>}
  */
 const queryWhDeliveryChallan = async (filter, options) => {
-    const mnfDeliveryChallans = await WhDeliveryChallan.paginate(filter, options);
-    return mnfDeliveryChallans;
+  const mnfDeliveryChallans = await WhDeliveryChallan.paginate(filter, options);
+  return mnfDeliveryChallans;
 };
 
 /**
@@ -37,22 +37,20 @@ const queryWhDeliveryChallan = async (filter, options) => {
  * @returns {Promise<PurchaseOrderType2>}
  */
 const getWhDeliveryChallanById = async (id) => {
-    return WhDeliveryChallan.findById(id);
+  return WhDeliveryChallan.findById(id);
 };
 
 /**
- * genrate delivery challan number 
- * @param {params} manufacturerEmail 
+ * genrate delivery challan number
+ * @param {params} manufacturerEmail
  * @returns {Promise<WhDeliveryChallan>}
  */
 const genratedeChallNO = async (wholesalerEmail) => {
-    const lastPO = await WhDeliveryChallan.findOne({ wholesalerEmail })
-        .sort({ deliveryChallanNumber: -1 })
-        .lean();
-    let nextdeliveryChallanNumber = lastPO ? lastPO.deliveryChallanNumber + 1 : 1;
-    return {
-        deliveryChallanNumber: nextdeliveryChallanNumber,
-    }
+  const lastPO = await WhDeliveryChallan.findOne({ wholesalerEmail }).sort({ deliveryChallanNumber: -1 }).lean();
+  const nextdeliveryChallanNumber = lastPO ? lastPO.deliveryChallanNumber + 1 : 1;
+  return {
+    deliveryChallanNumber: nextdeliveryChallanNumber,
+  };
 };
 
 /**
@@ -62,13 +60,13 @@ const genratedeChallNO = async (wholesalerEmail) => {
  * @returns {Promise<PurchaseOrderType2>}
  */
 const updateWhDeliveryChallanById = async (id, updateBody) => {
-    const cart = await getWhDeliveryChallanById(id);
-    if (!cart) {
-        throw new ApiError(httpStatus.NOT_FOUND, 'wholesaler challan not found');
-    }
-    Object.assign(cart, updateBody);
-    await cart.save();
-    return cart;
+  const cart = await getWhDeliveryChallanById(id);
+  if (!cart) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'wholesaler challan not found');
+  }
+  Object.assign(cart, updateBody);
+  await cart.save();
+  return cart;
 };
 
 /**
@@ -77,12 +75,12 @@ const updateWhDeliveryChallanById = async (id, updateBody) => {
  * @returns {Promise<PurchaseOrderType2>}
  */
 const deleteWhDeliveryChallanById = async (id) => {
-    const cart = await getWhDeliveryChallanById(id);
-    if (!cart) {
-        throw new ApiError(httpStatus.NOT_FOUND, 'wholesaler challan not found');
-    }
-    await cart.remove();
-    return cart;
+  const cart = await getWhDeliveryChallanById(id);
+  if (!cart) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'wholesaler challan not found');
+  }
+  await cart.remove();
+  return cart;
 };
 
 // const getDeliveryChallanByManufactureEmail = async (manufacturerEmail, filter, options) => {
@@ -102,11 +100,11 @@ const deleteWhDeliveryChallanById = async (id) => {
 // };
 // Create combined PO for wholesaler
 module.exports = {
-    createWhDeliveryChallan,
-    queryWhDeliveryChallan,
-    getWhDeliveryChallanById,
-    genratedeChallNO,
-    updateWhDeliveryChallanById,
-    deleteWhDeliveryChallanById,
-    // getDeliveryChallanByManufactureEmail,
+  createWhDeliveryChallan,
+  queryWhDeliveryChallan,
+  getWhDeliveryChallanById,
+  genratedeChallNO,
+  updateWhDeliveryChallanById,
+  deleteWhDeliveryChallanById,
+  // getDeliveryChallanByManufactureEmail,
 };

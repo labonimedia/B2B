@@ -28,10 +28,12 @@ const PurchaseOrderSchema = mongoose.Schema(
       default: Date.now,
     },
     poNumber: Number,
-    retailerPOs: [{
-      email: String,
-      poNumber: Number,
-    }],
+    retailerPOs: [
+      {
+        email: String,
+        poNumber: Number,
+      },
+    ],
 
     manufacturer: {
       email: String,
