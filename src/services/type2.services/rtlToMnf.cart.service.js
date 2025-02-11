@@ -99,26 +99,111 @@ const getCartType2ById = async (id) => {
     return RtlToMnfCart.findById(id);
 };
 
-/**
- * Get cart items for a specific user and productBy
- * @param {string} email - User's email
- * @param {string} productBy - Product's manufacturer email
- */
+// /**
+//  * Get cart items for a specific user and productBy
+//  * @param {string} email - User's email
+//  * @param {string} productBy - Product's manufacturer email
+//  */
+// const getCartByEmailToPlaceOrder = async (email, productBy) => {
+//     // Find the cart by email and productBy, and populate the product details
+//     const carts = await RtlToMnfCart.find({ email, productBy }).populate('productId');
+//     if (!carts || carts.length === 0) {
+//         throw new ApiError(httpStatus.NOT_FOUND, 'No carts found for this email and productBy');
+//     }
+//     const user = await User.findOne({ email }).select('role');
+//     if (!user) {
+//         throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+//     }
+//     let retailer = null;
+//     if (user.role === 'retailer') {
+//         retailer = await Retailer.findOne({ email }).select(
+//             'fullName companyName email address country state city pinCode mobNumber GSTIN code profileImg');
+
+//         if (!retailer) {
+//             throw new ApiError(httpStatus.NOT_FOUND, 'Retailer not found');
+//         }
+//     }
+
+//     // Fetch manufacturer details for the product's manufacturer
+//     const manufacturer = await Manufacture.findOne({ email: productBy }).select(
+//         'fullName companyName email address country state city pinCode mobNumber GSTIN'
+//     );
+
+//     if (!manufacturer) {
+//         throw new ApiError(httpStatus.NOT_FOUND, 'Manufacturer not found');
+//     }
+
+//     // Ensure wholesaler is present for roles that require it
+//     if (!retailer) {
+//         throw new ApiError(httpStatus.BAD_REQUEST, 'Wholesaler information is missing.');
+//     }
+
+
+//     // Prepare the cart and order details with the desired format
+//     const orderDetails = carts.map((cart) => ({
+//         _id: cart._id,
+//         productId: {
+//             designNumber: cart.designNumber || "",
+//             brand: cart.productId.brand,
+//             id: cart.productId._id,
+//         },
+//         set: cart.set.map((setItem) => ({
+//             designNumber: cart.designNumber || "",
+//             colour: setItem.colour,
+//             colourImage: setItem.colourImage || null,
+//             colourName: setItem.colourName,
+//             size: setItem.size,
+//             quantity: setItem.quantity,
+//             price: setItem.price,
+//         })),
+//     }));
+
+//     // Return the final response structure
+//     const result = {
+//         manufacturer: {
+//             fullName: manufacturer.fullName,
+//             companyName: manufacturer.companyName,
+//             email: manufacturer.email,
+//             address: manufacturer.address,
+//             country: manufacturer.country,
+//             state: manufacturer.state,
+//             city: manufacturer.city,
+//             pinCode: manufacturer.pinCode,
+//             mobNumber: manufacturer.mobNumber,
+//             GSTIN: manufacturer.GSTIN,
+//         },
+//         retailer,
+//         orderNumber,
+//         products: orderDetails,
+//     };
+//     return result;
+// };
+const genratedeChallNO = async (email) => {
+    const lastPO = await RtlToMnfPo.findOne({  email })
+    .sort({ poNumber: -1 })
+    .lean();
+ return nextdeliveryChallanNumber = lastPO ? lastPO.poNumber + 1 : 1;
+
+};
+
+
 const getCartByEmailToPlaceOrder = async (email, productBy) => {
-    // Find the cart by email and productBy, and populate the product details
-    const carts = await RtlToMnfCart.find({ email, productBy }).populate('productId');
+    // Find the cart by email and productBy without populating productId
+    const carts = await RtlToMnfCart.find({ email, productBy });
     if (!carts || carts.length === 0) {
         throw new ApiError(httpStatus.NOT_FOUND, 'No carts found for this email and productBy');
     }
+
     const user = await User.findOne({ email }).select('role');
     if (!user) {
         throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
     }
+
     let retailer = null;
     if (user.role === 'retailer') {
         retailer = await Retailer.findOne({ email }).select(
-            'fullName companyName email address country state city pinCode mobNumber GSTIN code profileImg');
-
+            'fullName companyName email address country state city pinCode mobNumber GSTIN code profileImg'
+        );
         if (!retailer) {
             throw new ApiError(httpStatus.NOT_FOUND, 'Retailer not found');
         }
@@ -142,12 +227,12 @@ const getCartByEmailToPlaceOrder = async (email, productBy) => {
     const orderDetails = carts.map((cart) => ({
         _id: cart._id,
         productId: {
-            designNumber: cart.productId.designNumber || "",
-            brand: cart.productId.brand,
-            id: cart.productId._id,
+            designNumber: cart.designNumber || "",
+            brand: cart.brand || "Brand not available",  // Extract directly from cart without productId population
+            id: cart._id || null,
         },
         set: cart.set.map((setItem) => ({
-            designNumber: cart.productId.designNumber || "",
+            designNumber: setItem.designNumber || "",
             colour: setItem.colour,
             colourImage: setItem.colourImage || null,
             colourName: setItem.colourName,
@@ -156,6 +241,8 @@ const getCartByEmailToPlaceOrder = async (email, productBy) => {
             price: setItem.price,
         })),
     }));
+
+    let orderNumber = await genratedeChallNO(email);
 
     // Return the final response structure
     const result = {
@@ -177,6 +264,84 @@ const getCartByEmailToPlaceOrder = async (email, productBy) => {
     };
     return result;
 };
+
+                // const getCartByEmailToPlaceOrder = async (email, productBy) => {
+                //     // Find the cart by email and productBy, and populate the product details
+                //     const carts = await RtlToMnfCart.find({ email, productBy }).populate('productId');
+                //     console.log('carts data',carts[0].set)
+                //     if (!carts || carts.length === 0) {
+                //         throw new ApiError(httpStatus.NOT_FOUND, 'No carts found for this email and productBy');
+                //     }
+                //     const user = await User.findOne({ email }).select('role');
+                //     if (!user) {
+                //         throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+                //     }
+                //     let retailer = null;
+                //     if (user.role === 'retailer') {
+                //         retailer = await Retailer.findOne({ email }).select(
+                //             'fullName companyName email address country state city pinCode mobNumber GSTIN code profileImg');
+
+                //         if (!retailer) {
+                //             throw new ApiError(httpStatus.NOT_FOUND, 'Retailer not found');
+                //         }
+                //     }
+
+                //     // Fetch manufacturer details for the product's manufacturer
+                //     const manufacturer = await Manufacture.findOne({ email: productBy }).select(
+                //         'fullName companyName email address country state city pinCode mobNumber GSTIN'
+                //     );
+
+                //     if (!manufacturer) {
+                //         throw new ApiError(httpStatus.NOT_FOUND, 'Manufacturer not found');
+                //     }
+
+                //     // Ensure wholesaler is present for roles that require it
+                //     if (!retailer) {
+                //         throw new ApiError(httpStatus.BAD_REQUEST, 'Wholesaler information is missing.');
+                //     }
+
+                //     // Prepare the cart and order details with the desired format
+                //     const orderDetails = carts.map((cart) => {
+                //         const product = cart.productId;
+                //         return {
+                //             _id: cart._id,
+                //             productId: {
+                //                 designNumber: cart.designNumber || "",
+                //                 brand: product?.brand || "Brand not available",  // Defensive check for undefined
+                //                 id: product?._id || null,
+                //             },
+                //             set: cart.set.map((setItem) => ({
+                //                 designNumber: cart.designNumber || "",
+                //                 colour: setItem.colour,
+                //                 colourImage: setItem.colourImage || null,
+                //                 colourName: setItem.colourName,
+                //                 size: setItem.size,
+                //                 quantity: setItem.quantity,
+                //                 price: setItem.price,
+                //             })),
+                //         };
+                //     });
+                // let orderNumber = await genratedeChallNO(email)
+                //     // Return the final response structure
+                //     const result = {
+                //         manufacturer: {
+                //             fullName: manufacturer.fullName,
+                //             companyName: manufacturer.companyName,
+                //             email: manufacturer.email,
+                //             address: manufacturer.address,
+                //             country: manufacturer.country,
+                //             state: manufacturer.state,
+                //             city: manufacturer.city,
+                //             pinCode: manufacturer.pinCode,
+                //             mobNumber: manufacturer.mobNumber,
+                //             GSTIN: manufacturer.GSTIN,
+                //         },
+                //         retailer,
+                //         orderNumber,
+                //         products: orderDetails,
+                //     };
+                //     return result;
+                // };
 
 /**
  * 
