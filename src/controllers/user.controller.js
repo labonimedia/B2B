@@ -47,7 +47,6 @@ const getUserByEmail = catchAsync(async (req, res) => {
   res.send(user);
 });
 
-
 const deleteUserByEmail = catchAsync(async (req, res) => {
   const user = await userService.deleteUserByEmail(req.query.email);
   if (!user) {

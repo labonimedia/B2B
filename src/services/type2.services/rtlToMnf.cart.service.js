@@ -1,7 +1,7 @@
 const httpStatus = require('http-status');
-const { RtlToMnfCart, User, Wholesaler, Retailer, Manufacture, WishListType2 } = require('../../models');
+const { RtlToMnfCart, User, RtlToMnfPo, Retailer, Manufacture, WishListType2 } = require('../../models');
 const ApiError = require('../../utils/ApiError');
-
+const { v4: uuidv4 } = require('uuid');
 /**
  * Create multiple RtlToMnfCart items
  * @param {Array<Object>} reqBody - Contains an array of item objects
@@ -137,7 +137,6 @@ const getCartByEmailToPlaceOrder = async (email, productBy) => {
     if (!retailer) {
         throw new ApiError(httpStatus.BAD_REQUEST, 'Wholesaler information is missing.');
     }
-
 
     // Prepare the cart and order details with the desired format
     const orderDetails = carts.map((cart) => ({

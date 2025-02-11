@@ -269,9 +269,7 @@ const getBrandsAndWholesalers = async (brandNamePattern, requestByEmail) => {
   const filteredRequestDetails = requestDetails.filter((request) => request.status !== 'accepted');
 
   // Create a map for request details
-  const requestDetailsMap = new Map(
-    filteredRequestDetails.map((request) => [request.email, request])
-  );
+  const requestDetailsMap = new Map(filteredRequestDetails.map((request) => [request.email, request]));
 
   // Step 5: Combine brands with their associated wholesalers and request details
   const result = brands.map((brand) => {
@@ -281,16 +279,13 @@ const getBrandsAndWholesalers = async (brandNamePattern, requestByEmail) => {
     const requestDetail = requestDetailsMap.get(brand.brandOwner) || {};
     return {
       brand: brand.toObject(),
-      wholesalers: associatedWholesalers.map((wholesaler) =>
-        wholesaler ? wholesaler.toObject() : null
-      ),
+      wholesalers: associatedWholesalers.map((wholesaler) => (wholesaler ? wholesaler.toObject() : null)),
       requestDetails: requestDetail.toObject ? requestDetail.toObject() : requestDetail,
     };
   });
 
   return result;
 };
-
 
 module.exports = {
   createBrand,

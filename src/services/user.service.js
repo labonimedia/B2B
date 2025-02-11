@@ -73,12 +73,8 @@ const createUser = async (userBody) => {
 
   // Finally, create the user in the User collection
   const createdUser = await User.create(userBody);
-  await Invitation.findOneAndUpdate(
-    { email: createdUser.email },
-    { $set: { status: 'accepted' } },
-    { new: true }
-  );
-  return createdUser
+  await Invitation.findOneAndUpdate({ email: createdUser.email }, { $set: { status: 'accepted' } }, { new: true });
+  return createdUser;
 };
 
 /**
@@ -215,7 +211,6 @@ const deleteUserById = async (userId) => {
   return user;
 };
 
-
 const deleteUserByEmail = async (email) => {
   const user = await User.findOne({ email });
   if (!user) {
@@ -244,7 +239,6 @@ const deleteUserByEmail = async (email) => {
 
   return { message: 'User deleted successfully' };
 };
-
 
 module.exports = {
   createUser,

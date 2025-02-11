@@ -1,4 +1,3 @@
-
 // const multer = require('multer');
 // const { PutObjectCommand, DeleteObjectCommand, S3Client } = require('@aws-sdk/client-s3');
 // const ffmpegPath = require('ffmpeg-static');
@@ -26,8 +25,6 @@
 //   },
 //   forcePathStyle: true, // Ensure path style is used
 // });
-
-
 
 // /**
 //  * Compress videos to a smaller size
@@ -155,8 +152,6 @@
 //   }
 // };""
 
-
-
 // const { PutObjectCommand, DeleteObjectCommand, S3Client, ListObjectsV2Command } = require('@aws-sdk/client-s3');
 // const httpStatus = require('http-status');
 // const ApiError = require('./ApiError');
@@ -217,7 +212,6 @@
 //       throw new Error('CDN Configuration is missing or region is undefined');
 //     }
 
-
 //     s3Client = new S3Client({
 //       region: cdnConfig.region,
 //       endpoint: `https://${cdnConfig.bucketName}.${cdnConfig.region}.digitaloceanspaces.com`,
@@ -246,7 +240,6 @@
 //   }
 // };
 
-
 // const uploadFiles = async (req, res, next) => {
 //   try {
 //     for (const field in req.files) {
@@ -274,8 +267,6 @@
 // };
 
 // const commonUploadMiddleware = (fields) => [upload.fields(fields), uploadFiles];
-
-
 
 const multer = require('multer');
 const { PutObjectCommand, DeleteObjectCommand, S3Client, ListObjectsV2Command } = require('@aws-sdk/client-s3');
@@ -355,9 +346,7 @@ const compressImageStream = async (fileBuffer) => {
   let compressedBuffer = fileBuffer;
 
   do {
-    compressedBuffer = await sharp(compressedBuffer)
-      .jpeg({ quality })
-      .toBuffer();
+    compressedBuffer = await sharp(compressedBuffer).jpeg({ quality }).toBuffer();
 
     quality -= 10;
   } while (compressedBuffer.length > 1 * 1024 * 1024 && quality > 10);
@@ -430,7 +419,6 @@ const uploadFile = async (file) => {
   }
 };
 
-
 // const uploadFiles = async (req, res, next) => {
 //   const uploadPromises = [];
 
@@ -456,7 +444,6 @@ const uploadFile = async (file) => {
 //   }
 // };
 
-
 const uploadFiles = async (req, res, next) => {
   try {
     const uploadPromises = [];
@@ -475,20 +462,17 @@ const uploadFiles = async (req, res, next) => {
     await Promise.all(uploadPromises);
     next();
   } catch (err) {
-    console.error("File upload error:", err);
-    res.status(500).json({ error: "Failed to upload files", details: err.message });
+    console.error('File upload error:', err);
+    res.status(500).json({ error: 'Failed to upload files', details: err.message });
   }
 };
 
 const commonUploadMiddleware = (fields) => [upload.fields(fields), uploadFiles];
 
-
 const getBasePath = (fullUrl) => {
   const url = new URL(fullUrl);
   return `${url.origin}/`;
 };
-
-
 
 /**
  * Delete a file from S3 bucket
@@ -530,13 +514,12 @@ const deleteFile = async (filePath) => {
   }
 };
 
-
 const getSpaceUsage = async (bucketName) => {
-  let cdn
+  let cdn;
   try {
-    cdn = await CDNPath.findOne({ status: 'active' }).lean()
+    cdn = await CDNPath.findOne({ status: 'active' }).lean();
   } catch (err) {
-    console.log(err)
+    console.log(err);
   }
 
   // console.log(activeCdn)
@@ -552,7 +535,7 @@ const getSpaceUsage = async (bucketName) => {
     // forcePathStyle: true,  // Uncomment if needed
   });
   let totalSize = 0;
-  let continuationToken = undefined;
+  let continuationToken;
 
   try {
     do {
@@ -570,12 +553,12 @@ const getSpaceUsage = async (bucketName) => {
     } while (continuationToken);
 
     // Convert the total size from bytes to GB
-    const totalSizeInGB = (25).toFixed(2);  // Assuming the total size is 25 GB
-    const usedSizeInGB = (totalSize / (1024 * 1024 * 1024)).toFixed(2);  // Convert bytes to GB
-    const totalSizeInGBFromBytes = (totalSizeInGB);  // Total space in GB (keep the fixed value)
+    const totalSizeInGB = (25).toFixed(2); // Assuming the total size is 25 GB
+    const usedSizeInGB = (totalSize / (1024 * 1024 * 1024)).toFixed(2); // Convert bytes to GB
+    const totalSizeInGBFromBytes = totalSizeInGB; // Total space in GB (keep the fixed value)
 
     // Calculate available size
-    const availableSizeInGB = (totalSizeInGBFromBytes - usedSizeInGB).toFixed(2);  // Available space in GB
+    const availableSizeInGB = (totalSizeInGBFromBytes - usedSizeInGB).toFixed(2); // Available space in GB
 
     // Return the response with total size, used size, and available size
     return {
@@ -591,7 +574,6 @@ const getSpaceUsage = async (bucketName) => {
     // res.status(500).send({ message: 'Error fetching space usage' });
   }
 };
-
 
 // fetchUsage();
 module.exports = {

@@ -17,12 +17,10 @@ const createOrUpdateWholesalerPriceType2 = async (reqBody) => {
     // If record exists, update it
     Object.assign(existingRecord, reqBody); // Merge the update data into the existing record
     return existingRecord.save(); // Save the updated record
-  } else {
-    // If no record exists, create a new one
-    return WholesalerPriceType2.create(reqBody);
   }
+  // If no record exists, create a new one
+  return WholesalerPriceType2.create(reqBody);
 };
-
 
 /**
  * Query for WholesalerPriceType2
@@ -103,8 +101,6 @@ const getFilteredProducts = async (body) => {
   }
 };
 
-
-
 /**
  * Get WholesalerPriceType2 by id
  * @param {ObjectId} id
@@ -114,11 +110,9 @@ const getWholesalerPriceType2ById = async (productId) => {
   return WholesalerPriceType2.findOne({ productId });
 };
 
-
 const getWholesalerPriceType2ByIdWholesaler = async (productId, WholesalerEmail) => {
   return WholesalerPriceType2.findOne({ productId, WholesalerEmail });
 };
-
 
 /**
  * Get WholesalerPriceType2 by id
@@ -126,18 +120,18 @@ const getWholesalerPriceType2ByIdWholesaler = async (productId, WholesalerEmail)
  * @returns {Promise<WholesalerPriceType2>}
  */
 const getRetailerPriceById = async (productId, WholesalerEmail) => {
-  // Find the retailer price by productId  
+  // Find the retailer price by productId
   const retailerPrice = await WholesalerPriceType2.findOne({ productId, WholesalerEmail }).lean();
   // If no retailer price is found, handle it gracefully
   if (!retailerPrice) {
-    return { message: "Retailer price not found for the given product ID." };
+    return { message: 'Retailer price not found for the given product ID.' };
   }
 
   // Find the associated product details
   const product = await ProductType2.findById(productId).lean();
   // If no product is found, handle it gracefully
   if (!product) {
-    return { message: "Product not found for the given product ID." };
+    return { message: 'Product not found for the given product ID.' };
   }
   // Return combined data
   return {
@@ -145,7 +139,6 @@ const getRetailerPriceById = async (productId, WholesalerEmail) => {
     product,
   };
 };
-
 
 /**
  * Update WholesalerPriceType2 by id

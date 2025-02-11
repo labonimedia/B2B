@@ -147,7 +147,8 @@ const retailerSchema = mongoose.Schema(
       },
       branch: {
         type: String,
-      }, swiftCode: {
+      },
+      swiftCode: {
         type: String,
       },
     },

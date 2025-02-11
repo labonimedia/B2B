@@ -72,5 +72,5 @@ module.exports = {
   updateRetailerById,
   deleteRetailerById,
   getWholesalersByRetailerId,
-  getManufactureByRetailerId
+  getManufactureByRetailerId,
 };

@@ -6,10 +6,8 @@ const router = express.Router();
 
 router
   .route('/')
-  .post(
-    auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), newCountryController.createNewCountry)
-  .get(
-    auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), newCountryController.queryNewCountry);
+  .post(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), newCountryController.createNewCountry)
+  .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), newCountryController.queryNewCountry);
 
 router
   .route('/:id')

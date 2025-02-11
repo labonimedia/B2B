@@ -47,8 +47,8 @@ const getMnfDeliveryChallanById = async (id) => {
 };
 
 /**
- * genrate delivery challan number 
- * @param {params} manufacturerEmail 
+ * genrate delivery challan number
+ * @param {params} manufacturerEmail
  * @returns {Promise<MnfDeliveryChallan>}
  */
 const genratedeChallNO = async (manufacturerEmail) => {

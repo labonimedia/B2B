@@ -8,7 +8,7 @@ const ApiError = require('../../utils/ApiError');
  * @returns {Promise<WholesalerReturn>}
  */
 const createWholesalerReturn = async (reqBody) => {
-    return await WholesalerReturn.create(reqBody);
+  return await WholesalerReturn.create(reqBody);
 };
 
 /**
@@ -21,8 +21,8 @@ const createWholesalerReturn = async (reqBody) => {
  * @returns {Promise<QueryResult>}
  */
 const queryWholesalerReturn = async (filter, options) => {
-    const WholesalerReturns = await WholesalerReturn.paginate(filter, options);
-    return WholesalerReturns;
+  const WholesalerReturns = await WholesalerReturn.paginate(filter, options);
+  return WholesalerReturns;
 };
 
 /**
@@ -31,7 +31,7 @@ const queryWholesalerReturn = async (filter, options) => {
  * @returns {Promise<WholesalerReturn>}
  */
 const getWholesalerReturnById = async (id) => {
-    return WholesalerReturn.findById(id);
+  return WholesalerReturn.findById(id);
 };
 
 /**
@@ -40,12 +40,12 @@ const getWholesalerReturnById = async (id) => {
  * @returns {Promise<WholesalerReturn>}
  */
 const getWholesalerReturnByEmail = async (email) => {
-    return WholesalerReturn.findOne({ email });
+  return WholesalerReturn.findOne({ email });
 };
 
 module.exports = {
-    createWholesalerReturn,
-    queryWholesalerReturn,
-    getWholesalerReturnById,
-    getWholesalerReturnByEmail,
+  createWholesalerReturn,
+  queryWholesalerReturn,
+  getWholesalerReturnById,
+  getWholesalerReturnByEmail,
 };

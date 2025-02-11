@@ -12,25 +12,22 @@
 //     });
 // });
 
-
 const ffmpeg = require('fluent-ffmpeg');
 const ffmpegInstaller = require('@ffmpeg-installer/ffmpeg');
 
 ffmpeg.setFfmpegPath(ffmpegInstaller.path);
 
 process.on('message', ({ inputFilePath, outputFilePath }) => {
-    ffmpeg(inputFilePath)
-        .videoCodec('libx264')
-        .outputOptions('-preset faster') // Use 'faster' instead of 'fast'
-        .outputOptions('-crf 30') // Increase CRF for faster compression
-        .size('640x?') // Reduce resolution
-        .save(outputFilePath)
-        .on('end', () => {
-            process.send({ success: true, outputFilePath });
-        })
-        .on('error', (error) => {
-            process.send({ success: false, error: error.message });
-        });
+  ffmpeg(inputFilePath)
+    .videoCodec('libx264')
+    .outputOptions('-preset faster') // Use 'faster' instead of 'fast'
+    .outputOptions('-crf 30') // Increase CRF for faster compression
+    .size('640x?') // Reduce resolution
+    .save(outputFilePath)
+    .on('end', () => {
+      process.send({ success: true, outputFilePath });
+    })
+    .on('error', (error) => {
+      process.send({ success: false, error: error.message });
+    });
 });
-
-

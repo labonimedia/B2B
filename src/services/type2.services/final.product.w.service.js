@@ -8,7 +8,7 @@ const ApiError = require('../../utils/ApiError');
  * @returns {Promise<FinalProductW>}
  */
 const createFinalProductW = async (reqBody) => {
-    return await FinalProductW.create(reqBody);
+  return await FinalProductW.create(reqBody);
 };
 
 /**
@@ -21,8 +21,8 @@ const createFinalProductW = async (reqBody) => {
  * @returns {Promise<QueryResult>}
  */
 const queryFinalProductW = async (filter, options) => {
-    const finalProductWs = await FinalProductW.paginate(filter, options);
-    return finalProductWs;
+  const finalProductWs = await FinalProductW.paginate(filter, options);
+  return finalProductWs;
 };
 
 /**
@@ -31,40 +31,39 @@ const queryFinalProductW = async (filter, options) => {
  * @returns {Promise<WholesalerReturn>}
  */
 const getFinalProductWById = async (id) => {
-    return FinalProductW.findById(id).lean();
+  return FinalProductW.findById(id).lean();
 };
 
-
 const disctributeProductToRetailer = async (finalProductId) => {
-    const finalProduct = await getFinalProductWById(finalProductId);
-    if (!finalProduct) {
-        throw new Error('FinalProduct not found');
-    }
+  const finalProduct = await getFinalProductWById(finalProductId);
+  if (!finalProduct) {
+    throw new Error('FinalProduct not found');
+  }
 
-    // Step 2: Extract the retailerPOs array
-    const retailerPOs = finalProduct.retailerPOs;
-    if (!retailerPOs || retailerPOs.length === 0) {
-        throw new Error('No retailerPOs associated with this FinalProduct');
-    }
+  // Step 2: Extract the retailerPOs array
+  const { retailerPOs } = finalProduct;
+  if (!retailerPOs || retailerPOs.length === 0) {
+    throw new Error('No retailerPOs associated with this FinalProduct');
+  }
 
-    // Step 3: Fetch data from RetailerPO collection for each retailerPO
-    const retailerDataPromises = retailerPOs.map(async (po) => {
-        const retailerData = await PurchaseOrderRetailerType2.findOne({
-            email: po.email,
-            poNumber: po.poNumber,
-        }).lean();
-        return retailerData || { email: po.email, poNumber: po.poNumber, notFound: true };
-    });
+  // Step 3: Fetch data from RetailerPO collection for each retailerPO
+  const retailerDataPromises = retailerPOs.map(async (po) => {
+    const retailerData = await PurchaseOrderRetailerType2.findOne({
+      email: po.email,
+      poNumber: po.poNumber,
+    }).lean();
+    return retailerData || { email: po.email, poNumber: po.poNumber, notFound: true };
+  });
 
-    // Wait for all promises to resolve
-    const retailerData = await Promise.all(retailerDataPromises);
+  // Wait for all promises to resolve
+  const retailerData = await Promise.all(retailerDataPromises);
 
-    // Step 4: Return the combined data
-    return {
-        ...finalProduct,
-        retailerDetails: retailerData,
-    };
-}
+  // Step 4: Return the combined data
+  return {
+    ...finalProduct,
+    retailerDetails: retailerData,
+  };
+};
 
 /**
  * Update PurchaseOrderType2 by id
@@ -73,19 +72,19 @@ const disctributeProductToRetailer = async (finalProductId) => {
  * @returns {Promise<PurchaseOrderType2>}
  */
 const updateFinalProductsById = async (id, updateBody) => {
-    const finalProducts = await getFinalProductWById(id);
-    if (!finalProducts) {
-        throw new ApiError(httpStatus.NOT_FOUND, 'Final Products not found');
-    }
-    Object.assign(finalProducts, updateBody);
-    await finalProducts.save();
-    return finalProducts;
+  const finalProducts = await getFinalProductWById(id);
+  if (!finalProducts) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Final Products not found');
+  }
+  Object.assign(finalProducts, updateBody);
+  await finalProducts.save();
+  return finalProducts;
 };
 
 module.exports = {
-    createFinalProductW,
-    queryFinalProductW,
-    getFinalProductWById,
-    disctributeProductToRetailer,
-    updateFinalProductsById,
+  createFinalProductW,
+  queryFinalProductW,
+  getFinalProductWById,
+  disctributeProductToRetailer,
+  updateFinalProductsById,
 };

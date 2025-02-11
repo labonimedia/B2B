@@ -18,7 +18,6 @@ const ApiError = require('../../utils/ApiError');
 //   if (!Array.isArray(retailerPOs) || retailerPOs.length === 0) {
 //     // throw new ApiError(httpStatus.BAD_REQUEST, "'poNumber' and valid 'retailerPOs' are required.");
 
-
 //   }
 
 //   // Create a new purchase order using the provided request body
@@ -51,8 +50,6 @@ const ApiError = require('../../utils/ApiError');
 //   return purchaseOrder;
 // };
 
-
-
 const createPurchaseOrderType2 = async (reqBody) => {
   const { email, productBy, retailerPOs } = reqBody;
   // Validate that required fields are provided
@@ -65,7 +62,7 @@ const createPurchaseOrderType2 = async (reqBody) => {
   if (!Array.isArray(retailerPOs) || retailerPOs.length === 0) {
     // Handle case where `retailerPOs` is not provided
     console.warn("'retailerPOs' not provided. Creating purchase order without retailer-specific processing.");
-    await CartType2.findOneAndDelete({ email, productBy })
+    await CartType2.findOneAndDelete({ email, productBy });
     // Create a purchase order without processing `retailerPOs`
     createdPurchaseOrder = await PurchaseOrderType2.create(reqBody);
   } else {
@@ -74,18 +71,18 @@ const createPurchaseOrderType2 = async (reqBody) => {
     createdPurchaseOrder = await PurchaseOrderType2.create(reqBody);
 
     if (!createdPurchaseOrder) {
-      throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, "Failed to create the purchase order.");
+      throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'Failed to create the purchase order.');
     }
 
     // Update the status of each retailer's purchase order in the array to 'processing'
     for (const retailerPO of retailerPOs) {
       const retailerOrder = await PurchaseOrderRetailerType2.findOne({
         email: retailerPO.email,
-        poNumber: retailerPO.poNumber
+        poNumber: retailerPO.poNumber,
       });
 
       if (!retailerOrder) {
-        throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, "Retailer purchase order not found.");
+        throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'Retailer purchase order not found.');
       }
 
       // Update the status in the `set` array where `designNumber` matches
@@ -103,7 +100,6 @@ const createPurchaseOrderType2 = async (reqBody) => {
   // Return the newly created purchase order
   return createdPurchaseOrder;
 };
-
 
 const deleteCartType2ById = async (email, productBy) => {
   const purchaseOrderType2 = await CartType2.findOneAndDelete({ email, productBy });
@@ -142,7 +138,7 @@ const getPurchanseOrderByEmail = async (email) => {
   });
 
   return purchaseOrders;
-}
+};
 
 const getProductOrderBySupplyer = async (supplierEmail) => {
   const productOrders = await PurchaseOrderType2.find({ productBy: supplierEmail });
