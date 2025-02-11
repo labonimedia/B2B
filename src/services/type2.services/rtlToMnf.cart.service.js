@@ -246,6 +246,8 @@ const getCartByEmailToPlaceOrder = async (email, productBy) => {
 
     // Return the final response structure
     const result = {
+        productBy: manufacturer.email,
+        email: retailer.email,
         manufacturer: {
             fullName: manufacturer.fullName,
             companyName: manufacturer.companyName,
@@ -261,8 +263,7 @@ const getCartByEmailToPlaceOrder = async (email, productBy) => {
         retailer,
         orderNumber,
         products: orderDetails,
-        productBy: manufacturer.productBy,
-        email: retailer.email,
+ 
     };
     return result;
 };

@@ -21,6 +21,6 @@ router
 
 router
   .route('/cart-products/po')
-  .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), rtlToMnfCartController.getCartByEmailToPlaceOrder);
+  .get( rtlToMnfCartController.getCartByEmailToPlaceOrder);
 
 module.exports = router;
