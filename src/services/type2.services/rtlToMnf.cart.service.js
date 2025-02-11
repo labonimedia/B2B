@@ -261,6 +261,8 @@ const getCartByEmailToPlaceOrder = async (email, productBy) => {
         retailer,
         orderNumber,
         products: orderDetails,
+        productBy: manufacturer.productBy,
+        email: retailer.email,
     };
     return result;
 };
