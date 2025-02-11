@@ -143,12 +143,12 @@ const getCartByEmailToPlaceOrder = async (email, productBy) => {
     const orderDetails = carts.map((cart) => ({
         _id: cart._id,
         productId: {
-            designNumber: cart.designNumber || "",
+            designNumber: cart.productId.designNumber || "",
             brand: cart.productId.brand,
             id: cart.productId._id,
         },
         set: cart.set.map((setItem) => ({
-            designNumber: cart.designNumber || "",
+            designNumber: cart.productId.designNumber || "",
             colour: setItem.colour,
             colourImage: setItem.colourImage || null,
             colourName: setItem.colourName,
