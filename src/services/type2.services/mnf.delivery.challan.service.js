@@ -1,6 +1,7 @@
 const httpStatus = require('http-status');
 const { MnfDeliveryChallan, PurchaseOrderType2 } = require('../../models');
 const ApiError = require('../../utils/ApiError');
+// const { autoForwardQueue, autoCancelQueue } = require("../../utils/queue");
 
 /**
  * Create multiple PurchaseOrderType2 items
@@ -14,7 +15,12 @@ const createMnfDeliveryChallan = async (reqBody) => {
         { $set: { status: 'shipped' } },
         { new: true })
 
-    return await MnfDeliveryChallan.create(reqBody);
+    const result = await MnfDeliveryChallan.create(reqBody)
+    // await autoForwardQueue.add(
+    //     { orderId: result._id },
+    //     { delay: 4 * 60 * 60 * 1000 }
+    // );
+    return result
 };
 
 /**
@@ -41,8 +47,8 @@ const getMnfDeliveryChallanById = async (id) => {
 };
 
 /**
- * genrate delivery challan number 
- * @param {params} manufacturerEmail 
+ * genrate delivery challan number
+ * @param {params} manufacturerEmail
  * @returns {Promise<MnfDeliveryChallan>}
  */
 const genratedeChallNO = async (manufacturerEmail) => {

@@ -26,7 +26,6 @@ router
   .route('/filterdata/status')
   .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), requestController.filterRequests);
 
-
 router
   .route('/check/status-request')
   .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), requestController.getRequestStatus);

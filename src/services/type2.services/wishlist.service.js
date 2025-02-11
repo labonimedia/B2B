@@ -157,12 +157,12 @@ const getWishListType2SchemaByEmail = async (email) => {
     // Get the corresponding WishListType2SchemaId for the product and productOwnerEmail
     const wishlistItem = wishListItems.filter((item) => item.productId.toString() === product._id.toString());
 
-    return wishlistItem.map(item => ({
+    return wishlistItem.map((item) => ({
       ...product.toObject(),
       manufactureName,
       productOwnerEmail: item.productOwnerEmail,
       WishListType2SchemaId: item._id,
-      productUser: item.productUser || ''
+      productUser: item.productUser || '',
     }));
   });
 

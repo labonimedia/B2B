@@ -131,7 +131,6 @@ const getRequestStatus = async (email, requestByEmail) => {
   return Request.findOne({ email, requestByEmail });
 };
 
-
 /**
  * Query for requests
  * @param {Object} filter

@@ -25,7 +25,6 @@ const CartSchema = new mongoose.Schema(
         // },
         productBy: {
           type: String,
-
         },
         designNumber: {
           type: String,

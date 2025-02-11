@@ -508,8 +508,7 @@ const defaultRoutes = [
   {
     path: '/rtl-toMnf-po',
     route: rtlToMnfPORoute,
-  }
-
+  },
 ];
 
 const devRoutes = [

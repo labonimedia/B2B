@@ -3,7 +3,6 @@ const config = require('../config/config');
 const logger = require('../config/logger');
 const otpService = require('./otp.service');
 
-
 const smtpConfig = {
   host: 'smtp.secureserver.net',
   port: 587, // SSL port

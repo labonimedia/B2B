@@ -275,7 +275,6 @@ productSchema.statics.findUpcomingProducts = function () {
   return this.find({ dateOfListing: { $gt: currentDate } }); // Filter products where dateOfListing is greater than the current date
 };
 
-
 /**
  * @typedef ProductType2
  */

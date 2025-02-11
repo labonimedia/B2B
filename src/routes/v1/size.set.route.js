@@ -7,7 +7,7 @@ const router = express.Router();
 router
   .route('/')
   .post(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), sizeSetController.createSizeSet)
-  .get(sizeSetController.querySizeSet); //auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
+  .get(sizeSetController.querySizeSet); // auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
 
 router
   .route('/:id')

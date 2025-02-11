@@ -10,7 +10,15 @@ const createCity = catchAsync(async (req, res) => {
 });
 
 const queryCity = catchAsync(async (req, res) => {
-  const filter = pick(req.query, ['name','country_name','country_id','City_code',' state_name','state_code','state_id']);
+  const filter = pick(req.query, [
+    'name',
+    'country_name',
+    'country_id',
+    'City_code',
+    ' state_name',
+    'state_code',
+    'state_id',
+  ]);
   const options = pick(req.query, ['sortBy', 'limit', 'page']);
   const result = await cityService.queryCity(filter, options);
   res.send(result);
@@ -35,12 +43,12 @@ const deleteCityById = catchAsync(async (req, res) => {
 });
 
 const getCities = catchAsync(async (req, res) => {
-    const {limit = 10, page = 1 } = req.query; // Query parameters
-    const {country_name, state_name } = req.body;
-    const cities = await cityService.findCities(country_name, state_name, limit, page);
-    res.status(httpStatus.OK).send({ success: true, data: cities });
-  });
-  
+  const { limit = 10, page = 1 } = req.query; // Query parameters
+  const { country_name, state_name } = req.body;
+  const cities = await cityService.findCities(country_name, state_name, limit, page);
+  res.status(httpStatus.OK).send({ success: true, data: cities });
+});
+
 module.exports = {
   createCity,
   queryCity,

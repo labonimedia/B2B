@@ -6,51 +6,48 @@ const { cdnPathService } = require('../services');
 const { getSpaceUsage } = require('../utils/upload');
 
 const createCDNPath = catchAsync(async (req, res) => {
-    const path = await cdnPathService.createCDNPath(req.body);
-    res.status(httpStatus.CREATED).send(path);
+  const path = await cdnPathService.createCDNPath(req.body);
+  res.status(httpStatus.CREATED).send(path);
 });
 
 const queryCDNPath = catchAsync(async (req, res) => {
-    const filter = pick(req.query, ['name', 'status']);
-    const options = pick(req.query, ['sortBy', 'limit', 'page']);
-    const result = await cdnPathService.queryCDNPath(filter, options);
-    res.send(result);
+  const filter = pick(req.query, ['name', 'status']);
+  const options = pick(req.query, ['sortBy', 'limit', 'page']);
+  const result = await cdnPathService.queryCDNPath(filter, options);
+  res.send(result);
 });
 
 const getCDNPathById = catchAsync(async (req, res) => {
-    const path = await cdnPathService.getCDNPathById(req.params.id);
-    if (!path) {
-        throw new ApiError(httpStatus.NOT_FOUND, 'path not found');
-    }
-    res.send(path);
+  const path = await cdnPathService.getCDNPathById(req.params.id);
+  if (!path) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'path not found');
+  }
+  res.send(path);
 });
 
 const updateCDNPathById = catchAsync(async (req, res) => {
-    const path = await cdnPathService.updateCDNPathById(req.params.id, req.body);
-    res.send(path);
+  const path = await cdnPathService.updateCDNPathById(req.params.id, req.body);
+  res.send(path);
 });
 
 const deleteCDNPathById = catchAsync(async (req, res) => {
-    await cdnPathService.deleteCDNPathById(req.params.id);
-    res.status(httpStatus.NO_CONTENT).send();
+  await cdnPathService.deleteCDNPathById(req.params.id);
+  res.status(httpStatus.NO_CONTENT).send();
 });
-
 
 const getSpaceUsagecontroller = catchAsync(async (req, res) => {
-    const path = await getSpaceUsage(req.query.bucketName);
-    if (!path) {
-        throw new ApiError(httpStatus.NOT_FOUND, 'path not found');
-    }
-    res.send(path);
+  const path = await getSpaceUsage(req.query.bucketName);
+  if (!path) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'path not found');
+  }
+  res.send(path);
 });
 
-
-
 module.exports = {
-    createCDNPath,
-    queryCDNPath,
-    getCDNPathById,
-    updateCDNPathById,
-    deleteCDNPathById,
-    getSpaceUsagecontroller,
+  createCDNPath,
+  queryCDNPath,
+  getCDNPathById,
+  updateCDNPathById,
+  deleteCDNPathById,
+  getSpaceUsagecontroller,
 };

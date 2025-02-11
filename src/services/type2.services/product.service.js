@@ -314,7 +314,6 @@ const updateProductVideo = async (req, productId) => {
   }
 };
 
-
 const updateProductImages = async (req) => {
   try {
     const { productImage } = req.body;
@@ -334,12 +333,11 @@ const updateProductImages = async (req) => {
       throw new ApiError(httpStatus.NOT_FOUND, 'Product or Colour Collection not found');
     }
 
-    return updatedProduct
+    return updatedProduct;
   } catch (err) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Error to updateProduct Images update ');
   }
-}
-
+};
 
 /**
  * Delete user by id
@@ -374,10 +372,6 @@ const deleteColorCollection = async (productId, collectionId) => {
   product.colourCollections.splice(collectionIndex, 1);
   await product.save();
 };
-
-
-
-
 
 /**
  * Filter products and fetch manufacturer details
@@ -441,8 +435,6 @@ const deleteProductVideo = async (productId, collectionId) => {
 
   await product.save();
 };
-
-
 
 // const filterProductsAndFetchManufactureDetails = async (filters) => {
 //   const query = {};

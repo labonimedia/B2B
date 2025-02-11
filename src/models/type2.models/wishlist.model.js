@@ -17,8 +17,8 @@ const wishListType2Schema = mongoose.Schema(
     },
     productUser: {
       type: String,
-      enum: ['wholesaler', 'manufacturer']
-    }
+      enum: ['wholesaler', 'manufacturer'],
+    },
   },
   {
     timestamps: true,

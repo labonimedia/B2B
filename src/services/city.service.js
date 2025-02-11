@@ -65,18 +65,18 @@ const deleteCityById = async (id) => {
 };
 
 const findCities = async (country_name, state_name, limit, page) => {
-    const filter = {};
-    if (country_name) filter.country_name = country_name;
-    if (state_name) filter.state_name = state_name;
-  
-    const options = {
-      limit: parseInt(limit, 10),
-      page: parseInt(page, 10),
-    };
-  
-    const result = await City.paginate(filter, options); // Using the `paginate` plugin
-    return result;
+  const filter = {};
+  if (country_name) filter.country_name = country_name;
+  if (state_name) filter.state_name = state_name;
+
+  const options = {
+    limit: parseInt(limit, 10),
+    page: parseInt(page, 10),
   };
+
+  const result = await City.paginate(filter, options); // Using the `paginate` plugin
+  return result;
+};
 
 module.exports = {
   createCity,

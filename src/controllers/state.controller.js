@@ -10,7 +10,7 @@ const createState = catchAsync(async (req, res) => {
 });
 
 const queryState = catchAsync(async (req, res) => {
-  const filter = pick(req.query, ['name','country_name','country_id','state_code']);
+  const filter = pick(req.query, ['name', 'country_name', 'country_id', 'state_code']);
   const options = pick(req.query, ['sortBy', 'limit', 'page']);
   const result = await stateService.queryState(filter, options);
   res.send(result);
@@ -35,7 +35,7 @@ const deleteStateById = catchAsync(async (req, res) => {
 });
 const getState = catchAsync(async (req, res) => {
   // const {limit = 10, page = 1 } = req.query; // Query parameters
-  const {country_name} = req.body;
+  const { country_name } = req.body;
   const cities = await stateService.findStates(country_name);
   res.status(httpStatus.OK).send({ success: true, data: cities });
 });

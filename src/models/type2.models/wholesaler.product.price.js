@@ -1,4 +1,3 @@
-
 const mongoose = require('mongoose');
 const { paginate, toJSON } = require('../plugins');
 
@@ -15,7 +14,6 @@ const wholesalerPriceSchema = mongoose.Schema(
     ],
     brandName: {
       type: String,
-
     },
     productId: {
       type: mongoose.Schema.Types.ObjectId,
@@ -27,7 +25,7 @@ const wholesalerPriceSchema = mongoose.Schema(
     priceAddedDate: {
       type: Date,
       default: Date.now,
-    }
+    },
   },
   {
     timestamps: true,

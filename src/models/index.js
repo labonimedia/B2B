@@ -111,5 +111,5 @@ module.exports.NewCountry = require('./new.country.model');
 module.exports.State = require('./state.model');
 module.exports.City = require('./city.model');
 module.exports.CDNPath = require('./cdn.path.model');
-module.exports.RtlToMnfCart = require('./type2.models/rtlTomnf.cart.model')
+module.exports.RtlToMnfCart = require('./type2.models/rtlTomnf.cart.model');
 module.exports.RtlToMnfPo = require('./type2.models/rtlToMnf.po.model');

@@ -6,20 +6,28 @@ const router = express.Router();
 
 router
   .route('/')
-  .post
-  (
-    //auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
-   retailerPurchaseOrderType2Controller.createRetailerPurchaseOrderType2
-   )
-  .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), retailerPurchaseOrderType2Controller.queryRetailerPurchaseOrderType2);
+  .post(
+    // auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
+    retailerPurchaseOrderType2Controller.createRetailerPurchaseOrderType2
+  )
+  .get(
+    auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
+    retailerPurchaseOrderType2Controller.queryRetailerPurchaseOrderType2
+  );
 
 router
   .route('/getby/supplier')
-  .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), retailerPurchaseOrderType2Controller.getProductOrderBySupplyer);
+  .get(
+    auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
+    retailerPurchaseOrderType2Controller.getProductOrderBySupplyer
+  );
 
 router
   .route('/:id')
-  .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), retailerPurchaseOrderType2Controller.getRetailerPurchaseOrderType2ById) // Get PurchaseOrderType2 by ID
+  .get(
+    auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
+    retailerPurchaseOrderType2Controller.getRetailerPurchaseOrderType2ById
+  ) // Get PurchaseOrderType2 by ID
   .patch(
     auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
     retailerPurchaseOrderType2Controller.updateRetailerPurchaseOrderType2ById
@@ -35,15 +43,14 @@ router
     retailerPurchaseOrderType2Controller.getPurchaseOrdersByManufactureEmail
   );
 
-  router
+router
   .route('/purchase-orders/wholesaler-email/combined-order')
   .get(
     auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
     retailerPurchaseOrderType2Controller.combinePurchaseOrders
   );
 
-
-  router
+router
   .route('/purchase-orders/wholesaler-email/combined-order/single')
   .get(
     auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),

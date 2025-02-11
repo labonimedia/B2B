@@ -92,7 +92,6 @@ const deleteRequestById = catchAsync(async (req, res) => {
 });
 
 const getRequestStatus = catchAsync(async (req, res) => {
-
   const request = await requestService.getRequestStatus(req.query.wholsalerEmail, req.query.requestByEmail);
   if (!request) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Request not found');
