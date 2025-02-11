@@ -1,6 +1,7 @@
 const httpStatus = require('http-status');
 const { MnfDeliveryChallan, PurchaseOrderType2 } = require('../../models');
 const ApiError = require('../../utils/ApiError');
+// const { autoForwardQueue, autoCancelQueue } = require("../../utils/queue");
 
 /**
  * Create multiple PurchaseOrderType2 items
@@ -8,10 +9,18 @@ const ApiError = require('../../utils/ApiError');
  * @returns {Promise<Array<PurchaseOrderType2>>}
  */
 const createMnfDeliveryChallan = async (reqBody) => {
-  const { email, poNumber } = reqBody;
-  await PurchaseOrderType2.findOneAndUpdate({ email, poNumber }, { $set: { status: 'shipped' } }, { new: true });
+    const { email, poNumber } = reqBody;
+    await PurchaseOrderType2.findOneAndUpdate(
+        { email: email, poNumber: poNumber },
+        { $set: { status: 'shipped' } },
+        { new: true })
 
-  return await MnfDeliveryChallan.create(reqBody);
+    const result = await MnfDeliveryChallan.create(reqBody)
+    // await autoForwardQueue.add(
+    //     { orderId: result._id },
+    //     { delay: 4 * 60 * 60 * 1000 }
+    // );
+    return result
 };
 
 /**
@@ -24,8 +33,8 @@ const createMnfDeliveryChallan = async (reqBody) => {
  * @returns {Promise<QueryResult>}
  */
 const queryMnfDeliveryChallan = async (filter, options) => {
-  const mnfDeliveryChallans = await MnfDeliveryChallan.paginate(filter, options);
-  return mnfDeliveryChallans;
+    const mnfDeliveryChallans = await MnfDeliveryChallan.paginate(filter, options);
+    return mnfDeliveryChallans;
 };
 
 /**
@@ -34,7 +43,7 @@ const queryMnfDeliveryChallan = async (filter, options) => {
  * @returns {Promise<PurchaseOrderType2>}
  */
 const getMnfDeliveryChallanById = async (id) => {
-  return MnfDeliveryChallan.findById(id);
+    return MnfDeliveryChallan.findById(id);
 };
 
 /**
@@ -43,13 +52,13 @@ const getMnfDeliveryChallanById = async (id) => {
  * @returns {Promise<MnfDeliveryChallan>}
  */
 const genratedeChallNO = async (manufacturerEmail) => {
-  const lastPO = await MnfDeliveryChallan.findOne({ productBy: manufacturerEmail })
-    .sort({ deliveryChallanNumber: -1 })
-    .lean();
-  const nextdeliveryChallanNumber = lastPO ? lastPO.deliveryChallanNumber + 1 : 1;
-  return {
-    deliveryChallanNumber: nextdeliveryChallanNumber,
-  };
+    const lastPO = await MnfDeliveryChallan.findOne({ productBy: manufacturerEmail })
+        .sort({ deliveryChallanNumber: -1 })
+        .lean();
+    let nextdeliveryChallanNumber = lastPO ? lastPO.deliveryChallanNumber + 1 : 1;
+    return {
+        deliveryChallanNumber: nextdeliveryChallanNumber,
+    }
 };
 
 /**
@@ -59,13 +68,13 @@ const genratedeChallNO = async (manufacturerEmail) => {
  * @returns {Promise<PurchaseOrderType2>}
  */
 const updateMnfDeliveryChallanById = async (id, updateBody) => {
-  const cart = await getMnfDeliveryChallanById(id);
-  if (!cart) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Purchase Order not found');
-  }
-  Object.assign(cart, updateBody);
-  await cart.save();
-  return cart;
+    const cart = await getMnfDeliveryChallanById(id);
+    if (!cart) {
+        throw new ApiError(httpStatus.NOT_FOUND, 'Purchase Order not found');
+    }
+    Object.assign(cart, updateBody);
+    await cart.save();
+    return cart;
 };
 
 /**
@@ -74,36 +83,36 @@ const updateMnfDeliveryChallanById = async (id, updateBody) => {
  * @returns {Promise<PurchaseOrderType2>}
  */
 const deleteMnfDeliveryChallanById = async (id) => {
-  const cart = await getMnfDeliveryChallanById(id);
-  if (!cart) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Purchase Order not found');
-  }
-  await cart.remove();
-  return cart;
+    const cart = await getMnfDeliveryChallanById(id);
+    if (!cart) {
+        throw new ApiError(httpStatus.NOT_FOUND, 'Purchase Order not found');
+    }
+    await cart.remove();
+    return cart;
 };
 
 const getDeliveryChallanByManufactureEmail = async (manufacturerEmail, filter, options) => {
-  // Apply additional filters
-  if (filter) {
-    const parsedFilter = JSON.parse(filter);
-    Object.assign(query, parsedFilter);
-  }
+    // Apply additional filters
+    if (filter) {
+        const parsedFilter = JSON.parse(filter);
+        Object.assign(query, parsedFilter);
+    }
 
-  // Use Mongoose paginate plugin
-  const result = await MnfDeliveryChallan.paginate(query, {
-    ...options,
-    customLabels: { docs: 'mnfdeliverychallans' },
-  });
+    // Use Mongoose paginate plugin
+    const result = await MnfDeliveryChallan.paginate(query, {
+        ...options,
+        customLabels: { docs: 'mnfdeliverychallans' },
+    });
 
-  return result;
+    return result;
 };
 // Create combined PO for wholesaler
 module.exports = {
-  createMnfDeliveryChallan,
-  queryMnfDeliveryChallan,
-  getMnfDeliveryChallanById,
-  genratedeChallNO,
-  updateMnfDeliveryChallanById,
-  deleteMnfDeliveryChallanById,
-  getDeliveryChallanByManufactureEmail,
+    createMnfDeliveryChallan,
+    queryMnfDeliveryChallan,
+    getMnfDeliveryChallanById,
+    genratedeChallNO,
+    updateMnfDeliveryChallanById,
+    deleteMnfDeliveryChallanById,
+    getDeliveryChallanByManufactureEmail,
 };
