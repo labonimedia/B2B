@@ -72,13 +72,14 @@ const createUser = async (userBody) => {
       await createRetailer([data], isReplicaSet ? { session } : {});
     }
 
-    // Update invitation status
-    await Invitation.findOneAndUpdate(
-      { email: createdUser[0].email },
-      { $set: { status: 'accepted' } },
-      { new: true, session: isReplicaSet ? session : undefined }
-    );
+    // // Update invitation status
+    // await Invitation.findOneAndUpdate(
+    //   { email: createdUser[0].email },
+    //   { $set: { status: 'accepted' } },
+    //   { new: true, session: isReplicaSet ? session : undefined }
+    // );
 
+    await Invitation.findOneAndUpdate({ email: createdUser.email }, { $set: { status: 'accepted' } }, { new: true, session: isReplicaSet ? session : undefined });
     // Commit transaction only if using a replica set
     if (isReplicaSet) {
       await session.commitTransaction();
