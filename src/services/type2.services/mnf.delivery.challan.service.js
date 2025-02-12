@@ -1,7 +1,8 @@
 const httpStatus = require('http-status');
 const { MnfDeliveryChallan, PurchaseOrderType2 } = require('../../models');
 const ApiError = require('../../utils/ApiError');
-// const { autoForwardQueue, autoCancelQueue } = require("../../utils/queue");
+const { autoForwardQueue, autoCancelQueue } = require("../../utils/queue");
+const { sendNotification } = require("../../utils/notification");
 
 /**
  * Create multiple PurchaseOrderType2 items
@@ -9,18 +10,25 @@ const ApiError = require('../../utils/ApiError');
  * @returns {Promise<Array<PurchaseOrderType2>>}
  */
 const createMnfDeliveryChallan = async (reqBody) => {
-    const { email, poNumber } = reqBody;
-    await PurchaseOrderType2.findOneAndUpdate(
-        { email: email, poNumber: poNumber },
-        { $set: { status: 'shipped' } },
-        { new: true })
+    const { email, poNumber, retailerId } = reqBody;
 
-    const result = await MnfDeliveryChallan.create(reqBody)
-    // await autoForwardQueue.add(
-    //     { orderId: result._id },
-    //     { delay: 4 * 60 * 60 * 1000 }
-    // );
-    return result
+    await PurchaseOrderType2.findOneAndUpdate(
+        { email, poNumber },
+        { $set: { status: 'shipped' } },
+        { new: true }
+    );
+
+    const result = await MnfDeliveryChallan.create(reqBody);
+
+    // Send real-time notification to the retailer
+    await sendNotification(email, `A new order ${result.orderNumber} has been created.`);
+
+    // Enqueue notification and auto-processing jobs
+    await notificationQueue.add({ orderId: result._id });
+    await notificationQueue.add({ orderId: result._id, recurring: true }, { repeat: { every: 2 * 60 * 60 * 1000 } });
+    await autoForwardQueue.add({ orderId: result._id }, { delay: 4 * 60 * 60 * 1000 });
+
+    return result;
 };
 
 /**
