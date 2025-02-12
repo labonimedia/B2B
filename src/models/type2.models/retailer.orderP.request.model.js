@@ -35,14 +35,14 @@ const RetailerPartialRequestSchema = mongoose.Schema(
                 availableQuantity: Number,
             },
         ],
-        responseByRetailer: {
-            type: String,
-            enum: ['accept_partial', 'reject_partial', 'cancel'],
-            default: null, // Null until retailer responds
-        },
-        responseDate: {
-            type: Date,
-        },
+        // responseByRetailer: {
+        //     type: String,
+        //     enum: ['accept_partial', 'reject_partial', 'cancel'],
+        //     // default: null, // Null until retailer responds
+        // },
+        // responseDate: {
+        //     type: Date,
+        // },
     },
     {
         timestamps: true,
