@@ -50,7 +50,7 @@ const register = {
       .pattern(/^[0-9]{10}$/) // Mobile number must be exactly 10 digits
       .required(), // Mobile number is required
 
-    refByEmail: Joi.array().items(Joi.string()).optional(), // Optional array of reference emails
+    refByEmail: Joi.string().optional(), // Optional array of reference emails
 
     blackListed: Joi.array().items(Joi.string()).optional(), // Optional array of blacklisted users
   }),
