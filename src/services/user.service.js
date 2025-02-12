@@ -13,39 +13,45 @@ const { createRetailer } = require('./retailer.service');
  * @returns {Promise<User>}
  */
 const createUser = async (userBody) => {
+  // Check if the email is already taken
+  if (await User.isEmailTaken(userBody.email)) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Email already taken');
+  }
+
+  // Generate unique ID based on the user's role
+  let prefix;
+  if (userBody.role === 'manufacture') {
+    prefix = 'MAN';
+  } else if (userBody.role === 'wholesaler') {
+    prefix = 'WHO';
+  } else if (userBody.role === 'retailer') {
+    prefix = 'RET';
+  } else {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Invalid user role');
+  }
+
   const session = await mongoose.startSession(); // Start a session
-  session.startTransaction(); // Start transaction
 
   try {
-    // Check if the email is already taken
-    if (await User.isEmailTaken(userBody.email)) {
-      throw new ApiError(httpStatus.BAD_REQUEST, 'Email already taken');
-    }
+    // Check if a replica set is enabled
+    const isReplicaSet = await mongoose.connection.db.admin().serverStatus().then(status => status.repl !== undefined);
 
-    // Generate unique ID based on the user's role
-    let prefix;
-    if (userBody.role === 'manufacture') {
-      prefix = 'MAN';
-    } else if (userBody.role === 'wholesaler') {
-      prefix = 'WHO';
-    } else if (userBody.role === 'retailer') {
-      prefix = 'RET';
-    } else {
-      throw new ApiError(httpStatus.BAD_REQUEST, 'Invalid user role');
+    if (isReplicaSet) {
+      session.startTransaction(); // Start transaction only if a replica set exists
     }
 
     // Increment the sequence for the corresponding role
     const counter = await Counter.findOneAndUpdate(
       { role: userBody.role },
       { $inc: { seq: 1 } },
-      { new: true, upsert: true, session }
+      { new: true, upsert: true, session: isReplicaSet ? session : undefined }
     );
 
     // Assign the generated user code
     userBody.code = `${prefix}${String(counter.seq).padStart(4, '0')}`;
 
     // Create the user in the User collection
-    const createdUser = await User.create([userBody], { session });
+    const createdUser = await User.create([userBody], isReplicaSet ? { session } : {});
 
     // Create additional data based on role
     const data = {
@@ -59,27 +65,32 @@ const createUser = async (userBody) => {
     };
 
     if (userBody.role === 'manufacture') {
-      await createManufacture([data], { session });
+      await createManufacture([data], isReplicaSet ? { session } : {});
     } else if (userBody.role === 'wholesaler') {
-      await createWholesaler([data], { session });
+      await createWholesaler([data], isReplicaSet ? { session } : {});
     } else if (userBody.role === 'retailer') {
-      await createRetailer([data], { session });
+      await createRetailer([data], isReplicaSet ? { session } : {});
     }
 
     // Update invitation status
     await Invitation.findOneAndUpdate(
       { email: createdUser[0].email },
       { $set: { status: 'accepted' } },
-      { new: true, session }
+      { new: true, session: isReplicaSet ? session : undefined }
     );
 
-    // Commit the transaction
-    await session.commitTransaction();
+    // Commit transaction only if using a replica set
+    if (isReplicaSet) {
+      await session.commitTransaction();
+    }
+
     session.endSession();
 
     return createdUser[0];
   } catch (error) {
-    await session.abortTransaction(); // Rollback if anything fails
+    if (isReplicaSet) {
+      await session.abortTransaction(); // Rollback if anything fails
+    }
     session.endSession();
     throw error;
   }
