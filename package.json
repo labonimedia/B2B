@@ -89,6 +89,7 @@
     "path": "^0.12.7",
     "pm2": "^5.1.0",
     "sharp": "^0.33.4",
+    "socket.io": "^4.8.1",
     "swagger-jsdoc": "^6.0.8",
     "swagger-ui-express": "^4.1.6",
     "uuid": "^10.0.0",
