@@ -72,7 +72,8 @@ const userSchema = mongoose.Schema(
       required: true,
       unique: true,
       validate(value) {
-        if (!validator.isMobilePhone(value, ['en-IN'])) {
+        // Custom regex to accept exactly 10 digits starting from 0 to 9
+        if (!/^[0-9]{10}$/.test(value)) {
           throw new Error('Invalid mobile number');
         }
       },
