@@ -12,6 +12,8 @@ router
   .get(auth('superadmin', 'manufacture', 'wholesaler'), validate(userValidation.getUsers), userController.getUsers);
 
 router.route('/update-pass').patch(validate(userValidation.updateUserByEmail), userController.updateUserByEmail);
+
+router.route('/delete-unwanted-user').delete(userController.deleteUserByEmail);
 router
   .route('/:userId')
   .get(auth('superadmin', 'manufacture', 'wholesaler'), validate(userValidation.getUser), userController.getUser)
@@ -23,7 +25,7 @@ router.route('/registered-user/:email').get(
   userController.getUserByEmail
 );
 
-router.route('/delete-unwanted-user').delete(userController.deleteUserByEmail);
+
 
 module.exports = router;
 

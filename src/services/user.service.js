@@ -1,4 +1,5 @@
 const httpStatus = require('http-status');
+const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const { User, Wholesaler, Manufacture, Retailer, Counter, Invitation } = require('../models');
 const ApiError = require('../utils/ApiError');
@@ -11,71 +12,79 @@ const { createRetailer } = require('./retailer.service');
  * @param {Object} userBody
  * @returns {Promise<User>}
  */
-
 const createUser = async (userBody) => {
-  // Check if the email is already taken
-  if (await User.isEmailTaken(userBody.email)) {
-    throw new ApiError(httpStatus.BAD_REQUEST, 'Email already taken');
-  }
+  const session = await mongoose.startSession(); // Start a session
+  session.startTransaction(); // Start transaction
 
-  // Generate unique ID based on the user's role
-  let prefix;
-  if (userBody.role === 'manufacture') {
-    prefix = 'MAN';
-  } else if (userBody.role === 'wholesaler') {
-    prefix = 'WHO';
-  } else if (userBody.role === 'retailer') {
-    prefix = 'RET';
-  }
+  try {
+    // Check if the email is already taken
+    if (await User.isEmailTaken(userBody.email)) {
+      throw new ApiError(httpStatus.BAD_REQUEST, 'Email already taken');
+    }
 
-  // Increment the sequence for the corresponding role
-  const counter = await Counter.findOneAndUpdate({ role: userBody.role }, { $inc: { seq: 1 } }, { new: true, upsert: true });
+    // Generate unique ID based on the user's role
+    let prefix;
+    if (userBody.role === 'manufacture') {
+      prefix = 'MAN';
+    } else if (userBody.role === 'wholesaler') {
+      prefix = 'WHO';
+    } else if (userBody.role === 'retailer') {
+      prefix = 'RET';
+    } else {
+      throw new ApiError(httpStatus.BAD_REQUEST, 'Invalid user role');
+    }
 
-  // Assign the generated ccode to userBody
-  // eslint-disable-next-line no-param-reassign
-  userBody.code = `${prefix}${String(counter.seq).padStart(4, '0')}`;
+    // Increment the sequence for the corresponding role
+    const counter = await Counter.findOneAndUpdate(
+      { role: userBody.role },
+      { $inc: { seq: 1 } },
+      { new: true, upsert: true, session }
+    );
 
-  // Create additional data based on role and create corresponding record
-  if (userBody.role === 'manufacture') {
+    // Assign the generated user code
+    userBody.code = `${prefix}${String(counter.seq).padStart(4, '0')}`;
+
+    // Create the user in the User collection
+    const createdUser = await User.create([userBody], { session });
+
+    // Create additional data based on role
     const data = {
       fullName: userBody.fullName,
       companyName: userBody.companyName,
       email: userBody.email,
       mobNumber: userBody.mobileNumber,
       category: userBody.category,
-      userCode: userBody.code, // Pass the generated code
+      userCode: userBody.code,
       contryCode: userBody.contryCode,
     };
-    await createManufacture(data);
-  } else if (userBody.role === 'wholesaler') {
-    const data = {
-      fullName: userBody.fullName,
-      companyName: userBody.companyName,
-      email: userBody.email,
-      mobNumber: userBody.mobileNumber,
-      category: userBody.category,
-      userCode: userBody.code, // Pass the generated code
-      contryCode: userBody.contryCode,
-    };
-    await createWholesaler(data);
-  } else if (userBody.role === 'retailer') {
-    const data = {
-      fullName: userBody.fullName,
-      companyName: userBody.companyName,
-      email: userBody.email,
-      mobNumber: userBody.mobileNumber,
-      category: userBody.category,
-      userCode: userBody.code, // Pass the generated code
-      contryCode: userBody.contryCode,
-    };
-    await createRetailer(data);
-  }
 
-  // Finally, create the user in the User collection
-  const createdUser = await User.create(userBody);
-  await Invitation.findOneAndUpdate({ email: createdUser.email }, { $set: { status: 'accepted' } }, { new: true });
-  return createdUser;
+    if (userBody.role === 'manufacture') {
+      await createManufacture([data], { session });
+    } else if (userBody.role === 'wholesaler') {
+      await createWholesaler([data], { session });
+    } else if (userBody.role === 'retailer') {
+      await createRetailer([data], { session });
+    }
+
+    // Update invitation status
+    await Invitation.findOneAndUpdate(
+      { email: createdUser[0].email },
+      { $set: { status: 'accepted' } },
+      { new: true, session }
+    );
+
+    // Commit the transaction
+    await session.commitTransaction();
+    session.endSession();
+
+    return createdUser[0];
+  } catch (error) {
+    await session.abortTransaction(); // Rollback if anything fails
+    session.endSession();
+    throw error;
+  }
 };
+
 
 /**
  * Query for users
