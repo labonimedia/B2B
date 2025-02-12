@@ -124,7 +124,7 @@ const getDeliveryChallanByManufactureEmail = async (manufacturerEmail, filter, o
 const processRetailerOrders = async (challanId) => {
     try {
         // 1️⃣ Fetch Manufacturer's Delivery Challan (where status is pending)
-        const deliveryChallan = await MnfDeliveryChallan.findById({ challanId });
+        const deliveryChallan = await MnfDeliveryChallan.findById(challanId);
 
         if (!deliveryChallan) {
             throw new Error('No pending delivery challan found');
