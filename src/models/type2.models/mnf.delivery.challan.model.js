@@ -41,6 +41,7 @@ const mnfDeliveryChallanSchema = mongoose.Schema(
     status: {
       type: String,
       enum: ['Pending', 'Partially-Fulfilled', 'Fulfilled', 'Rejected', 'Auto-Forwarded', 'Canceled'],
+      default: 'Pending',
     },
     poNumber: Number,
     deliveryChallanNumber: Number,
