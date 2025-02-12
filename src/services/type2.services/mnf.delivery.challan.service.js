@@ -188,8 +188,8 @@ const processRetailerOrders = async (challanId) => {
                     status: 'pending',
                     requestType: 'partial_delivery',
                     requestedItems: partialItems,
-                    responseByRetailer: null,
-                    responseDate: null,
+                    // responseByRetailer: null,
+                    // responseDate: null,
                 });
             }
         }
