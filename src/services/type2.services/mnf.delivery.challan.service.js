@@ -161,7 +161,8 @@ const processRetailerOrders = async (challanId) => {
                         // Partial order fulfillment required
                         partialItems.push({
                             ...item.toObject(),
-                            availableQuantity: stockItem.quantity,
+                            orderedQuantity: item.quantity, // Save ordered quantity
+                            availableQuantity: stockItem.quantity, // Save available quantity
                         });
 
                         orderFulfilled = false;
@@ -169,7 +170,11 @@ const processRetailerOrders = async (challanId) => {
                     }
                 } else {
                     orderFulfilled = false;
-                    partialItems.push({ ...item.toObject(), availableQuantity: 0 });
+                    partialItems.push({
+                        ...item.toObject(),
+                        orderedQuantity: item.quantity, // Save ordered quantity
+                        availableQuantity: 0, // No stock available
+                    });
                 }
             }
 
@@ -188,15 +193,13 @@ const processRetailerOrders = async (challanId) => {
                     status: 'pending',
                     requestType: 'partial_delivery',
                     requestedItems: partialItems,
-                    // responseByRetailer: null,
-                    // responseDate: null,
                 });
             }
         }
 
-        // // 🔹 Update Delivery Challan Stock
+        // 🔹 Update Delivery Challan Stock
         // await MnfDeliveryChallan.updateOne(
-        //     { poNumber: wholesalerPoNumber },
+        //     { _id: challanId },
         //     { $set: { avilableSet: availableStock } }
         // );
 
@@ -206,6 +209,7 @@ const processRetailerOrders = async (challanId) => {
         return { success: false, message: error.message };
     }
 };
+
 
 
 // Create combined PO for wholesaler
