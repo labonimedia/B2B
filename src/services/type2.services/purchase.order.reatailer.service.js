@@ -176,7 +176,7 @@ const combinePurchaseOrders = async (wholesalerEmail) => {
       const setMap = new Map();
 
       poGroup.forEach((item) => {
-        const key = `${item.designNumber}_${item.colour}_${item.size}`;
+        const key = `${item.designNumber}_${item.colour}_${item.size}_${item.quantity}`;
         if (setMap.has(key)) {
           setMap.get(key).quantity += item.quantity;
         } else {
@@ -187,10 +187,19 @@ const combinePurchaseOrders = async (wholesalerEmail) => {
 
       setMap.forEach((value) => mergedSet.push(value));
 
-      const retailerPOsArray = poGroup.map((item) => ({
-        email: item.poEmail,
-        poNumber: item.poNumber,
-      }));
+      const uniqueRetailerPOsMap = new Map();
+
+      poGroup.forEach((item) => {
+        const key = `${item.poEmail}-${item.poNumber}`;
+        if (!uniqueRetailerPOsMap.has(key)) {
+          uniqueRetailerPOsMap.set(key, {
+            email: item.poEmail,
+            poNumber: item.poNumber,
+          });
+        }
+      });
+
+      const retailerPOsArray = Array.from(uniqueRetailerPOsMap.values());
 
       const manufacturer = await Manufacture.findOne({ email: productBy }).select(
         'email fullName companyName address state country pinCode mobNumber GSTIN logo discountGiven'
