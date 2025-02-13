@@ -156,13 +156,12 @@ const combinePurchaseOrders = async (wholesalerEmail) => {
         if (!groupedByProduct[key]) {
           groupedByProduct[key] = [];
         }
-        // NOTE: Do not include wholesaler in the set item
+        // Exclude wholesaler from each set item.
         groupedByProduct[key].push({
           ...item,
           retailerPoId: po._id,
           poEmail: po.email,
           poNumber: po.poNumber,
-          // Remove wholesaler from here so that it doesn't appear in each set item
         });
       } else if (!item.productBy) {
         console.warn(`Missing productBy for item in PO ${po._id}`);
@@ -170,19 +169,20 @@ const combinePurchaseOrders = async (wholesalerEmail) => {
     });
   });
 
-  // Fetch the wholesaler information once
+  // Fetch the wholesaler information once.
   const wholesalerData = await Wholesaler.findOne({ email: wholesalerEmail });
 
   const combinedPOs = (await Promise.all(
     Object.keys(groupedByProduct).map(async (productBy) => {
       const poGroup = groupedByProduct[productBy];
 
-      // Merge items with the same designNumber, colour and size while removing any wholesaler info
+      // Merge items with the same designNumber, colour, size and retailer order.
       const setMap = new Map();
       poGroup.forEach((item) => {
-        // Destructure to remove wholesaler if exists
+        // Remove wholesaler if exists
         const { wholesaler, ...sanitizedItem } = item;
-        const key = `${sanitizedItem.designNumber}_${sanitizedItem.colour}_${sanitizedItem.size}`;
+        // Include retailer order info in the key.
+        const key = `${sanitizedItem.designNumber}_${sanitizedItem.colour}_${sanitizedItem.size}_${sanitizedItem.poEmail}_${sanitizedItem.poNumber}`;
         if (setMap.has(key)) {
           setMap.get(key).quantity += sanitizedItem.quantity;
         } else {
@@ -224,7 +224,7 @@ const combinePurchaseOrders = async (wholesalerEmail) => {
         email: wholesalerEmail,
         productBy,
         retailerPOs: retailerPOsArray,
-        wholesaler: wholesalerData, // Top-level wholesaler info
+        wholesaler: wholesalerData,
         manufacturer,
         discounts,
       };
@@ -233,6 +233,7 @@ const combinePurchaseOrders = async (wholesalerEmail) => {
 
   return combinedPOs;
 };
+
 
 // const combinePurchaseOrders = async (wholesalerEmail) => {
 //   if (!wholesalerEmail) {
