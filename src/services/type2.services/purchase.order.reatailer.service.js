@@ -176,7 +176,7 @@ const combinePurchaseOrders = async (wholesalerEmail) => {
       const setMap = new Map();
 
       poGroup.forEach((item) => {
-        const key = `${item.designNumber}_${item.colour}_${item.size}_${item.quantity}`;
+        const key = `${item.designNumber}_${item.colour}_${item.size}`;
         if (setMap.has(key)) {
           setMap.get(key).quantity += item.quantity;
         } else {
