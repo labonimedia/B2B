@@ -147,8 +147,8 @@ const combinePurchaseOrders = async (wholesalerEmail) => {
     throw new ApiError(httpStatus.NOT_FOUND, 'Cart Order not found.');
   }
 
+  // Group items by productBy
   const groupedByProduct = {};
-
   retailerPOs.forEach((po) => {
     po.set.forEach((item) => {
       if (item.status === 'pending' && item.productBy) {
@@ -156,12 +156,13 @@ const combinePurchaseOrders = async (wholesalerEmail) => {
         if (!groupedByProduct[key]) {
           groupedByProduct[key] = [];
         }
+        // NOTE: Do not include wholesaler in the set item
         groupedByProduct[key].push({
           ...item,
           retailerPoId: po._id,
           poEmail: po.email,
           poNumber: po.poNumber,
-          wholesaler: po.wholesaler,
+          // Remove wholesaler from here so that it doesn't appear in each set item
         });
       } else if (!item.productBy) {
         console.warn(`Missing productBy for item in PO ${po._id}`);
@@ -169,25 +170,29 @@ const combinePurchaseOrders = async (wholesalerEmail) => {
     });
   });
 
+  // Fetch the wholesaler information once
+  const wholesalerData = await Wholesaler.findOne({ email: wholesalerEmail });
+
   const combinedPOs = (await Promise.all(
     Object.keys(groupedByProduct).map(async (productBy) => {
       const poGroup = groupedByProduct[productBy];
 
+      // Merge items with the same designNumber, colour and size while removing any wholesaler info
       const setMap = new Map();
-
       poGroup.forEach((item) => {
-        const key = `${item.designNumber}_${item.colour}_${item.size}`;
+        // Destructure to remove wholesaler if exists
+        const { wholesaler, ...sanitizedItem } = item;
+        const key = `${sanitizedItem.designNumber}_${sanitizedItem.colour}_${sanitizedItem.size}`;
         if (setMap.has(key)) {
-          setMap.get(key).quantity += item.quantity;
+          setMap.get(key).quantity += sanitizedItem.quantity;
         } else {
-          setMap.set(key, { ...item });
+          setMap.set(key, sanitizedItem);
         }
       });
-
       const mergedSet = Array.from(setMap.values());
 
+      // Get unique retailer PO info
       const uniqueRetailerPOsMap = new Map();
-
       poGroup.forEach((item) => {
         const key = `${item.poEmail}-${item.poNumber}`;
         if (!uniqueRetailerPOsMap.has(key)) {
@@ -197,22 +202,19 @@ const combinePurchaseOrders = async (wholesalerEmail) => {
           });
         }
       });
-
       const retailerPOsArray = Array.from(uniqueRetailerPOsMap.values());
 
       const manufacturer = await Manufacture.findOne({ email: productBy }).select(
         'email fullName companyName address state country pinCode mobNumber GSTIN logo discountGiven'
       );
-
       if (!manufacturer) {
         console.warn(`Manufacturer details not found for productBy: ${productBy}`);
         return null;
       }
 
       let discounts = [];
-      const wholesaler = await Wholesaler.findOne({ email: wholesalerEmail });
-      if (wholesaler) {
-        discounts = wholesaler?.discountGiven?.filter(
+      if (wholesalerData) {
+        discounts = wholesalerData.discountGiven?.filter(
           (discount) => discount.discountGivenBy === productBy
         );
       }
@@ -222,7 +224,7 @@ const combinePurchaseOrders = async (wholesalerEmail) => {
         email: wholesalerEmail,
         productBy,
         retailerPOs: retailerPOsArray,
-        wholesaler: poGroup[0]?.wholesaler,
+        wholesaler: wholesalerData, // Top-level wholesaler info
         manufacturer,
         discounts,
       };
