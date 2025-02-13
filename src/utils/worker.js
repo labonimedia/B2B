@@ -1,6 +1,7 @@
 const { autoForwardQueue, autoCancelQueue } = require("./queue");
 const { MnfDeliveryChallan } = require("../models");
 const { sendNotification } = require("../utils/notification"); // Import correctly
+const { processRetailerOrders } = require("../services/type2.services/mnf.delivery.challan.service");
 
 // Process auto-forward job
 autoForwardQueue.process(async (job) => {
@@ -15,7 +16,7 @@ autoForwardQueue.process(async (job) => {
         await order.save();
 
         console.log(`✅ Order ${order.poNumber} auto-forwarded.`);
-
+        await processRetailerOrders(orderId);
         // Send real-time notification
         await sendNotification(order.email, `Order ${order.poNumber} has been auto-forwarded.`);
 
