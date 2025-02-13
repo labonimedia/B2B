@@ -92,6 +92,8 @@ const createPurchaseOrderType2 = async (reqBody) => {
         }
       });
 
+      retailerOrder.statusAll = 'processing';
+
       // Save the updated retailer order
       await retailerOrder.save();
     }

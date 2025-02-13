@@ -24,7 +24,7 @@ const PurchaseOrderRetailerSchema = mongoose.Schema(
     ],
     statusAll: {
       type: String,
-      enum: ['pending', 'delivered', 'cancelled'],
+      enum: ['pending', 'processing', 'delivered', 'cancelled'],
       default: 'pending',
     },
     email: String,
