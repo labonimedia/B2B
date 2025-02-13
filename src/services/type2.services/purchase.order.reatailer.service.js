@@ -170,7 +170,7 @@ const combinePurchaseOrders = async (wholesalerEmail) => {
   });
 
   // Fetch the wholesaler information once.
-  const wholesalerData = await Wholesaler.findOne({ email: wholesalerEmail });
+  const wholesalerData = await Wholesaler.findOne({ email: wholesalerEmail }).select('email fullName companyName address state country pinCode profileImg mobNumber GSTIN');
 
   const combinedPOs = (await Promise.all(
     Object.keys(groupedByProduct).map(async (productBy) => {
