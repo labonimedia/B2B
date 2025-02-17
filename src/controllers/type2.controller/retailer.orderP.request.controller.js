@@ -10,7 +10,7 @@ const createRetailerPartialReq = catchAsync(async (req, res) => {
 });
 
 const queryRetailerPartialReq = catchAsync(async (req, res) => {
-    const filter = pick(req.query, ['name', 'status']);
+    const filter = pick(req.query, ['name', 'retailerEmail', 'status']);
     const options = pick(req.query, ['sortBy', 'limit', 'page']);
     const result = await rtlOPReuestService.queryRetailerPartialReq(filter, options);
     res.send(result);
