@@ -55,11 +55,14 @@ const getDeliveryChallanByManufactureEmail = async (req, res) => {
 
 const processRetailerOrders = catchAsync(async (req, res) => {
   const cartItem = await mnfDeliveryChallanService.processRetailerOrders(req.query.deliveryChallanId);
+
   if (!cartItem) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Delivery challan  not found');
   }
+  await mnfDeliveryChallanService.updateMnfDeliveryChallanById(req.query.deliveryChallanId, { status: 'Forwarded' });
   res.status(httpStatus.OK).send(cartItem);
 });
+
 module.exports = {
   createMnfDeliveryChallan,
   queryMnfDeliveryChallan,
