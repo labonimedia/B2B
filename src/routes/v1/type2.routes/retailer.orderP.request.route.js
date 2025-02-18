@@ -6,12 +6,12 @@ const router = express.Router();
 
 router
     .route('/')
-    .post(auth('superadmin'), rtlOPReuestController.createRetailerPartialReq)
-    .get(auth('superadmin'), rtlOPReuestController.queryRetailerPartialReq);
+    .post(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), rtlOPReuestController.createRetailerPartialReq)
+    .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), rtlOPReuestController.queryRetailerPartialReq);
 
 router
     .route('/:id')
-    .get(auth('superadmin'), rtlOPReuestController.getRetailerPartialReqById)
-    .patch(auth('superadmin'), rtlOPReuestController.updateRetailerPartialReqById)
-    .delete(auth('superadmin'), rtlOPReuestController.deleteRetailerPartialReqById);
+    .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), rtlOPReuestController.getRetailerPartialReqById)
+    .patch(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), rtlOPReuestController.updateRetailerPartialReqById)
+    .delete(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), rtlOPReuestController.deleteRetailerPartialReqById);
 module.exports = router;
