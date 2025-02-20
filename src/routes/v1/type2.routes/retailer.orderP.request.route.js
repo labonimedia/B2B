@@ -14,4 +14,5 @@ router
     .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), rtlOPReuestController.getRetailerPartialReqById)
     .patch(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), rtlOPReuestController.updateRetailerPartialReqById)
     .delete(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), rtlOPReuestController.deleteRetailerPartialReqById);
+
 module.exports = router;

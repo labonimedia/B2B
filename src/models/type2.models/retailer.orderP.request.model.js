@@ -6,7 +6,6 @@ const RetailerPartialRequestSchema = mongoose.Schema(
         poNumber: {
             type: Number,
             required: true,
-            unique: true,
         },
         retailerEmail: {
             type: String,
