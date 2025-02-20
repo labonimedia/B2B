@@ -40,7 +40,7 @@ const queryRetailerPartialReq = async (filter, options) => {
     }, {});
 
     // Attach wholesaler fullName to the response
-    citys.docs = citys.results.map(item => ({
+    citys.results = citys.results.map(item => ({
         ...item.toObject(),
         wholesalerFullName: wholesalerMap[item.wholesalerEmail] || 'Unknown' // Add fullName or 'Unknown' if not found
     }));
