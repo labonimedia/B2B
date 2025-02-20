@@ -1,5 +1,5 @@
 const httpStatus = require('http-status');
-const { RetailerPartialReq } = require('../../models');
+const { RetailerPartialReq, Wholesaler } = require('../../models');
 const ApiError = require('../../utils/ApiError');
 
 /**
@@ -24,9 +24,30 @@ const createRetailerPartialReq = async (reqBody) => {
  * @returns {Promise<QueryResult>}
  */
 const queryRetailerPartialReq = async (filter, options) => {
+    // Fetch retailer partial requests with pagination
     const citys = await RetailerPartialReq.paginate(filter, options);
+
+    // Extract wholesaler emails from retailer responses
+    const wholesalerEmails = [...new Set(citys.results.map(item => item.wholesalerEmail))]; // Ensure unique emails
+
+    // Fetch wholesaler details based on emails
+    const wholesalers = await Wholesaler.find({ email: { $in: wholesalerEmails } }, { email: 1, fullName: 1 });
+
+    // Convert wholesalers to a map for easy lookup
+    const wholesalerMap = wholesalers.reduce((acc, wholesaler) => {
+        acc[wholesaler.email] = wholesaler.fullName;
+        return acc;
+    }, {});
+
+    // Attach wholesaler fullName to the response
+    citys.docs = citys.results.map(item => ({
+        ...item.toObject(),
+        wholesalerFullName: wholesalerMap[item.wholesalerEmail] || 'Unknown' // Add fullName or 'Unknown' if not found
+    }));
+
     return citys;
 };
+
 
 /**
  * Get RetailerPartialReq by id
