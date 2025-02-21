@@ -146,14 +146,13 @@ const processRetailerOrders = async (challanId) => {
             let partialItems = [];
 
             for (let item of order.set) {
+                delete item.role;
                 let stockItem = availableStock.find(
                     (s) =>
                         s.designNumber === item.designNumber &&
                         s.colour === item.colour &&
                         s.size === item.size
                 );
-
-                const { status, ...itemWithoutStatus } = item.toObject(); // Remove status field
 
                 if (stockItem) {
                     if (stockItem.quantity >= item.quantity) {
@@ -162,7 +161,7 @@ const processRetailerOrders = async (challanId) => {
                     } else {
                         // Partial order fulfillment required
                         partialItems.push({
-                            ...itemWithoutStatus,
+                            ...item.toObject(),
                             orderedQuantity: item.quantity, // Save ordered quantity
                             availableQuantity: stockItem.quantity, // Save available quantity
                         });
@@ -173,7 +172,7 @@ const processRetailerOrders = async (challanId) => {
                 } else {
                     orderFulfilled = false;
                     partialItems.push({
-                        ...itemWithoutStatus,
+                        ...item.toObject(),
                         orderedQuantity: item.quantity, // Save ordered quantity
                         availableQuantity: 0, // No stock available
                     });
