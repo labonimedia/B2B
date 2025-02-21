@@ -141,57 +141,39 @@ const processRetailerOrders = async (challanId) => {
         let availableStock = [...deliveryChallan.avilableSet]; // Clone available stock
 
         // 3️⃣ Process each Retailer PO
-        for (let order of retailerOrders) {
-            let orderFulfilled = true;
-            let partialItems = [];
+        for (const item of order.set) {
+            let stockItem = availableStock.find(
+                (s) =>
+                    s.designNumber === item.designNumber &&
+                    s.colour === item.colour &&
+                    s.size === item.size
+            );
 
-            for (let item of order.set) {
-                let stockItem = availableStock.find(
-                    (s) =>
-                        s.designNumber === item.designNumber &&
-                        s.colour === item.colour &&
-                        s.size === item.size
-                );
-
-                if (stockItem) {
-                    if (stockItem.quantity >= item.quantity) {
-                        // Full order can be fulfilled
-                        stockItem.quantity -= item.quantity;
-                    } else {
-                        // Partial order fulfillment required
-                        partialItems.push({
-                            ...item.toObject(),
-                            orderedQuantity: item.quantity, // Save ordered quantity
-                            availableQuantity: stockItem.quantity, // Save available quantity
-                        });
-
-                        orderFulfilled = false;
-                        stockItem.quantity = 0; // Deplete available stock
-                    }
+            if (stockItem) {
+                if (stockItem.quantity >= item.quantity) {
+                    // Full order can be fulfilled
+                    stockItem.quantity -= item.quantity;
                 } else {
-                    orderFulfilled = false;
-                    partialItems.push({
-                        ...item.toObject(),
-                        orderedQuantity: item.quantity, // Save ordered quantity
-                        availableQuantity: 0, // No stock available
-                    });
-                }
-            }
+                    // Partial order fulfillment required
+                    const { status, ...itemWithoutStatus } = item.toObject(); // Remove status field
 
-            if (orderFulfilled) {
-                // ✅ Update PO as fulfilled
-                await PurchaseOrderRetailerType2.updateOne(
-                    { poNumber: order.poNumber },
-                    { $set: { statusAll: 'processing' } }
-                );
+                    partialItems.push({
+                        ...itemWithoutStatus,
+                        orderedQuantity: item.quantity, // Save ordered quantity
+                        availableQuantity: stockItem.quantity, // Save available quantity
+                    });
+
+                    orderFulfilled = false;
+                    stockItem.quantity = 0; // Deplete available stock
+                }
             } else {
-                // 🚀 Save Partial Request for Retailer
-                await RetailerPartialReq.create({
-                    poNumber: order.poNumber,
-                    retailerEmail: order.email,
-                    wholesalerEmail: order.wholesalerEmail,
-                    requestType: 'partial_delivery',
-                    requestedItems: partialItems,
+                orderFulfilled = false;
+                const { status, ...itemWithoutStatus } = item.toObject(); // Remove status field
+
+                partialItems.push({
+                    ...itemWithoutStatus,
+                    orderedQuantity: item.quantity, // Save ordered quantity
+                    availableQuantity: 0, // No stock available
                 });
             }
         }
