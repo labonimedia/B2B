@@ -204,7 +204,7 @@ const processRetailerOrders = async (challanId) => {
                 );
             }
 
-            await Promise.all(updateOperations); // Execute updates in parallel for efficiency
+            const result = await Promise.all(updateOperations); // Execute updates in parallel for efficiency
         }
 
         // 🔹 Update Delivery Challan Stock
@@ -213,7 +213,7 @@ const processRetailerOrders = async (challanId) => {
         //     { $set: { avilableSet: availableStock } }
         // );
 
-        return { success: true, message: 'Retailer orders processed successfully' };
+        return result;
     } catch (error) {
         console.error('Error processing retailer orders:', error);
         return { success: false, message: error.message };
