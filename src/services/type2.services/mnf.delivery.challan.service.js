@@ -139,45 +139,47 @@ const processRetailerOrders = async (challanId) => {
     }).sort({ retailerPoDate: 1 });
 
     let availableStock = [...deliveryChallan.avilableSet]; // Clone available stock
+    for (const order of retailerOrders) {
+        let orderFulfilled = true;
+        let partialItems = [];
 
-    // 3️⃣ Process each Retailer PO
-    for (const item of order.set) {
-        let stockItem = availableStock.find(
-            (s) =>
-                s.designNumber === item.designNumber &&
-                s.colour === item.colour &&
-                s.size === item.size
-        );
+        for (const item of order.set) {
+            let stockItem = availableStock.find(
+                (s) =>
+                    s.designNumber === item.designNumber &&
+                    s.colour === item.colour &&
+                    s.size === item.size
+            );
 
-        if (stockItem) {
-            if (stockItem.quantity >= item.quantity) {
-                // Full order can be fulfilled
-                stockItem.quantity -= item.quantity;
+            if (stockItem) {
+                if (stockItem.quantity >= item.quantity) {
+                    // Full order can be fulfilled
+                    stockItem.quantity -= item.quantity;
+                } else {
+                    // Partial order fulfillment required
+                    const { status, ...itemWithoutStatus } = item.toObject(); // Remove status field
+
+                    partialItems.push({
+                        ...itemWithoutStatus,
+                        orderedQuantity: item.quantity, // Save ordered quantity
+                        availableQuantity: stockItem.quantity, // Save available quantity
+                    });
+
+                    orderFulfilled = false;
+                    stockItem.quantity = 0; // Deplete available stock
+                }
             } else {
-                // Partial order fulfillment required
+                orderFulfilled = false;
                 const { status, ...itemWithoutStatus } = item.toObject(); // Remove status field
 
                 partialItems.push({
                     ...itemWithoutStatus,
                     orderedQuantity: item.quantity, // Save ordered quantity
-                    availableQuantity: stockItem.quantity, // Save available quantity
+                    availableQuantity: 0, // No stock available
                 });
-
-                orderFulfilled = false;
-                stockItem.quantity = 0; // Deplete available stock
             }
-        } else {
-            orderFulfilled = false;
-            const { status, ...itemWithoutStatus } = item.toObject(); // Remove status field
-
-            partialItems.push({
-                ...itemWithoutStatus,
-                orderedQuantity: item.quantity, // Save ordered quantity
-                availableQuantity: 0, // No stock available
-            });
         }
     }
-
     // 🔹 Update Delivery Challan Stock
     // await MnfDeliveryChallan.updateOne(
     //     { _id: challanId },
