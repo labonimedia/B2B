@@ -20,6 +20,11 @@ const RetailerPartialRequestSchema = mongoose.Schema(
             enum: ['partial_delivery', 'checked', 'cancel'],
             required: true,
         },
+        status: {
+            type: String,
+            enum: ['pending', 'checked', 'rejected'],
+            default: 'pending',
+        },
         requestedItems: [
             {
                 status: {
