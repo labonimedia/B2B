@@ -190,7 +190,6 @@ const processRetailerOrders = async (challanId) => {
                     poNumber: order.poNumber,
                     retailerEmail: order.email,
                     wholesalerEmail: order.wholesalerEmail,
-                    status: 'pending',
                     requestType: 'partial_delivery',
                     requestedItems: partialItems,
                 });
