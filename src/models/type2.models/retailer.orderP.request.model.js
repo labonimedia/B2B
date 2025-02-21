@@ -17,7 +17,7 @@ const RetailerPartialRequestSchema = mongoose.Schema(
         },
         requestType: {
             type: String,
-            enum: ['partial_delivery', 'cancel'],
+            enum: ['partial_delivery', 'checked', 'cancel'],
             required: true,
         },
         requestedItems: [
