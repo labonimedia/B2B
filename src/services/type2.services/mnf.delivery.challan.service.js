@@ -122,73 +122,73 @@ const getDeliveryChallanByManufactureEmail = async (manufacturerEmail, filter, o
  * @returns {Promise<PurchaseOrderType2>}
  */
 const processRetailerOrders = async (challanId) => {
-    try {
-        // 1️⃣ Fetch Manufacturer's Delivery Challan (where status is pending)
-        const deliveryChallan = await MnfDeliveryChallan.findById(challanId);
+    // try {
+    // 1️⃣ Fetch Manufacturer's Delivery Challan (where status is pending)
+    const deliveryChallan = await MnfDeliveryChallan.findById(challanId);
 
-        if (!deliveryChallan) {
-            throw new Error('No pending delivery challan found');
-        }
+    if (!deliveryChallan) {
+        throw new Error('No pending delivery challan found');
+    }
 
-        // 2️⃣ Fetch all Retailer POs associated with the wholesaler's PO, sorted by PO date
-        let retailerOrders = await PurchaseOrderRetailerType2.find({
-            $or: deliveryChallan.retailerPOs.map((po) => ({
-                email: po.email,
-                poNumber: po.poNumber
-            }))
-        }).sort({ retailerPoDate: 1 });
+    // 2️⃣ Fetch all Retailer POs associated with the wholesaler's PO, sorted by PO date
+    let retailerOrders = await PurchaseOrderRetailerType2.find({
+        $or: deliveryChallan.retailerPOs.map((po) => ({
+            email: po.email,
+            poNumber: po.poNumber
+        }))
+    }).sort({ retailerPoDate: 1 });
 
-        let availableStock = [...deliveryChallan.avilableSet]; // Clone available stock
+    let availableStock = [...deliveryChallan.avilableSet]; // Clone available stock
 
-        // 3️⃣ Process each Retailer PO
-        for (const item of order.set) {
-            let stockItem = availableStock.find(
-                (s) =>
-                    s.designNumber === item.designNumber &&
-                    s.colour === item.colour &&
-                    s.size === item.size
-            );
+    // 3️⃣ Process each Retailer PO
+    for (const item of order.set) {
+        let stockItem = availableStock.find(
+            (s) =>
+                s.designNumber === item.designNumber &&
+                s.colour === item.colour &&
+                s.size === item.size
+        );
 
-            if (stockItem) {
-                if (stockItem.quantity >= item.quantity) {
-                    // Full order can be fulfilled
-                    stockItem.quantity -= item.quantity;
-                } else {
-                    // Partial order fulfillment required
-                    const { status, ...itemWithoutStatus } = item.toObject(); // Remove status field
-
-                    partialItems.push({
-                        ...itemWithoutStatus,
-                        orderedQuantity: item.quantity, // Save ordered quantity
-                        availableQuantity: stockItem.quantity, // Save available quantity
-                    });
-
-                    orderFulfilled = false;
-                    stockItem.quantity = 0; // Deplete available stock
-                }
+        if (stockItem) {
+            if (stockItem.quantity >= item.quantity) {
+                // Full order can be fulfilled
+                stockItem.quantity -= item.quantity;
             } else {
-                orderFulfilled = false;
+                // Partial order fulfillment required
                 const { status, ...itemWithoutStatus } = item.toObject(); // Remove status field
 
                 partialItems.push({
                     ...itemWithoutStatus,
                     orderedQuantity: item.quantity, // Save ordered quantity
-                    availableQuantity: 0, // No stock available
+                    availableQuantity: stockItem.quantity, // Save available quantity
                 });
+
+                orderFulfilled = false;
+                stockItem.quantity = 0; // Deplete available stock
             }
+        } else {
+            orderFulfilled = false;
+            const { status, ...itemWithoutStatus } = item.toObject(); // Remove status field
+
+            partialItems.push({
+                ...itemWithoutStatus,
+                orderedQuantity: item.quantity, // Save ordered quantity
+                availableQuantity: 0, // No stock available
+            });
         }
-
-        // 🔹 Update Delivery Challan Stock
-        // await MnfDeliveryChallan.updateOne(
-        //     { _id: challanId },
-        //     { $set: { avilableSet: availableStock } }
-        // );
-
-        return { success: true, message: 'Retailer orders processed successfully' };
-    } catch (error) {
-        console.error('Error processing retailer orders:', error);
-        return { success: false, message: error.message };
     }
+
+    // 🔹 Update Delivery Challan Stock
+    // await MnfDeliveryChallan.updateOne(
+    //     { _id: challanId },
+    //     { $set: { avilableSet: availableStock } }
+    // );
+
+    return { success: true, message: 'Retailer orders processed successfully' };
+    // } catch (error) {
+    //     console.error('Error processing retailer orders:', error);
+    //     return { success: false, message: error.message };
+    // }
 };
 
 
