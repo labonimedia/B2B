@@ -121,6 +121,105 @@ const getDeliveryChallanByManufactureEmail = async (manufacturerEmail, filter, o
  * @param {Object} updateBody
  * @returns {Promise<PurchaseOrderType2>}
  */
+// const processRetailerOrders = async (challanId) => {
+//     try {
+//         // 1️⃣ Fetch Manufacturer's Delivery Challan (where status is pending)
+//         const deliveryChallan = await MnfDeliveryChallan.findById(challanId);
+
+//         if (!deliveryChallan) {
+//             throw new Error('No pending delivery challan found');
+//         }
+
+//         // 2️⃣ Fetch all Retailer POs associated with the wholesaler's PO, sorted by PO date
+//         let retailerOrders = await PurchaseOrderRetailerType2.find({
+//             $or: deliveryChallan.retailerPOs.map((po) => ({
+//                 email: po.email,
+//                 poNumber: po.poNumber
+//             }))
+//         }).sort({ retailerPoDate: 1 });
+
+//         let availableStock = [...deliveryChallan.avilableSet]; // Clone available stock
+
+//         for (const order of retailerOrders) {
+//             let orderFulfilled = true;
+//             let partialItems = [];
+
+//             for (const item of order.set) {
+//                 let stockItem = availableStock.find(
+//                     (s) =>
+//                         s.designNumber === item.designNumber &&
+//                         s.colour === item.colour &&
+//                         s.size === item.size
+//                 );
+
+//                 if (stockItem) {
+//                     if (stockItem.quantity >= item.quantity) {
+//                         // Full order can be fulfilled
+//                         stockItem.quantity -= item.quantity;
+//                     } else {
+//                         // Partial order fulfillment required
+//                         const { status, ...itemWithoutStatus } = item.toObject(); // Remove status field
+
+//                         partialItems.push({
+//                             ...itemWithoutStatus,
+//                             orderedQuantity: item.quantity, // Save ordered quantity
+//                             availableQuantity: stockItem.quantity, // Save available quantity
+//                         });
+
+//                         orderFulfilled = false;
+//                         stockItem.quantity = 0; // Deplete available stock
+//                     }
+//                 } else {
+//                     orderFulfilled = false;
+//                     const { status, ...itemWithoutStatus } = item.toObject(); // Remove status field
+
+//                     partialItems.push({
+//                         ...itemWithoutStatus,
+//                         orderedQuantity: item.quantity, // Save ordered quantity
+//                         availableQuantity: 0, // No stock available
+//                     });
+//                 }
+//             }
+
+//             const updateOperations = [];
+
+//             if (orderFulfilled) {
+//                 // ✅ Update PO as fulfilled
+//                 updateOperations.push(
+//                     PurchaseOrderRetailerType2.updateOne(
+//                         { poNumber: order.poNumber },
+//                         { $set: { statusAll: 'processing' } }
+//                     )
+//                 );
+//             } else {
+//                 // 🚀 Save Partial Request for Retailer
+//                 updateOperations.push(
+//                     RetailerPartialReq.create({
+//                         poNumber: order.poNumber,
+//                         retailerEmail: order.email,
+//                         wholesalerEmail: order.wholesalerEmail,
+//                         requestType: 'partial_delivery',
+//                         requestedItems: partialItems,
+//                     })
+//                 );
+//             }
+
+//             const result = await Promise.all(updateOperations); // Execute updates in parallel for efficiency
+//         }
+
+//         // 🔹 Update Delivery Challan Stock
+//         // await MnfDeliveryChallan.updateOne(
+//         //     { _id: challanId },
+//         //     { $set: { avilableSet: availableStock } }
+//         // );
+
+//         return result;
+//     } catch (error) {
+//         console.error('Error processing retailer orders:', error);
+//         return { success: false, message: error.message };
+//     }
+// };
+
 const processRetailerOrders = async (challanId) => {
     try {
         // 1️⃣ Fetch Manufacturer's Delivery Challan (where status is pending)
@@ -192,33 +291,42 @@ const processRetailerOrders = async (challanId) => {
                     )
                 );
             } else {
-                // 🚀 Save Partial Request for Retailer
-                updateOperations.push(
-                    RetailerPartialReq.create({
-                        poNumber: order.poNumber,
-                        retailerEmail: order.email,
-                        wholesalerEmail: order.wholesalerEmail,
-                        requestType: 'partial_delivery',
-                        requestedItems: partialItems,
-                    })
-                );
+                // 🚀 Check if a partial request already exists
+                const existingPartialRequest = await RetailerPartialReq.findOne({
+                    poNumber: order.poNumber,
+                    retailerEmail: order.email,
+                    wholesalerEmail: order.wholesalerEmail,
+                    requestType: 'partial_delivery',
+                });
+
+                if (existingPartialRequest) {
+                    // 🔄 Update existing request (merge items)
+                    existingPartialRequest.requestedItems.push(...partialItems);
+                    updateOperations.push(existingPartialRequest.save());
+                } else {
+                    // ✅ Create new Partial Request
+                    updateOperations.push(
+                        RetailerPartialReq.create({
+                            poNumber: order.poNumber,
+                            retailerEmail: order.email,
+                            wholesalerEmail: order.wholesalerEmail,
+                            requestType: 'partial_delivery',
+                            requestedItems: partialItems,
+                        })
+                    );
+                }
             }
 
-            const result = await Promise.all(updateOperations); // Execute updates in parallel for efficiency
+            await Promise.all(updateOperations); // Execute updates in parallel for efficiency
         }
 
-        // 🔹 Update Delivery Challan Stock
-        // await MnfDeliveryChallan.updateOne(
-        //     { _id: challanId },
-        //     { $set: { avilableSet: availableStock } }
-        // );
-
-        return result;
+        return { success: true, message: 'Retailer orders processed successfully' };
     } catch (error) {
         console.error('Error processing retailer orders:', error);
         return { success: false, message: error.message };
     }
 };
+
 
 
 
