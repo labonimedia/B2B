@@ -296,8 +296,7 @@ const processRetailerOrders = async (challanId) => {
 
         return { success: true, message: 'Retailer orders processed successfully' };
     } catch (error) {
-        console.error('Error processing retailer orders:', error);
-        return { success: false, message: error.message };
+        throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'Error processing retailer orders');
     }
 };
 
