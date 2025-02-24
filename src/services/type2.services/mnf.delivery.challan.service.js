@@ -202,122 +202,16 @@ const getDeliveryChallanByManufactureEmail = async (manufacturerEmail, filter, o
 //         console.error('Error processing retailer orders:', error);
 //         return { success: false, message: error.message };
 //     }
-// };
-const processRetailerOrders = async (challanId) => {
-    try {
-        // 1️⃣ Fetch Manufacturer's Delivery Challan
-        const deliveryChallan = await MnfDeliveryChallan.findById(challanId);
-        if (!deliveryChallan) {
-            throw new Error('No pending delivery challan found');
-        }
-
-        // 2️⃣ Fetch Retailer POs (FIFO by retailerPoDate)
-        let retailerOrders = await PurchaseOrderRetailerType2.find({
-            $or: deliveryChallan.retailerPOs.map((po) => ({
-                email: po.email,
-                poNumber: po.poNumber
-            }))
-        }).sort({ retailerPoDate: 1 });
-
-        // Deep clone available stock to avoid modifying the original
-        let availableStock = deliveryChallan.avilableSet.map(item => ({ ...item }));
-
-        // 3️⃣ Process each Retailer PO
-        for (let order of retailerOrders) {
-            let orderFulfilled = true;
-            let partialItems = [];
-
-            // Aggregate items in order.set by unique attributes
-            let groupedItems = {};
-            for (let item of order.set) {
-                delete item.role; // Remove unwanted property
-                const key = `${item.designNumber}_${item.colour}_${item.size}_${item.colourName}`;
-                if (!groupedItems[key]) {
-                    groupedItems[key] = { ...item.toObject(), quantity: 0 };
-                }
-                groupedItems[key].quantity += item.quantity;
-            }
-            const aggregatedItems = Object.values(groupedItems);
-
-            // Process aggregated items
-            for (let item of aggregatedItems) {
-                let stockItem = availableStock.find(
-                    (s) =>
-                        s.designNumber === item.designNumber &&
-                        s.colour === item.colour &&
-                        s.size === item.size &&
-                        s.colourName === item.colourName
-                );
-
-                if (stockItem) {
-                    if (stockItem.quantity >= item.quantity) {
-                        // Fully fulfill the aggregated item
-                        stockItem.quantity -= item.quantity;
-                    } else {
-                        // Partial fulfillment
-                        partialItems.push({
-                            ...item,
-                            orderedQuantity: item.quantity,
-                            availableQuantity: stockItem.quantity
-                        });
-                        orderFulfilled = false;
-                        stockItem.quantity = 0; // Deplete stock
-                    }
-                } else {
-                    // No stock available
-                    partialItems.push({
-                        ...item,
-                        orderedQuantity: item.quantity,
-                        availableQuantity: 0
-                    });
-                    orderFulfilled = false;
-                }
-            }
-
-            if (orderFulfilled) {
-                // Update PO status to 'processing'
-                await PurchaseOrderRetailerType2.updateOne(
-                    { poNumber: order.poNumber },
-                    { $set: { statusAll: 'processing' } }
-                );
-            } else {
-                // Save or append to RetailerPartialReq
-                const existingPartialReq = await RetailerPartialReq.findOne({
-                    poNumber: order.poNumber,
-                    retailerEmail: order.email,
-                    wholesalerEmail: order.wholesalerEmail,
-                    requestType: 'partial_delivery'
-                });
-
-                if (existingPartialReq) {
-                    existingPartialReq.requestedItems.push(...partialItems);
-                    await existingPartialReq.save();
-                } else {
-                    await RetailerPartialReq.create({
-                        poNumber: order.poNumber,
-                        retailerEmail: order.email,
-                        wholesalerEmail: order.wholesalerEmail,
-                        requestType: 'partial_delivery',
-                        requestedItems: partialItems
-                    });
-                }
-            }
-        }
-
-        return { success: true, message: 'Retailer orders processed successfully' };
-    } catch (error) {
-        throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'Error processing retailer orders');
-    }
-};
+// // };
 // const processRetailerOrders = async (challanId) => {
 //     try {
-//         // 1️⃣ Fetch Manufacturer's Delivery Challan (with pending status)
+//         // 1️⃣ Fetch Manufacturer's Delivery Challan
 //         const deliveryChallan = await MnfDeliveryChallan.findById(challanId);
 //         if (!deliveryChallan) {
 //             throw new Error('No pending delivery challan found');
 //         }
 
-//         // 2️⃣ Fetch all Retailer POs associated with the challan's retailerPOs (FIFO by retailerPoDate)
+//         // 2️⃣ Fetch Retailer POs (FIFO by retailerPoDate)
 //         let retailerOrders = await PurchaseOrderRetailerType2.find({
 //             $or: deliveryChallan.retailerPOs.map((po) => ({
 //                 email: po.email,
@@ -325,18 +219,28 @@ const processRetailerOrders = async (challanId) => {
 //             }))
 //         }).sort({ retailerPoDate: 1 });
 
-//         // Clone available stock from the challan (avilableSet)
-//         let availableStock = [...deliveryChallan.avilableSet];
+//         // Deep clone available stock to avoid modifying the original
+//         let availableStock = deliveryChallan.avilableSet.map(item => ({ ...item }));
 
 //         // 3️⃣ Process each Retailer PO
 //         for (let order of retailerOrders) {
 //             let orderFulfilled = true;
 //             let partialItems = [];
 
+//             // Aggregate items in order.set by unique attributes
+//             let groupedItems = {};
 //             for (let item of order.set) {
-//                 // Remove unwanted property 'role'
-//                 delete item.role;
+//                 delete item.role; // Remove unwanted property
+//                 const key = `${item.designNumber}_${item.colour}_${item.size}_${item.colourName}`;
+//                 if (!groupedItems[key]) {
+//                     groupedItems[key] = { ...item.toObject(), quantity: 0 };
+//                 }
+//                 groupedItems[key].quantity += item.quantity;
+//             }
+//             const aggregatedItems = Object.values(groupedItems);
 
+//             // Process aggregated items
+//             for (let item of aggregatedItems) {
 //                 let stockItem = availableStock.find(
 //                     (s) =>
 //                         s.designNumber === item.designNumber &&
@@ -347,36 +251,37 @@ const processRetailerOrders = async (challanId) => {
 
 //                 if (stockItem) {
 //                     if (stockItem.quantity >= item.quantity) {
-//                         // Full order item can be fulfilled
+//                         // Fully fulfill the aggregated item
 //                         stockItem.quantity -= item.quantity;
 //                     } else {
-//                         // Partial order fulfillment required
+//                         // Partial fulfillment
 //                         partialItems.push({
-//                             ...item.toObject(),
+//                             ...item,
 //                             orderedQuantity: item.quantity,
 //                             availableQuantity: stockItem.quantity
 //                         });
 //                         orderFulfilled = false;
-//                         stockItem.quantity = 0; // Deplete available stock
+//                         stockItem.quantity = 0; // Deplete stock
 //                     }
 //                 } else {
-//                     orderFulfilled = false;
+//                     // No stock available
 //                     partialItems.push({
-//                         ...item.toObject(),
+//                         ...item,
 //                         orderedQuantity: item.quantity,
 //                         availableQuantity: 0
 //                     });
+//                     orderFulfilled = false;
 //                 }
 //             }
 
 //             if (orderFulfilled) {
-//                 // ✅ If fully fulfilled, update the PO status to 'processing'
+//                 // Update PO status to 'processing'
 //                 await PurchaseOrderRetailerType2.updateOne(
 //                     { poNumber: order.poNumber },
 //                     { $set: { statusAll: 'processing' } }
 //                 );
 //             } else {
-//                 // 🚀 Save Partial Request for Retailer in one document per retailer PO
+//                 // Save or append to RetailerPartialReq
 //                 const existingPartialReq = await RetailerPartialReq.findOne({
 //                     poNumber: order.poNumber,
 //                     retailerEmail: order.email,
@@ -385,7 +290,6 @@ const processRetailerOrders = async (challanId) => {
 //                 });
 
 //                 if (existingPartialReq) {
-//                     // Append new partial items to the existing document
 //                     existingPartialReq.requestedItems.push(...partialItems);
 //                     await existingPartialReq.save();
 //                 } else {
@@ -405,6 +309,103 @@ const processRetailerOrders = async (challanId) => {
 //         throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'Error processing retailer orders');
 //     }
 // };
+
+const processRetailerOrders = async (challanId) => {
+    try {
+        // 1️⃣ Fetch Manufacturer's Delivery Challan (with pending status)
+        const deliveryChallan = await MnfDeliveryChallan.findById(challanId);
+        if (!deliveryChallan) {
+            throw new Error('No pending delivery challan found');
+        }
+
+        // 2️⃣ Fetch all Retailer POs associated with the challan's retailerPOs (FIFO by retailerPoDate)
+        let retailerOrders = await PurchaseOrderRetailerType2.find({
+            $or: deliveryChallan.retailerPOs.map((po) => ({
+                email: po.email,
+                poNumber: po.poNumber
+            }))
+        }).sort({ retailerPoDate: 1 });
+
+        // Clone available stock from the challan (avilableSet)
+        let availableStock = [...deliveryChallan.avilableSet];
+
+        // 3️⃣ Process each Retailer PO
+        for (let order of retailerOrders) {
+            let orderFulfilled = true;
+            let partialItems = [];
+
+            for (let item of order.set) {
+                // Remove unwanted property 'role'
+                delete item.role;
+
+                let stockItem = availableStock.find(
+                    (s) =>
+                        s.designNumber === item.designNumber &&
+                        s.colour === item.colour &&
+                        s.size === item.size &&
+                        s.colourName === item.colourName
+                );
+
+                if (stockItem) {
+                    if (stockItem.quantity >= item.quantity) {
+                        // Full order item can be fulfilled
+                        stockItem.quantity -= item.quantity;
+                    } else {
+                        // Partial order fulfillment required
+                        partialItems.push({
+                            ...item.toObject(),
+                            orderedQuantity: item.quantity,
+                            availableQuantity: stockItem.quantity
+                        });
+                        orderFulfilled = false;
+                        stockItem.quantity = 0; // Deplete available stock
+                    }
+                } else {
+                    orderFulfilled = false;
+                    partialItems.push({
+                        ...item.toObject(),
+                        orderedQuantity: item.quantity,
+                        availableQuantity: 0
+                    });
+                }
+            }
+
+            if (orderFulfilled) {
+                // ✅ If fully fulfilled, update the PO status to 'processing'
+                await PurchaseOrderRetailerType2.updateOne(
+                    { poNumber: order.poNumber },
+                    { $set: { statusAll: 'processing' } }
+                );
+            } else {
+                // 🚀 Save Partial Request for Retailer in one document per retailer PO
+                const existingPartialReq = await RetailerPartialReq.findOne({
+                    poNumber: order.poNumber,
+                    retailerEmail: order.email,
+                    wholesalerEmail: order.wholesalerEmail,
+                    requestType: 'partial_delivery'
+                });
+
+                if (existingPartialReq) {
+                    // Append new partial items to the existing document
+                    existingPartialReq.requestedItems.push(...partialItems);
+                    await existingPartialReq.save();
+                } else {
+                    await RetailerPartialReq.create({
+                        poNumber: order.poNumber,
+                        retailerEmail: order.email,
+                        wholesalerEmail: order.wholesalerEmail,
+                        requestType: 'partial_delivery',
+                        requestedItems: partialItems
+                    });
+                }
+            }
+        }
+
+        return { success: true, message: 'Retailer orders processed successfully' };
+    } catch (error) {
+        throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'Error processing retailer orders');
+    }
+};
 
 
 // Create combined PO for wholesaler
