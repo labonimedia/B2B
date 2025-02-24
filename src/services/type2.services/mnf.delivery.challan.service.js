@@ -236,7 +236,8 @@ const processRetailerOrders = async (challanId) => {
                     (s) =>
                         s.designNumber === item.designNumber &&
                         s.colour === item.colour &&
-                        s.size === item.size
+                        s.size === item.size &&
+                        s.colourName === item.colourName
                 );
 
                 if (stockItem) {
