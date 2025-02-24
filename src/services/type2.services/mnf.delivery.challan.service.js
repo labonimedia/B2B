@@ -202,7 +202,7 @@ const getDeliveryChallanByManufactureEmail = async (manufacturerEmail, filter, o
 //         console.error('Error processing retailer orders:', error);
 //         return { success: false, message: error.message };
 //     }
-// // };
+// };
 // const processRetailerOrders = async (challanId) => {
 //     try {
 //         // 1️⃣ Fetch Manufacturer's Delivery Challan
@@ -386,8 +386,26 @@ const processRetailerOrders = async (challanId) => {
                 });
 
                 if (existingPartialReq) {
-                    // Append new partial items to the existing document
-                    existingPartialReq.requestedItems.push(...partialItems);
+                    // Iterate through partialItems and update existing requestedItems
+                    partialItems.forEach((newItem) => {
+                        let existingItem = existingPartialReq.requestedItems.find(
+                            (item) =>
+                                item.designNumber === newItem.designNumber &&
+                                item.colourName === newItem.colourName &&
+                                item.size === newItem.size &&
+                                item.colour === newItem.colour
+                        );
+
+                        if (existingItem) {
+                            // Update quantities if the item already exists
+                            existingItem.orderedQuantity += newItem.orderedQuantity;
+                            existingItem.availableQuantity += newItem.availableQuantity;
+                        } else {
+                            // If the item does not exist, add it
+                            existingPartialReq.requestedItems.push(newItem);
+                        }
+                    });
+
                     await existingPartialReq.save();
                 } else {
                     await RetailerPartialReq.create({
@@ -399,6 +417,30 @@ const processRetailerOrders = async (challanId) => {
                     });
                 }
             }
+
+            // } else {
+            //     // 🚀 Save Partial Request for Retailer in one document per retailer PO
+            //     const existingPartialReq = await RetailerPartialReq.findOne({
+            //         poNumber: order.poNumber,
+            //         retailerEmail: order.email,
+            //         wholesalerEmail: order.wholesalerEmail,
+            //         requestType: 'partial_delivery'
+            //     });
+
+            //     if (existingPartialReq) {
+            //         // Append new partial items to the existing document
+            //         existingPartialReq.requestedItems.push(...partialItems);
+            //         await existingPartialReq.save();
+            //     } else {
+            //         await RetailerPartialReq.create({
+            //             poNumber: order.poNumber,
+            //             retailerEmail: order.email,
+            //             wholesalerEmail: order.wholesalerEmail,
+            //             requestType: 'partial_delivery',
+            //             requestedItems: partialItems
+            //         });
+            //     }
+            // }
         }
 
         return { success: true, message: 'Retailer orders processed successfully' };
