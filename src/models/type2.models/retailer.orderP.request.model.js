@@ -3,6 +3,9 @@ const { paginate, toJSON } = require('../plugins');
 
 const RetailerPartialRequestSchema = mongoose.Schema(
     {
+        deliveryChallanId: {
+            type: String,
+        },
         poNumber: {
             type: Number,
             required: true,

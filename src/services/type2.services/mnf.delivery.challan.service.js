@@ -409,6 +409,7 @@ const processRetailerOrders = async (challanId) => {
                     await existingPartialReq.save();
                 } else {
                     await RetailerPartialReq.create({
+                        deliveryChallanId: challanId,
                         poNumber: order.poNumber,
                         retailerEmail: order.email,
                         wholesalerEmail: order.wholesalerEmail,
