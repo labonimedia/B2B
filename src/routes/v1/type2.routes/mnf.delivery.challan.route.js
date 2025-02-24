@@ -35,4 +35,9 @@ router
   .route('/purchase-orders/process-retailer-orders')
   .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), mnfDeliveryChallanController.processRetailerOrders);
 
+
+router
+  .route('/purchase-orders/process-retailer-orders/forworded')
+  .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), mnfDeliveryChallanController.getConfirmRequsted);
+
 module.exports = router;
