@@ -26,7 +26,7 @@ const createMnfDeliveryChallan = async (reqBody) => {
     // Enqueue notification and auto-processing jobs
     // await notificationQueue.add({ orderId: result._id });
     // await notificationQueue.add({ orderId: result._id, recurring: true }, { repeat: { every: 2 * 60 * 60 * 1000 } });
-    await autoForwardQueue.add({ orderId: result._id }, { delay: 40 * 1000 });
+    await autoForwardQueue.add({ orderId: result._id }, { delay: 4 * 60 * 60 * 1000 });
     // await autoForwardQueue.add({ orderId: result._id }, { delay: 5 * 60 * 1000 }); // 4 * 60 * 60 * 1000
 
     return result;
