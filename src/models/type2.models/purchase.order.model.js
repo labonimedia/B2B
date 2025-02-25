@@ -18,7 +18,7 @@ const PurchaseOrderSchema = mongoose.Schema(
     ],
     status: {
       type: String,
-      enum: ['pending', 'processing', 'shipped', 'delivered', 'cancelled'],
+      enum: ['pending', 'processing', 'shipped', 'delivered', 'cancelled', 'updated'],
       default: 'pending',
     },
     email: String,
