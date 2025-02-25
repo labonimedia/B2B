@@ -63,7 +63,7 @@ const getPurchaseOrdersByManufactureEmail = async (req, res) => {
 
 const updatePurchaseOrderQuantities = async (req, res) => {
   const data = await purchaseOrderType2Service.updatePurchaseOrderQuantities(req.query.orderId);
-  if (!cartItem) {
+  if (!data) {
     throw new ApiError(httpStatus.NOT_FOUND, 'MnfDeliveryChallan not found');
   }
   res.status(httpStatus.OK).send(data)

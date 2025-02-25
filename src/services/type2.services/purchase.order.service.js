@@ -249,7 +249,7 @@ const updatePurchaseOrderQuantities = async (purchaseOrderId) => {
     // Fetch retailer partial requests matching the retailer POs
     const retailerRequests = await RetailerPartialReq.find({
       $or: retailerPOFilters,
-      status: 'checked' // Only consider rejected requests
+      // status: 'checked' // Only consider rejected requests
     });
 
     if (!retailerRequests.length) {
@@ -273,27 +273,30 @@ const updatePurchaseOrderQuantities = async (purchaseOrderId) => {
     });
 
     if (!rejectedItemsMap.size) {
-      console.log('No rejected items to update.');
-      return;
+      // console.log('No rejected items to update.');
+      return {
+        result: 'No rejected items to update.'
+      };
     }
 
     // Update purchase order set array
     purchaseOrder.set = purchaseOrder.set.map(item => {
       const key = `${item.designNumber}-${item.colour}-${item.size}`;
-      if (rejectedItemsMap.has(key)) {
-        return {
-          ...item,
-          quantity: Math.max(0, item.quantity - rejectedItemsMap.get(key)) // Ensure quantity doesn't go negative
-        };
-      }
-      return item;
+      return {
+        ...item.toObject(), // Convert to plain JS object
+        quantity: rejectedItemsMap.has(key)
+          ? Math.max(0, item.quantity - rejectedItemsMap.get(key))
+          : item.quantity
+      };
     });
 
-    purchaseOrder.status = 'updated';
+
+    // purchaseOrder.status = 'updated';
     // Save updated purchase order
     await purchaseOrder.save();
     return purchaseOrder;
   } catch (error) {
+    console.log(error.message);
     throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'Error updating purchase order quantities');
   }
 };
