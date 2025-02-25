@@ -80,9 +80,6 @@ const getConfirmRequsted = async (orderID) => {
     const retailerPo = await RetailerPartialReq.find({ deliveryChallanId: orderID })
         .select('retailerEmail poNumber status');
     console.log(retailerPo);
-    if (retailerPo) {
-        return [];
-    }
     // Extract unique retailer emails
     const retailerEmails = [...new Set(retailerPo.map((po) => po.retailerEmail))];
 
