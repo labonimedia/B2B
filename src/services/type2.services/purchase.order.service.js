@@ -1,5 +1,5 @@
 const httpStatus = require('http-status');
-const { PurchaseOrderType2, CartType2, PurchaseOrderRetailerType2 } = require('../../models');
+const { PurchaseOrderType2, CartType2, PurchaseOrderRetailerType2, MnfDeliveryChallan, RetailerPartialReq } = require('../../models');
 const ApiError = require('../../utils/ApiError');
 
 /**
@@ -220,6 +220,83 @@ const getPurchaseOrdersByManufactureEmail = async (manufacturerEmail, filter, op
   return result;
 };
 // Create combined PO for wholesaler
+
+const updatePurchaseOrderQuantities = async (purchaseOrderId) => {
+  try {
+
+    const mnfChallan = await MnfDeliveryChallan.find({ _id: purchaseOrderId });
+    if (!mnfChallan) {
+      throw new Error('MnfDeliveryChallan not found');
+    }
+    // Fetch the purchase order
+    const purchaseOrder = await PurchaseOrderType2.findOne({ email: mnfChallan.email, productBy: mnfChallan.productBy, poNumber: mnfChallan.poNumber });
+    if (!purchaseOrder) {
+      throw new Error('Purchase Order not found');
+    }
+
+    // Extract retailer POs (email & poNumber) for matching retailer requests
+    const retailerPOs = purchaseOrder.retailerPOs || [];
+    const retailerPOFilters = retailerPOs.map(po => ({
+      retailerEmail: po.email,
+      poNumber: po.poNumber
+    }));
+
+    if (!retailerPOFilters.length) {
+      console.log('No retailer POs found.');
+      return;
+    }
+
+    // Fetch retailer partial requests matching the retailer POs
+    const retailerRequests = await RetailerPartialReq.find({
+      $or: retailerPOFilters,
+      status: 'checked' // Only consider rejected requests
+    });
+
+    if (!retailerRequests.length) {
+      console.log('No rejected retailer requests found.');
+      return;
+    }
+
+    // Map rejected requestedItems by (designNumber, colour, size)
+    let rejectedItemsMap = new Map();
+
+    retailerRequests.forEach(req => {
+      req.requestedItems.forEach(item => {
+        if (item.statusSingle === 'rejected') {
+          const key = `${item.designNumber}-${item.colour}-${item.size}`;
+          if (!rejectedItemsMap.has(key)) {
+            rejectedItemsMap.set(key, 0);
+          }
+          rejectedItemsMap.set(key, rejectedItemsMap.get(key) + item.orderedQuantity);
+        }
+      });
+    });
+
+    if (!rejectedItemsMap.size) {
+      console.log('No rejected items to update.');
+      return;
+    }
+
+    // Update purchase order set array
+    purchaseOrder.set = purchaseOrder.set.map(item => {
+      const key = `${item.designNumber}-${item.colour}-${item.size}`;
+      if (rejectedItemsMap.has(key)) {
+        return {
+          ...item,
+          quantity: Math.max(0, item.quantity - rejectedItemsMap.get(key)) // Ensure quantity doesn't go negative
+        };
+      }
+      return item;
+    });
+
+    // Save updated purchase order
+    await purchaseOrder.save();
+    console.log('Purchase order quantities updated successfully.');
+  } catch (error) {
+    console.error('Error updating purchase order quantities:', error);
+  }
+};
+
 module.exports = {
   createPurchaseOrderType2,
   queryPurchaseOrderType2,
@@ -230,4 +307,5 @@ module.exports = {
   deletePurchaseOrderType2ById,
   deleteCartType2ById,
   getPurchaseOrdersByManufactureEmail,
+  updatePurchaseOrderQuantities,
 };
