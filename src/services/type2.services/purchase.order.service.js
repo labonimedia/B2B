@@ -224,14 +224,14 @@ const getPurchaseOrdersByManufactureEmail = async (manufacturerEmail, filter, op
 const updatePurchaseOrderQuantities = async (purchaseOrderId) => {
   // try {
 
-  const mnfChallan = await MnfDeliveryChallan.find({ _id: purchaseOrderId });
+  const mnfChallan = await MnfDeliveryChallan.findOne({ _id: purchaseOrderId }).lean();
   if (!mnfChallan) {
-    throw new Error('MnfDeliveryChallan not found');
+    throw new ApiError(httpStatus.NOT_FOUND, 'MnfDeliveryChallan not found');
   }
   // Fetch the purchase order
   const purchaseOrder = await PurchaseOrderType2.findOne({ email: mnfChallan.email, productBy: mnfChallan.productBy, poNumber: mnfChallan.poNumber });
   if (!purchaseOrder) {
-    throw new Error('Purchase Order not found');
+    throw new ApiError(httpStatus.NOT_FOUND, 'Purchase Order not found');
   }
 
   // Extract retailer POs (email & poNumber) for matching retailer requests
@@ -291,8 +291,8 @@ const updatePurchaseOrderQuantities = async (purchaseOrderId) => {
 
   purchaseOrder.status = 'updated';
   // Save updated purchase order
-  const result = await purchaseOrder.save();
-  return result;
+  await purchaseOrder.save();
+  return purchaseOrder;
   // } catch (error) {
   //   console.error('Error updating purchase order quantities:', error);
   // }
