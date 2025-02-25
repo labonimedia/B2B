@@ -61,6 +61,11 @@ const getPurchaseOrdersByManufactureEmail = async (req, res) => {
   res.status(200).send({ success: true, data });
 };
 
+const updatePurchaseOrderQuantities = async (req, res) => {
+  const data = await purchaseOrderType2Service.updatePurchaseOrderQuantities(req.query.orderId);
+  res.status(200).send(data);
+};
+
 module.exports = {
   createPurchaseOrderType2,
   queryPurchaseOrderType2,
@@ -70,4 +75,5 @@ module.exports = {
   updatePurchaseOrderType2ById,
   deletePurchaseOrderType2ById,
   getPurchaseOrdersByManufactureEmail,
+  updatePurchaseOrderQuantities,
 };

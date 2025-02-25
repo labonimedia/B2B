@@ -79,7 +79,8 @@ const genratedeChallNO = async (manufacturerEmail) => {
 const getConfirmRequsted = async (orderID) => {
     const retailerPo = await RetailerPartialReq.find({ deliveryChallanId: orderID })
         .select('retailerEmail poNumber status');
-    if (!retailerPo.length) {
+    console.log(retailerPo);
+    if (retailerPo) {
         return [];
     }
     // Extract unique retailer emails
