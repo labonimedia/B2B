@@ -1,11 +1,10 @@
 const express = require('express');
 const helmet = require('helmet');
 const xss = require('xss-clean');
-const path = require('path');
 const mongoSanitize = require('express-mongo-sanitize');
 const compression = require('compression');
 const cors = require('cors');
-const { Worker } = require('worker_threads');
+const socketIo = require('socket.io');
 const passport = require('passport');
 const httpStatus = require('http-status');
 const config = require('./config/config');
@@ -16,29 +15,9 @@ const routes = require('./routes/v1');
 const { errorConverter, errorHandler } = require('./middlewares/error');
 const ApiError = require('./utils/ApiError');
 const logger = require('./config/logger');
-// Import the worker file
+require('./utils/worker');
+
 const app = express();
-
-function startCdnWorker() {
-  const workerFilePath = path.resolve(__dirname, 'cdn.worker.js'); // Resolves to an absolute path
-  return new Worker(workerFilePath); // Pass absolute path to Worker
-}
-
-// // Initialize the worker for CDN switching (starts as soon as the server runs)
-// const worker = startCdnWorker();
-// worker.on('message', (msg) => {
-//   logger.info('Message from CDN worker:', msg);  // You can log messages from the worker here
-// });
-
-// worker.on('error', (error) => {
-//   logger.error('Worker encountered an error:', error);
-// });
-
-// worker.on('exit', (code) => {
-//   if (code !== 0) {
-//     logger.error(`Worker stopped with exit code ${code}`);
-//   }
-// });
 
 if (config.env !== 'test') {
   app.use(morgan.successHandler);

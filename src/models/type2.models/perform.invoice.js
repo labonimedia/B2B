@@ -1,9 +1,9 @@
 const mongoose = require('mongoose');
 const { paginate, toJSON } = require('../plugins');
 
-const PurchaseOrderSchema = mongoose.Schema(
+const performInvoiceSchema = mongoose.Schema(
   {
-    set: [
+    orderedSet: [
       {
         _id: false,
         designNumber: String,
@@ -16,25 +16,28 @@ const PurchaseOrderSchema = mongoose.Schema(
         productBy: String,
       },
     ],
-    status: {
-      type: String,
-      enum: ['pending', 'processing', 'shipped', 'delivered', 'cancelled', 'updated'],
-      default: 'pending',
-    },
     email: String,
     productBy: String,
-    wholesalerPoDate: {
+    nextOrderDelivetryDate: {
+      type: Date,
+    },
+    mnfDileveryClallnDate: {
       type: Date,
       default: Date.now,
     },
+    status: {
+      type: String,
+      enum: ['Pending', 'Partially-Fulfilled', 'Fulfilled', 'Rejected', 'Auto-Forwarded', 'Forwarded', 'Canceled'],
+      default: 'Pending',
+    },
     poNumber: Number,
+    deliveryChallanNumber: Number,
     retailerPOs: [
       {
         email: String,
         poNumber: Number,
       },
     ],
-
     manufacturer: {
       email: String,
       fullName: String,
@@ -67,9 +70,9 @@ const PurchaseOrderSchema = mongoose.Schema(
 );
 
 // add plugin that converts mongoose to json
-PurchaseOrderSchema.plugin(toJSON);
-PurchaseOrderSchema.plugin(paginate);
+performInvoiceSchema.plugin(toJSON);
+performInvoiceSchema.plugin(paginate);
 
-const PurchaseOrderType2 = mongoose.model('PurchaseOrderType2', PurchaseOrderSchema);
+const performInvoice = mongoose.model('performInvoice', performInvoiceSchema);
 
-module.exports = PurchaseOrderType2;
+module.exports = performInvoice;

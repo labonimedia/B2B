@@ -1,5 +1,11 @@
 const httpStatus = require('http-status');
-const { PurchaseOrderType2, CartType2, PurchaseOrderRetailerType2 } = require('../../models');
+const {
+  PurchaseOrderType2,
+  CartType2,
+  PurchaseOrderRetailerType2,
+  MnfDeliveryChallan,
+  RetailerPartialReq,
+} = require('../../models');
 const ApiError = require('../../utils/ApiError');
 
 /**
@@ -91,6 +97,8 @@ const createPurchaseOrderType2 = async (reqBody) => {
           item.status = 'processing';
         }
       });
+
+      retailerOrder.statusAll = 'processing';
 
       // Save the updated retailer order
       await retailerOrder.save();
@@ -218,6 +226,155 @@ const getPurchaseOrdersByManufactureEmail = async (manufacturerEmail, filter, op
   return result;
 };
 // Create combined PO for wholesaler
+
+// const updatePurchaseOrderQuantities = async (purchaseOrderId) => {
+//   try {
+
+//     const mnfChallan = await MnfDeliveryChallan.findOne({ _id: purchaseOrderId }).lean();
+//     if (!mnfChallan) {
+//       throw new ApiError(httpStatus.NOT_FOUND, 'MnfDeliveryChallan not found');
+//     }
+//     // Fetch the purchase order
+//     const purchaseOrder = await PurchaseOrderType2.findOne({ email: mnfChallan.email, productBy: mnfChallan.productBy, poNumber: mnfChallan.poNumber });
+//     if (!purchaseOrder) {
+//       throw new ApiError(httpStatus.NOT_FOUND, 'Purchase Order not found');
+//     }
+
+//     // Extract retailer POs (email & poNumber) for matching retailer requests
+//     const retailerPOs = purchaseOrder.retailerPOs || [];
+//     const retailerPOFilters = retailerPOs.map(po => ({
+//       retailerEmail: po.email,
+//       poNumber: po.poNumber
+//     }));
+
+//     if (!retailerPOFilters.length) {
+//       console.log('No retailer POs found.');
+//       return;
+//     }
+
+//     // Fetch retailer partial requests matching the retailer POs
+//     const retailerRequests = await RetailerPartialReq.find({
+//       $or: retailerPOFilters,
+//       // status: 'checked' // Only consider rejected requests
+//     });
+
+//     if (!retailerRequests.length) {
+//       console.log('No rejected retailer requests found.');
+//       return;
+//     }
+
+//     // Map rejected requestedItems by (designNumber, colour, size)
+//     let rejectedItemsMap = new Map();
+
+//     retailerRequests.forEach(req => {
+//       req.requestedItems.forEach(item => {
+//         if (item.statusSingle === 'rejected') {
+//           const key = `${item.designNumber}-${item.colour}-${item.size}`;
+//           if (!rejectedItemsMap.has(key)) {
+//             rejectedItemsMap.set(key, 0);
+//           }
+//           rejectedItemsMap.set(key, rejectedItemsMap.get(key) + item.orderedQuantity);
+//         }
+//       });
+//     });
+
+//     if (!rejectedItemsMap.size) {
+//       // console.log('No rejected items to update.');
+//       return {
+//         result: 'No rejected items to update.'
+//       };
+//     }
+
+//     // Update purchase order set array
+//     purchaseOrder.set = purchaseOrder.set.map(item => {
+//       const key = `${item.designNumber}-${item.colour}-${item.size}`;
+//       return {
+//         ...item.toObject(), // Convert to plain JS object
+//         quantity: rejectedItemsMap.has(key)
+//           ? Math.max(0, item.quantity - rejectedItemsMap.get(key))
+//           : item.quantity
+//       };
+//     });
+
+//     // purchaseOrder.status = 'updated';
+//     // Save updated purchase order
+//     await purchaseOrder.save();
+//     return purchaseOrder;
+//   } catch (error) {
+//     console.log(error.message);
+//     throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'Error updating purchase order quantities');
+//   }
+// };
+
+const updatePurchaseOrderQuantities = async (purchaseOrderId) => {
+  try {
+    const mnfChallan = await MnfDeliveryChallan.findOne({ _id: purchaseOrderId }).lean();
+    if (!mnfChallan) {
+      throw new ApiError(httpStatus.NOT_FOUND, 'MnfDeliveryChallan not found');
+    }
+
+    const purchaseOrder = await PurchaseOrderType2.findOne({
+      email: mnfChallan.email,
+      productBy: mnfChallan.productBy,
+      poNumber: mnfChallan.poNumber,
+    });
+    if (!purchaseOrder) {
+      throw new ApiError(httpStatus.NOT_FOUND, 'Purchase Order not found');
+    }
+
+    const retailerPOs = purchaseOrder.retailerPOs || [];
+    const retailerPOFilters = retailerPOs.map((po) => ({
+      retailerEmail: po.email,
+      poNumber: po.poNumber,
+    }));
+
+    if (!retailerPOFilters.length) {
+      console.log('No retailer POs found.');
+      return;
+    }
+
+    const retailerRequests = await RetailerPartialReq.find({
+      $or: retailerPOFilters,
+    });
+
+    if (!retailerRequests.length) {
+      console.log('No rejected retailer requests found.');
+      return;
+    }
+
+    const rejectedItemsMap = new Map();
+    retailerRequests.forEach((req) => {
+      req.requestedItems.forEach((item) => {
+        if (item.statusSingle === 'rejected') {
+          const key = `${item.designNumber}-${item.colour}-${item.size}`;
+          rejectedItemsMap.set(key, (rejectedItemsMap.get(key) || 0) + item.orderedQuantity);
+        }
+      });
+    });
+
+    if (!rejectedItemsMap.size) {
+      return { result: 'No rejected items to update.' };
+    }
+
+    purchaseOrder.set = purchaseOrder.set
+      .map((item) => {
+        const key = `${item.designNumber}-${item.colour}-${item.size}`;
+        const newQuantity = rejectedItemsMap.has(key)
+          ? Math.max(0, item.quantity - rejectedItemsMap.get(key))
+          : item.quantity;
+
+        return newQuantity > 0 ? { ...item.toObject(), quantity: newQuantity } : null;
+      })
+      .filter((item) => item !== null);
+
+    await purchaseOrder.save();
+    return purchaseOrder;
+  } catch (error) {
+    console.log(error.message);
+    throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'Error updating purchase order quantities');
+  }
+};
+
 module.exports = {
   createPurchaseOrderType2,
   queryPurchaseOrderType2,
@@ -228,4 +385,5 @@ module.exports = {
   deletePurchaseOrderType2ById,
   deleteCartType2ById,
   getPurchaseOrdersByManufactureEmail,
+  updatePurchaseOrderQuantities,
 };

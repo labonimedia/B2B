@@ -102,3 +102,5 @@ module.exports.cdnPathService = require('./cdn.path.service');
 module.exports.cdnChangeService = require('./cdn.change.service');
 module.exports.RtlToMnfCartService = require('./type2.services/rtlToMnf.cart.service');
 module.exports.rTlToMnfPoService = require('./type2.services/rtlToMnf.po.service');
+module.exports.rtlOPReuestService = require('./type2.services/retailer.orderP.request.service');
+module.exports.performInvoiceService = require('./type2.services/perform.invoice.service');

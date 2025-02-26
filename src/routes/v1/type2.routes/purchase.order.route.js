@@ -35,4 +35,11 @@ router
     purchaseOrderType2Controller.getPurchaseOrdersByManufactureEmail
   );
 
+router
+  .route('/purchase-orders/update-quantities')
+  .get(
+    auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
+    purchaseOrderType2Controller.updatePurchaseOrderQuantities
+  );
+
 module.exports = router;
