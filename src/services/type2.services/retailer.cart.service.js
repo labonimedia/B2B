@@ -167,6 +167,7 @@ const genratePORetailerCartType2 = async (id) => {
       ? {
         email: wholesaler.email,
         fullName: wholesaler.fullName,
+        pan: wholesaler.pan,
         companyName: wholesaler.companyName,
         address: wholesaler.address,
         state: wholesaler.state,
@@ -180,6 +181,7 @@ const genratePORetailerCartType2 = async (id) => {
     retailer: retailer
       ? {
         email: retailer.email,
+        pan: retailer.pan,
         fullName: retailer.fullName,
         companyName: retailer.companyName,
         address: retailer.address,
