@@ -113,7 +113,7 @@ const genratePORetailerCartType2 = async (id) => {
   // Fetch manufacturer details based on the `productBy` email
   const wholesaler = await Wholesaler.findOne({
     email: cartItem.wholesalerEmail,
-  }).select('email fullName companyName address state country pinCode mobNumber profileImg GSTIN');
+  }).select('email fullName companyName address state country pinCode mobNumber profileImg GSTIN pan');
 
   // Fetch wholesaler details based on the provided `email` (if any)
   let retailer = null;
@@ -124,7 +124,7 @@ const genratePORetailerCartType2 = async (id) => {
     retailer = await Retailer.findOne({
       email: cartItem.email,
     }).select(
-      'email fullName companyName address state country pinCode mobNumber GSTIN logo profileImg discountGiven'
+      'email fullName companyName address state country pinCode mobNumber GSTIN logo pan profileImg discountGiven'
     );
 
     if (retailer) {
