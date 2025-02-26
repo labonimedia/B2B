@@ -30,4 +30,9 @@ router
     .route('/purchase-orders/genrate-chall-no')
     .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), performInvoiceController.genratedeChallNO);
 
+
+router
+    .route('/purchase-orders/old-availeble-data/:id')
+    .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), performInvoiceController.getPurchaseOrderWithOldAvailebleData);
+
 module.exports = router;
