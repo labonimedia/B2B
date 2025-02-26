@@ -14,7 +14,7 @@ const createMnfDeliveryChallan = async (reqBody) => {
 
     await PurchaseOrderType2.findOneAndUpdate(
         { email, poNumber },
-        { $set: { status: 'shipped' } },
+        { $set: { status: 'processing' } },
         { new: true }
     );
 

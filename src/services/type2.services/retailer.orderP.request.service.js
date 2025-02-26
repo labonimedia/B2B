@@ -8,10 +8,10 @@ const ApiError = require('../../utils/ApiError');
  * @returns {Promise<RetailerPartialReq>}
  */
 const createRetailerPartialReq = async (reqBody) => {
-    if (!reqBody) {
-        throw new ApiError(httpStatus.UNAUTHORIZED, `body is empty`);
-    }
-    return RetailerPartialReq.create(reqBody);
+  if (!reqBody) {
+    throw new ApiError(httpStatus.UNAUTHORIZED, `body is empty`);
+  }
+  return RetailerPartialReq.create(reqBody);
 };
 
 /**
@@ -24,30 +24,29 @@ const createRetailerPartialReq = async (reqBody) => {
  * @returns {Promise<QueryResult>}
  */
 const queryRetailerPartialReq = async (filter, options) => {
-    // Fetch retailer partial requests with pagination
-    const citys = await RetailerPartialReq.paginate(filter, options);
+  // Fetch retailer partial requests with pagination
+  const citys = await RetailerPartialReq.paginate(filter, options);
 
-    // Extract wholesaler emails from retailer responses
-    const wholesalerEmails = [...new Set(citys.results.map(item => item.wholesalerEmail))]; // Ensure unique emails
+  // Extract wholesaler emails from retailer responses
+  const wholesalerEmails = [...new Set(citys.results.map((item) => item.wholesalerEmail))]; // Ensure unique emails
 
-    // Fetch wholesaler details based on emails
-    const wholesalers = await Wholesaler.find({ email: { $in: wholesalerEmails } }, { email: 1, companyName: 1 });
+  // Fetch wholesaler details based on emails
+  const wholesalers = await Wholesaler.find({ email: { $in: wholesalerEmails } }, { email: 1, companyName: 1 });
 
-    // Convert wholesalers to a map for easy lookup
-    const wholesalerMap = wholesalers.reduce((acc, wholesaler) => {
-        acc[wholesaler.email] = wholesaler.companyName;
-        return acc;
-    }, {});
+  // Convert wholesalers to a map for easy lookup
+  const wholesalerMap = wholesalers.reduce((acc, wholesaler) => {
+    acc[wholesaler.email] = wholesaler.companyName;
+    return acc;
+  }, {});
 
-    // Attach wholesaler fullName to the response
-    citys.results = citys.results.map(item => ({
-        ...item.toObject(),
-        companyName: wholesalerMap[item.wholesalerEmail] || 'Unknown' // Add fullName or 'Unknown' if not found
-    }));
+  // Attach wholesaler fullName to the response
+  citys.results = citys.results.map((item) => ({
+    ...item.toObject(),
+    companyName: wholesalerMap[item.wholesalerEmail] || 'Unknown', // Add fullName or 'Unknown' if not found
+  }));
 
-    return citys;
+  return citys;
 };
-
 
 /**
  * Get RetailerPartialReq by id
@@ -55,7 +54,7 @@ const queryRetailerPartialReq = async (filter, options) => {
  * @returns {Promise<RetailerPartialReq>}
  */
 const getRetailerPartialReqById = async (id) => {
-    return RetailerPartialReq.findById(id);
+  return RetailerPartialReq.findById(id);
 };
 
 /**
@@ -65,13 +64,13 @@ const getRetailerPartialReqById = async (id) => {
  * @returns {Promise<RetailerPartialReq>}
  */
 const updateRetailerPartialReqById = async (id, updateBody) => {
-    const user = await getRetailerPartialReqById(id);
-    if (!user) {
-        throw new ApiError(httpStatus.NOT_FOUND, 'request not found');
-    }
-    Object.assign(user, updateBody);
-    await user.save();
-    return user;
+  const user = await getRetailerPartialReqById(id);
+  if (!user) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'request not found');
+  }
+  Object.assign(user, updateBody);
+  await user.save();
+  return user;
 };
 
 /**
@@ -80,18 +79,18 @@ const updateRetailerPartialReqById = async (id, updateBody) => {
  * @returns {Promise<RetailerPartialReq>}
  */
 const deleteRetailerPartialReqById = async (id) => {
-    const user = await getRetailerPartialReqById(id);
-    if (!user) {
-        throw new ApiError(httpStatus.NOT_FOUND, 'reuest not found');
-    }
-    await user.remove();
-    return user;
+  const user = await getRetailerPartialReqById(id);
+  if (!user) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'reuest not found');
+  }
+  await user.remove();
+  return user;
 };
 
 module.exports = {
-    createRetailerPartialReq,
-    queryRetailerPartialReq,
-    getRetailerPartialReqById,
-    updateRetailerPartialReqById,
-    deleteRetailerPartialReqById,
+  createRetailerPartialReq,
+  queryRetailerPartialReq,
+  getRetailerPartialReqById,
+  updateRetailerPartialReqById,
+  deleteRetailerPartialReqById,
 };

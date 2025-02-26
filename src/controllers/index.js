@@ -99,3 +99,4 @@ module.exports.cdnPathController = require('./cdn.path.controller');
 module.exports.rtlToMnfCartController = require('./type2.controller/RtlToMnf.cart.controller');
 module.exports.rtlToMnfPoController = require('./type2.controller/rtlToMnf.po.controller');
 module.exports.rtlOPReuestController = require('./type2.controller/retailer.orderP.request.controller');
+module.exports.performInvoiceController = require('./type2.controller/perform.invoice.controller');

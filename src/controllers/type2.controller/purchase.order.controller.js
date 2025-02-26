@@ -66,7 +66,7 @@ const updatePurchaseOrderQuantities = async (req, res) => {
   if (!data) {
     throw new ApiError(httpStatus.NOT_FOUND, 'MnfDeliveryChallan not found');
   }
-  res.status(httpStatus.OK).send(data)
+  res.status(httpStatus.OK).send(data);
 };
 
 module.exports = {
