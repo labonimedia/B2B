@@ -192,7 +192,7 @@ const getCartByEmailToPlaceOrder = async (email, productBy) => {
   let retailer = null;
   if (user.role === 'retailer') {
     retailer = await Retailer.findOne({ email }).select(
-      'fullName companyName email address country state city pinCode mobNumber GSTIN code profileImg'
+      'fullName companyName email address country state city pinCode mobNumber GSTIN code profileImg pan'
     );
     if (!retailer) {
       throw new ApiError(httpStatus.NOT_FOUND, 'Retailer not found');
@@ -201,7 +201,7 @@ const getCartByEmailToPlaceOrder = async (email, productBy) => {
 
   // Fetch manufacturer details for the product's manufacturer
   const manufacturer = await Manufacture.findOne({ email: productBy }).select(
-    'fullName companyName email address country state city pinCode mobNumber GSTIN'
+    'fullName companyName email address country state city pinCode mobNumber GSTIN pan'
   );
 
   if (!manufacturer) {
@@ -242,6 +242,7 @@ const getCartByEmailToPlaceOrder = async (email, productBy) => {
       fullName: manufacturer.fullName,
       companyName: manufacturer.companyName,
       email: manufacturer.email,
+      pan: manufacturer.pan,
       address: manufacturer.address,
       country: manufacturer.country,
       state: manufacturer.state,
