@@ -27,7 +27,7 @@ const performInvoiceSchema = mongoose.Schema(
     },
     status: {
       type: String,
-      enum: ['Pending', 'Partially-Fulfilled', 'Fulfilled', 'Rejected', 'Auto-Forwarded', 'Forwarded', 'Canceled'],
+      enum: ['Pending', 'Partially-Fulfilled', 'Fulfilled', 'Canceled'],
       default: 'Pending',
     },
     poNumber: Number,

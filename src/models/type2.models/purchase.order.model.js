@@ -34,7 +34,6 @@ const PurchaseOrderSchema = mongoose.Schema(
         poNumber: Number,
       },
     ],
-
     manufacturer: {
       email: String,
       fullName: String,
