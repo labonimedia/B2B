@@ -25,8 +25,6 @@ router.route('/registered-user/:email').get(
   userController.getUserByEmail
 );
 
-
-
 module.exports = router;
 
 /**

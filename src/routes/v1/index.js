@@ -513,7 +513,7 @@ const defaultRoutes = [
   {
     path: '/rtl-orderP-request',
     route: rtlOrderPRequestRoute,
-  }
+  },
 ];
 
 const devRoutes = [

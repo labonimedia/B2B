@@ -1,5 +1,11 @@
 const httpStatus = require('http-status');
-const { PurchaseOrderType2, CartType2, PurchaseOrderRetailerType2, MnfDeliveryChallan, RetailerPartialReq } = require('../../models');
+const {
+  PurchaseOrderType2,
+  CartType2,
+  PurchaseOrderRetailerType2,
+  MnfDeliveryChallan,
+  RetailerPartialReq,
+} = require('../../models');
 const ApiError = require('../../utils/ApiError');
 
 /**
@@ -290,7 +296,6 @@ const getPurchaseOrdersByManufactureEmail = async (manufacturerEmail, filter, op
 //       };
 //     });
 
-
 //     // purchaseOrder.status = 'updated';
 //     // Save updated purchase order
 //     await purchaseOrder.save();
@@ -318,7 +323,7 @@ const updatePurchaseOrderQuantities = async (purchaseOrderId) => {
     }
 
     const retailerPOs = purchaseOrder.retailerPOs || [];
-    const retailerPOFilters = retailerPOs.map(po => ({
+    const retailerPOFilters = retailerPOs.map((po) => ({
       retailerEmail: po.email,
       poNumber: po.poNumber,
     }));
@@ -337,9 +342,9 @@ const updatePurchaseOrderQuantities = async (purchaseOrderId) => {
       return;
     }
 
-    let rejectedItemsMap = new Map();
-    retailerRequests.forEach(req => {
-      req.requestedItems.forEach(item => {
+    const rejectedItemsMap = new Map();
+    retailerRequests.forEach((req) => {
+      req.requestedItems.forEach((item) => {
         if (item.statusSingle === 'rejected') {
           const key = `${item.designNumber}-${item.colour}-${item.size}`;
           rejectedItemsMap.set(key, (rejectedItemsMap.get(key) || 0) + item.orderedQuantity);
@@ -352,7 +357,7 @@ const updatePurchaseOrderQuantities = async (purchaseOrderId) => {
     }
 
     purchaseOrder.set = purchaseOrder.set
-      .map(item => {
+      .map((item) => {
         const key = `${item.designNumber}-${item.colour}-${item.size}`;
         const newQuantity = rejectedItemsMap.has(key)
           ? Math.max(0, item.quantity - rejectedItemsMap.get(key))
@@ -360,7 +365,7 @@ const updatePurchaseOrderQuantities = async (purchaseOrderId) => {
 
         return newQuantity > 0 ? { ...item.toObject(), quantity: newQuantity } : null;
       })
-      .filter(item => item !== null);
+      .filter((item) => item !== null);
 
     await purchaseOrder.save();
     return purchaseOrder;
@@ -369,7 +374,6 @@ const updatePurchaseOrderQuantities = async (purchaseOrderId) => {
     throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'Error updating purchase order quantities');
   }
 };
-
 
 module.exports = {
   createPurchaseOrderType2,

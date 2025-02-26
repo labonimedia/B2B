@@ -34,7 +34,10 @@ const createUser = async (userBody) => {
 
   try {
     // Check if a replica set is enabled
-    const isReplicaSet = await mongoose.connection.db.admin().serverStatus().then(status => status.repl !== undefined);
+    const isReplicaSet = await mongoose.connection.db
+      .admin()
+      .serverStatus()
+      .then((status) => status.repl !== undefined);
 
     if (isReplicaSet) {
       session.startTransaction(); // Start transaction only if a replica set exists
@@ -96,7 +99,6 @@ const createUser = async (userBody) => {
     throw error;
   }
 };
-
 
 /**
  * Query for users

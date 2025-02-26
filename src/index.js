@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const socketIo = require('socket.io');
-const http = require("http");
+const http = require('http');
 const app = require('./app');
 const config = require('./config/config');
 const logger = require('./config/logger');
@@ -9,8 +9,8 @@ let server = http.createServer(app); // Create HTTP server
 const io = socketIo(server, {
   cors: {
     origin: '*', // Allow frontend access
-    methods: ['GET', 'POST']
-  }
+    methods: ['GET', 'POST'],
+  },
 });
 
 mongoose.connect(config.mongoose.url, config.mongoose.options).then(() => {
@@ -23,16 +23,16 @@ mongoose.connect(config.mongoose.url, config.mongoose.options).then(() => {
 // Store connected users (Key: userId, Value: socketId)
 const onlineUsers = new Map();
 
-io.on("connection", (socket) => {
+io.on('connection', (socket) => {
   console.log(`🔌 User connected: ${socket.id}`);
 
-  socket.on("register", (userId) => {
+  socket.on('register', (userId) => {
     onlineUsers.set(userId, socket.id);
     console.log(`✅ User ${userId} registered`);
   });
 
-  socket.on("disconnect", () => {
-    for (let [userId, socketId] of onlineUsers.entries()) {
+  socket.on('disconnect', () => {
+    for (const [userId, socketId] of onlineUsers.entries()) {
       if (socketId === socket.id) {
         onlineUsers.delete(userId);
         console.log(`❌ User ${userId} disconnected.`);
@@ -40,7 +40,7 @@ io.on("connection", (socket) => {
       }
     }
   });
-});;
+});
 const exitHandler = () => {
   if (server) {
     server.close(() => {
@@ -67,8 +67,7 @@ process.on('SIGTERM', () => {
   }
 });
 
-module.exports = { io }
-
+module.exports = { io };
 
 // const mongoose = require('mongoose');
 // const socketIo = require('socket.io');
@@ -86,7 +85,6 @@ module.exports = { io }
 //     methods: ['GET', 'POST']
 //   }
 // });
-
 
 // io.on("connection", (socket) => {
 //   console.log(`🔌 User connected: ${socket.id}`);
