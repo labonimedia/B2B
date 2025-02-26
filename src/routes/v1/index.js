@@ -102,6 +102,7 @@ const cdnPathRoute = require('./cdn.path.routes');
 const rtlToMnfCartRoute = require('./type2.routes/rtlToMnf.cart.route');
 const rtlToMnfPORoute = require('./type2.routes/rtlToMnf.po.route');
 const rtlOrderPRequestRoute = require('./type2.routes/retailer.orderP.request.route');
+const performInvoiceRoute = require('./type2.routes/perform.invoice.route');
 
 const router = express.Router();
 
@@ -514,6 +515,10 @@ const defaultRoutes = [
     path: '/rtl-orderP-request',
     route: rtlOrderPRequestRoute,
   },
+  {
+    path: '/perform-invoice',
+    route: performInvoiceRoute,
+  }
 ];
 
 const devRoutes = [
