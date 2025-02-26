@@ -1,5 +1,5 @@
 const httpStatus = require('http-status');
-const { RetailerCartType2, User, Wholesaler, Retailer, Manufacture, POCountertype2, WishListType2 } = require('../../models');
+const { RetailerCartType2, User, Wholesaler, Retailer, Manufacture, POCountertype2, WishListType2, PurchaseOrderRetailerType2 } = require('../../models');
 const ApiError = require('../../utils/ApiError');
 
 /**
@@ -152,18 +152,10 @@ const genratePORetailerCartType2 = async (id) => {
 
   // Get the current order count for the wholesaler and financial year
   let orderCount;
-  try {
-    orderCount = await POCountertype2.findOneAndUpdate(
-      { email: retailer?.email, year: financialYear },
-      { $inc: { count: 1 } },
-      { new: true, upsert: true, setDefaultsOnInsert: true }
-    );
-  } catch (error) {
-    if (error.code === 11000) {
-      throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'Duplicate order counter entry.');
-    }
-    throw error;
-  }
+  const lastPO = await PurchaseOrderRetailerType2.findOne({ email: cartItem.email })
+    .sort({ poNumber: -1 })
+    .lean();
+  orderCount = lastPO ? lastPO.poNumber + 1 : 1;
 
   const orderNumber = orderCount.count;
 
