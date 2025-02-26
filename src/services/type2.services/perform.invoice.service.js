@@ -57,17 +57,30 @@ const genratedeChallNO = async (manufacturerEmail) => {
  * @returns {Promise<PerformInvoice>}
  */
 const getPurchaseOrderWithOldAvailebleData = async (id) => {
-    const purchaseOrder = await PurchaseOrderType2.findById(id);
-    if (!purchaseOrder) {
+    // Fetch the purchase order by ID and convert it to a plain object.
+    const purchaseOrderDoc = await PurchaseOrderType2.findById(id);
+    if (!purchaseOrderDoc) {
         throw new ApiError(httpStatus.NOT_FOUND, 'Purchase Order not found');
     }
+    const purchaseOrder = purchaseOrderDoc.toObject();
 
-    const mnfDeliveryChallan = await MnfDeliveryChallan.findOne({ email: purchaseOrder.email, poNumber: purchaseOrder.poNumber });
-    if (!mnfDeliveryChallan) {
+    // Fetch the corresponding delivery challan for the purchase order.
+    const mnfDeliveryChallanDoc = await MnfDeliveryChallan.findOne({
+        email: purchaseOrder.email,
+        poNumber: purchaseOrder.poNumber,
+    });
+    if (!mnfDeliveryChallanDoc) {
         throw new ApiError(httpStatus.NOT_FOUND, 'Delivery Challan not found');
     }
+    const mnfDeliveryChallan = mnfDeliveryChallanDoc.toObject();
 
-}
+    // Merge the availableSet from the delivery challan into the purchase order object.
+    return {
+        ...purchaseOrder,
+        avilableSet: mnfDeliveryChallan.avilableSet,
+    };
+};
+
 
 /**
  * Update PurchaseOrderType2 by id
@@ -123,4 +136,5 @@ module.exports = {
     updatePerformInvoiceById,
     deletePerformInvoiceById,
     getPerformInvoiceByManufactureEmail,
+    getPurchaseOrderWithOldAvailebleData,
 };
