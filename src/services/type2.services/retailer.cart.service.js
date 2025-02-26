@@ -157,7 +157,7 @@ const genratePORetailerCartType2 = async (id) => {
     .lean();
   orderCount = lastPO ? lastPO.poNumber + 1 : 1;
 
-  const orderNumber = orderCount.count;
+  const orderNumber = orderCount;
 
   // Prepare the enriched response
   const enrichedCartItem = {
