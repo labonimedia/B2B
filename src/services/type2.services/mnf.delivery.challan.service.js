@@ -246,7 +246,7 @@ const processRetailerOrders = async (challanId) => {
                             existingPartialReq.requestedItems.push(newItem);
                         }
                     });
-
+                    existingPartialReq.status = 'pending';
                     await existingPartialReq.save();
                 } else {
                     await RetailerPartialReq.create({
@@ -263,6 +263,7 @@ const processRetailerOrders = async (challanId) => {
 
         return { success: true, message: 'Retailer orders processed successfully' };
     } catch (error) {
+        console.log(error.message);
         throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'Error processing retailer orders');
     }
 };
