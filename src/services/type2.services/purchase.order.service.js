@@ -367,6 +367,7 @@ const updatePurchaseOrderQuantities = async (purchaseOrderId) => {
       })
       .filter((item) => item !== null);
 
+      purchaseOrder.status = 'updated';
     await purchaseOrder.save();
     return purchaseOrder;
   } catch (error) {
