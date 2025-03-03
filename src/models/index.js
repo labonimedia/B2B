@@ -114,4 +114,4 @@ module.exports.CDNPath = require('./cdn.path.model');
 module.exports.RtlToMnfCart = require('./type2.models/rtlTomnf.cart.model');
 module.exports.RtlToMnfPo = require('./type2.models/rtlToMnf.po.model');
 module.exports.RetailerPartialReq = require('./type2.models/retailer.orderP.request.model');
-module.exports.PerformInvoice = require('./type2.models/perform.invoice');
+module.exports.PerformInvoice = require('./type2.models/perform.invoice.model');
