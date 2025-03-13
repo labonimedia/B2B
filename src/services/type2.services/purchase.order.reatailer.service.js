@@ -61,9 +61,8 @@ const getPurchaseOrderRetailerType2ByIdWithDiscount = async (id) => {
   // Fetch wholesaler details and discount array
      let retailer = await Retailer.findOne({
         email: purchaseOrder.retailer.email,
-      }).select(
-        'email discountGiven'
-      );
+      }) .select("discountGiven")
+      .lean();
   
       if (retailer) {
         // Find the discount entry for the `productBy` field
