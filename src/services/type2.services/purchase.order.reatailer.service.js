@@ -1,5 +1,5 @@
 const httpStatus = require('http-status');
-const { PurchaseOrderRetailerType2, RetailerCartType2, Manufacture, PurchaseOrderType2, Wholesaler } = require('../../models');
+const { PurchaseOrderRetailerType2, RetailerCartType2, Manufacture, PurchaseOrderType2, Wholesaler, Retailer } = require('../../models');
 const ApiError = require('../../utils/ApiError');
 
 /**
@@ -59,7 +59,7 @@ const getPurchaseOrderRetailerType2ByIdWithDiscount = async (id) => {
   const purchaseOrder = await PurchaseOrderRetailerType2.findById(id);
   let discountDetails;
   // Fetch wholesaler details and discount array
-      retailer = await Retailer.findOne({
+     let retailer = await Retailer.findOne({
         email: purchaseOrder.retailer.email,
       }).select(
         'email discountGiven'
