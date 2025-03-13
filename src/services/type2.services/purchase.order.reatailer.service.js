@@ -78,7 +78,13 @@ const getPurchaseOrderRetailerType2ByIdWithDiscount = async (id) => {
           };
         }
       }
-  return {purchaseOrder, ...discountDetails}
+      return {
+        ...purchaseOrder,
+        retailer: {
+          ...purchaseOrder.retailer,
+          discountDetails: discountDetails ?? null,
+        },
+      };
 };
 
 const getProductOrderBySupplyer = async (supplierEmail) => {
