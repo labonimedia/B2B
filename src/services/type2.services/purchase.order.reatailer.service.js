@@ -56,7 +56,7 @@ const getPurchaseOrderRetailerType2ById = async (id) => {
 };
 
 const getPurchaseOrderRetailerType2ByIdWithDiscount = async (id) => {
-  const purchaseOrder = await PurchaseOrderRetailerType2.findById(id);
+  const purchaseOrder = await PurchaseOrderRetailerType2.findById(id).lean();
   let discountDetails;
   // Fetch wholesaler details and discount array
      let retailer = await Retailer.findOne({
