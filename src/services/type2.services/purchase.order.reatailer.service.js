@@ -55,6 +55,32 @@ const getPurchaseOrderRetailerType2ById = async (id) => {
   return PurchaseOrderRetailerType2.findById(id);
 };
 
+const getPurchaseOrderRetailerType2ByIdWithDiscount = async (id) => {
+  const purchaseOrder = await PurchaseOrderRetailerType2.findById(id);
+  let discountDetails;
+  // Fetch wholesaler details and discount array
+      retailer = await Retailer.findOne({
+        email: purchaseOrder.retailer.email,
+      }).select(
+        'email discountGiven'
+      );
+  
+      if (retailer) {
+        // Find the discount entry for the `productBy` field
+        const discountEntry = retailer.discountGiven.find(
+          (discount) => discount.discountGivenBy === purchaseOrder.wholesaler.email
+        );
+  
+        if (discountEntry) {
+          discountDetails = {
+            productDiscount: discountEntry.productDiscount,
+            category: discountEntry.category,
+          };
+        }
+      }
+  return {purchaseOrder, ...discountDetails}
+};
+
 const getProductOrderBySupplyer = async (supplierEmail) => {
   const productOrders = await PurchaseOrderRetailerType2.find({ supplierEmail });
 
