@@ -303,7 +303,7 @@ const combinePurchaseOrders = async (wholesalerEmail) => {
 //       const mergedSet = [];
 //       const setMap = new Map();
 
-//       poGroup.forEach((item) => {
+//       poGroup.forEach((item) =>getPurchaseOrderRetailerType2ByIdWithDiscount {
 //         const key = `${item.designNumber}_${item.colour}_${item.size}`;
 //         if (setMap.has(key)) {
 //           setMap.get(key).quantity += item.quantity;
@@ -638,6 +638,7 @@ module.exports = {
   combinePurchaseOrders,
   combinePurchaseOrdersForManufacturer,
   getPurchaseOrderRetailerType2ById,
+  getPurchaseOrderRetailerType2ByIdWithDiscount,
   updatePurchaseOrderRetailerType2ById,
   deletePurchaseOrderRetailerType2ById,
   deleteCartType2ById,

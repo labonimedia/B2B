@@ -20,7 +20,7 @@ const queryRetailerPurchaseOrderType2 = catchAsync(async (req, res) => {
 });
 
 const getRetailerPurchaseOrderType2ById = catchAsync(async (req, res) => {
-  const cartItem = await RetailerPurchaseOrderType2Service.getPurchaseOrderRetailerType2ById(req.params.id);
+  const cartItem = await RetailerPurchaseOrderType2Service.getPurchaseOrderRetailerType2ByIdWithDiscount(req.params.id);
   if (!cartItem) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Cart not found');
   }
