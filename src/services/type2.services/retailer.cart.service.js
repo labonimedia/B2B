@@ -189,7 +189,7 @@ const genratePORetailerCartType2 = async (id) => {
         mobNumber: retailer.mobNumber,
         GSTIN: retailer.GSTIN,
         logo: retailer.logo,
-        discountDetails: discountDetails ?? [],  // Include discount details (if found)
+        discountDetails: discountDetails ?? null,  // Include discount details (if found)
       }
       : null, // Default to null if wholesaler not found
   };
