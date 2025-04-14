@@ -12,9 +12,9 @@ const smtpConfig = {
     pass: 'Goodwill#120',
   },
   // Optional timeout settings
-  connectionTimeout: 10000, // 10 seconds
-  greetingTimeout: 10000,
-  socketTimeout: 10000,
+  connectionTimeout: 60000, // 10 seconds
+  greetingTimeout: 60000,
+  socketTimeout: 60000,
 };
 
 const transport = nodemailer.createTransport(config.email.smtp);
@@ -35,6 +35,7 @@ if (config.env !== 'test') {
  */
 const sendEmail = async (to, subject, text) => {
   const msg = { from: config.email.from, to, subject, text };
+
   await transport.sendMail(msg);
 };
 // sendEmail('bhusnarsd@gmail.com', 'Test Subject', 'Test Email Body')
