@@ -56,15 +56,15 @@ module.exports = {
   },
   email: {
     smtp: {
-      host: envVars.SMTP_HOST,
-      port: envVars.SMTP_PORT,
+      host: "smtp.gmail.com",
+      port: 465,
       secure: true,
       auth: {
-        user: envVars.SMTP_USERNAME,
-        pass: envVars.SMTP_PASSWORD,
+        user: "labonimediasm@gmail.com",
+        pass: "lieuhgyfavtsxnth",
       },
     },
-    from: envVars.EMAIL_FROM,
+    from: "labonimediasm@gmail.com",
   },
   cdn: {
     accessKey: envVars.AWS_ACCESS_KEY_ID,
