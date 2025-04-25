@@ -322,24 +322,25 @@ const assignOrUpdateDiscount = async (email, discountGivenBy, category, productD
   return wholesaler;
 };
 
-const assignOrUpdateDiscountToRetailer = async (email, discountGivenBy, category, productDiscount, shippingDiscount) => {
+const assignOrUpdateDiscountToRetailer = async (email, id, discountGivenBy, category, productDiscount, shippingDiscount) => {
   const wholesaler = await Retailer.findOne({ email });
   if (!wholesaler) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Retailer not found');
   }
 
   const existingDiscountIndex = wholesaler.discountGiven.findIndex(
-    (discount) => discount.discountGivenBy === discountGivenBy
+    (discount) => discount.id === id
   );
 
   if (existingDiscountIndex !== -1) {
     // Update the existing discount
     wholesaler.discountGiven[existingDiscountIndex].category = category;
+    wholesaler.discountGiven[existingDiscountIndex].id = id;
     wholesaler.discountGiven[existingDiscountIndex].productDiscount = productDiscount;
     wholesaler.discountGiven[existingDiscountIndex].shippingDiscount = shippingDiscount;
   } else {
     // Add new discount entry
-    wholesaler.discountGiven.push({ discountGivenBy, category, productDiscount, shippingDiscount });
+    wholesaler.discountGiven.push({ discountGivenBy, id ,category, productDiscount, shippingDiscount });
   }
 
   await wholesaler.save();

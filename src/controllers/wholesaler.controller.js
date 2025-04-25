@@ -100,10 +100,11 @@ const assignDiscount = catchAsync(async (req, res) => {
 });
 
 const assignDiscountToRetailer = catchAsync(async (req, res) => {
-  const { email, discountGivenBy, category, productDiscount, shippingDiscount } = req.body;
+  const { email, id,  discountGivenBy, category, productDiscount, shippingDiscount } = req.body;
 
   const retailer = await wholesalerService.assignOrUpdateDiscountToRetailer(
     email,
+    id,
     discountGivenBy,
     category,
     productDiscount,
