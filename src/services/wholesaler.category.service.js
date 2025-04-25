@@ -1,5 +1,5 @@
 const httpStatus = require('http-status');
-const { WholesalerCategory } = require('../models');
+const { WholesalerCategory, Wholesaler } = require('../models');
 const ApiError = require('../utils/ApiError');
 
 /**
@@ -41,13 +41,37 @@ const getWholesalerCategoryById = async (id) => {
  * @returns {Promise<WholesalerCategory>}
  */
 const updateWholesalerCategoryById = async (id, updateBody) => {
-  const user = await getWholesalerCategoryById(id);
-  if (!user) {
+  const category = await getWholesalerCategoryById(id);
+  if (!category) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Wholesaler Category not found');
   }
-  Object.assign(user, updateBody);
-  await user.save();
-  return user;
+  // Object.assign(user, updateBody);
+  // await user.save();
+  // return user;
+
+  if (!category) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Retailer Category not found');
+  }
+
+  Object.assign(category, updateBody);
+  await category.save();
+
+  // Update retailers who have this category
+  await Wholesaler.updateMany(
+    { 'discountGiven.id': id },
+    {
+      $set: {
+        'discountGiven.$[elem].category': updateBody.category,
+        'discountGiven.$[elem].productDiscount': updateBody.productDiscount,
+        'discountGiven.$[elem].shippingDiscount': updateBody.shippingDiscount,
+      },
+    },
+    {
+      arrayFilters: [{ 'elem.id': id }],
+    }
+  );
+
+  return category;
 };
 
 /**
@@ -55,15 +79,31 @@ const updateWholesalerCategoryById = async (id, updateBody) => {
  * @param {ObjectId} userId
  * @returns {Promise<WholesalerCategory>}
  */
+// const deleteWholesalerCategoryById = async (id) => {
+//   const user = await getWholesalerCategoryById(id);
+//   if (!user) {
+//     throw new ApiError(httpStatus.NOT_FOUND, 'Wholesaler Category not found');
+//   }
+//   await user.remove();
+//   return user;
+// };
 const deleteWholesalerCategoryById = async (id) => {
   const user = await getWholesalerCategoryById(id);
   if (!user) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Wholesaler Category not found');
   }
+
+  // Remove the category from Retailers' discountGiven array
+  await Wholesaler.updateMany(
+    { 'discountGiven.id': id },
+    { $pull: { discountGiven: { id: id } } }
+  );
+
+  // Remove the category itself
   await user.remove();
+
   return user;
 };
-
 module.exports = {
   createWholesalerCategory,
   queryWholesalerCategory,
