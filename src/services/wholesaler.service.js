@@ -329,7 +329,7 @@ const assignOrUpdateDiscountToRetailer = async (email, id, discountGivenBy, cate
   }
 
   const existingDiscountIndex = wholesaler.discountGiven.findIndex(
-    (discount) => discount.id === id
+    (discount) => discount.discountGivenBy === discountGivenBy
   );
 
   if (existingDiscountIndex !== -1) {
