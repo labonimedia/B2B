@@ -9,6 +9,11 @@ const createPurchaseOrderType2 = catchAsync(async (req, res) => {
   res.status(httpStatus.CREATED).send(createdItems);
 });
 
+const getsinglepurchaseorderdataByWholesalerEmail = catchAsync(async (req, res) => {
+  const data = await purchaseOrderType2Service.getSinglePurchaseOrderDataByWholesalerEmail(req.body);
+  res.status(httpStatus.OK).send(data);
+});
+
 const queryPurchaseOrderType2 = catchAsync(async (req, res) => {
   const filter = pick(req.query, ['productBy', 'email', 'status']);
   const options = pick(req.query, ['sortBy', 'limit', 'page']);
@@ -79,4 +84,5 @@ module.exports = {
   deletePurchaseOrderType2ById,
   getPurchaseOrdersByManufactureEmail,
   updatePurchaseOrderQuantities,
+  getsinglepurchaseorderdataByWholesalerEmail,
 };

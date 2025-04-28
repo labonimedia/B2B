@@ -42,4 +42,8 @@ router
     purchaseOrderType2Controller.updatePurchaseOrderQuantities
   );
 
+  router
+  .route('/getsinglepurchaseorderdata/bywholesaleremail')
+  .post(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), purchaseOrderType2Controller.getsinglepurchaseorderdataByWholesalerEmail)
+
 module.exports = router;

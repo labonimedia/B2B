@@ -55,7 +55,25 @@ const ApiError = require('../../utils/ApiError');
 //   // Return the newly created purchase order
 //   return purchaseOrder;
 // };
+const getSinglePurchaseOrderDataByWholesalerEmail = async (body) => {
+  const { email, productBy, poNumber } = body;
 
+  if (!email || !productBy || !poNumber) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Email, productBy, and poNumber are required.');
+  }
+
+  const purchaseOrder = await PurchaseOrderType2.findOne({
+    email,
+    productBy,
+    poNumber,
+  });
+
+  if (!purchaseOrder) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Purchase order not found.');
+  }
+
+  return purchaseOrder;
+};
 const createPurchaseOrderType2 = async (reqBody) => {
   const { email, productBy, retailerPOs } = reqBody;
   // Validate that required fields are provided
@@ -387,4 +405,5 @@ module.exports = {
   deleteCartType2ById,
   getPurchaseOrdersByManufactureEmail,
   updatePurchaseOrderQuantities,
+  getSinglePurchaseOrderDataByWholesalerEmail
 };
