@@ -440,6 +440,7 @@ const deleteRetailerCartType2ById = async (id) => {
   await cart.remove();
   return cart;
 };
+
 const deleteCartSetItem = async (cartId, setId) => {
   const cart = await getRetailerCartType2ById(cartId)
   if (!cart) {
@@ -456,6 +457,7 @@ const deleteCartSetItem = async (cartId, setId) => {
   await cart.save();
   return cart;
 };
+
 module.exports = {
   createRetailerCartType2,
   queryRetailerCartType2,
