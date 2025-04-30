@@ -440,7 +440,22 @@ const deleteRetailerCartType2ById = async (id) => {
   await cart.remove();
   return cart;
 };
+const deleteCartSetItem = async (cartId, setId) => {
+  const cart = await getRetailerCartType2ById(cartId)
+  if (!cart) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Cart not found');
+  }
 
+  const initialLength = cart.set.length;
+  cart.set = cart.set.filter((item) => item._id.toString() !== setId);
+
+  if (cart.set.length === initialLength) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Set item not found');
+  }
+
+  await cart.save();
+  return cart;
+};
 module.exports = {
   createRetailerCartType2,
   queryRetailerCartType2,
@@ -450,4 +465,5 @@ module.exports = {
   getRetailerCartType2ById,
   updateRetailerCartType2ById,
   deleteRetailerCartType2ById,
+  deleteCartSetItem
 };
