@@ -20,7 +20,12 @@ router
     auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
     retailerCartType2Controller.deleteRetailerCartType2ById
   ); // Delete CartType2 by ID
-
+  router
+  .route('/:cartId/set/:setId')
+  .delete(
+    auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
+    retailerCartType2Controller.deleteCartSetItem
+  );
 router
   .route('/place-order/products/:id')
   .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), retailerCartType2Controller.genratePORetailerCartType2);

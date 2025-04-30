@@ -52,6 +52,11 @@ const deleteRetailerCartType2ById = catchAsync(async (req, res) => {
   await RetailerCartType2Service.deleteRetailerCartType2ById(req.params.id);
   res.status(httpStatus.NO_CONTENT).send();
 });
+const deleteCartSetItem = catchAsync(async (req, res) => {
+  const { cartId, setId } = req.params;
+  await RetailerCartType2Service.deleteCartSetItem(cartId, setId);
+  res.status(httpStatus.NO_CONTENT).send();
+});
 
 module.exports = {
   createRetailerCartType2,
@@ -62,4 +67,5 @@ module.exports = {
   getCartByEmailToPlaceOrder,
   updateRetailerCartType2ById,
   deleteRetailerCartType2ById,
+  deleteCartSetItem
 };
