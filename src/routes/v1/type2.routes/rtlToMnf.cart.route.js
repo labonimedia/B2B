@@ -8,7 +8,7 @@ router
   .route('/')
   .post
   (
-//auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
+auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
      rtlToMnfCartController.createCartType2) // Create CartType2
   .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), rtlToMnfCartController.queryCartType2); // Query CartType2  auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
 
