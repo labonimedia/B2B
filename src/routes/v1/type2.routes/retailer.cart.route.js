@@ -6,7 +6,10 @@ const router = express.Router();
 
 router
   .route('/')
-  .post(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), retailerCartType2Controller.createRetailerCartType2) // Create CartType2
+  .post
+   (
+  auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
+   retailerCartType2Controller.createRetailerCartType2) // Create CartType2
   .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), retailerCartType2Controller.queryRetailerCartType2); // Query CartType2
 
 router
@@ -23,7 +26,7 @@ router
   router
   .route('/:cartId/set/:setId')
   .delete(
-    auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
+auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
     retailerCartType2Controller.deleteCartSetItem
   );
 router
@@ -33,5 +36,13 @@ router
 router
   .route('/catr/products')
   .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailesr'), retailerCartType2Controller.getCartByEmail);
-
+// router
+//   .route('/update-set-item')
+//   .patch(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), retailerCartType2Controller.updateSetItem);
+router
+  .route('/updatecart/:cartId/set/:setId')
+  .patch
+  (
+  auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
+   retailerCartType2Controller.updateSetItem);
 module.exports = router;
