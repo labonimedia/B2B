@@ -7,20 +7,55 @@ const ApiError = require('../../utils/ApiError');
  * @param {Array<Object>} reqBody - Contains an array of item objects
  * @returns {Promise<Array<RetailerCartType2>>}
  */
+// const createRetailerCartType2 = async (reqBody) => {
+//   const { email, wholesalerEmail, set } = reqBody;
+//   // Check if a cart already exists with the same email and productBy
+//   const existingCart = await RetailerCartType2.findOne({ email, wholesalerEmail });
+//   if (existingCart) {
+//     // Push new set data into the existing cart's set array
+//     existingCart.set.push(...set);
+//     await existingCart.save();
+//     await WishListType2.findOneAndDelete({ productId: reqBody.productId, email })
+//     return existingCart
+//   } else {
+//     // If no cart exists, create a new one
+//     const newCart = await RetailerCartType2.create(reqBody);
+//     await WishListType2.findOneAndDelete({ productId: reqBody.productId, email })
+//     return newCart;
+//   }
+// };
+
 const createRetailerCartType2 = async (reqBody) => {
   const { email, wholesalerEmail, set } = reqBody;
-  // Check if a cart already exists with the same email and productBy
+
   const existingCart = await RetailerCartType2.findOne({ email, wholesalerEmail });
+
   if (existingCart) {
-    // Push new set data into the existing cart's set array
-    existingCart.set.push(...set);
+    // Iterate over each new item
+    set.forEach((newItem) => {
+      const existingItem = existingCart.set.find(
+        (item) =>
+          item.designNumber === newItem.designNumber &&
+          item.colour === newItem.colour &&
+          item.size === newItem.size
+      );
+
+      if (existingItem) {
+        // Update quantity if item already exists
+        existingItem.quantity += newItem.quantity;
+      } else {
+        // Push new item if not found
+        existingCart.set.push(newItem);
+      }
+    });
+
     await existingCart.save();
-    await WishListType2.findOneAndDelete({ productId: reqBody.productId, email })
-    return existingCart
+    await WishListType2.findOneAndDelete({ productId: reqBody.productId, email });
+    return existingCart;
   } else {
-    // If no cart exists, create a new one
+    // Create new cart if not existing
     const newCart = await RetailerCartType2.create(reqBody);
-    await WishListType2.findOneAndDelete({ productId: reqBody.productId, email })
+    await WishListType2.findOneAndDelete({ productId: reqBody.productId, email });
     return newCart;
   }
 };
@@ -458,6 +493,27 @@ const deleteCartSetItem = async (cartId, setId) => {
   return cart;
 };
 
+const updateSetItem = async (cartId, setId, updateBody) => {
+  const cart = await getRetailerCartType2ById(cartId)
+
+  if (!cart) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Cart not found');
+  }
+
+  const item = cart.set.id(setId);
+  if (!item) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Set item not found');
+  }
+
+  // Update fields
+  Object.keys(updateBody).forEach((key) => {
+    item[key] = updateBody[key];
+  });
+
+  await cart.save();
+  return cart;
+};
+
 module.exports = {
   createRetailerCartType2,
   queryRetailerCartType2,
@@ -467,5 +523,6 @@ module.exports = {
   getRetailerCartType2ById,
   updateRetailerCartType2ById,
   deleteRetailerCartType2ById,
-  deleteCartSetItem
+  deleteCartSetItem,
+  updateSetItem
 };

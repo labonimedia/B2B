@@ -7,23 +7,65 @@ const ApiError = require('../../utils/ApiError');
  * @param {Array<Object>} reqBody - Contains an array of item objects
  * @returns {Promise<Array<RtlToMnfCart>>}
  */
+
+// const createCartType2 = async (reqBody) => {
+//   const { email, productBy, set } = reqBody;
+//   // Check if a cart already exists with the same email and productBy
+//   const existingCart = await RtlToMnfCart.findOne({ email, productBy });
+//   if (existingCart) {
+//     // Push new set data into the existing cart's set array
+//     existingCart.set.push(...set);
+//     await existingCart.save();
+//     await WishListType2.findOneAndDelete({ productId: reqBody.productId, email });
+//     return existingCart;
+//   }
+//   // If no cart exists, create a new one
+//   const newCart = await RtlToMnfCart.create(reqBody);
+//   await WishListType2.findOneAndDelete({ productId: reqBody.productId, email });
+//   return newCart;
+// };
 const createCartType2 = async (reqBody) => {
   const { email, productBy, set } = reqBody;
-  // Check if a cart already exists with the same email and productBy
+
   const existingCart = await RtlToMnfCart.findOne({ email, productBy });
+
   if (existingCart) {
-    // Push new set data into the existing cart's set array
-    existingCart.set.push(...set);
+    // Iterate over each new set item
+    set.forEach((newItem) => {
+      const existingItem = existingCart.set.find(
+        (item) =>
+          item.designNumber === newItem.designNumber &&
+          item.colour === newItem.colour &&
+          item.size === newItem.size
+      );
+
+      if (existingItem) {
+        // Update quantity if item already exists
+        existingItem.quantity += newItem.quantity;
+      } else {
+        // Push new item if not found
+        existingCart.set.push(newItem);
+      }
+    });
+
     await existingCart.save();
-    await WishListType2.findOneAndDelete({ productId: reqBody.productId, email });
+
+    if (reqBody.productId) {
+      await WishListType2.findOneAndDelete({ productId: reqBody.productId, email });
+    }
+
     return existingCart;
   }
-  // If no cart exists, create a new one
+
+  // Create a new cart if none exists
   const newCart = await RtlToMnfCart.create(reqBody);
-  await WishListType2.findOneAndDelete({ productId: reqBody.productId, email });
+
+  if (reqBody.productId) {
+    await WishListType2.findOneAndDelete({ productId: reqBody.productId, email });
+  }
+
   return newCart;
 };
-
 /**
  * Query for RtlToMnfCart
  * @param {Object} filter - Mongo filter
@@ -423,6 +465,45 @@ const deleteCartType2ById = async (id) => {
   return cart;
 };
 
+const updateSetItem = async (cartId, setId, updateBody) => {
+  const cart = await getCartType2ById(cartId)
+
+  if (!cart) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Cart not found');
+  }
+
+  const item = cart.set.id(setId);
+  if (!item) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Set item not found');
+  }
+
+  // Update fields
+  Object.keys(updateBody).forEach((key) => {
+    item[key] = updateBody[key];
+  });
+
+  await cart.save();
+  return cart;
+};
+
+
+const deleteCartSetItem = async (cartId, setId) => {
+  const cart = await getCartType2ById(cartId)
+  if (!cart) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Cart not found');
+  }
+
+  const initialLength = cart.set.length;
+  cart.set = cart.set.filter((item) => item._id.toString() !== setId);
+
+  if (cart.set.length === initialLength) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Set item not found');
+  }
+
+  await cart.save();
+  return cart;
+};
+
 module.exports = {
   createCartType2,
   queryCartType2,
@@ -431,4 +512,6 @@ module.exports = {
   getCartType2ById,
   updateCartType2ById,
   deleteCartType2ById,
+  updateSetItem,
+  deleteCartSetItem
 };
