@@ -24,6 +24,7 @@ const ApiError = require('../../utils/ApiError');
 //   await WishListType2.findOneAndDelete({ productId: reqBody.productId, email });
 //   return newCart;
 // };
+
 const createCartType2 = async (reqBody) => {
   const { email, productBy, set } = reqBody;
 

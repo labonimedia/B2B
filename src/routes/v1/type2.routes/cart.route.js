@@ -6,7 +6,9 @@ const router = express.Router();
 
 router
   .route('/')
-  .post(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), cartType2Controller.createCartType2) // Create CartType2
+  .post(
+     auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
+   cartType2Controller.createCartType2) // Create CartType2
   .get(cartType2Controller.queryCartType2); // Query CartType2  auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
 
 router
@@ -21,4 +23,18 @@ router
   .route('/catr/products')
   .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), cartType2Controller.getCartByEmail);
 
+
+  router
+  .route('/updatecart/:cartId/set/:setId')
+  .patch
+  (
+ // auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
+cartType2Controller.updateSetItem)
+
+   router
+   .route('/:cartId/set/:setId')
+   .delete(
+ // auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
+cartType2Controller.deleteCartSetItem
+   );  
 module.exports = router;
