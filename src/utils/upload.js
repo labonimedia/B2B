@@ -22,7 +22,7 @@ let s3Client;
 // Function to initialize the S3 client dynamically
 const initializeS3Client = async () => {
   const cdnConfig = await CDNPath.findOne({ status: 'active' }).lean();
-
+console.log(cdnConfig);
   if (!cdnConfig) {
     throw new Error('No active CDN configuration found');
   }

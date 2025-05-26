@@ -157,15 +157,29 @@ const queryPurchaseOrderType2 = async (filter, options) => {
 const getPurchaseOrderType2ById = async (id) => {
   return PurchaseOrderType2.findById(id);
 };
-const getPurchanseOrderByEmail = async (email) => {
-  const purchaseOrders = await PurchaseOrderType2.find({
-    email, // Filter by email
-    'retailerPOs.0': { $exists: false }, // Ensure retailerPOs array is empty
-  });
+// const getPurchanseOrderByEmail = async (email) => {
+//   const purchaseOrders = await PurchaseOrderType2.find({
+//     email, // Filter by email
+//     'retailerPOs.0': { $exists: false }, // Ensure retailerPOs array is empty
+//   });
 
-  return purchaseOrders;
+//   return purchaseOrders;
+// };
+const getPurchanseOrderByEmail = async (email, page, limit) => {
+  const options = {
+    page: parseInt(page, 10) || 1,
+    limit: parseInt(limit, 10) || 10,
+    sort: { createdAt: -1 }, // Sort by newest first
+  };
+
+  const query = {
+    email,
+    'retailerPOs.0': { $exists: false }, // Empty retailerPOs
+  };
+
+  const result = await PurchaseOrderType2.paginate(query, options);
+  return result;
 };
-
 const getProductOrderBySupplyer = async (supplierEmail) => {
   const productOrders = await PurchaseOrderType2.find({ productBy: supplierEmail });
 
