@@ -7,6 +7,7 @@ const ApiError = require('../../utils/ApiError');
  * @param {Array<Object>} reqBody - Contains an array of item objects
  * @returns {Promise<Array<RetailerCartType2>>}
  */
+
 // const createRetailerCartType2 = async (reqBody) => {
 //   const { email, wholesalerEmail, set } = reqBody;
 //   // Check if a cart already exists with the same email and productBy
@@ -27,9 +28,7 @@ const ApiError = require('../../utils/ApiError');
 
 const createRetailerCartType2 = async (reqBody) => {
   const { email, wholesalerEmail, set } = reqBody;
-
   const existingCart = await RetailerCartType2.findOne({ email, wholesalerEmail });
-
   if (existingCart) {
     // Iterate over each new item
     set.forEach((newItem) => {
