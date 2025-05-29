@@ -11,18 +11,11 @@ const CartSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-
     designNumber: {
       type: String,
     },
     set: [
       {
-        // _id: false,
-        // productId: {
-        //   type: mongoose.Schema.Types.ObjectId,
-        //   ref: 'ProductType2',
-        //   required: true,
-        // },
         productBy: {
           type: String,
         },
@@ -44,8 +37,22 @@ const CartSchema = new mongoose.Schema(
         quantity: {
           type: Number,
         },
-        manufacturerPrice: String,
+        manufacturerPrice: {
+          type: String,
+        },
         price: {
+          type: String,
+        },
+        productType: {
+          type: String,
+        },
+        gender: {
+          type: String,
+        },
+        clothing: {
+          type: String,
+        },
+        subCategory: {
           type: String,
         },
       },
@@ -63,7 +70,8 @@ const CartSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
-// add plugin that converts mongoose to json
+
+// Plugins
 CartSchema.plugin(toJSON);
 CartSchema.plugin(paginate);
 
