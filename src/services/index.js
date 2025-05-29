@@ -104,3 +104,5 @@ module.exports.RtlToMnfCartService = require('./type2.services/rtlToMnf.cart.ser
 module.exports.rTlToMnfPoService = require('./type2.services/rtlToMnf.po.service');
 module.exports.rtlOPReuestService = require('./type2.services/retailer.orderP.request.service');
 module.exports.performInvoiceService = require('./type2.services/perform.invoice.service');
+// new flow
+module.exports.poRetailerToWholesalerService = require('./type2.services/po.retailer.to.wholesaler.service');
