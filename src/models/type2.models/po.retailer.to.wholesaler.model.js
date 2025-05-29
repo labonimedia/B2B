@@ -68,6 +68,7 @@ const PORetailerToWholesalerSchema = new mongoose.Schema(
       productDiscount: String,
       category: String,
     },
+    cartId:String,
   },
   {
     timestamps: true,
