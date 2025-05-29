@@ -103,7 +103,8 @@ const rtlToMnfCartRoute = require('./type2.routes/rtlToMnf.cart.route');
 const rtlToMnfPORoute = require('./type2.routes/rtlToMnf.po.route');
 const rtlOrderPRequestRoute = require('./type2.routes/retailer.orderP.request.route');
 const performInvoiceRoute = require('./type2.routes/perform.invoice.route');
-
+//new flow apis
+const PORetailerToWholesalerRoute = require('./type2.routes/po.retailer.to.wholesaler.route');
 const router = express.Router();
 
 const defaultRoutes = [
@@ -518,7 +519,12 @@ const defaultRoutes = [
   {
     path: '/perform-invoice',
     route: performInvoiceRoute,
-  }
+  },
+  //new flow apis for order flow
+  {
+    path: '/po-retailer-to-wholesaler',
+    route: PORetailerToWholesalerRoute,
+  },
 ];
 
 const devRoutes = [
