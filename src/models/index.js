@@ -115,4 +115,6 @@ module.exports.RtlToMnfCart = require('./type2.models/rtlTomnf.cart.model');
 module.exports.RtlToMnfPo = require('./type2.models/rtlToMnf.po.model');
 module.exports.RetailerPartialReq = require('./type2.models/retailer.orderP.request.model');
 module.exports.PerformInvoice = require('./type2.models/perform.invoice.model');
+/// new models PO 
 module.exports.PORetailerToWholesaler = require('./type2.models/po.retailer.to.wholesaler.model');
+module.exports.PORetailerToManufacturer = require('./type2.models/po.retailer.to.manufacture.model');
