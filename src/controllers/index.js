@@ -102,3 +102,4 @@ module.exports.rtlOPReuestController = require('./type2.controller/retailer.orde
 module.exports.performInvoiceController = require('./type2.controller/perform.invoice.controller');
 //new flow apis
 module.exports.poRetailerToWholesalerController = require('./type2.controller/po.retailer.to.wholesaler.controller');
+module.exports.poRetailerToManufactureController = require('./type2.controller/po.retailer.to.manufacture.controller');
