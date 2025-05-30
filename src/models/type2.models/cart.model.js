@@ -44,6 +44,18 @@ const CartSchema = new mongoose.Schema(
         price: {
           type: String,
         },
+        productType: {
+          type: String,
+        },
+        gender: {
+          type: String,
+        },
+        clothing: {
+          type: String,
+        },
+        subCategory: {
+          type: String,
+        },
       },
     ],
     cartAddedDate: {
