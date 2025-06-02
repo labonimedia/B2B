@@ -1,6 +1,7 @@
 const httpStatus = require('http-status');
 const catchAsync = require('../../utils/catchAsync');
 const { poRetailerToWholesalerService } = require('../../services');
+const pick = require('../../utils/pick');
 
 const createRetailerPurchaseOrderType2 = catchAsync(async (req, res) => {
   const createdPO = await poRetailerToWholesalerService.createPurchaseOrderRetailerType2(req.body);
