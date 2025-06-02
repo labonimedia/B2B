@@ -38,8 +38,8 @@ const createPurchaseOrderRetailerType2 = async (reqBody) => {
  * @returns {Promise<QueryResult>}
  */
 const getAllPoRetailerToWholesaler = async (filter, options) => {
-  const PORetailerToWholesaler = await PORetailerToWholesaler.paginate(filter, options);
-  return PORetailerToWholesaler;
+  const poRetailerToWholesaler = await PORetailerToWholesaler.paginate(filter, options);
+  return poRetailerToWholesaler;
 };
 
 /**
