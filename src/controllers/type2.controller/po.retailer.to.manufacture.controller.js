@@ -23,7 +23,7 @@ const getRetailerPOByManufacture = catchAsync(async (req, res) => {
   const pos = await poRetailerToManufactureService.getRetailerPOByManufacture(manufacturerEmail);
   res.status(httpStatus.OK).send(pos);
 });
-
+// update PO details such as available quantity so on ... on retailers PO 
 const updateRetailerPOSetItem = catchAsync(async (req, res) => {
   const { poId } = req.params;
   const updatedPO = await poRetailerToManufactureService.updateRetailerPOSetItem(poId, req.body);

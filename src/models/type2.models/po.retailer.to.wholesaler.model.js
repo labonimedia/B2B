@@ -12,7 +12,10 @@ const PORetailerToWholesalerSchema = new mongoose.Schema(
         colourName: String,
         size: String,
         quantity: Number, // Requested by retailer
-        availableQuantity: Number, // Updated by wholesaler
+        availableQuantity:{
+          type: Number,
+          default: 0, 
+        } , // Updated by wholesaler
         confirmed: {
           type: Boolean,
           default: false, // Confirmed by retailer if changes are made
