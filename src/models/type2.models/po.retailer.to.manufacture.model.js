@@ -12,7 +12,10 @@ const PORetailerToManufacturerSchema = new mongoose.Schema(
         colourName: String,
         size: String,
         quantity: Number, // Requested by retailer
-        availableQuantity: Number, // Updated by manufacturer
+        availableQuantity:{
+          type: Number,
+          default: 0, 
+        } , // Updated by manufacturer
         confirmed: {
           type: Boolean,
           default: false, // Confirmed by retailer (true = accepted, false = not yet acted or cancelled)
