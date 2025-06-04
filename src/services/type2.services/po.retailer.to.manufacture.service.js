@@ -49,27 +49,57 @@ const getRetailerPOByManufacture = async (manufacturerEmail) => {
   return PORetailerToManufacturer.find({ manufacturerEmail }).sort({ createdAt: -1 });
 };
 
-/**
- * Manufacture updates a specific set item in the PO
- */
-const updateRetailerPOSetItem = async (poId, updateBody) => {
-  const { designNumber, colour, size, updatedFields } = updateBody;
+// /**
+//  * Manufacture updates a specific set item in the PO
+//  */
+// const updateRetailerPOSetItem = async (poId, updateBody) => {
+//   const { designNumber, colour, size, updatedFields } = updateBody;
 
+//   const po = await PORetailerToManufacturer.findById(poId);
+//   if (!po) throw new ApiError(httpStatus.NOT_FOUND, 'Purchase Order not found');
+
+//   const item = po.set.find(
+//     (item) =>
+//       item.designNumber === designNumber &&
+//       item.colour === colour &&
+//       item.size === size
+//   );
+
+//   if (!item) throw new ApiError(httpStatus.NOT_FOUND, 'Set item not found in PO');
+
+//   Object.keys(updatedFields).forEach((key) => {
+//     item[key] = updatedFields[key];
+//   });
+
+//   await po.save();
+//   return po;
+// };
+const updateRetailerPOSetItem = async (poId, updateBody) => {
   const po = await PORetailerToManufacturer.findById(poId);
   if (!po) throw new ApiError(httpStatus.NOT_FOUND, 'Purchase Order not found');
 
-  const item = po.set.find(
-    (item) =>
-      item.designNumber === designNumber &&
-      item.colour === colour &&
-      item.size === size
-  );
-
-  if (!item) throw new ApiError(httpStatus.NOT_FOUND, 'Set item not found in PO');
-
-  Object.keys(updatedFields).forEach((key) => {
-    item[key] = updatedFields[key];
+  // Update top-level fields (except _id and set)
+  Object.keys(updateBody).forEach((key) => {
+    if (key !== 'set' && key !== '_id') {
+      po[key] = updateBody[key];
+    }
   });
+
+  // Update set items if present
+  if (Array.isArray(updateBody.set)) {
+    updateBody.set.forEach((incomingSetItem) => {
+      if (!incomingSetItem._id) return; // skip if no _id
+
+      const existingSetItem = po.set.id(incomingSetItem._id);
+      if (existingSetItem) {
+        Object.keys(incomingSetItem).forEach((field) => {
+          if (field !== '_id') {
+            existingSetItem[field] = incomingSetItem[field];
+          }
+        });
+      }
+    });
+  }
 
   await po.save();
   return po;

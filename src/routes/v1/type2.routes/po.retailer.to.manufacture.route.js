@@ -21,10 +21,10 @@ router
     auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
     poRetailerToManufactureController.getRetailerPOByManufacture
   );
-  
-// update set quantity and other details for retailer PO by manufacture
+
+// update set quantity and other details for retailer PO ( manufacture and retailer can update the any data in po )
 router
-  .route('/update-po/by-manufacture-to-retailer :poId')
+  .route('/update-po-data/:poId')
   .patch(
      auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
      poRetailerToManufactureController.updateRetailerPOSetItem
