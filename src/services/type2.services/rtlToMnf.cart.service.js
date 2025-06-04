@@ -1,6 +1,6 @@
 const httpStatus = require('http-status');
 const { v4: uuidv4 } = require('uuid');
-const { RtlToMnfCart, User, RtlToMnfPo, Retailer, Manufacture, WishListType2 } = require('../../models');
+const { RtlToMnfCart, User, RtlToMnfPo, Retailer, Manufacture, WishListType2, PORetailerToManufacturer } = require('../../models');
 const ApiError = require('../../utils/ApiError');
 /**
  * Create multiple RtlToMnfCart items
@@ -216,7 +216,7 @@ const getCartType2ById = async (id) => {
 //     return result;
 // };
 const genratedeChallNO = async (email) => {
-  const lastPO = await RtlToMnfPo.findOne({ email }).sort({ poNumber: -1 }).lean();
+  const lastPO = await PORetailerToManufacturer.findOne({ email }).sort({ poNumber: -1 }).lean();
   return (nextdeliveryChallanNumber = lastPO ? lastPO.poNumber + 1 : 1);
 };
 

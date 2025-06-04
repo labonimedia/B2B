@@ -1,5 +1,5 @@
 const httpStatus = require('http-status');
-const { RetailerCartType2, User, Wholesaler, Retailer, Manufacture, POCountertype2, WishListType2, PurchaseOrderRetailerType2 } = require('../../models');
+const { RetailerCartType2, User, Wholesaler, Retailer, Manufacture, POCountertype2, WishListType2, PurchaseOrderRetailerType2, PORetailerToWholesaler} = require('../../models');
 const ApiError = require('../../utils/ApiError');
 
 /**
@@ -137,32 +137,118 @@ const getRetailerCartType2ById = async (id) => {
  * @param {string} productBy - Product's manufacturer email
  */
 
+// const genratePORetailerCartType2 = async (id) => {
+//   // Fetch the RetailerCartType2 document by its ID
+//   const cartItem = await RetailerCartType2.findById(id);
+//   if (!cartItem) {
+//     throw new Error("Cart item not found");
+//   }
+
+//   // Fetch manufacturer details based on the `productBy` email
+//   const wholesaler = await Wholesaler.findOne({
+//     email: cartItem.wholesalerEmail,
+//   }).select('email fullName companyName address state country pinCode mobNumber profileImg GSTIN pan');
+
+//   // Fetch wholesaler details based on the provided `email` (if any)
+//   let retailer = null;
+//   let discountDetails = null;
+
+//   if (cartItem.email) {
+//     // Fetch wholesaler details and discount array
+//     retailer = await Retailer.findOne({
+//       email: cartItem.email,
+//     }).select(
+//       'email fullName companyName address state country pinCode mobNumber GSTIN logo pan profileImg discountGiven'
+//     );
+
+//     if (retailer) {
+//       // Find the discount entry for the `productBy` field
+//       const discountEntry = retailer.discountGiven.find(
+//         (discount) => discount.discountGivenBy === cartItem.wholesalerEmail
+//       );
+
+//       if (discountEntry) {
+//         discountDetails = {
+//           productDiscount: discountEntry.productDiscount,
+//           category: discountEntry.category,
+//         };
+//       }
+//     }
+//   }
+
+//   // Determine the financial year for the order number
+//   const now = new Date();
+//   const currentMonth = now.getMonth();
+//   let financialYear =
+//     currentMonth < 2 || (currentMonth === 2 && now.getDate() < 1)
+//       ? now.getFullYear() - 1
+//       : now.getFullYear();
+
+//   // Get the current order count for the wholesaler and financial year
+//   let orderCount;
+//   const lastPO = await PurchaseOrderRetailerType2.findOne({ email: cartItem.email })
+//     .sort({ poNumber: -1 })
+//     .lean();
+//   orderCount = lastPO ? lastPO.poNumber + 1 : 1;
+
+//   const orderNumber = orderCount;
+
+//   // Prepare the enriched response
+//   const enrichedCartItem = {
+//     ...cartItem.toObject(),
+//     poNumber: orderNumber, // Purchase Order Number
+//     wholesaler: wholesaler
+//       ? {
+//         email: wholesaler.email,
+//         fullName: wholesaler.fullName,
+//         pan: wholesaler.pan,
+//         companyName: wholesaler.companyName,
+//         address: wholesaler.address,
+//         state: wholesaler.state,
+//         country: wholesaler.country,
+//         pinCode: wholesaler.pinCode,
+//         mobNumber: wholesaler.mobNumber,
+//         profileImg: wholesaler.profileImg,
+//         GSTIN: wholesaler.GSTIN,
+//       }
+//       : null, // Default to null if manufacturer not found
+//     retailer: retailer
+//       ? {
+//         email: retailer.email,
+//         pan: retailer.pan,
+//         fullName: retailer.fullName,
+//         companyName: retailer.companyName,
+//         address: retailer.address,
+//         state: retailer.state,
+//         country: retailer.country,
+//         pinCode: retailer.pinCode,
+//         mobNumber: retailer.mobNumber,
+//         GSTIN: retailer.GSTIN,
+//         logo: retailer.logo,
+//         discountDetails: discountDetails ?? null,  // Include discount details (if found)
+//       }
+//       : null, // Default to null if wholesaler not found
+//   };
+
+//   return enrichedCartItem;
+// };
+
+
 const genratePORetailerCartType2 = async (id) => {
-  // Fetch the RetailerCartType2 document by its ID
   const cartItem = await RetailerCartType2.findById(id);
-  if (!cartItem) {
-    throw new Error("Cart item not found");
-  }
+  if (!cartItem) throw new Error("Cart item not found");
 
-  // Fetch manufacturer details based on the `productBy` email
-  const wholesaler = await Wholesaler.findOne({
-    email: cartItem.wholesalerEmail,
-  }).select('email fullName companyName address state country pinCode mobNumber profileImg GSTIN pan');
+  const wholesaler = await Wholesaler.findOne({ email: cartItem.wholesalerEmail })
+    .select('email fullName companyName address state country pinCode mobNumber profileImg GSTIN pan');
 
-  // Fetch wholesaler details based on the provided `email` (if any)
   let retailer = null;
   let discountDetails = null;
 
   if (cartItem.email) {
-    // Fetch wholesaler details and discount array
-    retailer = await Retailer.findOne({
-      email: cartItem.email,
-    }).select(
-      'email fullName companyName address state country pinCode mobNumber GSTIN logo pan profileImg discountGiven'
-    );
+    retailer = await Retailer.findOne({ email: cartItem.email })
+      .select('email fullName companyName address state country pinCode mobNumber GSTIN logo pan profileImg discountGiven');
 
     if (retailer) {
-      // Find the discount entry for the `productBy` field
       const discountEntry = retailer.discountGiven.find(
         (discount) => discount.discountGivenBy === cartItem.wholesalerEmail
       );
@@ -176,27 +262,17 @@ const genratePORetailerCartType2 = async (id) => {
     }
   }
 
-  // Determine the financial year for the order number
-  const now = new Date();
-  const currentMonth = now.getMonth();
-  let financialYear =
-    currentMonth < 2 || (currentMonth === 2 && now.getDate() < 1)
-      ? now.getFullYear() - 1
-      : now.getFullYear();
-
-  // Get the current order count for the wholesaler and financial year
-  let orderCount;
-  const lastPO = await PurchaseOrderRetailerType2.findOne({ email: cartItem.email })
+  // ✅ Use new model to get last poNumber for this retailer
+  const lastPO = await PORetailerToWholesaler.findOne({ email: cartItem.email })
     .sort({ poNumber: -1 })
     .lean();
-  orderCount = lastPO ? lastPO.poNumber + 1 : 1;
 
-  const orderNumber = orderCount;
+  const orderNumber = lastPO ? lastPO.poNumber + 1 : 1;
 
-  // Prepare the enriched response
+  // ✅ Prepare enriched cart data
   const enrichedCartItem = {
     ...cartItem.toObject(),
-    poNumber: orderNumber, // Purchase Order Number
+    poNumber: orderNumber,
     wholesaler: wholesaler
       ? {
         email: wholesaler.email,
@@ -211,7 +287,7 @@ const genratePORetailerCartType2 = async (id) => {
         profileImg: wholesaler.profileImg,
         GSTIN: wholesaler.GSTIN,
       }
-      : null, // Default to null if manufacturer not found
+      : null,
     retailer: retailer
       ? {
         email: retailer.email,
@@ -225,16 +301,14 @@ const genratePORetailerCartType2 = async (id) => {
         mobNumber: retailer.mobNumber,
         GSTIN: retailer.GSTIN,
         logo: retailer.logo,
-        discountDetails: discountDetails ?? null,  // Include discount details (if found)
+        productDiscount: discountDetails?.productDiscount || null,
+        category: discountDetails?.category || null,
       }
-      : null, // Default to null if wholesaler not found
+      : null,
   };
 
   return enrichedCartItem;
 };
-
-
-
 
 /**
  * Get cart items for a specific user and productBy
