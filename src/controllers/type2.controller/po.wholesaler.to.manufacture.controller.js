@@ -19,7 +19,16 @@ const createRetailerPurchaseOrderType2 = catchAsync(async (req, res) => {
       ...result
     });
   });
-
+  const generatePOToManufacturer = catchAsync(async (req, res) => {
+    const wholesalerEmail = req.params.wholesalerEmail; // assuming logged-in wholesaler
+    const generatedPO = await poWholesalerToManufactureService.generatePOToManufacturer(wholesalerEmail);
+  
+    res.status(200).send({
+      success: true,
+      message: 'POs to manufacturer generated (not saved)',
+      data: generatedPO,
+    });
+  });
 const getAllPoWholesalerToManufacturer = catchAsync(async (req, res) => {
     const filter = pick(req.query, ['productBy', 'wholesalerEmail', 'email']);
     const options = pick(req.query, ['sortBy', 'limit', 'page']);
@@ -86,4 +95,5 @@ module.exports = {
   updateSinglePoWholesalerToManufacturer,
   getSinglePoWholesalerToManufacturer,
   getCombinedRetailerItems,
+  generatePOToManufacturer,
 };
