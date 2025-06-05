@@ -63,10 +63,10 @@ const deleteSinglePoWholesalerToManufacturer = catchAsync(async (req, res) => {
   res.status(httpStatus.NO_CONTENT).send();
 });
 const getCombinedRetailerItems = catchAsync(async (req, res) => {
-    const { wholesalerEmail } = req.params;
+    const { wholesalerEmail } = req.query;
 
     if (!wholesalerEmail) {
-        
+
       return res.status(400).json({
         success: false,
         message: 'wholesalerEmail is required',
