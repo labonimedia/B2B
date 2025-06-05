@@ -34,6 +34,30 @@ const POWholesalerToManufacturerSchema = new mongoose.Schema(
         ]
       }
     ],
+    wholesaler: {
+      email: String,
+      fullName: String,
+      companyName: String,
+      address: String,
+      state: String,
+      country: String,
+      pinCode: String,
+      mobNumber: String,
+      GSTIN: String,
+      productDiscount: String,
+      category: String
+    },
+    manufacturer: {
+      email: String,
+      fullName: String,
+      companyName: String,
+      address: String,
+      state: String,
+      country: String,
+      pinCode: String,
+      mobNumber: String,
+      GSTIN: String,
+    },
     manufacturerEmail: String,
     wholesalerEmail: String,
     statusAll: {
