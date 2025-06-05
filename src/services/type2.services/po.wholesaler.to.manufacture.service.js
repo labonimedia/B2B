@@ -147,12 +147,14 @@ const generatePOToManufacturer = async (wholesalerEmail) => {
       // Get discount info
       let productDiscount = null;
       let category = null;
+      let shippingDiscount = null;
       const discountEntry = wholesaler.discountGiven?.find(
         (entry) => entry.discountGivenBy?.toLowerCase() === manufacturer.email.toLowerCase()
       );
       if (discountEntry) {
         productDiscount = discountEntry.productDiscount || null;
         category = discountEntry.category || null;
+        shippingDiscount = discountEntry.shippingDiscount || null;
       }
   
       const createdFromRetailerPoIds = [
@@ -220,24 +222,118 @@ const generatePOToManufacturer = async (wholesalerEmail) => {
     return poList;
   };
 
+// const createPoToManufacturer = async (wholesalerEmail, combinedPOData) => {
+//     const createdPoIds = [];
+  
+//     for (const item of combinedPOData) {
+//       const { manufacturerEmail, set, wholesaler, manufacturer } = item;
+  
+//       // ✅ Get last PO number for this wholesaler
+//       const lastPo = await POWholesalerToManufacturer.findOne({ wholesalerEmail })
+//         .sort({ poNumber: -1 })
+//         .lean();
+//       const poNumber = lastPo ? lastPo.poNumber + 1 : 1;
+  
+//       // ✅ Extract unique poIds from retailerPoLinks
+//       const createdFromRetailerPoIds = [
+//         ...new Set(set.flatMap((s) => s.retailerPoLinks.map((link) => link.poId)))
+//       ];
+  
+//       // ✅ Create PO to Manufacturer
+//       const newPO = new POWholesalerToManufacturer({
+//         wholesalerEmail,
+//         manufacturerEmail,
+//         poNumber,
+//         set: set.map((s) => {
+//           const { productBy, price, ...rest } = s;
+//           return {
+//             ...rest,
+//             manufacturerPrice: price,
+//             price,
+//             availableQuantity: 0,
+//             status: 'pending'
+//           };
+//         }),
+//         createdFromRetailerPoIds,
+//         wholesaler: {
+//           email: wholesaler.email,
+//           fullName: wholesaler.fullName,
+//           companyName: wholesaler.companyName,
+//           address: wholesaler.address,
+//           state: wholesaler.state,
+//           country: wholesaler.country,
+//           pinCode: wholesaler.pinCode,
+//           mobNumber: wholesaler.mobNumber,
+//           GSTIN: wholesaler.GSTIN,
+//           profileImg: wholesaler.profileImg,
+//           logo: wholesaler.logo,
+//           productDiscount: wholesaler.productDiscount,
+//           category: wholesaler.category
+//         },
+//         manufacturer: {
+//           email: manufacturer.email,
+//           fullName: manufacturer.fullName,
+//           companyName: manufacturer.companyName,
+//           address: manufacturer.address,
+//           state: manufacturer.state,
+//           profileImg: manufacturer.profileImg,
+//           logo: manufacturer.logo,
+//           country: manufacturer.country,
+//           pinCode: manufacturer.pinCode,
+//           mobNumber: manufacturer.mobNumber,
+//           GSTIN: manufacturer.GSTIN,
+         
+//         },
+//         statusAll: 'pending'
+//       });
+  
+//       await newPO.save();
+//       createdPoIds.push(newPO._id);
+  
+//       // ✅ Update referenced set in PORetailerToWholesaler
+//       for (const s of set) {
+//         for (const link of s.retailerPoLinks) {
+//           await PORetailerToWholesaler.updateOne(
+//             { _id: link.poId, 'set._id': link.setItemId },
+//             {
+//               $set: {
+//                 'set.$.status': 'processing',
+//                 'set.$.availableQuantity': link.quantity
+//               }
+//             }
+//           );
+//         }
+//       }
+  
+//       // ✅ Update statusAll in retailer PO
+//       for (const poId of createdFromRetailerPoIds) {
+//         await PORetailerToWholesaler.updateOne(
+//           { _id: poId },
+//           { $set: { statusAll: 'processing' } }
+//         );
+//       }
+//     }
+  
+//     return {
+//       message: 'POs to manufacturers created successfully',
+//       createdPoIds
+//     };
+//   };
 const createPoToManufacturer = async (wholesalerEmail, combinedPOData) => {
-    const createdPoIds = [];
+    const createdPOs = [];
   
     for (const item of combinedPOData) {
       const { manufacturerEmail, set, wholesaler, manufacturer } = item;
   
-      // ✅ Get last PO number for this wholesaler
       const lastPo = await POWholesalerToManufacturer.findOne({ wholesalerEmail })
         .sort({ poNumber: -1 })
         .lean();
       const poNumber = lastPo ? lastPo.poNumber + 1 : 1;
   
-      // ✅ Extract unique poIds from retailerPoLinks
       const createdFromRetailerPoIds = [
         ...new Set(set.flatMap((s) => s.retailerPoLinks.map((link) => link.poId)))
       ];
   
-      // ✅ Create PO to Manufacturer
       const newPO = new POWholesalerToManufacturer({
         wholesalerEmail,
         manufacturerEmail,
@@ -279,16 +375,17 @@ const createPoToManufacturer = async (wholesalerEmail, combinedPOData) => {
           country: manufacturer.country,
           pinCode: manufacturer.pinCode,
           mobNumber: manufacturer.mobNumber,
-          GSTIN: manufacturer.GSTIN,
-         
+          GSTIN: manufacturer.GSTIN
         },
         statusAll: 'pending'
       });
   
-      await newPO.save();
-      createdPoIds.push(newPO._id);
+      const savedPO = await newPO.save();
   
-      // ✅ Update referenced set in PORetailerToWholesaler
+      // Push full PO data (as plain object)
+      createdPOs.push(savedPO.toObject());
+  
+      // Update status of referenced items
       for (const s of set) {
         for (const link of s.retailerPoLinks) {
           await PORetailerToWholesaler.updateOne(
@@ -303,7 +400,6 @@ const createPoToManufacturer = async (wholesalerEmail, combinedPOData) => {
         }
       }
   
-      // ✅ Update statusAll in retailer PO
       for (const poId of createdFromRetailerPoIds) {
         await PORetailerToWholesaler.updateOne(
           { _id: poId },
@@ -314,10 +410,10 @@ const createPoToManufacturer = async (wholesalerEmail, combinedPOData) => {
   
     return {
       message: 'POs to manufacturers created successfully',
-      createdPoIds
+      data: createdPOs
     };
   };
-
+  
 /**
  * Create Retailer PO and remove matching cart entry
  */
