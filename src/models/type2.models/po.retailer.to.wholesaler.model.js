@@ -35,7 +35,7 @@ const PORetailerToWholesalerSchema = new mongoose.Schema(
     ],
     statusAll: {
       type: String,
-      enum: ['pending', 'processing', 'delivered', 'cancelled'],
+      enum: ['pending','wholesaler_updated', 'processing', 'delivered', 'cancelled'],
       default: 'pending',
     },
     email: String, // Retailer email

@@ -234,19 +234,98 @@ const getRetailerCartType2ById = async (id) => {
 // };
 
 
+// const genratePORetailerCartType2 = async (id) => {
+//   const cartItem = await RetailerCartType2.findById(id);
+//   if (!cartItem) throw new Error("Cart item not found");
+
+//   const wholesaler = await Wholesaler.findOne({ email: cartItem.wholesalerEmail })
+//     .select('email fullName companyName address state country pinCode mobNumber profileImg GSTIN pan');
+
+//   let retailer = null;
+//   let discountDetails = null;
+
+//   if (cartItem.email) {
+//     retailer = await Retailer.findOne({ email: cartItem.email })
+//       .select('email fullName companyName address state country pinCode mobNumber GSTIN logo pan profileImg discountGiven');
+
+//     if (retailer) {
+//       const discountEntry = retailer.discountGiven.find(
+//         (discount) => discount.discountGivenBy === cartItem.wholesalerEmail
+//       );
+
+//       if (discountEntry) {
+//         discountDetails = {
+//           productDiscount: discountEntry.productDiscount,
+//           category: discountEntry.category,
+//         };
+//       }
+//     }
+//   }
+
+//   // ✅ Use new model to get last poNumber for this retailer
+//   const lastPO = await PORetailerToWholesaler.findOne({ email: cartItem.email })
+//     .sort({ poNumber: -1 })
+//     .lean();
+
+//   const orderNumber = lastPO ? lastPO.poNumber + 1 : 1;
+
+//   // ✅ Prepare enriched cart data
+//   const enrichedCartItem = {
+//     ...cartItem.toObject(),
+//     poNumber: orderNumber,
+//     wholesaler: wholesaler
+//       ? {
+//         email: wholesaler.email,
+//         fullName: wholesaler.fullName,
+//         pan: wholesaler.pan,
+//         companyName: wholesaler.companyName,
+//         address: wholesaler.address,
+//         state: wholesaler.state,
+//         country: wholesaler.country,
+//         pinCode: wholesaler.pinCode,
+//         mobNumber: wholesaler.mobNumber,
+//         profileImg: wholesaler.profileImg,
+//         GSTIN: wholesaler.GSTIN,
+//       }
+//       : null,
+//     retailer: retailer
+//       ? {
+//         email: retailer.email,
+//         pan: retailer.pan,
+//         fullName: retailer.fullName,
+//         companyName: retailer.companyName,
+//         address: retailer.address,
+//         state: retailer.state,
+//         country: retailer.country,
+//         pinCode: retailer.pinCode,
+//         mobNumber: retailer.mobNumber,
+//         GSTIN: retailer.GSTIN,
+//         logo: retailer.logo,
+//         productDiscount: discountDetails?.productDiscount || null,
+//         category: discountDetails?.category || null,
+//       }
+//       : null,
+//   };
+
+//   return enrichedCartItem;
+// };
 const genratePORetailerCartType2 = async (id) => {
   const cartItem = await RetailerCartType2.findById(id);
   if (!cartItem) throw new Error("Cart item not found");
 
-  const wholesaler = await Wholesaler.findOne({ email: cartItem.wholesalerEmail })
-    .select('email fullName companyName address state country pinCode mobNumber profileImg GSTIN pan');
+  // ✅ Fetch wholesaler details (include profileImg and other fields)
+  const wholesaler = await Wholesaler.findOne({ email: cartItem.wholesalerEmail }).select(
+    'email fullName companyName address state country pinCode mobNumber profileImg GSTIN pan logo'
+  );
 
   let retailer = null;
   let discountDetails = null;
 
   if (cartItem.email) {
-    retailer = await Retailer.findOne({ email: cartItem.email })
-      .select('email fullName companyName address state country pinCode mobNumber GSTIN logo pan profileImg discountGiven');
+    // ✅ Fetch retailer details (include logo and profileImg)
+    retailer = await Retailer.findOne({ email: cartItem.email }).select(
+      'email fullName companyName address state country pinCode mobNumber GSTIN logo pan profileImg discountGiven'
+    );
 
     if (retailer) {
       const discountEntry = retailer.discountGiven.find(
@@ -262,48 +341,50 @@ const genratePORetailerCartType2 = async (id) => {
     }
   }
 
-  // ✅ Use new model to get last poNumber for this retailer
+  // ✅ Get last PO number for retailer
   const lastPO = await PORetailerToWholesaler.findOne({ email: cartItem.email })
     .sort({ poNumber: -1 })
     .lean();
 
   const orderNumber = lastPO ? lastPO.poNumber + 1 : 1;
 
-  // ✅ Prepare enriched cart data
+  // ✅ Build response object
   const enrichedCartItem = {
     ...cartItem.toObject(),
     poNumber: orderNumber,
     wholesaler: wholesaler
       ? {
-        email: wholesaler.email,
-        fullName: wholesaler.fullName,
-        pan: wholesaler.pan,
-        companyName: wholesaler.companyName,
-        address: wholesaler.address,
-        state: wholesaler.state,
-        country: wholesaler.country,
-        pinCode: wholesaler.pinCode,
-        mobNumber: wholesaler.mobNumber,
-        profileImg: wholesaler.profileImg,
-        GSTIN: wholesaler.GSTIN,
-      }
+          email: wholesaler.email,
+          fullName: wholesaler.fullName,
+          pan: wholesaler.pan,
+          companyName: wholesaler.companyName,
+          address: wholesaler.address,
+          state: wholesaler.state,
+          country: wholesaler.country,
+          pinCode: wholesaler.pinCode,
+          mobNumber: wholesaler.mobNumber,
+          profileImg: wholesaler.profileImg || null,
+          logo: wholesaler.logo || null,
+          GSTIN: wholesaler.GSTIN,
+        }
       : null,
     retailer: retailer
       ? {
-        email: retailer.email,
-        pan: retailer.pan,
-        fullName: retailer.fullName,
-        companyName: retailer.companyName,
-        address: retailer.address,
-        state: retailer.state,
-        country: retailer.country,
-        pinCode: retailer.pinCode,
-        mobNumber: retailer.mobNumber,
-        GSTIN: retailer.GSTIN,
-        logo: retailer.logo,
-        productDiscount: discountDetails?.productDiscount || null,
-        category: discountDetails?.category || null,
-      }
+          email: retailer.email,
+          pan: retailer.pan,
+          fullName: retailer.fullName,
+          companyName: retailer.companyName,
+          address: retailer.address,
+          state: retailer.state,
+          country: retailer.country,
+          pinCode: retailer.pinCode,
+          mobNumber: retailer.mobNumber,
+          GSTIN: retailer.GSTIN,
+          logo: retailer.logo || null,
+          profileImg: retailer.profileImg || null,
+          productDiscount: discountDetails?.productDiscount || null,
+          category: discountDetails?.category || null,
+        }
       : null,
   };
 
