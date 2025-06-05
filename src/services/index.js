@@ -107,3 +107,4 @@ module.exports.performInvoiceService = require('./type2.services/perform.invoice
 // new flow
 module.exports.poRetailerToWholesalerService = require('./type2.services/po.retailer.to.wholesaler.service');
 module.exports.poRetailerToManufactureService = require('./type2.services/po.retailer.to.manufacture.service');
+module.exports.poWholesalerToManufactureService = require('./type2.services/po.wholesaler.to.manufacture.service');

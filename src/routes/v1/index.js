@@ -106,6 +106,10 @@ const performInvoiceRoute = require('./type2.routes/perform.invoice.route');
 //new flow apis
 const PORetailerToWholesalerRoute = require('./type2.routes/po.retailer.to.wholesaler.route');
 const PORetailerToManufactureRoute = require('./type2.routes/po.retailer.to.manufacture.route');
+const POWholesalerToManufactureRoute = require('./type2.routes/po.wholesaler.to.manufacture.route');
+
+
+
 const router = express.Router();
 
 const defaultRoutes = [
@@ -529,6 +533,10 @@ const defaultRoutes = [
   {
     path: '/po-retailer-to-manufacture',
     route: PORetailerToManufactureRoute,
+  },
+  {
+    path: '/po-wholesaler-to-manufacture',
+    route: POWholesalerToManufactureRoute,
   },
 ];
 
