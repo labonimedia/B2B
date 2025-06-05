@@ -43,7 +43,7 @@ const updateRetailerPOSetItem = catchAsync(async (req, res) => {
 });
 
 const getSinglePoWholesalerToManufacturer = catchAsync(async (req, res) => {
-  const cartItem = await poWholesalerToManufactureService.getSinglePoWholesalerToManufacturer(req.params.id);
+  const cartItem = await poWholesalerToManufactureService.getSinglePOWholesalerToManufacturer(req.params.id);
   if (!cartItem) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Single Retailer To Wholesaler PO not found');
   }
@@ -63,9 +63,10 @@ const deleteSinglePoWholesalerToManufacturer = catchAsync(async (req, res) => {
   res.status(httpStatus.NO_CONTENT).send();
 });
 const getCombinedRetailerItems = catchAsync(async (req, res) => {
-    const { wholesalerEmail } = req.query;
+    const { wholesalerEmail } = req.params;
 
     if (!wholesalerEmail) {
+        
       return res.status(400).json({
         success: false,
         message: 'wholesalerEmail is required',
