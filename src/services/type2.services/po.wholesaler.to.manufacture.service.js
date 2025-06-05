@@ -9,26 +9,84 @@ const ApiError = require('../../utils/ApiError');
 const getSinglePOWholesalerToManufacturer = async (id) => {
     return POWholesalerToManufacturer.findById(id);
   };
-  const createPoToManufacturer = async (wholesalerEmail, payload) => {
-    const poIds = [];
+
+//   const createPoToManufacturer = async (wholesalerEmail, payload) => {
+//     const poIds = [];
   
-    for (const [manufacturerEmail, setItems] of Object.entries(payload)) {
+//     for (const [manufacturerEmail, setItems] of Object.entries(payload)) {
+//       const newPO = new POWholesalerToManufacturer({
+//         wholesalerEmail,
+//         manufacturerEmail,
+//         set: setItems.map((item) => {
+//           delete item.productBy;
+//           return item;
+//         }),
+//         createdFromRetailerPoIds: [...new Set(setItems.flatMap(item => item.retailerPoLinks.map(link => link.poId)))]
+//       });
+  
+//       await newPO.save();
+//       poIds.push(newPO._id);
+  
+//       // Update each retailer PO
+//       for (const item of setItems) {
+//         for (const link of item.retailerPoLinks) {
+//           await PORetailerToWholesaler.updateOne(
+//             { _id: link.poId, 'set._id': link.setItemId },
+//             {
+//               $set: {
+//                 'set.$.status': 'processing',
+//                 'set.$.availableQuantity': link.quantity
+//               }
+//             }
+//           );
+//         }
+//       }
+//     }
+  
+//     return { message: 'POs created successfully', poIds };
+//   };
+
+const createPoToManufacturer = async (wholesalerEmail, combinedPOData) => {
+    const createdPoIds = [];
+  
+    for (const item of combinedPOData) {
+      const { manufacturerEmail, set } = item;
+  
+      // ✅ Get last PO number for this wholesaler
+      const lastPo = await POWholesalerToManufacturer.findOne({ wholesalerEmail })
+        .sort({ poNumber: -1 })
+        .lean();
+      const poNumber = lastPo ? lastPo.poNumber + 1 : 1;
+  
+      // ✅ Extract unique poIds from retailerPoLinks
+      const createdFromRetailerPoIds = [
+        ...new Set(set.flatMap((s) => s.retailerPoLinks.map((link) => link.poId)))
+      ];
+  
+      // ✅ Create PO to Manufacturer
       const newPO = new POWholesalerToManufacturer({
         wholesalerEmail,
         manufacturerEmail,
-        set: setItems.map((item) => {
-          delete item.productBy;
-          return item;
+        poNumber,
+        set: set.map((s) => {
+          const { productBy, price, ...rest } = s;
+          return {
+            ...rest,
+            manufacturerPrice: price, // Storing current price as manufacturerPrice
+            price,
+            availableQuantity: 0, // manufacturer will update later
+            status: 'pending'
+          };
         }),
-        createdFromRetailerPoIds: [...new Set(setItems.flatMap(item => item.retailerPoLinks.map(link => link.poId)))]
+        createdFromRetailerPoIds
       });
   
       await newPO.save();
-      poIds.push(newPO._id);
+      createdPoIds.push(newPO._id);
   
-      // Update each retailer PO
-      for (const item of setItems) {
-        for (const link of item.retailerPoLinks) {
+      // ✅ Update each referenced set in PORetailerToWholesaler
+      for (const s of set) {
+        for (const link of s.retailerPoLinks) {
           await PORetailerToWholesaler.updateOne(
             { _id: link.poId, 'set._id': link.setItemId },
             {
@@ -40,10 +98,22 @@ const getSinglePOWholesalerToManufacturer = async (id) => {
           );
         }
       }
+  
+      // ✅ Update statusAll for each retailer PO
+      for (const poId of createdFromRetailerPoIds) {
+        await PORetailerToWholesaler.updateOne(
+          { _id: poId },
+          { $set: { statusAll: 'processing' } }
+        );
+      }
     }
   
-    return { message: 'POs created successfully', poIds };
+    return {
+      message: 'POs to manufacturers created successfully',
+      createdPoIds
+    };
   };
+  
 /**
  * Create Retailer PO and remove matching cart entry
  */

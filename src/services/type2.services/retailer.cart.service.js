@@ -309,6 +309,7 @@ const getRetailerCartType2ById = async (id) => {
 
 //   return enrichedCartItem;
 // };
+
 const genratePORetailerCartType2 = async (id) => {
   const cartItem = await RetailerCartType2.findById(id);
   if (!cartItem) throw new Error("Cart item not found");
