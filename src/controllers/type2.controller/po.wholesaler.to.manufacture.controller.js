@@ -63,8 +63,17 @@ const deleteSinglePoWholesalerToManufacturer = catchAsync(async (req, res) => {
   res.status(httpStatus.NO_CONTENT).send();
 });
 const getCombinedRetailerItems = catchAsync(async (req, res) => {
-    const data = await poWholesalerToManufactureService.combinePendingRetailerPOItems(req.params.email);
-    res.status(httpStatus.OK).send({ success: true, data });
+    const { wholesalerEmail } = req.query;
+
+    if (!wholesalerEmail) {
+      return res.status(400).json({
+        success: false,
+        message: 'wholesalerEmail is required',
+      });
+    }
+
+    const resultArray = await poWholesalerToManufactureService.combinePendingRetailerPOItems(req.params.email);
+    res.status(httpStatus.OK).send({ success: true, data: resultArray });
   });
 module.exports = {
   createRetailerPurchaseOrderType2,
