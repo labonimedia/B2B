@@ -1,5 +1,5 @@
 const httpStatus = require('http-status');
-const { POWholesalerToManufacturer, RetailerCartType2 } = require('../../models');
+const { POWholesalerToManufacturer, RetailerCartType2, PORetailerToWholesaler } = require('../../models');
 const ApiError = require('../../utils/ApiError');
 /**
  * Get POWholesalerToManufacturer by id
