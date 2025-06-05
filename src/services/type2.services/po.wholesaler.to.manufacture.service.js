@@ -147,7 +147,9 @@ const generatePOToManufacturer = async (wholesalerEmail) => {
       // Get discount info
       let productDiscount = null;
       let category = null;
-      const discountEntry = wholesaler.discountGiven?.find((entry) => entry.discountGivenBy === manufacturerEmail);
+      const discountEntry = wholesaler.discountGiven?.find(
+        (entry) => entry.discountGivenBy?.toLowerCase() === manufacturerEmail.toLowerCase()
+      );
       if (discountEntry) {
         productDiscount = discountEntry.productDiscount || null;
         category = discountEntry.category || null;
