@@ -43,7 +43,7 @@ router
     auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
     poWholesalerToManufacturerController.deleteSinglePoWholesalerToManufacturer
   ); // Delete SinglePoWholesalerToManufacturer by ID
-router.get('/get-combined-po-items/:email', auth('wholesaler'), poWholesalerToManufacturerController.getCombinedRetailerItems);
+router.get('/get-combined-po-items', auth('wholesaler'), poWholesalerToManufacturerController.getCombinedRetailerItems);
 
 // router.post('/create-po-to-manufacturer', auth('wholesaler'), poWholesalerToManufacturerController.createPoToManufacturer);
 
