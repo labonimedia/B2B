@@ -28,6 +28,7 @@ router
      auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
      poWholesalerToManufacturerController.updateRetailerPOSetItem
   );
+  router.get('/get-combined-po-items', auth('wholesaler'), poWholesalerToManufacturerController.getCombinedRetailerItems);
 
 router
   .route('/:id')
