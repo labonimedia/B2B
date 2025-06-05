@@ -103,3 +103,4 @@ module.exports.performInvoiceController = require('./type2.controller/perform.in
 //new flow apis
 module.exports.poRetailerToWholesalerController = require('./type2.controller/po.retailer.to.wholesaler.controller');
 module.exports.poRetailerToManufactureController = require('./type2.controller/po.retailer.to.manufacture.controller');
+module.exports.poWholesalerToManufacturerController = require('./type2.controller/po.wholesaler.to.manufacture.controller');
