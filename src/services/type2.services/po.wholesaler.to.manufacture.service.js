@@ -141,7 +141,61 @@ const updateSinglePOWholesalerToManufacturer = async (id, updateBody) => {
     return cart;
   };
 
-  const combinePendingRetailerPOItems = async (wholesalerEmail) => {
+//   const combinePendingRetailerPOItems = async (wholesalerEmail) => {
+//     const allRetailerPOs = await PORetailerToWholesaler.find({
+//       wholesalerEmail,
+//       statusAll: 'pending',
+//       'set.status': 'pending',
+//     });
+  
+//     const combinedMap = new Map();
+  
+//     for (const po of allRetailerPOs) {
+//       for (const setItem of po.set) {
+//         if (setItem.status !== 'pending') continue;
+  
+//         const key = `${setItem.productBy}|${setItem.designNumber}|${setItem.colour}|${setItem.size}`;
+  
+//         const existing = combinedMap.get(key) || {
+//           designNumber: setItem.designNumber,
+//           colour: setItem.colour,
+//           colourName: setItem.colourName,
+//           size: setItem.size,
+//           totalQuantity: 0,
+//           clothing: setItem.clothing,
+//           gender: setItem.gender,
+//           subCategory: setItem.subCategory,
+//           productType: setItem.productType,
+//           price: setItem.price,
+//           manufacturerPrice: setItem.manufacturerPrice,
+//           retailerPoLinks: [],
+//           productBy: setItem.productBy
+//         };
+  
+//         existing.totalQuantity += setItem.quantity;
+//         existing.retailerPoLinks.push({
+//           poId: po._id,
+//           setItemId: setItem._id,
+//           quantity: setItem.quantity,
+//         });
+  
+//         combinedMap.set(key, existing);
+//       }
+//     }
+  
+//     // Group by manufacturer email (productBy)
+//     const groupedByManufacturer = {};
+//     for (const item of combinedMap.values()) {
+//       const manufacturer = item.productBy;
+//       if (!groupedByManufacturer[manufacturer]) {
+//         groupedByManufacturer[manufacturer] = [];
+//       }
+//       groupedByManufacturer[manufacturer].push(item);
+//     }
+  
+//     return groupedByManufacturer;
+//   };
+const combinePendingRetailerPOItems = async (wholesalerEmail) => {
     const allRetailerPOs = await PORetailerToWholesaler.find({
       wholesalerEmail,
       statusAll: 'pending',
@@ -183,17 +237,24 @@ const updateSinglePOWholesalerToManufacturer = async (id, updateBody) => {
       }
     }
   
-    // Group by manufacturer email (productBy)
-    const groupedByManufacturer = {};
+    // Convert map to grouped array
+    const manufacturerMap = new Map();
+  
     for (const item of combinedMap.values()) {
-      const manufacturer = item.productBy;
-      if (!groupedByManufacturer[manufacturer]) {
-        groupedByManufacturer[manufacturer] = [];
+      const manufacturerEmail = item.productBy;
+      if (!manufacturerMap.has(manufacturerEmail)) {
+        manufacturerMap.set(manufacturerEmail, []);
       }
-      groupedByManufacturer[manufacturer].push(item);
+      manufacturerMap.get(manufacturerEmail).push(item);
     }
   
-    return groupedByManufacturer;
+    const resultArray = [];
+  
+    for (const [manufacturerEmail, set] of manufacturerMap.entries()) {
+      resultArray.push({ manufacturerEmail, set });
+    }
+  
+    return resultArray; // Final format as array
   };
   
 module.exports = {
