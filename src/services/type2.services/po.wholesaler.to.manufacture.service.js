@@ -512,16 +512,77 @@ const updateSinglePOWholesalerToManufacturer = async (id, updateBody) => {
   };
 
 
-  const combinePendingRetailerPOItems = async (wholesalerEmail) => {
+//   const combinePendingRetailerPOItems = async (wholesalerEmail) => {
+//     const allRetailerPOs = await PORetailerToWholesaler.find({
+//       wholesalerEmail,
+//       statusAll: 'pending',
+//       set: { $elemMatch: { status: 'pending' } }
+//     });
+  
+
+//     const combinedMap = new Map();
+  
+//     for (const po of allRetailerPOs) {
+//       for (const setItem of po.set) {
+//         if (setItem.status !== 'pending') continue;
+  
+//         const key = `${setItem.productBy}|${setItem.designNumber}|${setItem.colour}|${setItem.size}`;
+  
+//         const existing = combinedMap.get(key) || {
+//           designNumber: setItem.designNumber,
+//           colour: setItem.colour,
+//           colourName: setItem.colourName,
+//           size: setItem.size,
+//           totalQuantity: 0,
+//           clothing: setItem.clothing,
+//           gender: setItem.gender,
+//           subCategory: setItem.subCategory,
+//           productType: setItem.productType,
+//           price: setItem.price,
+//           manufacturerPrice: setItem.manufacturerPrice,
+//           retailerPoLinks: [],
+//           productBy: setItem.productBy
+//         };
+  
+//         existing.totalQuantity += setItem.quantity;
+//         existing.retailerPoLinks.push({
+//           poId: po._id,
+//           setItemId: setItem._id,
+//           quantity: setItem.quantity,
+//         });
+  
+//         combinedMap.set(key, existing);
+//       }
+//     }
+  
+//     const manufacturerMap = new Map();
+  
+//     for (const item of combinedMap.values()) {
+//       const manufacturerEmail = item.productBy;
+//       if (!manufacturerMap.has(manufacturerEmail)) {
+//         manufacturerMap.set(manufacturerEmail, []);
+//       }
+//       manufacturerMap.get(manufacturerEmail).push(item);
+//     }
+  
+//     const resultArray = [];
+  
+//     for (const [manufacturerEmail, set] of manufacturerMap.entries()) {
+//       resultArray.push({ manufacturerEmail, set });
+//     }
+  
+//     return resultArray;
+//   };
+
+const combinePendingRetailerPOItems = async (wholesalerEmail) => {
     const allRetailerPOs = await PORetailerToWholesaler.find({
       wholesalerEmail,
       statusAll: 'pending',
       set: { $elemMatch: { status: 'pending' } }
-    });
-  
-    console.log('Found POs:', allRetailerPOs.length);
+    }).lean();
   
     const combinedMap = new Map();
+    const retailerInfoMap = new Map(); // For tracking PO + Retailer for each manufacturer
   
     for (const po of allRetailerPOs) {
       for (const setItem of po.set) {
@@ -549,10 +610,25 @@ const updateSinglePOWholesalerToManufacturer = async (id, updateBody) => {
         existing.retailerPoLinks.push({
           poId: po._id,
           setItemId: setItem._id,
-          quantity: setItem.quantity,
+          quantity: setItem.quantity
         });
   
         combinedMap.set(key, existing);
+  
+        // Track retailer info for this manufacturer
+        const manufacturerEmail = setItem.productBy;
+        if (!retailerInfoMap.has(manufacturerEmail)) {
+          retailerInfoMap.set(manufacturerEmail, new Map());
+        }
+  
+        const retailerMap = retailerInfoMap.get(manufacturerEmail);
+        if (!retailerMap.has(po._id.toString())) {
+          retailerMap.set(po._id.toString(), {
+            poId: po._id,
+            poNumber: po.poNumber,
+            retailerName: po.retailer?.fullName || 'Retailer'
+          });
+        }
       }
     }
   
@@ -569,12 +645,17 @@ const updateSinglePOWholesalerToManufacturer = async (id, updateBody) => {
     const resultArray = [];
   
     for (const [manufacturerEmail, set] of manufacturerMap.entries()) {
-      resultArray.push({ manufacturerEmail, set });
+      const retailerArray = Array.from(retailerInfoMap.get(manufacturerEmail)?.values() || []);
+      resultArray.push({
+        manufacturerEmail,
+        set,
+        retailers: retailerArray
+      });
     }
   
     return resultArray;
   };
-
+  
   
 // const combinePendingRetailerPOItems = async (wholesalerEmail) => {
 //     const allRetailerPOs = await PORetailerToWholesaler.find({
