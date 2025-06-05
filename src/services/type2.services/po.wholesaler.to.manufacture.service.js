@@ -277,68 +277,6 @@ const updateSinglePOWholesalerToManufacturer = async (id, updateBody) => {
 
 
 
-// const combinePendingRetailerPOItems = async (wholesalerEmail) => {
-//     const allRetailerPOs = await PORetailerToWholesaler.find({
-//       wholesalerEmail,
-//       statusAll: 'pending',
-//       'set.status': 'pending',
-//     });
-  
-//     const combinedMap = new Map();
-  
-//     for (const po of allRetailerPOs) {
-//       for (const setItem of po.set) {
-//         if (setItem.status !== 'pending') continue;
-  
-//         const key = `${setItem.productBy}|${setItem.designNumber}|${setItem.colour}|${setItem.size}`;
-  
-//         const existing = combinedMap.get(key) || {
-//           designNumber: setItem.designNumber,
-//           colour: setItem.colour,
-//           colourName: setItem.colourName,
-//           size: setItem.size,
-//           totalQuantity: 0,
-//           clothing: setItem.clothing,
-//           gender: setItem.gender,
-//           subCategory: setItem.subCategory,
-//           productType: setItem.productType,
-//           price: setItem.price,
-//           manufacturerPrice: setItem.manufacturerPrice,
-//           retailerPoLinks: [],
-//           productBy: setItem.productBy
-//         };
-  
-//         existing.totalQuantity += setItem.quantity;
-//         existing.retailerPoLinks.push({
-//           poId: po._id,
-//           setItemId: setItem._id,
-//           quantity: setItem.quantity,
-//         });
-  
-//         combinedMap.set(key, existing);
-//       }
-//     }
-  
-//     // Convert map to grouped array
-//     const manufacturerMap = new Map();
-  
-//     for (const item of combinedMap.values()) {
-//       const manufacturerEmail = item.productBy;
-//       if (!manufacturerMap.has(manufacturerEmail)) {
-//         manufacturerMap.set(manufacturerEmail, []);
-//       }
-//       manufacturerMap.get(manufacturerEmail).push(item);
-//     }
-  
-//     const resultArray = [];
-  
-//     for (const [manufacturerEmail, set] of manufacturerMap.entries()) {
-//       resultArray.push({ manufacturerEmail, set });
-//     }
-  
-//     return resultArray; // Final format as array
-//   };
-
 const combinePendingRetailerPOItems = async (wholesalerEmail) => {
     const allRetailerPOs = await PORetailerToWholesaler.find({
       wholesalerEmail,
@@ -348,7 +286,6 @@ const combinePendingRetailerPOItems = async (wholesalerEmail) => {
   
     const combinedMap = new Map();
   
-    // Step 1: Combine all set items
     for (const po of allRetailerPOs) {
       for (const setItem of po.set) {
         if (setItem.status !== 'pending') continue;
@@ -382,8 +319,9 @@ const combinePendingRetailerPOItems = async (wholesalerEmail) => {
       }
     }
   
-    // Step 2: Group by manufacturerEmail
+    // Convert map to grouped array
     const manufacturerMap = new Map();
+  
     for (const item of combinedMap.values()) {
       const manufacturerEmail = item.productBy;
       if (!manufacturerMap.has(manufacturerEmail)) {
@@ -392,127 +330,191 @@ const combinePendingRetailerPOItems = async (wholesalerEmail) => {
       manufacturerMap.get(manufacturerEmail).push(item);
     }
   
-    // Step 3: Fetch wholesaler details once
-    const wholesaler = await Wholesaler.findOne({ email: wholesalerEmail }).select(
-      'email fullName companyName address state country pinCode mobNumber profileImg GSTIN pan logo discountGiven'
-    );
-    if (!wholesaler) throw new ApiError(httpStatus.NOT_FOUND, 'Wholesaler not found');
+    const resultArray = [];
   
-    const createdPoIds = [];
-  
-    // Step 4: For each manufacturer, prepare and store PO
     for (const [manufacturerEmail, set] of manufacturerMap.entries()) {
-      const manufacturer = await Manufacture.findOne({ email: manufacturerEmail }).select(
-        'fullName companyName email address country state city profileImg pinCode logo mobNumber GSTIN pan'
-      );
-      if (!manufacturer) throw new ApiError(httpStatus.NOT_FOUND, `Manufacturer not found: ${manufacturerEmail}`);
-  
-      // Fetch discount info from wholesaler.discountGiven array
-      let productDiscount = null;
-      let category = null;
-      
-      const discountEntry = wholesaler.discountGiven?.find(
-        (entry) => entry.discountGivenBy === manufacturerEmail
-      );
-      
-      if (discountEntry) {
-        productDiscount = discountEntry.productDiscount ?? null;
-        category = discountEntry.category ?? null;
-      }
-      // Get latest PO number
-      const lastPo = await POWholesalerToManufacturer.findOne({ wholesalerEmail }).sort({ poNumber: -1 }).lean();
-      const poNumber = lastPo ? lastPo.poNumber + 1 : 1;
-  
-      // Extract unique retailer PO IDs
-      const createdFromRetailerPoIds = [
-        ...new Set(set.flatMap((s) => s.retailerPoLinks.map((link) => link.poId)))
-      ];
-  
-      // Create PO document
-      const newPO = new POWholesalerToManufacturer({
-        wholesalerEmail,
-        manufacturerEmail,
-        poNumber,
-        createdFromRetailerPoIds,
-        set: set.map(s => ({
-          designNumber: s.designNumber,
-          colour: s.colour,
-          colourName: s.colourName,
-          size: s.size,
-          totalQuantity: s.totalQuantity,
-          clothing: s.clothing,
-          gender: s.gender,
-          subCategory: s.subCategory,
-          productType: s.productType,
-          manufacturerPrice: s.manufacturerPrice,
-          price: s.price,
-          availableQuantity: 0,
-          status: 'pending',
-          retailerPoLinks: s.retailerPoLinks
-        })),
-        wholesaler: {
-          email: wholesaler.email,
-          fullName: wholesaler.fullName,
-          companyName: wholesaler.companyName,
-          address: wholesaler.address,
-          state: wholesaler.state,
-          country: wholesaler.country,
-          pinCode: wholesaler.pinCode,
-          mobNumber: wholesaler.mobNumber,
-          GSTIN: wholesaler.GSTIN,
-          profileImg: wholesaler.profileImg,
-          logo: wholesaler.logo,
-          productDiscount,
-          category
-        },
-        manufacturer: {
-          email: manufacturer.email,
-          fullName: manufacturer.fullName,
-          companyName: manufacturer.companyName,
-          address: manufacturer.address,
-          state: manufacturer.state,
-          country: manufacturer.country,
-          pinCode: manufacturer.pinCode,
-          mobNumber: manufacturer.mobNumber,
-          GSTIN: manufacturer.GSTIN,
-          profileImg: manufacturer.profileImg,
-          logo: manufacturer.logo,
-        },
-        statusAll: 'pending'
-      });
-  
-      await newPO.save();
-      createdPoIds.push(newPO._id);
-  
-      // Step 5: Update status for referenced retailer PO sets
-      for (const s of set) {
-        for (const link of s.retailerPoLinks) {
-          await PORetailerToWholesaler.updateOne(
-            { _id: link.poId, 'set._id': link.setItemId },
-            {
-              $set: {
-                'set.$.status': 'processing',
-                'set.$.availableQuantity': link.quantity
-              }
-            }
-          );
-        }
-      }
-  
-      // Step 6: Update overall status of retailer POs
-      for (const poId of createdFromRetailerPoIds) {
-        await PORetailerToWholesaler.updateOne(
-          { _id: poId },
-          { $set: { statusAll: 'processing' } }
-        );
-      }
+      resultArray.push({ manufacturerEmail, set });
     }
   
-    return {
-      message: 'POs to manufacturers created successfully',
-      createdPoIds
-    };
+    return resultArray; // Final format as array
   };
+
+// const combinePendingRetailerPOItems = async (wholesalerEmail) => {
+//     const allRetailerPOs = await PORetailerToWholesaler.find({
+//       wholesalerEmail,
+//       statusAll: 'pending',
+//       'set.status': 'pending',
+//     });
+  
+//     const combinedMap = new Map();
+  
+//     // Step 1: Combine all set items
+//     for (const po of allRetailerPOs) {
+//       for (const setItem of po.set) {
+//         if (setItem.status !== 'pending') continue;
+  
+//         const key = `${setItem.productBy}|${setItem.designNumber}|${setItem.colour}|${setItem.size}`;
+  
+//         const existing = combinedMap.get(key) || {
+//           designNumber: setItem.designNumber,
+//           colour: setItem.colour,
+//           colourName: setItem.colourName,
+//           size: setItem.size,
+//           totalQuantity: 0,
+//           clothing: setItem.clothing,
+//           gender: setItem.gender,
+//           subCategory: setItem.subCategory,
+//           productType: setItem.productType,
+//           price: setItem.price,
+//           manufacturerPrice: setItem.manufacturerPrice,
+//           retailerPoLinks: [],
+//           productBy: setItem.productBy
+//         };
+  
+//         existing.totalQuantity += setItem.quantity;
+//         existing.retailerPoLinks.push({
+//           poId: po._id,
+//           setItemId: setItem._id,
+//           quantity: setItem.quantity,
+//         });
+  
+//         combinedMap.set(key, existing);
+//       }
+//     }
+  
+//     // Step 2: Group by manufacturerEmail
+//     const manufacturerMap = new Map();
+//     for (const item of combinedMap.values()) {
+//       const manufacturerEmail = item.productBy;
+//       if (!manufacturerMap.has(manufacturerEmail)) {
+//         manufacturerMap.set(manufacturerEmail, []);
+//       }
+//       manufacturerMap.get(manufacturerEmail).push(item);
+//     }
+  
+//     // Step 3: Fetch wholesaler details once
+//     const wholesaler = await Wholesaler.findOne({ email: wholesalerEmail }).select(
+//       'email fullName companyName address state country pinCode mobNumber profileImg GSTIN pan logo discountGiven'
+//     );
+//     if (!wholesaler) throw new ApiError(httpStatus.NOT_FOUND, 'Wholesaler not found');
+  
+//     const createdPoIds = [];
+  
+//     // Step 4: For each manufacturer, prepare and store PO
+//     for (const [manufacturerEmail, set] of manufacturerMap.entries()) {
+//       const manufacturer = await Manufacture.findOne({ email: manufacturerEmail }).select(
+//         'fullName companyName email address country state city profileImg pinCode logo mobNumber GSTIN pan'
+//       );
+//       if (!manufacturer) throw new ApiError(httpStatus.NOT_FOUND, `Manufacturer not found: ${manufacturerEmail}`);
+  
+//       // Fetch discount info from wholesaler.discountGiven array
+//       let productDiscount = null;
+//       let category = null;
+      
+//       const discountEntry = wholesaler.discountGiven?.find(
+//         (entry) => entry.discountGivenBy === manufacturerEmail
+//       );
+      
+//       if (discountEntry) {
+//         productDiscount = discountEntry.productDiscount ?? null;
+//         category = discountEntry.category ?? null;
+//       }
+//       // Get latest PO number
+//       const lastPo = await POWholesalerToManufacturer.findOne({ wholesalerEmail }).sort({ poNumber: -1 }).lean();
+//       const poNumber = lastPo ? lastPo.poNumber + 1 : 1;
+  
+//       // Extract unique retailer PO IDs
+//       const createdFromRetailerPoIds = [
+//         ...new Set(set.flatMap((s) => s.retailerPoLinks.map((link) => link.poId)))
+//       ];
+  
+//       // Create PO document
+//       const newPO = new POWholesalerToManufacturer({
+//         wholesalerEmail,
+//         manufacturerEmail,
+//         poNumber,
+//         createdFromRetailerPoIds,
+//         set: set.map(s => ({
+//           designNumber: s.designNumber,
+//           colour: s.colour,
+//           colourName: s.colourName,
+//           size: s.size,
+//           totalQuantity: s.totalQuantity,
+//           clothing: s.clothing,
+//           gender: s.gender,
+//           subCategory: s.subCategory,
+//           productType: s.productType,
+//           manufacturerPrice: s.manufacturerPrice,
+//           price: s.price,
+//           availableQuantity: 0,
+//           status: 'pending',
+//           retailerPoLinks: s.retailerPoLinks
+//         })),
+//         wholesaler: {
+//           email: wholesaler.email,
+//           fullName: wholesaler.fullName,
+//           companyName: wholesaler.companyName,
+//           address: wholesaler.address,
+//           state: wholesaler.state,
+//           country: wholesaler.country,
+//           pinCode: wholesaler.pinCode,
+//           mobNumber: wholesaler.mobNumber,
+//           GSTIN: wholesaler.GSTIN,
+//           profileImg: wholesaler.profileImg,
+//           logo: wholesaler.logo,
+//           productDiscount,
+//           category
+//         },
+//         manufacturer: {
+//           email: manufacturer.email,
+//           fullName: manufacturer.fullName,
+//           companyName: manufacturer.companyName,
+//           address: manufacturer.address,
+//           state: manufacturer.state,
+//           country: manufacturer.country,
+//           pinCode: manufacturer.pinCode,
+//           mobNumber: manufacturer.mobNumber,
+//           GSTIN: manufacturer.GSTIN,
+//           profileImg: manufacturer.profileImg,
+//           logo: manufacturer.logo,
+//         },
+//         statusAll: 'pending'
+//       });
+//       const createdPoDocs = [];
+//       await newPO.save();
+//       createdPoIds.push(newPO._id);
+//       createdPoDocs.push(newPO);
+  
+//       // Step 5: Update status for referenced retailer PO sets
+//       for (const s of set) {
+//         for (const link of s.retailerPoLinks) {
+//           await PORetailerToWholesaler.updateOne(
+//             { _id: link.poId, 'set._id': link.setItemId },
+//             {
+//               $set: {
+//                 'set.$.status': 'processing',
+//                 'set.$.availableQuantity': link.quantity
+//               }
+//             }
+//           );
+//         }
+//       }
+  
+//       // Step 6: Update overall status of retailer POs
+//       for (const poId of createdFromRetailerPoIds) {
+//         await PORetailerToWholesaler.updateOne(
+//           { _id: poId },
+//           { $set: { statusAll: 'processing' } }
+//         );
+//       }
+//     }
+  
+//     return {
+//       message: 'POs to manufacturers created successfully',
+//       createdPoIds,
+//       createdPoDetails: createdPoDocs
+//     };
+//   };
   
 module.exports = {
   createPurchaseOrderRetailerType2,
