@@ -45,7 +45,9 @@ const POWholesalerToManufacturerSchema = new mongoose.Schema(
       mobNumber: String,
       GSTIN: String,
       productDiscount: String,
-      category: String
+      category: String,
+      profileImg: String,
+      logo: String,
     },
     manufacturer: {
       email: String,
@@ -57,6 +59,8 @@ const POWholesalerToManufacturerSchema = new mongoose.Schema(
       pinCode: String,
       mobNumber: String,
       GSTIN: String,
+      profileImg: String,
+      logo: String,
     },
     manufacturerEmail: String,
     wholesalerEmail: String,
