@@ -14,6 +14,11 @@ router
       auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
       poWholesalerToManufacturerController.getAllPoWholesalerToManufacturer
     );
+    router.get(
+        '/generate-po-data-to-manufacturer/:wholesalerEmail',
+        auth('wholesaler'),
+        poWholesalerToManufacturerController.generatePOToManufacturer
+      );
 
 router
   .route('/wholesaler/:wholesalerEmail')
