@@ -142,9 +142,10 @@ const updateSinglePOWholesalerToManufacturer = async (id, updateBody) => {
   };
 
   const combinePendingRetailerPOItems = async (wholesalerEmail) => {
-    const allRetailerPOs = await PORetailerToWholesaler.find({ 
-      wholesalerEmail, 
-      'set.status': 'pending' 
+    const allRetailerPOs = await PORetailerToWholesaler.find({
+      wholesalerEmail,
+      statusAll: 'pending',
+      'set.status': 'pending',
     });
   
     const combinedMap = new Map();
@@ -154,6 +155,7 @@ const updateSinglePOWholesalerToManufacturer = async (id, updateBody) => {
         if (setItem.status !== 'pending') continue;
   
         const key = `${setItem.productBy}|${setItem.designNumber}|${setItem.colour}|${setItem.size}`;
+  
         const existing = combinedMap.get(key) || {
           designNumber: setItem.designNumber,
           colour: setItem.colour,
@@ -174,24 +176,24 @@ const updateSinglePOWholesalerToManufacturer = async (id, updateBody) => {
         existing.retailerPoLinks.push({
           poId: po._id,
           setItemId: setItem._id,
-          quantity: setItem.quantity
+          quantity: setItem.quantity,
         });
   
         combinedMap.set(key, existing);
       }
     }
   
-    // Group by manufacturerEmail
+    // Group by manufacturer email (productBy)
     const groupedByManufacturer = {};
-  
     for (const item of combinedMap.values()) {
-      if (!groupedByManufacturer[item.productBy]) {
-        groupedByManufacturer[item.productBy] = [];
+      const manufacturer = item.productBy;
+      if (!groupedByManufacturer[manufacturer]) {
+        groupedByManufacturer[manufacturer] = [];
       }
-      groupedByManufacturer[item.productBy].push(item);
+      groupedByManufacturer[manufacturer].push(item);
     }
   
-    return groupedByManufacturer; // key: manufacturerEmail, value: set[]
+    return groupedByManufacturer;
   };
   
 module.exports = {
