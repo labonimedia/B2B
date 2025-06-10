@@ -20,12 +20,12 @@ const createRetailerPurchaseOrderType2 = catchAsync(async (req, res) => {
     });
   });
   const generatePOToManufacturer = catchAsync(async (req, res) => {
-    const wholesalerEmail = req.params.wholesalerEmail; // assuming logged-in wholesaler
-    const generatedPO = await poWholesalerToManufactureService.generatePOToManufacturer(wholesalerEmail);
+    const { wholesalerEmail, manufacturerEmail } = req.params;
+    const generatedPO = await poWholesalerToManufactureService.generatePOToManufacturer(wholesalerEmail, manufacturerEmail);
   
     res.status(200).send({
       success: true,
-      message: 'POs to manufacturer generated (not saved)',
+      message: 'PO to manufacturer generated (not saved)',
       data: generatedPO,
     });
   });
