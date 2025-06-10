@@ -14,12 +14,17 @@ router
       auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
       poWholesalerToManufacturerController.getAllPoWholesalerToManufacturer
     );
+    // router.get(
+    //     '/generate-po-data-to-manufacturer/:wholesalerEmail',
+    //     auth('wholesaler'),
+    //     poWholesalerToManufacturerController.generatePOToManufacturer
+    //   );
     router.get(
-        '/generate-po-data-to-manufacturer/:wholesalerEmail',
+        '/generate-po-data-to-manufacturer/:wholesalerEmail/:manufacturerEmail',
         auth('wholesaler'),
         poWholesalerToManufacturerController.generatePOToManufacturer
       );
-
+      
 router
   .route('/wholesaler/:wholesalerEmail')
   .get(

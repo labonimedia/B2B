@@ -80,7 +80,148 @@ const getSinglePOWholesalerToManufacturer = async (id) => {
 //     };
 //   };
 
-const generatePOToManufacturer = async (wholesalerEmail) => {
+// const generatePOToManufacturer = async (wholesalerEmail) => {
+//     const allRetailerPOs = await PORetailerToWholesaler.find({
+//       wholesalerEmail,
+//       statusAll: 'pending',
+//       'set.status': 'pending',
+//     });
+  
+//     const combinedMap = new Map();
+  
+//     for (const po of allRetailerPOs) {
+//       for (const setItem of po.set) {
+//         if (setItem.status !== 'pending') continue;
+  
+//         const key = `${setItem.productBy}|${setItem.designNumber}|${setItem.colour}|${setItem.size}`;
+  
+//         const existing = combinedMap.get(key) || {
+//           designNumber: setItem.designNumber,
+//           colour: setItem.colour,
+//           colourName: setItem.colourName,
+//           size: setItem.size,
+//           totalQuantity: 0,
+//           clothing: setItem.clothing,
+//           gender: setItem.gender,
+//           subCategory: setItem.subCategory,
+//           productType: setItem.productType,
+//           price: setItem.price,
+//           manufacturerPrice: setItem.manufacturerPrice,
+//           retailerPoLinks: [],
+//           productBy: setItem.productBy,
+//         };
+  
+//         existing.totalQuantity += setItem.quantity;
+//         existing.retailerPoLinks.push({
+//           poId: po._id,
+//           setItemId: setItem._id,
+//           quantity: setItem.quantity,
+//         });
+  
+//         combinedMap.set(key, existing);
+//       }
+//     }
+  
+//     const manufacturerMap = new Map();
+//     for (const item of combinedMap.values()) {
+//       const manufacturerEmail = item.productBy;
+//       if (!manufacturerMap.has(manufacturerEmail)) {
+//         manufacturerMap.set(manufacturerEmail, []);
+//       }
+//       manufacturerMap.get(manufacturerEmail).push(item);
+//     }
+  
+//     const wholesaler = await Wholesaler.findOne({ email: wholesalerEmail }).select(
+//       'email fullName companyName address state country pinCode mobNumber profileImg GSTIN pan logo discountGiven'
+//     );
+//     if (!wholesaler) throw new ApiError(httpStatus.NOT_FOUND, 'Wholesaler not found');
+  
+//     const poList = [];
+  
+//     for (const [manufacturerEmail, set] of manufacturerMap.entries()) {
+//       const manufacturer = await Manufacture.findOne({ email: manufacturerEmail }).select(
+//         'email fullName companyName address state country pinCode mobNumber GSTIN profileImg logo'
+//       );
+//       if (!manufacturer) throw new ApiError(httpStatus.NOT_FOUND, `Manufacturer not found: ${manufacturerEmail}`);
+  
+//       // Get discount info
+//       let productDiscount = null;
+//       let category = null;
+//       let shippingDiscount = null;
+//       const discountEntry = wholesaler.discountGiven?.find(
+//         (entry) => entry.discountGivenBy?.toLowerCase() === manufacturer.email.toLowerCase()
+//       );
+//       if (discountEntry) {
+//         productDiscount = discountEntry.productDiscount || null;
+//         category = discountEntry.category || null;
+//         shippingDiscount = discountEntry.shippingDiscount || null;
+//       }
+  
+//       const createdFromRetailerPoIds = [
+//         ...new Set(set.flatMap((s) => s.retailerPoLinks.map((link) => link.poId.toString()))),
+//       ];
+  
+//       const lastPo = await POWholesalerToManufacturer.findOne({ wholesalerEmail })
+//       .sort({ poNumber: -1 })
+//       .lean();
+//     const poNumber = lastPo ? lastPo.poNumber + 1 : 1;
+
+//       poList.push({
+//         wholesalerEmail,
+//         manufacturerEmail,
+//         poNumber,
+//         createdFromRetailerPoIds,
+//         set: set.map((s) => ({
+//           designNumber: s.designNumber,
+//           colour: s.colour,
+//           colourName: s.colourName,
+//           size: s.size,
+//           totalQuantity: s.totalQuantity,
+//           clothing: s.clothing,
+//           gender: s.gender,
+//           subCategory: s.subCategory,
+//           productType: s.productType,
+//           manufacturerPrice: s.manufacturerPrice,
+//           price: s.price,
+//           availableQuantity: 0,
+//           status: 'pending',
+//           retailerPoLinks: s.retailerPoLinks,
+//         })),
+//         wholesaler: {
+//           email: wholesaler.email,
+//           fullName: wholesaler.fullName,
+//           companyName: wholesaler.companyName,
+//           address: wholesaler.address,
+//           state: wholesaler.state,
+//           country: wholesaler.country,
+//           pinCode: wholesaler.pinCode,
+//           mobNumber: wholesaler.mobNumber,
+//           GSTIN: wholesaler.GSTIN,
+//           profileImg: wholesaler.profileImg,
+//           logo: wholesaler.logo,
+//           productDiscount,
+//           category,
+//         },
+//         manufacturer: {
+//           email: manufacturer.email,
+//           fullName: manufacturer.fullName,
+//           companyName: manufacturer.companyName,
+//           address: manufacturer.address,
+//           state: manufacturer.state,
+//           country: manufacturer.country,
+//           pinCode: manufacturer.pinCode,
+//           mobNumber: manufacturer.mobNumber,
+//           GSTIN: manufacturer.GSTIN,
+//           profileImg: manufacturer.profileImg,
+//           logo: manufacturer.logo,
+//         },
+//         statusAll: 'pending',
+//       });
+//     }
+  
+//     return poList;
+//   };
+const generatePOToManufacturer = async (wholesalerEmail, targetManufacturerEmail) => {
     const allRetailerPOs = await PORetailerToWholesaler.find({
       wholesalerEmail,
       statusAll: 'pending',
@@ -131,97 +272,93 @@ const generatePOToManufacturer = async (wholesalerEmail) => {
       manufacturerMap.get(manufacturerEmail).push(item);
     }
   
+    const set = manufacturerMap.get(targetManufacturerEmail);
+    if (!set || set.length === 0) return null;
+  
     const wholesaler = await Wholesaler.findOne({ email: wholesalerEmail }).select(
       'email fullName companyName address state country pinCode mobNumber profileImg GSTIN pan logo discountGiven'
     );
     if (!wholesaler) throw new ApiError(httpStatus.NOT_FOUND, 'Wholesaler not found');
   
-    const poList = [];
+    const manufacturer = await Manufacture.findOne({ email: targetManufacturerEmail }).select(
+      'email fullName companyName address state country pinCode mobNumber GSTIN profileImg logo'
+    );
+    if (!manufacturer) throw new ApiError(httpStatus.NOT_FOUND, `Manufacturer not found: ${targetManufacturerEmail}`);
   
-    for (const [manufacturerEmail, set] of manufacturerMap.entries()) {
-      const manufacturer = await Manufacture.findOne({ email: manufacturerEmail }).select(
-        'email fullName companyName address state country pinCode mobNumber GSTIN profileImg logo'
-      );
-      if (!manufacturer) throw new ApiError(httpStatus.NOT_FOUND, `Manufacturer not found: ${manufacturerEmail}`);
+    // Get discount info
+    let productDiscount = null;
+    let category = null;
+    let shippingDiscount = null;
+    const discountEntry = wholesaler.discountGiven?.find(
+      (entry) => entry.discountGivenBy?.toLowerCase() === manufacturer.email.toLowerCase()
+    );
+    if (discountEntry) {
+      productDiscount = discountEntry.productDiscount || null;
+      category = discountEntry.category || null;
+      shippingDiscount = discountEntry.shippingDiscount || null;
+    }
   
-      // Get discount info
-      let productDiscount = null;
-      let category = null;
-      let shippingDiscount = null;
-      const discountEntry = wholesaler.discountGiven?.find(
-        (entry) => entry.discountGivenBy?.toLowerCase() === manufacturer.email.toLowerCase()
-      );
-      if (discountEntry) {
-        productDiscount = discountEntry.productDiscount || null;
-        category = discountEntry.category || null;
-        shippingDiscount = discountEntry.shippingDiscount || null;
-      }
+    const createdFromRetailerPoIds = [
+      ...new Set(set.flatMap((s) => s.retailerPoLinks.map((link) => link.poId.toString()))),
+    ];
   
-      const createdFromRetailerPoIds = [
-        ...new Set(set.flatMap((s) => s.retailerPoLinks.map((link) => link.poId.toString()))),
-      ];
-  
-      const lastPo = await POWholesalerToManufacturer.findOne({ wholesalerEmail })
+    const lastPo = await POWholesalerToManufacturer.findOne({ wholesalerEmail })
       .sort({ poNumber: -1 })
       .lean();
     const poNumber = lastPo ? lastPo.poNumber + 1 : 1;
-
-      poList.push({
-        wholesalerEmail,
-        manufacturerEmail,
-        poNumber,
-        createdFromRetailerPoIds,
-        set: set.map((s) => ({
-          designNumber: s.designNumber,
-          colour: s.colour,
-          colourName: s.colourName,
-          size: s.size,
-          totalQuantity: s.totalQuantity,
-          clothing: s.clothing,
-          gender: s.gender,
-          subCategory: s.subCategory,
-          productType: s.productType,
-          manufacturerPrice: s.manufacturerPrice,
-          price: s.price,
-          availableQuantity: 0,
-          status: 'pending',
-          retailerPoLinks: s.retailerPoLinks,
-        })),
-        wholesaler: {
-          email: wholesaler.email,
-          fullName: wholesaler.fullName,
-          companyName: wholesaler.companyName,
-          address: wholesaler.address,
-          state: wholesaler.state,
-          country: wholesaler.country,
-          pinCode: wholesaler.pinCode,
-          mobNumber: wholesaler.mobNumber,
-          GSTIN: wholesaler.GSTIN,
-          profileImg: wholesaler.profileImg,
-          logo: wholesaler.logo,
-          productDiscount,
-          category,
-        },
-        manufacturer: {
-          email: manufacturer.email,
-          fullName: manufacturer.fullName,
-          companyName: manufacturer.companyName,
-          address: manufacturer.address,
-          state: manufacturer.state,
-          country: manufacturer.country,
-          pinCode: manufacturer.pinCode,
-          mobNumber: manufacturer.mobNumber,
-          GSTIN: manufacturer.GSTIN,
-          profileImg: manufacturer.profileImg,
-          logo: manufacturer.logo,
-        },
-        statusAll: 'pending',
-      });
-    }
   
-    return poList;
+    return {
+      wholesalerEmail,
+      manufacturerEmail: targetManufacturerEmail,
+      poNumber,
+      createdFromRetailerPoIds,
+      set: set.map((s) => ({
+        designNumber: s.designNumber,
+        colour: s.colour,
+        colourName: s.colourName,
+        size: s.size,
+        totalQuantity: s.totalQuantity,
+        clothing: s.clothing,
+        gender: s.gender,
+        subCategory: s.subCategory,
+        productType: s.productType,
+        manufacturerPrice: s.manufacturerPrice,
+        price: s.price,
+        availableQuantity: 0,
+        status: 'pending',
+        retailerPoLinks: s.retailerPoLinks,
+      })),
+      wholesaler: {
+        email: wholesaler.email,
+        fullName: wholesaler.fullName,
+        companyName: wholesaler.companyName,
+        address: wholesaler.address,
+        state: wholesaler.state,
+        country: wholesaler.country,
+        pinCode: wholesaler.pinCode,
+        mobNumber: wholesaler.mobNumber,
+        GSTIN: wholesaler.GSTIN,
+        profileImg: wholesaler.profileImg,
+        logo: wholesaler.logo,
+        productDiscount,
+        category,
+      },
+      manufacturer: {
+        email: manufacturer.email,
+        fullName: manufacturer.fullName,
+        companyName: manufacturer.companyName,
+        address: manufacturer.address,
+        state: manufacturer.state,
+        country: manufacturer.country,
+        pinCode: manufacturer.pinCode,
+        mobNumber: manufacturer.mobNumber,
+        GSTIN: manufacturer.GSTIN,
+        profileImg: manufacturer.profileImg,
+        logo: manufacturer.logo,
+      },
+      statusAll: 'pending',
+    };
   };
-
 // const createPoToManufacturer = async (wholesalerEmail, combinedPOData) => {
 //     const createdPoIds = [];
   
