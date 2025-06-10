@@ -8,11 +8,22 @@ const pick = require('../../utils/pick');
 //   res.status(httpStatus.CREATED).send(createdPO);
 // });
 
-const createRetailerPurchaseOrderType2 = catchAsync(async (req, res) => {
-    const wholesalerEmail = req.body.wholesalerEmail; // or req.body.wholesalerEmail
-    const combinedPOData = req.body.data;
+// const createRetailerPurchaseOrderType2 = catchAsync(async (req, res) => {
+//     const wholesalerEmail = req.body.wholesalerEmail; // or req.body.wholesalerEmail
+//     const combinedPOData = req.body.data;
   
-    const result = await poWholesalerToManufactureService.createPoToManufacturer(wholesalerEmail, combinedPOData);
+//     const result = await poWholesalerToManufactureService.createPoToManufacturer(wholesalerEmail, combinedPOData);
+  
+//     res.status(201).json({
+//       success: true,
+//       ...result
+//     });
+//   });
+const createRetailerPurchaseOrderType2 = catchAsync(async (req, res) => {
+    const wholesalerEmail = req.body.wholesalerEmail;
+    const singlePOData = req.body;
+  
+    const result = await poWholesalerToManufactureService.createPoToManufacturer(wholesalerEmail, [singlePOData]);
   
     res.status(201).json({
       success: true,
