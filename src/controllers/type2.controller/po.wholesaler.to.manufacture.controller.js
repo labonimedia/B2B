@@ -19,6 +19,7 @@ const pick = require('../../utils/pick');
 //       ...result
 //     });
 //   });
+
 const createRetailerPurchaseOrderType2 = catchAsync(async (req, res) => {
     const wholesalerEmail = req.body.wholesalerEmail;
     const singlePOData = req.body;

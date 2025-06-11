@@ -70,6 +70,10 @@ const POWholesalerToManufacturerSchema = new mongoose.Schema(
       default: 'pending'
     },
     poNumber: Number,
+    wholesalerPODateCreated:{
+      type: Date,
+      default: Date.now
+    },
     createdFromRetailerPoIds: [mongoose.Schema.Types.ObjectId],
     createdAt: {
       type: Date,
