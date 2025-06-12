@@ -32,12 +32,12 @@ router
     poWholesalerToManufacturerController.getRetailerPOByWholesaler
   );
 
-router
-  .route('/update-item/:poId')
-  .patch(
-     auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
-     poWholesalerToManufacturerController.updateRetailerPOSetItem
-  );
+// router
+//   .route('/update-item/:poId')
+//   .patch(
+//      auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
+//      poWholesalerToManufacturerController.updateRetailerPOSetItem
+//   );
   router.get('/get-combined-po-items', auth('wholesaler'), poWholesalerToManufacturerController.getCombinedRetailerItems);
 
 router
@@ -57,5 +57,8 @@ router
 router.get('/get-combined-po-items', auth('wholesaler'), poWholesalerToManufacturerController.getCombinedRetailerItems);
 
 // router.post('/create-po-to-manufacturer', auth('wholesaler'), poWholesalerToManufacturerController.createPoToManufacturer);
-
+router
+  .route('/update-po-data/:poId')
+  .patch(auth('manufacture'), poWholesalerToManufacturerController.updatePoData);
+  
 module.exports = router;

@@ -74,6 +74,7 @@ const getRetailerPOByManufacture = async (manufacturerEmail) => {
 //   await po.save();
 //   return po;
 // };
+
 const updateRetailerPOSetItem = async (poId, updateBody) => {
   const po = await PORetailerToManufacturer.findById(poId);
   if (!po) throw new ApiError(httpStatus.NOT_FOUND, 'Purchase Order not found');

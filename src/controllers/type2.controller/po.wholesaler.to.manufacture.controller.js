@@ -98,6 +98,11 @@ const getCombinedRetailerItems = catchAsync(async (req, res) => {
     const resultArray = await poWholesalerToManufactureService.combinePendingRetailerPOItems(wholesalerEmail);
     res.status(httpStatus.OK).send({ success: true, data: resultArray });
   });
+  const updatePoData = catchAsync(async (req, res) => {
+    const updatedPO = await poWholesalerToManufactureService.updatePoData(req.params.poId, req.body);
+    res.status(200).json({ success: true, data: updatedPO });
+  });
+
 module.exports = {
   createRetailerPurchaseOrderType2,
   getRetailerPOByWholesaler,
@@ -108,4 +113,5 @@ module.exports = {
   getSinglePoWholesalerToManufacturer,
   getCombinedRetailerItems,
   generatePOToManufacturer,
+  updatePoData,
 };
