@@ -51,6 +51,7 @@ const PORetailerToManufacturerSchema = new mongoose.Schema(
       enum: [
         'pending',
         'm_order_confirmed',
+        'm_order_updated',
         'm_order_cancelled',
         'm_partial_delivery',
         'r_order_confirmed',
