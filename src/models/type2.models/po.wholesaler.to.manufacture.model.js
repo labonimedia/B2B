@@ -186,15 +186,12 @@ const POWholesalerToManufacturerSchema = new mongoose.Schema(
       default: 'pending'
     },
 
-
-    
     expDeliveryDate: {
       type: Date, // Expected or actual delivery date
     },
     partialDeliveryDate: {
       type: Date, // partail or actual delivery date
     },
-
 
     wholesalerConfirmedAt: {
       type: Date, // When retailer confirms the PO
