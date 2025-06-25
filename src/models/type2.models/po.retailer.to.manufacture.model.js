@@ -62,9 +62,11 @@ const PORetailerToManufacturerSchema = new mongoose.Schema(
       default: 'pending'
     },
 
-    // New Fields
-    deliveryDate: {
+    expDeliveryDate: {
       type: Date, // Expected or actual delivery date
+    },
+      partialDeliveryDate: {
+      type: Date, // partail or actual delivery date
     },
 
     retailerConfirmedAt: {
