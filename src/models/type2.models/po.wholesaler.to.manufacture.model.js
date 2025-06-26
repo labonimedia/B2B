@@ -2,64 +2,64 @@
 const mongoose = require('mongoose');
 const { paginate, toJSON } = require('../plugins');
 
-// Embedded schema for Transport Details
-const transportDetailsSchema = new mongoose.Schema({
-   transportType: {
-    type: String,
-    trim: true,
-  },
-  transporterCompanyName: {
-    type: String,
-    trim: true,
-  },
-  vehicleNumber: {
-    type: String,
-    trim: true,
-  },
-  contactNumber: {
-    type: Number,
-    trim: true,
-  },
-  altContactNumber: {
-    type: Number,
-    trim: true,
-  },
-  trackingId: {
-    type: String,
-    trim: true,
-  },
-  modeOfTransport: {
-    type: String,
-    enum: ['road', 'railway', 'air', 'sea', 'other'],
-  },
-  dispatchDate: {
-    type: Date,
-    required: true,
-  },
-  expectedDeliveryDate: {
-    type: Date,
-  },
-  deliveryDate: {
-    type: Date,
-  },
-  deliveryAddress: {
-    type: String,
-    required: true,
-  },
-  remarks: {
-    type: String,
-    trim: true,
-  },
-  gstNumber: {
-    type: String,
-    trim: true,
-    required: true,
-  },
-  contactPersonName: {
-    type: String,
-    trim: true,
-  },
-});
+// // Embedded schema for Transport Details
+// const transportDetailsSchema = new mongoose.Schema({
+//    transportType: {
+//     type: String,
+//     trim: true,
+//   },
+//   transporterCompanyName: {
+//     type: String,
+//     trim: true,
+//   },
+//   vehicleNumber: {
+//     type: String,
+//     trim: true,
+//   },
+//   contactNumber: {
+//     type: Number,
+//     trim: true,
+//   },
+//   altContactNumber: {
+//     type: Number,
+//     trim: true,
+//   },
+//   trackingId: {
+//     type: String,
+//     trim: true,
+//   },
+//   modeOfTransport: {
+//     type: String,
+//     enum: ['road', 'railway', 'air', 'sea', 'other'],
+//   },
+//   dispatchDate: {
+//     type: Date,
+//     required: true,
+//   },
+//   expectedDeliveryDate: {
+//     type: Date,
+//   },
+//   deliveryDate: {
+//     type: Date,
+//   },
+//   deliveryAddress: {
+//     type: String,
+//     required: true,
+//   },
+//   remarks: {
+//     type: String,
+//     trim: true,
+//   },
+//   gstNumber: {
+//     type: String,
+//     trim: true,
+//     required: true,
+//   },
+//   contactPersonName: {
+//     type: String,
+//     trim: true,
+//   },
+// });
 const POWholesalerToManufacturerSchema = new mongoose.Schema(
   {
     set: [
@@ -100,7 +100,7 @@ const POWholesalerToManufacturerSchema = new mongoose.Schema(
         ]
       }
     ],
-      transportDetails: transportDetailsSchema,
+     // transportDetails: transportDetailsSchema,
     wholesaler: {
       email: String,
       fullName: String,
