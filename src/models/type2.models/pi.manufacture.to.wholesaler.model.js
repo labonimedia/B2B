@@ -1,22 +1,7 @@
 const mongoose = require('mongoose');
 const { paginate, toJSON } = require('../plugins');
 
-// Embedded Transport Details Schema
-const transportDetailsSchema = new mongoose.Schema({
-  transporterName: { type: String, required: true, trim: true },
-  vehicleNumber: { type: String, trim: true },
-  lrNumber: { type: String, trim: true },
-  modeOfTransport: {
-    type: String,
-    enum: ['road', 'rail', 'air', 'sea', 'other'],
-    default: 'road',
-  },
-  dispatchDate: { type: Date, required: true },
-  expectedDeliveryDate: { type: Date },
-  deliveryDate: { type: Date },
-  deliveryAddress: { type: String, required: true },
-  remarks: { type: String, trim: true },
-});
+
 
 // Embedded Bank Details Schema
 const bankDetailsSchema = new mongoose.Schema({
@@ -90,7 +75,7 @@ const m2wPerformaInvoiceSchema = new mongoose.Schema(
       logo: String,
     },
 
-    transportDetails: transportDetailsSchema,
+
     bankDetails: bankDetailsSchema,
 
     deliveryItems: [

@@ -1,6 +1,65 @@
 const mongoose = require('mongoose');
 const { paginate, toJSON } = require('../plugins');
 
+// Embedded schema for Transport Details
+const transportDetailsSchema = new mongoose.Schema({
+   transportType: {
+    type: String,
+    trim: true,
+  },
+  transporterCompanyName: {
+    type: String,
+    trim: true,
+  },
+  vehicleNumber: {
+    type: String,
+    trim: true,
+  },
+  contactNumber: {
+    type: Number,
+    trim: true,
+  },
+  altContactNumber: {
+    type: Number,
+    trim: true,
+  },
+  trackingId: {
+    type: String,
+    trim: true,
+  },
+  modeOfTransport: {
+    type: String,
+    enum: ['road', 'railway', 'air', 'sea', 'other'],
+  },
+  dispatchDate: {
+    type: Date,
+    required: true,
+  },
+  expectedDeliveryDate: {
+    type: Date,
+  },
+  deliveryDate: {
+    type: Date,
+  },
+  deliveryAddress: {
+    type: String,
+    required: true,
+  },
+  remarks: {
+    type: String,
+    trim: true,
+  },
+  gstNumber: {
+    type: String,
+    trim: true,
+    required: true,
+  },
+  contactPersonName: {
+    type: String,
+    trim: true,
+  },
+});
+
 const PORetailerToManufacturerSchema = new mongoose.Schema(
   {
     set: [
@@ -12,10 +71,10 @@ const PORetailerToManufacturerSchema = new mongoose.Schema(
         colourName: String,
         size: String,
         quantity: Number, // Requested by retailer
-        availableQuantity:{
+        availableQuantity: {
           type: Number,
-          default: 0, 
-        } , // Updated by manufacturer
+          default: 0,
+        }, // Updated by manufacturer
         confirmed: {
           type: Boolean,
           default: false, // Confirmed by retailer (true = accepted, false = not yet acted or cancelled)
@@ -26,17 +85,17 @@ const PORetailerToManufacturerSchema = new mongoose.Schema(
         },
         status: {
           type: String,
-         // enum: ['pending', 'manufacturer_updated', 'retailer_confirmed', 'cancelled', 'processing', 'shipped', 'delivered', 'partial'],
-         enum: [
-          'pending',             // Initial status
-          'm_confirmed',         // Manufacturer confirmed
-          'm_cancelled',         // Manufacturer cancelled
-          'm_partial_delivery',  // Manufacturer partially delivered
-          'r_confirmed',         // Retailer confirmed
-          'r_cancelled',         // Retailer cancelled
-          'shipped',             // Fully shipped
-          'delivered'            // Fully delivered
-        ],        
+          // enum: ['pending', 'manufacturer_updated', 'retailer_confirmed', 'cancelled', 'processing', 'shipped', 'delivered', 'partial'],
+          enum: [
+            'pending',             // Initial status
+            'm_confirmed',         // Manufacturer confirmed
+            'm_cancelled',         // Manufacturer cancelled
+            'm_partial_delivery',  // Manufacturer partially delivered
+            'r_confirmed',         // Retailer confirmed
+            'r_cancelled',         // Retailer cancelled
+            'shipped',             // Fully shipped
+            'delivered'            // Fully delivered
+          ],
           default: 'pending',
         },
         price: String,
@@ -46,6 +105,7 @@ const PORetailerToManufacturerSchema = new mongoose.Schema(
         subCategory: String,
       },
     ],
+    transportDetails: transportDetailsSchema,
     statusAll: {
       type: String,
       enum: [
@@ -65,7 +125,7 @@ const PORetailerToManufacturerSchema = new mongoose.Schema(
     expDeliveryDate: {
       type: Date, // Expected or actual delivery date
     },
-      partialDeliveryDate: {
+    partialDeliveryDate: {
       type: Date, // partail or actual delivery date
     },
 
