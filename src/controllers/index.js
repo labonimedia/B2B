@@ -104,3 +104,6 @@ module.exports.performInvoiceController = require('./type2.controller/perform.in
 module.exports.poRetailerToWholesalerController = require('./type2.controller/po.retailer.to.wholesaler.controller');
 module.exports.poRetailerToManufactureController = require('./type2.controller/po.retailer.to.manufacture.controller');
 module.exports.poWholesalerToManufacturerController = require('./type2.controller/po.wholesaler.to.manufacture.controller');
+// performa invoice
+module.exports.m2rPerformaInvoiceController = require('./type2.controller/pi.manufacture.to.retailer.controller');
+module.exports.m2wPerformaInvoiceController = require('./type2.controller/pi.manufacture.to.wholesaler.controller');

@@ -108,3 +108,6 @@ module.exports.performInvoiceService = require('./type2.services/perform.invoice
 module.exports.poRetailerToWholesalerService = require('./type2.services/po.retailer.to.wholesaler.service');
 module.exports.poRetailerToManufactureService = require('./type2.services/po.retailer.to.manufacture.service');
 module.exports.poWholesalerToManufactureService = require('./type2.services/po.wholesaler.to.manufacture.service');
+// performa Invoice
+module.exports.M2RPerformaInvoiceService = require('./type2.services/pi.manufacture.to.retailer.service');
+module.exports.M2WPerformaInvoiceService = require('./type2.services/pi.manufacture.to.wholesaler.service');
