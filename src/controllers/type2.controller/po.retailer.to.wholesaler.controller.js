@@ -51,6 +51,12 @@ const deleteSinglePoRetailerToWholesaler = catchAsync(async (req, res) => {
   res.status(httpStatus.NO_CONTENT).send();
 });
 
+const getPOsByMultipleIds = catchAsync(async (req, res) => {
+  const { ids } = req.body;
+  const result = await poRetailerToWholesalerService.getPOsByIds(ids);
+  res.status(httpStatus.OK).send(result);
+});
+
 module.exports = {
   createRetailerPurchaseOrderType2,
   getRetailerPOByWholesaler,
@@ -59,4 +65,5 @@ module.exports = {
   deleteSinglePoRetailerToWholesaler,
   updateSinglePoRetailerToWholesaler,
   getSinglePoRetailerToWholesaler,
+  getPOsByMultipleIds,
 };

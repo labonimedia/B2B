@@ -106,7 +106,18 @@ const updateSinglePoRetailerToWholesaler = async (id, updateBody) => {
     await cart.remove();
     return cart;
   };
+  
+const getPOsByIds = async (ids) => {
+  if (!Array.isArray(ids) || ids.length === 0) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'IDs array is required');
+  }
 
+  const pos = await PORetailerToWholesaler.find({
+    _id: { $in: ids },
+  });
+
+  return pos;
+};
 module.exports = {
   createPurchaseOrderRetailerType2,
   getRetailerPOByWholesaler,
@@ -115,4 +126,5 @@ module.exports = {
   updateSinglePoRetailerToWholesaler,
   deleteSinglePoRetailerToWholesaler,
   getSinglePoRetailerToWholesaler,
+  getPOsByIds,
 };
