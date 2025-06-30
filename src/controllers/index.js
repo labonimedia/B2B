@@ -107,3 +107,5 @@ module.exports.poWholesalerToManufacturerController = require('./type2.controlle
 // performa invoice
 module.exports.m2rPerformaInvoiceController = require('./type2.controller/pi.manufacture.to.retailer.controller');
 module.exports.m2wPerformaInvoiceController = require('./type2.controller/pi.manufacture.to.wholesaler.controller');
+// inventory 
+module.exports.ManufactureInventoryController = require('./type2.controller/inventory.manufacture.controller');

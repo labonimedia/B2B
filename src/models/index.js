@@ -122,3 +122,5 @@ module.exports.POWholesalerToManufacturer = require('./type2.models/po.wholesale
 //Performa Invoice
 module.exports.M2RPerformaInvoice = require('./type2.models/pi.manufacture.to.retailer.model');
 module.exports.M2WPerformaInvoice = require('./type2.models/pi.manufacture.to.wholesaler.model');
+// inventory model
+module.exports.ManufactureInventory = require('./type2.models/inventory.manufacture.model');
