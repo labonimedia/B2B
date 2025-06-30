@@ -3,6 +3,11 @@ const catchAsync = require('../../utils/catchAsync');
 const { ManufactureInventoryService } = require('../../services');
 const pick = require('../../utils/pick');
 
+const bulkCreateInventories = catchAsync(async (req, res) => {
+  const inventories = await ManufactureInventoryService.bulkInsertInventory(req.body);
+  res.status(httpStatus.CREATED).send({ success: true, data: inventories });
+});
+
 const createInventory = catchAsync(async (req, res) => {
   const result = await ManufactureInventoryService.createInventory(req.body);
   res.status(httpStatus.CREATED).send(result);
@@ -36,6 +41,7 @@ const deleteInventory = catchAsync(async (req, res) => {
 
 module.exports = {
   createInventory,
+  bulkCreateInventories,
   getInventories,
   getInventoryById,
   updateInventory,
