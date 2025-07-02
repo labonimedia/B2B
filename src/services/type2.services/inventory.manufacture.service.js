@@ -10,6 +10,45 @@ const ApiError = require('../../utils/ApiError');
 
 //   return ManufactureInventory.insertMany(inventoryArray);
 // };
+
+// const bulkInsertInventory = async (inventoryArray) => {
+//   if (!Array.isArray(inventoryArray) || inventoryArray.length === 0) {
+//     throw new ApiError(httpStatus.BAD_REQUEST, 'Request body must be a non-empty array');
+//   }
+
+//   const bulkOps = inventoryArray.map((item) => {
+//     const filter = {
+//       userEmail: item.userEmail,
+//       designNumber: item.designNumber,
+//       colour: item.colour,
+//       brandSize: item.brandSize,
+//       standardSize: item.standardSize,
+//       productId: new mongoose.Types.ObjectId(item.productId),
+//     };
+
+//     const update = {
+//       $set: {
+//         quantity: item.quantity,
+//         minimumQuantityAlert: item.minimumQuantityAlert,
+//         lastUpdatedBy: item.lastUpdatedBy || '',
+//         lastUpdatedAt: new Date(),
+//       },
+//     };
+
+//     return {
+//       updateOne: {
+//         filter,
+//         update,
+//         upsert: true, // ← this creates if not found
+//       },
+//     };
+//   });
+
+//   // Perform all operations in bulk
+//   const result = await ManufactureInventory.bulkWrite(bulkOps);
+
+//   return result;
+// };
 const bulkInsertInventory = async (inventoryArray) => {
   if (!Array.isArray(inventoryArray) || inventoryArray.length === 0) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Request body must be a non-empty array');
@@ -31,6 +70,7 @@ const bulkInsertInventory = async (inventoryArray) => {
         minimumQuantityAlert: item.minimumQuantityAlert,
         lastUpdatedBy: item.lastUpdatedBy || '',
         lastUpdatedAt: new Date(),
+        colourName: item.colourName, // <-- Make sure to include this
       },
     };
 
@@ -38,16 +78,26 @@ const bulkInsertInventory = async (inventoryArray) => {
       updateOne: {
         filter,
         update,
-        upsert: true, // ← this creates if not found
+        upsert: true,
       },
     };
   });
 
-  // Perform all operations in bulk
   const result = await ManufactureInventory.bulkWrite(bulkOps);
 
-  return result;
+  // Optionally fetch updated documents to return in response
+  const updatedDesignNumbers = inventoryArray.map((item) => item.designNumber);
+
+  const updatedDocs = await ManufactureInventory.find({
+    designNumber: { $in: updatedDesignNumbers },
+  });
+
+  return {
+    status: result,
+    updatedData: updatedDocs,
+  };
 };
+
 const createInventory = async (data) => {
   return ManufactureInventory.create(data);
 };
