@@ -47,6 +47,7 @@ const queryInventories = async (filter, options, search) => {
             quantity: '$quantity',
             minimumQuantityAlert: '$minimumQuantityAlert',
             lastUpdatedAt: '$lastUpdatedAt',
+             productId: '$productId',
           },
         },
       },
