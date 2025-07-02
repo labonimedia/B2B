@@ -20,7 +20,7 @@ const createInventory = catchAsync(async (req, res) => {
 //   res.send(result);
 // });
 const getInventories = catchAsync(async (req, res) => {
-  const filter = pick(req.query, ['userEmail', 'designNumber', 'colour', 'brandSize', 'standardSize', 'colourName']);
+  const filter = pick(req.query, ['userEmail', 'designNumber', 'colour', 'brandSize', 'standardSize', 'colourName', 'productId']);
   const options = pick(req.query, ['sortBy', 'limit', 'page']);
   const search = req.query.search || ''; // optional designNumber search
 
