@@ -1,7 +1,8 @@
 const httpStatus = require('http-status');
 const { ManufactureInventory } = require('../../models');
 const ApiError = require('../../utils/ApiError');
-
+ const mongoose = require('mongoose');
+ 
 // const bulkInsertInventory = async (inventoryArray) => {
 //   if (!Array.isArray(inventoryArray) || inventoryArray.length === 0) {
 //     throw new ApiError(httpStatus.BAD_REQUEST, 'Request body must be a non-empty array');
