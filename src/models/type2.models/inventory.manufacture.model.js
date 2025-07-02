@@ -27,6 +27,9 @@ const inventorySchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+       status: {
+        type: String,
+    },
     standardSize: {
         type: String,
         required: true,
