@@ -14,9 +14,70 @@ const createInventory = async (data) => {
   return ManufactureInventory.create(data);
 };
 
-const queryInventories = async (filter, options) => {
-  return ManufactureInventory.paginate(filter, options);
+// const queryInventories = async (filter, options) => {
+//   return ManufactureInventory.paginate(filter, options);
+// };
+
+const queryInventories = async (filter, options, search) => {
+  const matchStage = { ...filter };
+
+  if (search) {
+    matchStage.designNumber = { $regex: search, $options: 'i' };
+  }
+
+  const page = parseInt(options.page, 10) || 1;
+  const limit = parseInt(options.limit, 10) || 10;
+  const skip = (page - 1) * limit;
+
+  const aggregation = await ManufactureInventory.aggregate([
+    { $match: matchStage },
+    {
+      $group: {
+        _id: '$designNumber',
+        totalQuantity: { $sum: '$quantity' },
+        entries: {
+          $push: {
+            _id: '$_id',
+            userEmail: '$userEmail',
+            designNumber: '$designNumber',
+            colour: '$colour',
+            colourName: '$colourName',
+            brandSize: '$brandSize',
+            standardSize: '$standardSize',
+            quantity: '$quantity',
+            minimumQuantityAlert: '$minimumQuantityAlert',
+            lastUpdatedAt: '$lastUpdatedAt',
+          },
+        },
+      },
+    },
+    { $sort: { _id: 1 } },
+    {
+      $facet: {
+        paginatedResults: [
+          { $skip: skip },
+          { $limit: limit },
+        ],
+        totalCount: [
+          { $count: 'count' },
+        ],
+      },
+    },
+  ])
+    .allowDiskUse(true); // Optional, safe for large datasets
+
+  const results = aggregation[0]?.paginatedResults || [];
+  const totalCount = aggregation[0]?.totalCount[0]?.count || 0;
+
+  return {
+    results,
+    page,
+    limit,
+    totalPages: Math.ceil(totalCount / limit),
+    totalResults: totalCount,
+  };
 };
+
 
 const getInventoryById = async (id) => {
   return ManufactureInventory.findById(id);

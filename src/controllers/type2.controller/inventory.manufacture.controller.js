@@ -13,13 +13,20 @@ const createInventory = catchAsync(async (req, res) => {
   res.status(httpStatus.CREATED).send(result);
 });
 
+// const getInventories = catchAsync(async (req, res) => {
+//   const filter = pick(req.query, ['userEmail', 'designNumber', 'colour', 'size', 'colourName']);
+//   const options = pick(req.query, ['sortBy', 'limit', 'page']);
+//   const result = await ManufactureInventoryService.queryInventories(filter, options);
+//   res.send(result);
+// });
 const getInventories = catchAsync(async (req, res) => {
-  const filter = pick(req.query, ['userEmail', 'designNumber', 'colour', 'size', 'colourName']);
+  const filter = pick(req.query, ['userEmail', 'designNumber', 'colour', 'brandSize', 'standardSize', 'colourName']);
   const options = pick(req.query, ['sortBy', 'limit', 'page']);
-  const result = await ManufactureInventoryService.queryInventories(filter, options);
+  const search = req.query.search || ''; // optional designNumber search
+
+  const result = await ManufactureInventoryService.queryInventories(filter, options, search);
   res.send(result);
 });
-
 const getInventoryById = catchAsync(async (req, res) => {
   const inventory = await ManufactureInventoryService.getInventoryById(req.params.id);
   if (!inventory) {
