@@ -6,11 +6,6 @@ const inventorySchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    manufactureId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Manufacture',
-        required: true,
-    },
     productId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'ProductType2',
@@ -28,7 +23,11 @@ const inventorySchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    size: {
+    brandSize: {
+        type: String,
+        required: true,
+    },
+    standardSize: {
         type: String,
         required: true,
     },
