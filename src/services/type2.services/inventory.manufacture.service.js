@@ -2,14 +2,51 @@ const httpStatus = require('http-status');
 const { ManufactureInventory } = require('../../models');
 const ApiError = require('../../utils/ApiError');
 
+// const bulkInsertInventory = async (inventoryArray) => {
+//   if (!Array.isArray(inventoryArray) || inventoryArray.length === 0) {
+//     throw new ApiError(httpStatus.BAD_REQUEST, 'Request body must be a non-empty array');
+//   }
+
+//   return ManufactureInventory.insertMany(inventoryArray);
+// };
 const bulkInsertInventory = async (inventoryArray) => {
   if (!Array.isArray(inventoryArray) || inventoryArray.length === 0) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Request body must be a non-empty array');
   }
 
-  return ManufactureInventory.insertMany(inventoryArray);
-};
+  const bulkOps = inventoryArray.map((item) => {
+    const filter = {
+      userEmail: item.userEmail,
+      designNumber: item.designNumber,
+      colour: item.colour,
+      brandSize: item.brandSize,
+      standardSize: item.standardSize,
+      productId: new mongoose.Types.ObjectId(item.productId),
+    };
 
+    const update = {
+      $set: {
+        quantity: item.quantity,
+        minimumQuantityAlert: item.minimumQuantityAlert,
+        lastUpdatedBy: item.lastUpdatedBy || '',
+        lastUpdatedAt: new Date(),
+      },
+    };
+
+    return {
+      updateOne: {
+        filter,
+        update,
+        upsert: true, // ← this creates if not found
+      },
+    };
+  });
+
+  // Perform all operations in bulk
+  const result = await ManufactureInventory.bulkWrite(bulkOps);
+
+  return result;
+};
 const createInventory = async (data) => {
   return ManufactureInventory.create(data);
 };
