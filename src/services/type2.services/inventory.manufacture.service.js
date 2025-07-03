@@ -179,27 +179,20 @@ const queryInventories = async (filter, options, search) => {
 
   const aggregation = await ManufactureInventory.aggregate([
     { $match: matchStage },
+
+    // Add isLowStock flag for each document
     {
-      // Add isLowStock flag for sorting later
       $addFields: {
         isLowStock: { $eq: ['$quantity', '$minimumQuantityAlert'] },
       },
     },
-    {
-      $sort: {
-        isLowStock: -1, // Prioritize low stock first
-        lastUpdatedAt: -1,
-      },
-    },
+
+    // Group by designNumber and check if ANY of the entries are low in stock
     {
       $group: {
         _id: '$designNumber',
         totalQuantity: { $sum: '$quantity' },
-        lowStockCount: {
-          $sum: {
-            $cond: [{ $eq: ['$quantity', '$minimumQuantityAlert'] }, 1, 0],
-          },
-        },
+        hasLowStock: { $max: { $cond: ['$isLowStock', 1, 0] } }, // 1 if any isLowStock exists
         entries: {
           $push: {
             _id: '$_id',
@@ -218,13 +211,11 @@ const queryInventories = async (filter, options, search) => {
         },
       },
     },
-    {
-      // Sort groups: low stock groups first
-      $sort: {
-        lowStockCount: -1,
-        _id: 1,
-      },
-    },
+
+    // Sort: groups with low stock come first
+    { $sort: { hasLowStock: -1, _id: 1 } },
+
+    // Paginate after sorting
     {
       $facet: {
         paginatedResults: [
@@ -249,7 +240,6 @@ const queryInventories = async (filter, options, search) => {
     totalResults: totalCount,
   };
 };
-
 
 const getInventoryById = async (id) => {
   return ManufactureInventory.findById(id);
