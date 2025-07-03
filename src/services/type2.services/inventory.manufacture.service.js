@@ -166,6 +166,7 @@ const createInventory = async (data) => {
 //     totalResults: totalCount,
 //   };
 // };
+
 const queryInventories = async (filter, options, search) => {
   const matchStage = { ...filter };
 
@@ -180,19 +181,19 @@ const queryInventories = async (filter, options, search) => {
   const aggregation = await ManufactureInventory.aggregate([
     { $match: matchStage },
 
-    // Add isLowStock flag for each document
+    // Flag if quantity is less than or equal to minimum alert
     {
       $addFields: {
-        isLowStock: { $eq: ['$quantity', '$minimumQuantityAlert'] },
+        isLowStock: { $lte: ['$quantity', '$minimumQuantityAlert'] },
       },
     },
 
-    // Group by designNumber and check if ANY of the entries are low in stock
+    // Group by designNumber and check if any entry isLowStock
     {
       $group: {
         _id: '$designNumber',
         totalQuantity: { $sum: '$quantity' },
-        hasLowStock: { $max: { $cond: ['$isLowStock', 1, 0] } }, // 1 if any isLowStock exists
+        hasLowStock: { $max: { $cond: ['$isLowStock', 1, 0] } },
         entries: {
           $push: {
             _id: '$_id',
@@ -212,19 +213,17 @@ const queryInventories = async (filter, options, search) => {
       },
     },
 
-    // Sort: groups with low stock come first
+    // Sort: first groups where any item is low or below alert
     { $sort: { hasLowStock: -1, _id: 1 } },
 
-    // Paginate after sorting
+    // Pagination
     {
       $facet: {
         paginatedResults: [
           { $skip: skip },
           { $limit: limit },
         ],
-        totalCount: [
-          { $count: 'count' },
-        ],
+        totalCount: [{ $count: 'count' }],
       },
     },
   ]).allowDiskUse(true);
@@ -240,6 +239,7 @@ const queryInventories = async (filter, options, search) => {
     totalResults: totalCount,
   };
 };
+
 
 const getInventoryById = async (id) => {
   return ManufactureInventory.findById(id);
