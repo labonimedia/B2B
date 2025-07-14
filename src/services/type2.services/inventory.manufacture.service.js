@@ -58,6 +58,7 @@ const bulkInsertInventory = async (inventoryArray) => {
     const filter = {
       userEmail: item.userEmail,
       designNumber: item.designNumber,
+      brandName:item.brandName,
       colour: item.colour,
       brandSize: item.brandSize,
       standardSize: item.standardSize,
@@ -208,6 +209,7 @@ const queryInventories = async (filter, options, search) => {
             lastUpdatedAt: '$lastUpdatedAt',
             productId: '$productId',
             isLowStock: '$isLowStock',
+            brandName: '$brandName',
           },
         },
       },

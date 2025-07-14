@@ -33,11 +33,15 @@ const deleteInventory = catchAsync(async (req, res) => {
   await WholesalerInventoryService.deleteInventoryById(req.params.id);
   res.status(httpStatus.NO_CONTENT).send();
 });
-
+const bulkCreateInventories = catchAsync(async (req, res) => {
+  const { status, updatedData } = await WholesalerInventoryService.bulkInsertInventory(req.body);
+  res.status(httpStatus.CREATED).send({ success: true, status, data: updatedData });
+});
 module.exports = {
   createInventory,
   getInventories,
   getInventoryById,
   updateInventory,
   deleteInventory,
+  bulkCreateInventories,
 };

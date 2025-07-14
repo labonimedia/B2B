@@ -19,6 +19,10 @@ const inventorySchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+      brandName: {
+        type: String,
+        required: true,
+    },
     colourName: {
         type: String,
         required: true,
