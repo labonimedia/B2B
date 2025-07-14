@@ -7,6 +7,7 @@ const pick = require('../../utils/pick');
 //   const inventories = await ManufactureInventoryService.bulkInsertInventory(req.body);
 //   res.status(httpStatus.CREATED).send({ success: true, data: inventories });
 // });
+
 const bulkCreateInventories = catchAsync(async (req, res) => {
   const { status, updatedData } = await ManufactureInventoryLogsService.bulkInsertInventory(req.body);
   res.status(httpStatus.CREATED).send({ success: true, status, data: updatedData });
