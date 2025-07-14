@@ -34,10 +34,57 @@ const deleteInventoryById = async (id) => {
   await inventory.deleteOne();
 };
 
+const bulkInsertInventory = async (inventoryArray) => {
+  if (!Array.isArray(inventoryArray) || inventoryArray.length === 0) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Request body must be a non-empty array');
+  }
+  const bulkOps = inventoryArray.map((item) => {
+    const filter = {
+      userEmail: item.userEmail,
+      designNumber: item.designNumber,
+      colour: item.colour,
+      brandSize: item.brandSize,
+      standardSize: item.standardSize,
+      // productId: new mongoose.Types.ObjectId(item.productId),
+    };
+    const update = {
+      $set: {
+        quantity: item.quantity,
+        minimumQuantityAlert: item.minimumQuantityAlert,
+        lastUpdatedBy: item.lastUpdatedBy || '',
+        lastUpdatedAt: new Date(),
+        colourName: item.colourName, // <-- Make sure to include this
+      },
+    };
+    return {
+      updateOne: {
+        filter,
+        update,
+        upsert: true,
+      },
+    };
+  });
+
+  const result = await WholesalerInventory.bulkWrite(bulkOps);
+
+  // Optionally fetch updated documents to return in response
+  const updatedDesignNumbers = inventoryArray.map((item) => item.designNumber);
+
+  const updatedDocs = await WholesalerInventory.find({
+    designNumber: { $in: updatedDesignNumbers },
+  });
+
+  return {
+    status: result,
+    updatedData: updatedDocs,
+  };
+};
+
 module.exports = {
   createInventory,
   queryInventories,
   getInventoryById,
   updateInventoryById,
   deleteInventoryById,
+  bulkInsertInventory,
 };

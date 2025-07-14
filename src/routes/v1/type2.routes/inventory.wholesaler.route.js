@@ -14,4 +14,9 @@ router
   .put(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), WholesalerInventoryController.updateInventory)
   .delete(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), WholesalerInventoryController.deleteInventory);
 
+router
+    .route('/bulk')
+    .post(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
+        WholesalerInventoryController.bulkCreateInventories
+    );
 module.exports = router;
