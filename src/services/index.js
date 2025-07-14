@@ -115,3 +115,4 @@ module.exports.M2WPerformaInvoiceService = require('./type2.services/pi.manufact
 module.exports.ManufactureInventoryService = require('./type2.services/inventory.manufacture.service');
 module.exports.WholesalerInventoryService = require('./type2.services/inventory.wholesaler.service');
 module.exports.RetailerInventoryService = require('./type2.services/inventory.retailer.service');
+module.exports.ManufactureInventoryLogsService = require('./type2.services/manufacture.inventory.logs.service');

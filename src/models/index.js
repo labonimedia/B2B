@@ -126,3 +126,4 @@ module.exports.M2WPerformaInvoice = require('./type2.models/pi.manufacture.to.wh
 module.exports.ManufactureInventory = require('./type2.models/inventory.manufacture.model');
 module.exports.WholesalerInventory = require('./type2.models/inventory.wholesaler.model');
 module.exports.RetailerInventory = require('./type2.models/inventory.retailer.model');
+module.exports.ManufactureInventoryLogs = require('./type2.models/manufacture.inventory.logs.model');
