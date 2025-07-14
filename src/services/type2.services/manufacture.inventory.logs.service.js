@@ -100,10 +100,96 @@ const bulkInsertInventory = async (inventoryArray) => {
   };
 };
 
-const createInventory = async (data) => {
-  return ManufactureInventoryLogs.create(data);
-};
+// const createInventory = async (data) => {
+//   return ManufactureInventoryLogs.create(data);
+// };
 
+// const createInventory = async (data) => {
+//   const {
+//     userEmail,
+//     productId,
+//     designNumber,
+//     colour,
+//     brandName,
+//     colourName,
+//     brandSize,
+//     standardSize,
+//     recordsArray
+//   } = data;
+
+//   const filter = {
+//     userEmail,
+//     productId,
+//     designNumber,
+//     colour,
+//     brandName,
+//     colourName,
+//     brandSize,
+//     standardSize,
+//   };
+
+//   // Check if a log already exists
+//   let existingLog = await ManufactureInventoryLogs.findOne(filter);
+
+//   if (existingLog) {
+//     // Push new record to existing document
+//     existingLog.recordsArray.push(...recordsArray); // push one or multiple records
+//     await existingLog.save();
+//     return existingLog;
+//   } else {
+//     // Create a new log document
+//     const newLog = await ManufactureInventoryLogs.create({
+//       ...filter,
+//       recordsArray,
+//     });
+//     return newLog;
+//   }
+// };
+
+const createInventory = async (dataArray) => {
+  const results = [];
+
+  for (const data of dataArray) {
+    const {
+      userEmail,
+      productId,
+      designNumber,
+      colour,
+      brandName,
+      colourName,
+      brandSize,
+      standardSize,
+      recordsArray
+    } = data;
+
+    const filter = {
+      userEmail,
+      productId,
+      designNumber,
+      colour,
+      brandName,
+      colourName,
+      brandSize,
+      standardSize,
+    };
+
+    let existingLog = await ManufactureInventoryLogs.findOne(filter);
+
+    if (existingLog) {
+      existingLog.recordsArray.push(...recordsArray);
+      await existingLog.save();
+      results.push(existingLog);
+    } else {
+      const newLog = await ManufactureInventoryLogs.create({
+        ...filter,
+        recordsArray,
+      });
+      results.push(newLog);
+    }
+  }
+
+  return results;
+};
 const queryInventories = async (filter, options) => {
   return ManufactureInventoryLogs.paginate(filter, options);
 };
