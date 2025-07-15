@@ -10,6 +10,11 @@ const inventoryRecordSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
+status: {
+  type: String,
+  enum: ['stock_added', 'stock_removed'],
+  required: true,
+},
   lastUpdatedBy: {
     type: String,
   },
