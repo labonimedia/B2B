@@ -18,31 +18,11 @@ const createInventory = catchAsync(async (req, res) => {
   res.status(httpStatus.CREATED).send(result);
 });
 
-// const getInventories = catchAsync(async (req, res) => {
-//  const filter = pick(req.query, ['userEmail','brandName' , 'designNumber', 'colour', 'brandSize', 'standardSize', 'colourName', 'productId']);
-//   const options = pick(req.query, ['sortBy', 'limit', 'page']);
-// //   const search = req.query.search || '';
-// //   // Convert productId to ObjectId
-//   if (filter.productId) {
-//     const mongoose = require('mongoose');
-//     try {
-//       filter.productId = new mongoose.Types.ObjectId(filter.productId);
-//     } catch (error) {
-//       return res.status(400).send({ message: 'Invalid productId' });
-//     }
-//   }
-//   const result = await ManufactureInventoryLogsService.queryInventories(filter, options);
-//   res.send(result);
-// });
-
-
-
 const getInventories = catchAsync(async (req, res) => {
-  const filter = pick(req.query, ['userEmail','brandName' , 'designNumber', 'colour', 'brandSize', 'standardSize', 'colourName', 'productId']);
+ const filter = pick(req.query, ['userEmail','brandName' , 'designNumber', 'colour', 'brandSize', 'standardSize', 'colourName', 'productId']);
   const options = pick(req.query, ['sortBy', 'limit', 'page']);
-  const search = req.query.search || '';
-
-  // Convert productId to ObjectId
+//   const search = req.query.search || '';
+//   // Convert productId to ObjectId
   if (filter.productId) {
     const mongoose = require('mongoose');
     try {
@@ -51,10 +31,30 @@ const getInventories = catchAsync(async (req, res) => {
       return res.status(400).send({ message: 'Invalid productId' });
     }
   }
-
-  const result = await ManufactureInventoryLogsService.queryInventories(filter, options, search);
+  const result = await ManufactureInventoryLogsService.queryInventories(filter, options);
   res.send(result);
 });
+
+
+
+// const getInventories = catchAsync(async (req, res) => {
+//   const filter = pick(req.query, ['userEmail','brandName' , 'designNumber', 'colour', 'brandSize', 'standardSize', 'colourName', 'productId']);
+//   const options = pick(req.query, ['sortBy', 'limit', 'page']);
+//   const search = req.query.search || '';
+
+//   // Convert productId to ObjectId
+//   if (filter.productId) {
+//     const mongoose = require('mongoose');
+//     try {
+//       filter.productId = new mongoose.Types.ObjectId(filter.productId);
+//     } catch (error) {
+//       return res.status(400).send({ message: 'Invalid productId' });
+//     }
+//   }
+
+//   const result = await ManufactureInventoryLogsService.queryInventories(filter, options, search);
+//   res.send(result);
+// });
 
 const getInventoryById = catchAsync(async (req, res) => {
   const inventory = await ManufactureInventoryLogsService.getInventoryById(req.params.id);
