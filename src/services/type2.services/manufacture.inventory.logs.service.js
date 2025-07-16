@@ -191,11 +191,79 @@ const createInventory = async (dataArray) => {
   return results;
 };
 
-const queryInventories = async (filter, options) => {
-  return ManufactureInventoryLogs.paginate(filter, options);
+// const queryInventories = async (filter, options) => {
+//   return ManufactureInventoryLogs.paginate(filter, options);
+// };
+
+const queryInventories = async (filter = {}, options = {}) => {
+  const page = parseInt(options.page) || 1;
+  const limit = parseInt(options.limit) || 10;
+  const skip = (page - 1) * limit;
+
+  const aggregation = await ManufactureInventoryLogs.aggregate([
+    { $match: filter },
+
+    // Flatten recordsArray
+    { $unwind: "$recordsArray" },
+
+    // Group by designNumber
+    {
+      $group: {
+        _id: "$designNumber",
+        totalUpdates: { $sum: 1 },
+        totalQuantityAdded: {
+          $sum: {
+            $cond: [{ $eq: ["$recordsArray.status", "stock_added"] }, "$recordsArray.updatedQuantity", 0],
+          },
+        },
+        totalQuantityRemoved: {
+          $sum: {
+            $cond: [{ $eq: ["$recordsArray.status", "stock_removed"] }, "$recordsArray.updatedQuantity", 0],
+          },
+        },
+        latestUpdatedAt: { $max: "$recordsArray.lastUpdatedAt" },
+        entries: {
+          $push: {
+            _id: "$_id",
+            userEmail: "$userEmail",
+            productId: "$productId",
+            colour: "$colour",
+            colourName: "$colourName",
+            brandSize: "$brandSize",
+            standardSize: "$standardSize",
+            brandName: "$brandName",
+            records: "$recordsArray",
+          }
+        },
+      },
+    },
+
+    // Sort by latestUpdatedAt descending
+    { $sort: { latestUpdatedAt: -1 } },
+
+    // Pagination
+    {
+      $facet: {
+        paginatedResults: [
+          { $skip: skip },
+          { $limit: limit },
+        ],
+        totalCount: [{ $count: 'count' }],
+      },
+    },
+  ]);
+
+  const results = aggregation[0]?.paginatedResults || [];
+  const totalCount = aggregation[0]?.totalCount?.[0]?.count || 0;
+
+  return {
+    results,
+    page,
+    limit,
+    totalPages: Math.ceil(totalCount / limit),
+    totalResults: totalCount,
+  };
 };
-
-
 
 // const queryInventories = async (filter, options, search) => {
 //   const matchStage = { ...filter };
