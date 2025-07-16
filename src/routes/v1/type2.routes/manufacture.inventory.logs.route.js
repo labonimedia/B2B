@@ -8,7 +8,7 @@ router
     .post(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
         ManufactureInventoryLogsController.bulkCreateInventories
     );
-    
+
 router
     .route('/')
     .post(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), ManufactureInventoryLogsController.createInventory)
