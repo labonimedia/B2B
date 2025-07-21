@@ -171,11 +171,87 @@ const createInventory = async (data) => {
 //   };
 // };
 
+// const queryInventories = async (filter, options, search) => {
+//   const matchStage = { ...filter };
+
+//   if (search) {
+//     matchStage.designNumber = { $regex: search, $options: 'i' };
+//   }
+
+//   const page = parseInt(options.page, 10) || 1;
+//   const limit = parseInt(options.limit, 10) || 10;
+//   const skip = (page - 1) * limit;
+
+//   const aggregation = await ManufactureInventory.aggregate([
+//     { $match: matchStage },
+
+//     // Flag if quantity is less than or equal to minimum alert
+//     {
+//       $addFields: {
+//         isLowStock: { $lte: ['$quantity', '$minimumQuantityAlert'] },
+//       },
+//     },
+
+//     // Group by designNumber and check if any entry isLowStock
+//     {
+//       $group: {
+//         _id: '$designNumber',
+//         totalQuantity: { $sum: '$quantity' },
+//         hasLowStock: { $max: { $cond: ['$isLowStock', 1, 0] } },
+//         entries: {
+//           $push: {
+//             _id: '$_id',
+//             userEmail: '$userEmail',
+//             designNumber: '$designNumber',
+//             colour: '$colour',
+//             colourName: '$colourName',
+//             brandSize: '$brandSize',
+//             standardSize: '$standardSize',
+//             quantity: '$quantity',
+//             minimumQuantityAlert: '$minimumQuantityAlert',
+//             lastUpdatedAt: '$lastUpdatedAt',
+//             productId: '$productId',
+//             isLowStock: '$isLowStock',
+//             brandName: '$brandName',
+//           },
+//         },
+//       },
+//     },
+
+//     // Sort: first groups where any item is low or below alert
+//     { $sort: { hasLowStock: -1, _id: 1 } },
+
+//     // Pagination
+//     {
+//       $facet: {
+//         paginatedResults: [
+//           { $skip: skip },
+//           { $limit: limit },
+//         ],
+//         totalCount: [{ $count: 'count' }],
+//       },
+//     },
+//   ]).allowDiskUse(true);
+
+//   const results = aggregation[0]?.paginatedResults || [];
+//   const totalCount = aggregation[0]?.totalCount[0]?.count || 0;
+
+//   return {
+//     results,
+//     page,
+//     limit,
+//     totalPages: Math.ceil(totalCount / limit),
+//     totalResults: totalCount,
+//   };
+// };
 const queryInventories = async (filter, options, search) => {
   const matchStage = { ...filter };
 
   if (search) {
-    matchStage.designNumber = { $regex: search, $options: 'i' };
+    matchStage.$or = [
+      { designNumber: { $regex: search, $options: 'i' } },
+      { brandName: { $regex: search, $options: 'i' } },
+    ];
   }
 
   const page = parseInt(options.page, 10) || 1;
@@ -185,14 +261,12 @@ const queryInventories = async (filter, options, search) => {
   const aggregation = await ManufactureInventory.aggregate([
     { $match: matchStage },
 
-    // Flag if quantity is less than or equal to minimum alert
     {
       $addFields: {
         isLowStock: { $lte: ['$quantity', '$minimumQuantityAlert'] },
       },
     },
 
-    // Group by designNumber and check if any entry isLowStock
     {
       $group: {
         _id: '$designNumber',
@@ -218,10 +292,8 @@ const queryInventories = async (filter, options, search) => {
       },
     },
 
-    // Sort: first groups where any item is low or below alert
     { $sort: { hasLowStock: -1, _id: 1 } },
 
-    // Pagination
     {
       $facet: {
         paginatedResults: [
@@ -244,7 +316,6 @@ const queryInventories = async (filter, options, search) => {
     totalResults: totalCount,
   };
 };
-
 
 const getInventoryById = async (id) => {
   return ManufactureInventory.findById(id);
