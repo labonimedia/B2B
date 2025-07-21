@@ -11,6 +11,7 @@ const ApiError = require('../../utils/ApiError');
 //   return ManufactureInventory.insertMany(inventoryArray);
 // };
 
+
 // const bulkInsertInventory = async (inventoryArray) => {
 //   if (!Array.isArray(inventoryArray) || inventoryArray.length === 0) {
 //     throw new ApiError(httpStatus.BAD_REQUEST, 'Request body must be a non-empty array');
@@ -103,6 +104,7 @@ const bulkInsertInventory = async (inventoryArray) => {
 const createInventory = async (data) => {
   return ManufactureInventory.create(data);
 };
+
 
 // const queryInventories = async (filter, options) => {
 //   return ManufactureInventory.paginate(filter, options);
@@ -248,17 +250,18 @@ const getInventoryById = async (id) => {
   return ManufactureInventory.findById(id);
 };
 
+
 const updateInventoryById = async (id, updateData) => {
   const inventory = await getInventoryById(id);
   if (!inventory) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Inventory not found');
   }
-
   Object.assign(inventory, updateData);
   inventory.lastUpdatedAt = new Date();
-  await inventory.save();
+  await inventory.save();   wssssssssssssw
   return inventory;
 };
+
 
 const deleteInventoryById = async (id) => {
   const inventory = await getInventoryById(id);
