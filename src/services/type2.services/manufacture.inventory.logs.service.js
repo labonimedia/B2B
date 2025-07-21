@@ -3,52 +3,7 @@ const { ManufactureInventoryLogs } = require('../../models');
 const ApiError = require('../../utils/ApiError');
  const mongoose = require('mongoose');
  
-// const bulkInsertInventory = async (inventoryArray) => {
-//   if (!Array.isArray(inventoryArray) || inventoryArray.length === 0) {
-//     throw new ApiError(httpStatus.BAD_REQUEST, 'Request body must be a non-empty array');
-//   }
 
-//   return ManufactureInventoryLogs.insertMany(inventoryArray);
-// };
-
-// const bulkInsertInventory = async (inventoryArray) => {
-//   if (!Array.isArray(inventoryArray) || inventoryArray.length === 0) {
-//     throw new ApiError(httpStatus.BAD_REQUEST, 'Request body must be a non-empty array');
-//   }
-
-//   const bulkOps = inventoryArray.map((item) => {
-//     const filter = {
-//       userEmail: item.userEmail,
-//       designNumber: item.designNumber,
-//       colour: item.colour,
-//       brandSize: item.brandSize,
-//       standardSize: item.standardSize,
-//       productId: new mongoose.Types.ObjectId(item.productId),
-//     };
-
-//     const update = {
-//       $set: {
-//         quantity: item.quantity,
-//         minimumQuantityAlert: item.minimumQuantityAlert,
-//         lastUpdatedBy: item.lastUpdatedBy || '',
-//         lastUpdatedAt: new Date(),
-//       },
-//     };
-
-//     return {
-//       updateOne: {
-//         filter,
-//         update,
-//         upsert: true, // ← this creates if not found
-//       },
-//     };
-//   });
-
-//   // Perform all operations in bulk
-//   const result = await ManufactureInventoryLogs.bulkWrite(bulkOps);
-
-//   return result;
-// };
 
 const bulkInsertInventory = async (inventoryArray) => {
   if (!Array.isArray(inventoryArray) || inventoryArray.length === 0) {
@@ -100,51 +55,6 @@ const bulkInsertInventory = async (inventoryArray) => {
   };
 };
 
-// const createInventory = async (data) => {
-//   return ManufactureInventoryLogs.create(data);
-// };
-
-// const createInventory = async (data) => {
-//   const {
-//     userEmail,
-//     productId,
-//     designNumber,
-//     colour,
-//     brandName,
-//     colourName,
-//     brandSize,
-//     standardSize,
-//     recordsArray
-//   } = data;
-
-//   const filter = {
-//     userEmail,
-//     productId,
-//     designNumber,
-//     colour,
-//     brandName,
-//     colourName,
-//     brandSize,
-//     standardSize,
-//   };
-
-//   // Check if a log already exists
-//   let existingLog = await ManufactureInventoryLogs.findOne(filter);
-
-//   if (existingLog) {
-//     // Push new record to existing document
-//     existingLog.recordsArray.push(...recordsArray); // push one or multiple records
-//     await existingLog.save();
-//     return existingLog;
-//   } else {
-//     // Create a new log document
-//     const newLog = await ManufactureInventoryLogs.create({
-//       ...filter,
-//       recordsArray,
-//     });
-//     return newLog;
-//   }
-// };
 
 const createInventory = async (dataArray) => {
   const results = [];
@@ -191,93 +101,26 @@ const createInventory = async (dataArray) => {
   return results;
 };
 
-// const queryInventories = async (filter, options) => {
-//   return ManufactureInventoryLogs.paginate(filter, options);
-// };
-
-// const queryInventories = async (filter = {}, options = {}) => {
-//   const page = parseInt(options.page) || 1;
-//   const limit = parseInt(options.limit) || 10;
-//   const skip = (page - 1) * limit;
-
-//   const aggregation = await ManufactureInventoryLogs.aggregate([
-//     { $match: filter },
-
-//     // Flatten recordsArray
-//     { $unwind: "$recordsArray" },
-
-//     // Group by designNumber
-//     {
-//       $group: {
-//         _id: "$designNumber",
-//         totalUpdates: { $sum: 1 },
-//         totalQuantityAdded: {
-//           $sum: {
-//             $cond: [{ $eq: ["$recordsArray.status", "stock_added"] }, "$recordsArray.updatedQuantity", 0],
-//           },
-//         },
-//         totalQuantityRemoved: {
-//           $sum: {
-//             $cond: [{ $eq: ["$recordsArray.status", "stock_removed"] }, "$recordsArray.updatedQuantity", 0],
-//           },
-//         },
-//          brandName: "$brandName",
-//         latestUpdatedAt: { $max: "$recordsArray.lastUpdatedAt" },
-//         entries: {
-//           $push: {
-//             _id: "$_id",
-//             userEmail: "$userEmail",
-//             productId: "$productId",
-//             colour: "$colour",
-//             colourName: "$colourName",
-//             brandSize: "$brandSize",
-//             standardSize: "$standardSize",
-//             brandName: "$brandName",
-//             records: "$recordsArray",
-//           }
-//         },
-//       },
-//     },
-
-//     // Sort by latestUpdatedAt descending
-//     { $sort: { latestUpdatedAt: -1 } },
-
-//     // Pagination
-//     {
-//       $facet: {
-//         paginatedResults: [
-//           { $skip: skip },
-//           { $limit: limit },
-//         ],
-//         totalCount: [{ $count: 'count' }],
-//       },
-//     },
-//   ]);
-
-//   const results = aggregation[0]?.paginatedResults || [];
-//   const totalCount = aggregation[0]?.totalCount?.[0]?.count || 0;
-
-//   return {
-//     results,
-//     page,
-//     limit,
-//     totalPages: Math.ceil(totalCount / limit),
-//     totalResults: totalCount,
-//   };
-// };
-
-const queryInventories = async (filter = {}, options = {}) => {
+const queryInventories = async (filter = {}, options = {}, search = '') => {
   const page = parseInt(options.page) || 1;
   const limit = parseInt(options.limit) || 10;
   const skip = (page - 1) * limit;
 
-  const aggregation = await ManufactureInventoryLogs.aggregate([
-    { $match: filter },
+  // Add search logic for brandName or designNumber
+  const matchStage = { ...filter };
 
-    // Flatten recordsArray
+  if (search) {
+    matchStage.$or = [
+      { designNumber: { $regex: search, $options: 'i' } },
+      { brandName: { $regex: search, $options: 'i' } },
+    ];
+  }
+
+  const aggregation = await ManufactureInventoryLogs.aggregate([
+    { $match: matchStage },
+
     { $unwind: "$recordsArray" },
 
-    // Group by designNumber and brandName
     {
       $group: {
         _id: {
@@ -311,7 +154,6 @@ const queryInventories = async (filter = {}, options = {}) => {
       },
     },
 
-    // Add flat fields for _id values
     {
       $addFields: {
         designNumber: "$_id.designNumber",
@@ -319,13 +161,10 @@ const queryInventories = async (filter = {}, options = {}) => {
       },
     },
 
-    // Remove _id object
     { $project: { _id: 0 } },
 
-    // Sort
     { $sort: { latestUpdatedAt: -1 } },
 
-    // Pagination
     {
       $facet: {
         paginatedResults: [
@@ -348,6 +187,8 @@ const queryInventories = async (filter = {}, options = {}) => {
     totalResults: totalCount,
   };
 };
+
+
 
 // const queryInventories = async (filter, options, search) => {
 //   const matchStage = { ...filter };
