@@ -250,6 +250,7 @@ const createInventory = async (data) => {
 //     totalResults: totalCount,
 //   };
 // };
+
 const queryInventories = async (filter, options, search) => {
   const matchStage = { ...filter };
 
