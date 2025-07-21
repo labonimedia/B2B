@@ -3,6 +3,16 @@ const catchAsync = require('../../utils/catchAsync');
 const { ManufactureInventoryService } = require('../../services');
 const pick = require('../../utils/pick');
 
+const getInventoriesByDesignNumbers = catchAsync(async (req, res) => {
+  const { designNumbers } = req.body;
+
+  if (!Array.isArray(designNumbers) || designNumbers.length === 0) {
+    return res.status(400).json({ message: 'designNumbers must be a non-empty array' });
+  }
+
+  const result = await ManufactureInventoryService.findByDesignNumbers(designNumbers);
+  res.status(200).json({ success: true, data: result });
+})
 // const bulkCreateInventories = catchAsync(async (req, res) => {
 //   const inventories = await ManufactureInventoryService.bulkInsertInventory(req.body);
 //   res.status(httpStatus.CREATED).send({ success: true, data: inventories });
@@ -94,4 +104,5 @@ module.exports = {
   getInventoryById,
   updateInventory,
   deleteInventory,
+  getInventoriesByDesignNumbers,
 };
