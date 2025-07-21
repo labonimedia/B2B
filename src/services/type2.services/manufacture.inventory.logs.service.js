@@ -265,6 +265,7 @@ const createInventory = async (dataArray) => {
 //     totalResults: totalCount,
 //   };
 // };
+
 const queryInventories = async (filter = {}, options = {}) => {
   const page = parseInt(options.page) || 1;
   const limit = parseInt(options.limit) || 10;
