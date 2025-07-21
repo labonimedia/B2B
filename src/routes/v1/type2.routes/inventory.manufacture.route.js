@@ -19,5 +19,8 @@ router
     .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), ManufactureInventoryController.getInventoryById)
     .put(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), ManufactureInventoryController.updateInventory)
     .delete(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), ManufactureInventoryController.deleteInventory);
+    
+router.post('/by-designs', ManufactureInventoryController.getInventoriesByDesignNumbers);
+
 
 module.exports = router;
