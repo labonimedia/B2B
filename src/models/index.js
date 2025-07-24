@@ -127,3 +127,5 @@ module.exports.ManufactureInventory = require('./type2.models/inventory.manufact
 module.exports.WholesalerInventory = require('./type2.models/inventory.wholesaler.model');
 module.exports.RetailerInventory = require('./type2.models/inventory.retailer.model');
 module.exports.ManufactureInventoryLogs = require('./type2.models/manufacture.inventory.logs.model');
+//credit Note model
+module.exports.ManufactureCreditNote = require('./type2.models/credit.note.manufacture.model');
