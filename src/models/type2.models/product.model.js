@@ -105,8 +105,24 @@ const productSchema = mongoose.Schema(
     gheraInMTR: { type: String },
     finishType: { type: String },
 
+     dimenstions: {
+        height: {
+          type: String,
+        },
+        width: {
+          type: String,
+        },
+        length: {
+          type: String,
+        },
+        weight: {
+          type: String,
+        }},
     // sizes: { type: [String], default: [] },
-
+        hsnCode: {
+          type: String,
+        },
+        
     sizes: [
       {
         standardSize: {
