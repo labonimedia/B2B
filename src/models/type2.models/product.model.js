@@ -119,10 +119,12 @@ const productSchema = mongoose.Schema(
           type: String,
         }},
     // sizes: { type: [String], default: [] },
-        hsnCode: {
-          type: String,
-        },
-        
+           hsnCode: {
+             type: String,
+           },
+           hsnGst: {
+             type: String,
+           },
     sizes: [
       {
         standardSize: {
