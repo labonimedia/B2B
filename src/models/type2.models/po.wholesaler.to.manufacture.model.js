@@ -89,6 +89,12 @@ const POWholesalerToManufacturerSchema = new mongoose.Schema(
         clothing: String,
         gender: String,
         subCategory: String,
+                 hsnCode: {
+          type: String,
+        },
+        hsnGst: {
+          type: String,
+        },
         productType: String,
         manufacturerPrice: String,
           //transportDetails: transportDetailsSchema,

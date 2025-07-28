@@ -147,6 +147,12 @@ const m2wPerformaInvoiceSchema = new mongoose.Schema(
         gender: String,
         clothing: String,
         subCategory: String,
+               hsnCode: {
+          type: String,
+        },
+        hsnGst: {
+          type: String,
+        },
         status: {
           type: String,
           enum: ['pending', 'dispatched', 'delivered', 'partial'],

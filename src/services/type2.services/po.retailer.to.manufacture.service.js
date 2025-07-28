@@ -49,32 +49,6 @@ const getRetailerPOByManufacture = async (manufacturerEmail) => {
   return PORetailerToManufacturer.find({ manufacturerEmail }).sort({ createdAt: -1 });
 };
 
-// /**
-//  * Manufacture updates a specific set item in the PO
-//  */
-// const updateRetailerPOSetItem = async (poId, updateBody) => {
-//   const { designNumber, colour, size, updatedFields } = updateBody;
-
-//   const po = await PORetailerToManufacturer.findById(poId);
-//   if (!po) throw new ApiError(httpStatus.NOT_FOUND, 'Purchase Order not found');
-
-//   const item = po.set.find(
-//     (item) =>
-//       item.designNumber === designNumber &&
-//       item.colour === colour &&
-//       item.size === size
-//   );
-
-//   if (!item) throw new ApiError(httpStatus.NOT_FOUND, 'Set item not found in PO');
-
-//   Object.keys(updatedFields).forEach((key) => {
-//     item[key] = updatedFields[key];
-//   });
-
-//   await po.save();
-//   return po;
-// };
-
 const updateRetailerPOSetItem = async (poId, updateBody) => {
   const po = await PORetailerToManufacturer.findById(poId);
   if (!po) throw new ApiError(httpStatus.NOT_FOUND, 'Purchase Order not found');

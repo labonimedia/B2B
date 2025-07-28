@@ -55,6 +55,12 @@ const CartSchema = new mongoose.Schema(
         subCategory: {
           type: String,
         },
+                 hsnCode: {
+          type: String,
+        },
+        hsnGst: {
+          type: String,
+        },
       },
     ],
     cartAddedDate: {

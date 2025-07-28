@@ -6,7 +6,7 @@ const creditNoteSchema = new mongoose.Schema(
         creditNoteNumber: {
             type: String,
             unique: true,
-            required: true, 
+            required: true,
         },
         invoiceId: {
             type: mongoose.Schema.Types.ObjectId,
@@ -23,18 +23,24 @@ const creditNoteSchema = new mongoose.Schema(
             email: String,
             fullName: String,
             companyName: String,
-            contactNumber:String,
+            contactNumber: String,
         },
         receiver: {
             email: String,
             fullName: String,
             companyName: String,
-            contactNumber:String,
+            contactNumber: String,
         },
 
         set: [
             {
                 designNumber: String,
+                hsnCode: {
+                    type: String,
+                },
+                hsnGst: {
+                    type: String,
+                },
                 size: String,
                 color: String,
                 quantity: Number,
