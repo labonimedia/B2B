@@ -1,29 +1,12 @@
 const httpStatus = require('http-status');
-const { v4: uuidv4 } = require('uuid');
-const { RtlToMnfCart, User, RtlToMnfPo, Retailer, Manufacture, WishListType2, PORetailerToManufacturer } = require('../../models');
+const { RtlToMnfCart, User,  Retailer, Manufacture, WishListType2, PORetailerToManufacturer } = require('../../models');
 const ApiError = require('../../utils/ApiError');
+
 /**
  * Create multiple RtlToMnfCart items
  * @param {Array<Object>} reqBody - Contains an array of item objects
  * @returns {Promise<Array<RtlToMnfCart>>}
  */
-
-// const createCartType2 = async (reqBody) => {
-//   const { email, productBy, set } = reqBody;
-//   // Check if a cart already exists with the same email and productBy
-//   const existingCart = await RtlToMnfCart.findOne({ email, productBy });
-//   if (existingCart) {
-//     // Push new set data into the existing cart's set array
-//     existingCart.set.push(...set);
-//     await existingCart.save();
-//     await WishListType2.findOneAndDelete({ productId: reqBody.productId, email });
-//     return existingCart;
-//   }
-//   // If no cart exists, create a new one
-//   const newCart = await RtlToMnfCart.create(reqBody);
-//   await WishListType2.findOneAndDelete({ productId: reqBody.productId, email });
-//   return newCart;
-// };
 
 const createCartType2 = async (reqBody) => {
   const { email, productBy, set } = reqBody;
@@ -76,10 +59,6 @@ const createCartType2 = async (reqBody) => {
  * @param {number} [options.page] - Current page (default = 1)
  * @returns {Promise<QueryResult>}
  */
-// const queryCartType2 = async (filter, options) => {
-//   const cartType2Items = await RtlToMnfCart.paginate(filter, options);
-//   return cartType2Items;
-// };
 
 const queryCartType2 = async (filter, options) => {
   // Paginate the RtlToMnfCart items
@@ -137,170 +116,11 @@ const getCartType2ById = async (id) => {
   return RtlToMnfCart.findById(id);
 };
 
-// /**
-//  * Get cart items for a specific user and productBy
-//  * @param {string} email - User's email
-//  * @param {string} productBy - Product's manufacturer email
-//  */
-// const getCartByEmailToPlaceOrder = async (email, productBy) => {
-//     // Find the cart by email and productBy, and populate the product details
-//     const carts = await RtlToMnfCart.find({ email, productBy }).populate('productId');
-//     if (!carts || carts.length === 0) {
-//         throw new ApiError(httpStatus.NOT_FOUND, 'No carts found for this email and productBy');
-//     }
-//     const user = await User.findOne({ email }).select('role');
-//     if (!user) {
-//         throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
-//     }
-//     let retailer = null;
-//     if (user.role === 'retailer') {
-//         retailer = await Retailer.findOne({ email }).select(
-//             'fullName companyName email address country state city pinCode mobNumber GSTIN code profileImg');
-
-//         if (!retailer) {
-//             throw new ApiError(httpStatus.NOT_FOUND, 'Retailer not found');
-//         }
-//     }
-
-//     // Fetch manufacturer details for the product's manufacturer
-//     const manufacturer = await Manufacture.findOne({ email: productBy }).select(
-//         'fullName companyName email address country state city pinCode mobNumber GSTIN'
-//     );
-
-//     if (!manufacturer) {
-//         throw new ApiError(httpStatus.NOT_FOUND, 'Manufacturer not found');
-//     }
-
-//     // Ensure wholesaler is present for roles that require it
-//     if (!retailer) {
-//         throw new ApiError(httpStatus.BAD_REQUEST, 'Wholesaler information is missing.');
-//     }
-
-//     // Prepare the cart and order details with the desired format
-//     const orderDetails = carts.map((cart) => ({
-//         _id: cart._id,
-//         productId: {
-//             designNumber: cart.designNumber || "",
-//             brand: cart.productId.brand,
-//             id: cart.productId._id,
-//         },
-//         set: cart.set.map((setItem) => ({
-//             designNumber: cart.designNumber || "",
-//             colour: setItem.colour,
-//             colourImage: setItem.colourImage || null,
-//             colourName: setItem.colourName,
-//             size: setItem.size,
-//             quantity: setItem.quantity,
-//             price: setItem.price,
-//         })),
-//     }));
-
-//     // Return the final response structure
-//     const result = {
-//         manufacturer: {
-//             fullName: manufacturer.fullName,
-//             companyName: manufacturer.companyName,
-//             email: manufacturer.email,
-//             address: manufacturer.address,
-//             country: manufacturer.country,
-//             state: manufacturer.state,
-//             city: manufacturer.city,
-//             pinCode: manufacturer.pinCode,
-//             mobNumber: manufacturer.mobNumber,
-//             GSTIN: manufacturer.GSTIN,
-//         },
-//         retailer,
-//         orderNumber,
-//         products: orderDetails,
-//     };
-//     return result;
-// };
-
 const genratedeChallNO = async (email) => {
   const lastPO = await PORetailerToManufacturer.findOne({ email }).sort({ poNumber: -1 }).lean();
   return (nextdeliveryChallanNumber = lastPO ? lastPO.poNumber + 1 : 1);
 };
 
-// const getCartByEmailToPlaceOrder = async (email, productBy) => {
-//   // Find the cart by email and productBy without populating productId
-//   const carts = await RtlToMnfCart.find({ email, productBy });
-//   if (!carts || carts.length === 0) {
-//     throw new ApiError(httpStatus.NOT_FOUND, 'No carts found for this email and productBy');
-//   }
-
-//   const user = await User.findOne({ email }).select('role');
-//   if (!user) {
-//     throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
-//   }
-
-//   let retailer = null;
-//   if (user.role === 'retailer') {
-//     retailer = await Retailer.findOne({ email }).select(
-//       'fullName companyName email address country state city pinCode mobNumber GSTIN code profileImg pan'
-//     );
-//     if (!retailer) {
-//       throw new ApiError(httpStatus.NOT_FOUND, 'Retailer not found');
-//     }
-//   }
-
-//   // Fetch manufacturer details for the product's manufacturer
-//   const manufacturer = await Manufacture.findOne({ email: productBy }).select(
-//     'fullName companyName email address country state city pinCode mobNumber GSTIN pan'
-//   );
-
-//   if (!manufacturer) {
-//     throw new ApiError(httpStatus.NOT_FOUND, 'Manufacturer not found');
-//   }
-
-//   // Ensure wholesaler is present for roles that require it
-//   if (!retailer) {
-//     throw new ApiError(httpStatus.BAD_REQUEST, 'Wholesaler information is missing.');
-//   }
-
-//   // Prepare the cart and order details with the desired format
-//   const orderDetails = carts.map((cart) => ({
-//     _id: cart._id,
-//     productId: {
-//       designNumber: cart.designNumber || '',
-//       brand: cart.brand || 'Brand not available', // Extract directly from cart without productId population
-//       id: cart._id || null,
-//     },
-//     set: cart.set.map((setItem) => ({
-//       designNumber: setItem.designNumber || '',
-//       colour: setItem.colour,
-//       colourImage: setItem.colourImage || null,
-//       colourName: setItem.colourName,
-//       size: setItem.size,
-//       quantity: setItem.quantity,
-//       price: setItem.price,
-//     })),
-//   }));
-
-//   const orderNumber = await genratedeChallNO(email);
-
-//   // Return the final response structure
-//   const result = {
-//     productBy: manufacturer.email,
-//     email: retailer.email,
-//     manufacturer: {
-//       fullName: manufacturer.fullName,
-//       companyName: manufacturer.companyName,
-//       email: manufacturer.email,
-//       pan: manufacturer.pan,
-//       address: manufacturer.address,
-//       country: manufacturer.country,
-//       state: manufacturer.state,
-//       city: manufacturer.city,
-//       pinCode: manufacturer.pinCode,
-//       mobNumber: manufacturer.mobNumber,
-//       GSTIN: manufacturer.GSTIN,
-//     },
-//     retailer,
-//     orderNumber,
-//     products: orderDetails,
-//   };
-//   return result;
-// };
 const getCartByEmailToPlaceOrder = async (email, productBy) => {
   const carts = await RtlToMnfCart.find({ email, productBy });
   if (!carts || carts.length === 0) {
@@ -375,6 +195,8 @@ const getCartByEmailToPlaceOrder = async (email, productBy) => {
       gender: setItem.gender,
       clothing: setItem.clothing,
       subCategory: setItem.subCategory,
+      hsnCode: setItem.hsnCode,
+      hsnGst: setItem.hsnGst,
     })),
   }));
 
@@ -419,84 +241,6 @@ const getCartByEmailToPlaceOrder = async (email, productBy) => {
 
   return result;
 };
-
-// const getCartByEmailToPlaceOrder = async (email, productBy) => {
-//     // Find the cart by email and productBy, and populate the product details
-//     const carts = await RtlToMnfCart.find({ email, productBy }).populate('productId');
-//     console.log('carts data',carts[0].set)
-//     if (!carts || carts.length === 0) {
-//         throw new ApiError(httpStatus.NOT_FOUND, 'No carts found for this email and productBy');
-//     }
-//     const user = await User.findOne({ email }).select('role');
-//     if (!user) {
-//         throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
-//     }
-//     let retailer = null;
-//     if (user.role === 'retailer') {
-//         retailer = await Retailer.findOne({ email }).select(
-//             'fullName companyName email address country state city pinCode mobNumber GSTIN code profileImg');
-
-//         if (!retailer) {
-//             throw new ApiError(httpStatus.NOT_FOUND, 'Retailer not found');
-//         }
-//     }
-
-//     // Fetch manufacturer details for the product's manufacturer
-//     const manufacturer = await Manufacture.findOne({ email: productBy }).select(
-//         'fullName companyName email address country state city pinCode mobNumber GSTIN'
-//     );
-
-//     if (!manufacturer) {
-//         throw new ApiError(httpStatus.NOT_FOUND, 'Manufacturer not found');
-//     }
-
-//     // Ensure wholesaler is present for roles that require it
-//     if (!retailer) {
-//         throw new ApiError(httpStatus.BAD_REQUEST, 'Wholesaler information is missing.');
-//     }
-
-//     // Prepare the cart and order details with the desired format
-//     const orderDetails = carts.map((cart) => {
-//         const product = cart.productId;
-//         return {
-//             _id: cart._id,
-//             productId: {
-//                 designNumber: cart.designNumber || "",
-//                 brand: product?.brand || "Brand not available",  // Defensive check for undefined
-//                 id: product?._id || null,
-//             },
-//             set: cart.set.map((setItem) => ({
-//                 designNumber: cart.designNumber || "",
-//                 colour: setItem.colour,
-//                 colourImage: setItem.colourImage || null,
-//                 colourName: setItem.colourName,
-//                 size: setItem.size,
-//                 quantity: setItem.quantity,
-//                 price: setItem.price,
-//             })),
-//         };
-//     });
-// let orderNumber = await genratedeChallNO(email)
-//     // Return the final response structure
-//     const result = {
-//         manufacturer: {
-//             fullName: manufacturer.fullName,
-//             companyName: manufacturer.companyName,
-//             email: manufacturer.email,
-//             address: manufacturer.address,
-//             country: manufacturer.country,
-//             state: manufacturer.state,
-//             city: manufacturer.city,
-//             pinCode: manufacturer.pinCode,
-//             mobNumber: manufacturer.mobNumber,
-//             GSTIN: manufacturer.GSTIN,
-//         },
-//         retailer,
-//         orderNumber,
-//         products: orderDetails,
-//     };
-//     return result;
-// };
 
 /**
  *

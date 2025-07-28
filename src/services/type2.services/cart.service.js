@@ -7,24 +7,6 @@ const ApiError = require('../../utils/ApiError');
  * @param {Array<Object>} reqBody - Contains an array of item objects
  * @returns {Promise<Array<CartType2>>}
  */
-// const createCartType2 = async (reqBody) => {
-//   const { email, productBy, set } = reqBody;
-//     // Check if a cart already exists with the same email and productBy
-//     const existingCart = await CartType2.findOne({ email, productBy });
-//     if (existingCart) {
-//       // Push new set data into the existing cart's set array
-//       existingCart.set.push(...set);
-//       await existingCart.save();
-//       await WishListType2.findOneAndDelete({productId: reqBody.productId, email})
-//       return  existingCart
-//     } else {
-//       // If no cart exists, create a new one
-//       const newCart = await CartType2.create(reqBody);
-//       await WishListType2.findOneAndDelete({productId: reqBody.productId, email})
-//       return  newCart;
-//     }
-// };
-
 
 const createCartType2 = async (reqBody) => {
   const { email, productBy, set } = reqBody;
@@ -78,10 +60,6 @@ const createCartType2 = async (reqBody) => {
  * @param {number} [options.page] - Current page (default = 1)
  * @returns {Promise<QueryResult>}
  */
-// const queryCartType2 = async (filter, options) => {
-//   const cartType2Items = await CartType2.paginate(filter, options);
-//   return cartType2Items;
-// };
 
 const queryCartType2 = async (filter, options) => {
   // Paginate the CartType2 items
@@ -346,60 +324,6 @@ const getCartByEmailToPlaceOrder = async (email, productBy) => {
 
   return result;
 };
-
-
-
-// const getCartByEmail = async (email) => {
-//   // Find all cart items by email and populate the product details (productId)
-//   const cartItems = await CartType2.find({ email }).populate('productId');
-//   if (!cartItems || cartItems.length === 0) {
-//     throw new ApiError(httpStatus.NOT_FOUND, 'No carts found for this email');
-//   }
-
-//   // Extract unique manufacturer emails from all cart products (based on productBy)
-//   const productByEmails = [...new Set(cartItems.map((item) => item.productBy))];
-
-//   // Fetch manufacturers based on the extracted emails
-//   const manufacturers = await Manufacture.find({ email: { $in: productByEmails } });
-//   const manufacturerMap = new Map(manufacturers.map((manufacturer) => [manufacturer.email, manufacturer]));
-
-//   // Group the cart items by the `productBy` field
-//   const groupedCart = cartItems.reduce((acc, item) => {
-//     const { productBy } = item;
-//     const manufacturer = manufacturerMap.get(productBy);
-
-//     if (!acc[productBy]) {
-//       acc[productBy] = {
-//         fullName: manufacturer ? manufacturer.fullName : 'Unknown Manufacturer',
-//         manufacturer: productBy, // Add manufacturer email
-//         manufacturerEmail: manufacturer ? manufacturer.email : 'Unknown', // Include manufacturer email
-//         products: [],
-//       };
-//     }
-
-//     acc[productBy].products.push({
-//       set: item.set.map((setItem) => ({
-//         designNumber: setItem.designNumber || "" ,
-//         colour: setItem.colour,
-//         colourImage: setItem.colourImage,
-//         colourName: setItem.colourName,
-//         size: setItem.size,
-//         quantity: setItem.quantity,
-//         price: setItem.price,
-//       })),
-//       _id: item._id,
-//       productId: {
-//         designNumber: item.productId.designNumber,
-//         brand: item.productId.brand,
-//         id: item.productId._id,
-//       },
-//     });
-
-//     return acc;
-//   }, {});
-
-//   return groupedCart;
-// };
 
 
 /**
