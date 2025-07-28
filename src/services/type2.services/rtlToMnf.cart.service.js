@@ -202,6 +202,7 @@ const getCartByEmailToPlaceOrder = async (email, productBy) => {
 
   const orderNumber = await genratedeChallNO(email);
 
+  
   const result = {
     productBy: manufacturer.email,
     email: retailer.email,
