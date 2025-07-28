@@ -105,7 +105,7 @@ const productSchema = mongoose.Schema(
     gheraInMTR: { type: String },
     finishType: { type: String },
 
-     dimenstions: {
+     dimensions: {
         height: {
           type: String,
         },
@@ -118,6 +118,7 @@ const productSchema = mongoose.Schema(
         weight: {
           type: String,
         }},
+
     // sizes: { type: [String], default: [] },
            hsnCode: {
              type: String,
