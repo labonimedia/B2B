@@ -138,7 +138,7 @@ const performaInvoiceSchema = new mongoose.Schema(
     },
 
     bankDetails: bankDetailsSchema,
-    //transportDetails: transportDetailsSchema,
+  
     manufacturerEmail: {
       type: String,
       required: true,

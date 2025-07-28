@@ -116,3 +116,5 @@ module.exports.ManufactureInventoryService = require('./type2.services/inventory
 module.exports.WholesalerInventoryService = require('./type2.services/inventory.wholesaler.service');
 module.exports.RetailerInventoryService = require('./type2.services/inventory.retailer.service');
 module.exports.ManufactureInventoryLogsService = require('./type2.services/manufacture.inventory.logs.service');
+//hsn gst 
+module.exports.gstHsnService = require('./type2.services/hsn.gst.data.service');

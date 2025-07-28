@@ -115,6 +115,8 @@ const ManufactureInventoryRoute =  require('./type2.routes/inventory.manufacture
 const WholesalerInventoryRoute =  require('./type2.routes/inventory.wholesaler.route');
 const RetailerInventoryRoute =  require('./type2.routes/inventory.retailer.route');
 const ManufactureInventoryLogsRoute =  require('./type2.routes/manufacture.inventory.logs.route');
+// hsn gst route
+const HsnGstRoute =  require('./type2.routes/hsn.gst.data.route');
 
 const router = express.Router();
 
@@ -570,7 +572,10 @@ const defaultRoutes = [
     path: '/manufacture-inventory-logs',
     route: ManufactureInventoryLogsRoute,
   },
-
+    {
+    path: '/hsn-gst',
+    route: HsnGstRoute,
+  },
   
 ];
 
