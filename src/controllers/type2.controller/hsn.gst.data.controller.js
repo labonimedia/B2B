@@ -14,7 +14,7 @@ const bulkUploadFile = catchAsync(async (req, res) => {
   if (req.file) {
     const csvFilePath = join(uploadsFolder, req.file.filename);
     const csvJsonArray = await csv().fromFile(csvFilePath);
-    const staff = await gstHsnService.bulkUpload(null, csvJsonArray, req.user);
+    const staff = await gstHsnService.bulkUpload(null, csvJsonArray);
     res.status(httpStatus.CREATED).send(staff);
   } else {
     throw new ApiError(httpStatus.NOT_FOUND, 'Missing file');
