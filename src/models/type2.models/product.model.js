@@ -123,6 +123,9 @@ const productSchema = mongoose.Schema(
            hsnCode: {
              type: String,
            },
+             description: {
+             type: String,
+           },
            hsnGst: {
              type: String,
            },
