@@ -129,3 +129,5 @@ module.exports.RetailerInventory = require('./type2.models/inventory.retailer.mo
 module.exports.ManufactureInventoryLogs = require('./type2.models/manufacture.inventory.logs.model');
 //credit Note model
 module.exports.ManufactureCreditNote = require('./type2.models/credit.note.manufacture.model');
+// hsn 
+module.exports.HsnGst =  require('./type2.models/hsn.gst.data.model');  
