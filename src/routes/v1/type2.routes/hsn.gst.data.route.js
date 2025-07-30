@@ -3,7 +3,7 @@ const multer = require('multer');
 const path = require('path');
 const { gstHsnController } = require('../../../controllers');
 
-const staticFolder = path.join(__dirname, '../../');
+const staticFolder = path.join(__dirname, '../../uploads');
 const uploadsFolder = path.join(staticFolder, 'uploads');
 
 const router = express.Router();
@@ -20,6 +20,11 @@ router
   .post(  
     upload.single('file'),
     gstHsnController.bulkUploadFile
+  );
+  router
+  .route('/arrayUpload')
+  .post(  
+    gstHsnController.arrayUpload
   );
 router
   .route('/:hsnCode')
