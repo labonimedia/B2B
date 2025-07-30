@@ -1,6 +1,14 @@
 const express = require('express');
-const router = express.Router();
+const multer = require('multer');
+const path = require('path');
 const { gstHsnController } = require('../../../controllers');
+
+const staticFolder = path.join(__dirname, '../../');
+const uploadsFolder = path.join(staticFolder, 'uploads');
+
+const router = express.Router();
+
+const upload = multer({ dest: uploadsFolder });
 
 router
   .route('/')
@@ -9,7 +17,8 @@ router
   );
 router
   .route('/bulkupload')
-  .post(
+  .post(  
+    upload.single('file'),
     gstHsnController.bulkUploadFile
   );
 router
