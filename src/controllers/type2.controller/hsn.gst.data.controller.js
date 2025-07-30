@@ -21,6 +21,17 @@ const bulkUploadFile = catchAsync(async (req, res) => {
   }
 });
 
+const arrayUpload = catchAsync(async (req, res) => {
+  const data = req.body;
+
+  if (!Array.isArray(data) || data.length === 0) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Request body must be a non-empty array');
+  }
+
+  const result = await gstHsnService.bulkUploadHsnGst(data);
+  res.status(httpStatus.CREATED).send({ message: 'Bulk upload completed', result });
+});
+
 /**
  * GET /api/hsn
  * Get list of GST HSN codes, optional filters & pagination
@@ -54,4 +65,5 @@ module.exports = {
   getHsnCodes,
   getHsnCodeDetails,
   bulkUploadFile,
+  arrayUpload,
 };
