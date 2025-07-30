@@ -1,15 +1,14 @@
 const path = require('path');
-const csv = require('csvtojson');
-const { join } = require('path');
-const httpStatus = require('http-status');
-const pick = require('../../utils/pick');
-const ApiError = require('../../utils/ApiError');
-const catchAsync = require('../../utils/catchAsync');
 const { gstHsnService } = require('../../services');
+const catchAsync = require('../../utils/catchAsync');
+const httpStatus = require('http-status');
+const ApiError = require('../../utils/ApiError');
+const csv = require('csvtojson');
 
-// const staticFolder = path.join(__dirname, '../');
-// const uploadsFolder = path.join(staticFolder, 'uploads');
-const uploadsFolder = path.join(__dirname, '../uploads');
+
+const staticFolder = path.join(__dirname, '../../uploads');
+const uploadsFolder = path.join(staticFolder, 'uploads');
+
 const bulkUploadFile = catchAsync(async (req, res) => {
   if (req.file) {
     const csvFilePath = join(uploadsFolder, req.file.filename);
