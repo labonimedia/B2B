@@ -29,7 +29,7 @@ const getHsnCodeByCode = async (hsnCode) => {
  * @param {Object} user - Logged-in user (optional, can log uploader info if needed)
  * @returns {Promise<Array<Object>>} - Created or updated HSN entries
  */
-const bulkUpload = async (hsnArray = [], csvFilePath = null, user) => {
+const bulkUpload = async (hsnArray = [], csvFilePath = null,) => {
   if (!hsnArray || !Array.isArray(hsnArray) || !hsnArray.length) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Missing or empty HSN data array');
   }
