@@ -65,28 +65,37 @@ const bulkUpload = async (hsnArray = [], csvFilePath = null,) => {
   return results;
 };
 
+// /**
+//  * Bulk upload or update HSN GST records
+//  * @param {Array<Object>} dataArray
+//  * @returns {Promise<Array<HsnGst>>}
+//  */
+// const bulkUploadHsnGst = async (dataArray) => {
+//   const results = await Promise.all(
+//     dataArray.map(async (item) => {
+//       const { hsnCode, gstRate, description } = item;
+
+//       const existing = await HsnGst.findOne({ hsnCode });
+
+//       if (existing) {
+//         existing.gstRate = gstRate;
+//         existing.description = description || existing.description;
+//         return existing.save();
+//       }
+
+//       return HsnGst.create({ hsnCode, gstRate, description });
+//     })
+//   );
+
+//   return results;
+// };
 /**
- * Bulk upload or update HSN GST records
+ * Bulk upload HSN GST records (allowing duplicates)
  * @param {Array<Object>} dataArray
  * @returns {Promise<Array<HsnGst>>}
  */
 const bulkUploadHsnGst = async (dataArray) => {
-  const results = await Promise.all(
-    dataArray.map(async (item) => {
-      const { hsnCode, gstRate, description } = item;
-
-      const existing = await HsnGst.findOne({ hsnCode });
-
-      if (existing) {
-        existing.gstRate = gstRate;
-        existing.description = description || existing.description;
-        return existing.save();
-      }
-
-      return HsnGst.create({ hsnCode, gstRate, description });
-    })
-  );
-
+  const results = await HsnGst.insertMany(dataArray, { ordered: false });
   return results;
 };
 module.exports = {
