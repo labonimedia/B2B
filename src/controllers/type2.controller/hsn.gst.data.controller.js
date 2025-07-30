@@ -39,7 +39,7 @@ const arrayUpload = catchAsync(async (req, res) => {
  */
 const getHsnCodes = catchAsync(async (req, res) => {
   // Example: Allow query params like `limit`, `page`, or `search`
-  const filter = pick(req.query, ['search']); // extend filters as needed
+  const filter = pick(req.query, ['hsnCode']); // extend filters as needed
   const options = pick(req.query, ['limit', 'page', 'sortBy']);
 
   const result = await gstHsnService.queryHsnCodes(filter, options);
