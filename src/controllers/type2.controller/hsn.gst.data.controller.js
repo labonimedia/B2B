@@ -7,9 +7,9 @@ const ApiError = require('../../utils/ApiError');
 const catchAsync = require('../../utils/catchAsync');
 const { gstHsnService } = require('../../services');
 
-const staticFolder = path.join(__dirname, '../');
-const uploadsFolder = path.join(staticFolder, 'uploads');
-
+// const staticFolder = path.join(__dirname, '../');
+// const uploadsFolder = path.join(staticFolder, 'uploads');
+const uploadsFolder = path.join(__dirname, '../uploads');
 const bulkUploadFile = catchAsync(async (req, res) => {
   if (req.file) {
     const csvFilePath = join(uploadsFolder, req.file.filename);
