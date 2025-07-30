@@ -1,4 +1,4 @@
-const { HSN } = require('minute-designs-hsn-code'); // Import HSN utility from package
+const { HsnGst } = require('../../models');
 
 /**
  * Query HSN codes, with optional search, sorting, and pagination
@@ -7,42 +7,7 @@ const { HSN } = require('minute-designs-hsn-code'); // Import HSN utility from p
  * @returns {Object} paginated results
  */
 const queryHsnCodes = async (filter, options) => {
-  let data = HSN.getHSNCodes(); // Get all HSN codes as array
-
-  if (filter.search) {
-    const searchLower = filter.search.toLowerCase();
-    data = data.filter(
-      (item) =>
-        item.hsn.toString().includes(searchLower) ||
-        (item.description && item.description.toLowerCase().includes(searchLower))
-    );
-  }
-
-  // Sorting by provided key (e.g., hsn or description)
-  if (options.sortBy) {
-    const [key, order] = options.sortBy.split(':');
-    data.sort((a, b) => {
-      if (a[key] === undefined || b[key] === undefined) return 0;
-      if (order === 'desc') return String(b[key]).localeCompare(String(a[key]));
-      return String(a[key]).localeCompare(String(b[key]));
-    });
-  }
-
-  // Pagination
-  const page = parseInt(options.page, 10) || 1;
-  const limit = parseInt(options.limit, 10) || 10;
-  const startIndex = (page - 1) * limit;
-  const endIndex = page * limit;
-
-  const paginatedData = data.slice(startIndex, endIndex);
-
-  return {
-    results: paginatedData,
-    page,
-    limit,
-    totalResults: data.length,
-    totalPages: Math.ceil(data.length / limit),
-  };
+  return HsnGst.paginate(filter, options);
 };
 
 /**
@@ -51,10 +16,57 @@ const queryHsnCodes = async (filter, options) => {
  * @returns {Object|null} HSN code details or null if not found
  */
 const getHsnCodeByCode = async (hsnCode) => {
-  return HSN.getHSNCodes().find((item) => item.hsn === hsnCode);
+/**
+ * Get a single M2R Performa Invoice by ID
+ */
+  return HsnGst.findOne({hsnCode:hsnCode});
+
+};
+/**
+ * Bulk Upload HSN-GST Records from CSV
+ * @param {Array<Object>} hsnArray - Parsed CSV data as array of objects
+ * @param {String|null} csvFilePath - Not used anymore
+ * @param {Object} user - Logged-in user (optional, can log uploader info if needed)
+ * @returns {Promise<Array<Object>>} - Created or updated HSN entries
+ */
+const bulkUpload = async (hsnArray = [], csvFilePath = null, user) => {
+  if (!hsnArray || !Array.isArray(hsnArray) || !hsnArray.length) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Missing or empty HSN data array');
+  }
+
+  const results = await Promise.all(
+    hsnArray.map(async (record) => {
+      const { hsnCode, gst, description } = record;
+
+      // Basic validation
+      if (!hsnCode || !gst) {
+        throw new ApiError(httpStatus.BAD_REQUEST, 'HSN Code and GST are required fields');
+      }
+
+      // Check if the HSN code already exists
+      const existing = await HsnGst.findOne({ hsnCode });
+
+      if (existing) {
+        // Update existing record if needed
+        existing.gst = gst;
+        if (description) existing.description = description;
+        return existing.save();
+      }
+
+      // Create new record
+      return HsnGst.create({
+        hsnCode,
+        gst,
+        description: description || null,
+      });
+    })
+  );
+
+  return results;
 };
 
 module.exports = {
   queryHsnCodes,
   getHsnCodeByCode,
+  bulkUpload,
 };

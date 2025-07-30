@@ -1,6 +1,25 @@
-const catchAsync = require('../../utils/catchAsync');
+const path = require('path');
+const csv = require('csvtojson');
+const { join } = require('path');
+const httpStatus = require('http-status');
 const pick = require('../../utils/pick');
+const ApiError = require('../../utils/ApiError');
+const catchAsync = require('../../utils/catchAsync');
 const { gstHsnService } = require('../../services');
+
+const staticFolder = path.join(__dirname, '../');
+const uploadsFolder = path.join(staticFolder, 'uploads');
+
+const bulkUploadFile = catchAsync(async (req, res) => {
+  if (req.file) {
+    const csvFilePath = join(uploadsFolder, req.file.filename);
+    const csvJsonArray = await csv().fromFile(csvFilePath);
+    const staff = await gstHsnService.bulkUpload(null, csvJsonArray, req.user);
+    res.status(httpStatus.CREATED).send(staff);
+  } else {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Missing file');
+  }
+});
 
 /**
  * GET /api/hsn
@@ -19,18 +38,20 @@ const getHsnCodes = catchAsync(async (req, res) => {
  * GET /api/hsn/:hsnCode
  * Get details of specific HSN code
  */
+
+/**
+ * Get a single M2R Invoice by ID
+ */
 const getHsnCodeDetails = catchAsync(async (req, res) => {
-  const hsnCode = req.params.hsnCode;
-  const hsnDetails = await gstHsnService.getHsnCodeByCode(hsnCode);
-
+    const hsnDetails = await gstHsnService.getHsnCodeByCode(req.params.hsnCode);
   if (!hsnDetails) {
-    return res.status(404).json({ message: 'HSN code not found' });
+    res.status(httpStatus.NOT_FOUND).send({ message:'HSN code not found' });
+    return;
   }
-
-   res.status(httpStatus.CREATED).send(hsnDetails);
+  res.send(hsnDetails);
 });
-
 module.exports = {
   getHsnCodes,
   getHsnCodeDetails,
+  bulkUploadFile,
 };

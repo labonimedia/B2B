@@ -7,7 +7,11 @@ router
   .get(
     gstHsnController.getHsnCodes
   );
-
+router
+  .route('/bulkupload')
+  .post(
+    gstHsnController.bulkUploadFile
+  );
 router
   .route('/:hsnCode')
   .get(
