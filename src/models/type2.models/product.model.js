@@ -127,7 +127,7 @@ const productSchema = mongoose.Schema(
              type: String,
            },
            hsnGst: {
-             type: String,
+             type: Number,
            },
     sizes: [
       {
