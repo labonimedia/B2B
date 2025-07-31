@@ -197,6 +197,7 @@ const getCartByEmailToPlaceOrder = async (email, productBy) => {
       subCategory: setItem.subCategory,
       hsnCode: setItem.hsnCode,
       hsnGst: setItem.hsnGst,
+        hsnDescription: setItem.hsnDescription,
     })),
   }));
 
