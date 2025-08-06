@@ -103,15 +103,15 @@ const PORetailerToManufacturerSchema = new mongoose.Schema(
         gender: String,
         clothing: String,
         subCategory: String,
-            hsnCode: {
+        hsnCode: {
           type: String,
         },
-      hsnGst: {
-             type: Number,
-           },
-                hsnDescription: {
-             type: String,
-           },
+        hsnGst: {
+          type: Number,
+        },
+        hsnDescription: {
+          type: String,
+        },
       },
     ],
     //transportDetails: transportDetailsSchema,
