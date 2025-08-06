@@ -120,3 +120,5 @@ module.exports.ManufactureInventoryLogsService = require('./type2.services/manuf
 module.exports.gstHsnService = require('./type2.services/hsn.gst.data.service');
 //return reason
 module.exports.returnReasonService = require('./type2.services/return.reason.master.service');
+// credit Note
+module.exports.mtoRCreditNoteService = require('./type2.services/credit.note.manufacture.to.retailer.service');
