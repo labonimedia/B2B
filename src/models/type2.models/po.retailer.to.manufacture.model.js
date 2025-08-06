@@ -3,7 +3,7 @@ const { paginate, toJSON } = require('../plugins');
 
 // // Embedded schema for Transport Details
 const transportDetailsSchema = new mongoose.Schema({
-   transportType: {
+  transportType: {
     type: String,
     trim: true,
   },
@@ -29,7 +29,7 @@ const transportDetailsSchema = new mongoose.Schema({
   },
   modeOfTransport: {
     type: String,
-    enum: ['road', 'railway', 'air', 'sea', 'other'],
+    enum: ['road', 'railway', 'air', 'sea', 'other',  'self'],
   },
   dispatchDate: {
     type: Date,
@@ -58,7 +58,7 @@ const transportDetailsSchema = new mongoose.Schema({
     type: String,
     trim: true,
   },
-    note: {
+  note: {
     type: String,
     trim: true,
   },
