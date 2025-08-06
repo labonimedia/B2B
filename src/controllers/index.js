@@ -116,3 +116,5 @@ module.exports.ManufactureInventoryLogsController = require('./type2.controller/
 module.exports.gstHsnController = require('./type2.controller/hsn.gst.data.controller');
 // reason return
 module.exports.returnReasonController = require('./type2.controller/return.reason.master.controller');
+// credit Note
+module.exports.mtoRCreditNoteController = require('./type2.controller/credit.note.manufacture.to.retailer.controller');
