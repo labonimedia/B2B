@@ -87,6 +87,6 @@ const creditNoteSchema = new mongoose.Schema(
 creditNoteSchema.plugin(toJSON);
 creditNoteSchema.plugin(paginate);
 
-const ManufactureCreditNote = mongoose.model('ManufactureCreditNote', creditNoteSchema);
+const MtoRCreditNote = mongoose.model('MtoRCreditNote', creditNoteSchema);
 
-module.exports = ManufactureCreditNote;
+module.exports = MtoRCreditNote;

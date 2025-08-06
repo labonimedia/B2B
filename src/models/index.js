@@ -128,7 +128,7 @@ module.exports.WholesalerInventory = require('./type2.models/inventory.wholesale
 module.exports.RetailerInventory = require('./type2.models/inventory.retailer.model');
 module.exports.ManufactureInventoryLogs = require('./type2.models/manufacture.inventory.logs.model');
 //credit Note model
-module.exports.ManufactureCreditNote = require('./type2.models/credit.note.manufacture.model');
+module.exports.MtoRCreditNote = require('./type2.models/credit.note.manufacture.to.retailer.model');
 // hsn 
 module.exports.HsnGst =  require('./type2.models/hsn.gst.data.model');  
 // return reason
