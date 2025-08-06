@@ -56,15 +56,15 @@ const rtlToMnfCartSchema = new mongoose.Schema(
         subCategory: {
           type: String,
         },
-          hsnCode: {
+        hsnCode: {
           type: String,
         },
-      hsnGst: {
-             type: Number,
-           },
-                hsnDescription: {
-             type: String,
-           },
+        hsnGst: {
+          type: Number,
+        },
+        hsnDescription: {
+          type: String,
+        },
       },
     ],
     cartAddedDate: {
