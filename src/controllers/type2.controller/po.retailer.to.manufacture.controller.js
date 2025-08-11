@@ -9,7 +9,7 @@ const createRetailerPurchaseOrderType2 = catchAsync(async (req, res) => {
 });
 
 const getAllPoRetailerToManufacture = catchAsync(async (req, res) => {
-    const filter = pick(req.query, ['productBy', 'manufacturerEmail', 'email']);
+    const filter = pick(req.query, ['productBy', 'manufacturerEmail', 'email', 'statusAll']);
     const options = pick(req.query, ['sortBy', 'limit', 'page']);
     const RetailerPurchaseOrderType2Items = await poRetailerToManufactureService.getAllPoRetailerToManufacture(
       filter,
