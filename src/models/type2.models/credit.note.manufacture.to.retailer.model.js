@@ -33,21 +33,47 @@ const creditNoteSchema = new mongoose.Schema(
         },
 
         set: [
-            {
-                designNumber: String,
-                hsnCode: {
-                    type: String,
-                },
-                hsnGst: {
-                    type: String,
-                },
-                size: String,
-                color: String,
-                quantity: Number,
-                price: Number,
-                totalAmount: Number, // price * quantity
-                reason: String,
-            }
+            // {
+            //     designNumber: String,
+            //     hsnCode: {
+            //         type: String,
+            //     },
+            //     hsnGst: {
+            //         type: String,
+            //     },
+            //     hsnDescription: {
+            //         type: String,
+            //     },
+            //     size: String,
+            //     color: String,
+            //     quantity: Number,
+            //     price: Number,
+            //     totalAmount: Number, // price * quantity
+            //     reason: String,
+            // }
+             {
+        productBy: String, // Manufacturer email
+        designNumber: String,
+        colour: String,
+        colourImage: String,
+        colourName: String,
+        size: String,
+        returnQuantity: Number, // Requested by retailer
+        price: String,
+        productType: String,
+        gender: String,
+        clothing: String,
+        subCategory: String,
+        hsnCode: {
+          type: String,
+        },
+        hsnGst: {
+          type: Number,
+        },
+        hsnDescription: {
+          type: String,
+        },
+      },
         ],
 
         totalCreditAmount: {
