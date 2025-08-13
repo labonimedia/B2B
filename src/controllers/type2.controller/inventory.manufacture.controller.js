@@ -26,6 +26,20 @@ const createInventory = catchAsync(async (req, res) => {
   res.status(httpStatus.CREATED).send(result);
 });
 
+const bulkUpdateInventory = catchAsync(async (req, res) => {
+  const updates = req.body.updates;
+
+  if (!Array.isArray(updates) || updates.length === 0) {
+    return res.status(400).json({ message: 'Updates array is required' });
+  }
+
+  const result = await ManufactureInventoryService.bulkUpdateInventory(updates);
+  res.status(200).json({
+    message: 'Inventory updated successfully',
+    data: result,
+  });
+});
+
 // const getInventories = catchAsync(async (req, res) => {
 //   const filter = pick(req.query, ['userEmail', 'designNumber', 'colour', 'size', 'colourName']);
 //   const options = pick(req.query, ['sortBy', 'limit', 'page']);
@@ -106,4 +120,5 @@ module.exports = {
   updateInventory,
   deleteInventory,
   getInventoriesByDesignNumbers,
+  bulkUpdateInventory,
 };

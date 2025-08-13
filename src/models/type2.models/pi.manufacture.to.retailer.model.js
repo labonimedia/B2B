@@ -3,79 +3,83 @@ const { paginate, toJSON } = require('../plugins');
 
 // Embedded schema for Transport Details
 
-// const transportDetailsSchema = new mongoose.Schema({
-//    transportType: {
-//     type: String,
-//     trim: true,
-//   },
-//   transporterCompanyName: {
-//     type: String,
-//     trim: true,
-//   },
-//   vehicleNumber: {
-//     type: String,
-//     trim: true,
-//   },
-//   contactNumber: {
-//     type: Number,
-//     trim: true,
-//   },
-//   altContactNumber: {
-//     type: Number,
-//     trim: true,
-//   },
-//   trackingId: {
-//     type: String,
-//     trim: true,
-//   },
-//   modeOfTransport: {
-//     type: String,
-//     enum: ['road', 'railway', 'air', 'sea', 'other'],
-//   },
-//   dispatchDate: {
-//     type: Date,
-//     required: true,
-//   },
-//   expectedDeliveryDate: {
-//     type: Date,
-//   },
-//   deliveryDate: {
-//     type: Date,
-//   },
-//   deliveryAddress: {
-//     type: String,
-//     required: true,
-//   },
-//   remarks: {
-//     type: String,
-//     trim: true,
-//   },
-//   gstNumber: {
-//     type: String,
-//     trim: true,
-//     required: true,
-//   },
-//   contactPersonName: {
-//     type: String,
-//     trim: true,
-//   },
-// });
+const transportDetailsSchema = new mongoose.Schema({
+  transportType: {
+    type: String,
+    trim: true,
+  },
+  transporterCompanyName: {
+    type: String,
+    trim: true,
+  },
+  vehicleNumber: {
+    type: String,
+    trim: true,
+  },
+  contactNumber: {
+    type: Number,
+    trim: true,
+  },
+  altContactNumber: {
+    type: Number,
+    trim: true,
+  },
+  trackingId: {
+    type: String,
+    trim: true,
+  },
+  modeOfTransport: {
+    type: String,
+    enum: ['road', 'railway', 'air', 'sea', 'other', 'self'],
+  },
+  dispatchDate: {
+    type: Date,
+    // required: true,
+  },
+  expectedDeliveryDate: {
+    type: Date,
+  },
+  deliveryDate: {
+    type: Date,
+  },
+  deliveryAddress: {
+    type: String,
+    // required: true,
+  },
+  remarks: {
+    type: String,
+    trim: true,
+  },
+  gstNumber: {
+    type: String,
+    trim: true,
+    // required: true,
+  },
+  contactPersonName: {
+    type: String,
+    trim: true,
+  },
+  note: {
+    type: String,
+    trim: true,
+  },
+});
 
 // Embedded schema for Bank Details
 const bankDetailsSchema = new mongoose.Schema({
   accountHolderName: {
     type: String,
-    required: true,
+   // required: true,
     trim: true,
   },
   accountNumber: {
     type: String,
-    required: true,
+    //required: true,
     trim: true,
   },
   bankName: {
     type: String,
-    required: true,
+   // required: true,
     trim: true,
   },
   branchName: {
@@ -84,12 +88,12 @@ const bankDetailsSchema = new mongoose.Schema({
   },
   ifscCode: {
     type: String,
-    required: true,
+   // required: true,
     trim: true,
   },
-    swiftCode: {
+  swiftCode: {
     type: String,
-    required: true,
+    //required: true,
     trim: true,
   },
   upiId: {
@@ -110,7 +114,7 @@ const performaInvoiceSchema = new mongoose.Schema(
       ref: 'PORetailerToManufacturer',
       required: true,
     },
-       poNumber: {
+    poNumber: {
       type: Number,
       required: true,
     },
@@ -138,7 +142,7 @@ const performaInvoiceSchema = new mongoose.Schema(
     },
 
     bankDetails: bankDetailsSchema,
-  
+
     manufacturerEmail: {
       type: String,
       required: true,
@@ -160,10 +164,13 @@ const performaInvoiceSchema = new mongoose.Schema(
         gender: String,
         clothing: String,
         subCategory: String,
-            hsnCode: {
+        hsnCode: {
           type: String,
         },
         hsnGst: {
+          type: Number,
+        },
+        hsnDescription: {
           type: String,
         },
         status: {
@@ -173,7 +180,7 @@ const performaInvoiceSchema = new mongoose.Schema(
         },
       },
     ],
-     manufacturer: {
+    manufacturer: {
       email: String,
       fullName: String,
       companyName: String,
@@ -199,6 +206,7 @@ const performaInvoiceSchema = new mongoose.Schema(
       category: String,
     },
     totalQuantity: Number,
+    transportDetails: transportDetailsSchema,
     totalAmount: Number,
     discountApplied: Number,
     finalAmount: Number,

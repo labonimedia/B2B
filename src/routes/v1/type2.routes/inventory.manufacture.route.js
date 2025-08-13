@@ -22,5 +22,6 @@ router
     
 router.post('/by-designs', ManufactureInventoryController.getInventoriesByDesignNumbers);
 
+router.post('/update-bulk', ManufactureInventoryController.bulkUpdateInventory);
 
 module.exports = router;
