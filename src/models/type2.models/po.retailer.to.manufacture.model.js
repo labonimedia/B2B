@@ -116,6 +116,9 @@ const PORetailerToManufacturerSchema = new mongoose.Schema(
         hsnDescription: {
           type: String,
         },
+               brandName: {
+          type: String,
+        },
       },
     ],
     transportDetails: transportDetailsSchema,
