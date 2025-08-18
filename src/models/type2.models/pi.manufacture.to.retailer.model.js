@@ -178,6 +178,9 @@ const performaInvoiceSchema = new mongoose.Schema(
           enum: ['pending', 'dispatched', 'delivered', 'partial'],
           default: 'pending',
         },
+               brandName: {
+          type: String,
+        },
       },
     ],
     manufacturer: {
