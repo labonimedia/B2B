@@ -196,6 +196,7 @@ const getCartByEmailToPlaceOrder = async (email, productBy) => {
       clothing: setItem.clothing,
       subCategory: setItem.subCategory,
       hsnCode: setItem.hsnCode,
+      brandName: setItem.brandName,
       hsnGst: setItem.hsnGst,
         hsnDescription: setItem.hsnDescription,
     })),
