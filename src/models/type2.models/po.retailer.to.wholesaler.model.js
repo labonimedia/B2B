@@ -70,6 +70,9 @@ const PORetailerToWholesalerSchema = new mongoose.Schema(
         colourImage: String,
         colourName: String,
         size: String,
+               brandName: {
+          type: String,
+        },
         quantity: Number, // Requested by retailer
         availableQuantity:{
           type: Number,
@@ -94,6 +97,9 @@ const PORetailerToWholesalerSchema = new mongoose.Schema(
           type: String,
         },
         hsnGst: {
+          type: String,
+        },
+           hsnDescription: {
           type: String,
         },
       },
