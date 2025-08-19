@@ -110,8 +110,69 @@ const bulkInsertInventory = async (inventoryArray) => {
 const createInventory = async (data) => {
   return ManufactureInventory.create(data);
 };
+
+// /**
+//  * Bulk update inventory quantities
+//  * @param {Array} updates - Array of update objects
+//  * @returns {Promise<Array>}
+//  */
+// const bulkUpdateInventory = async (updates) => {
+//   const results = [];
+
+//   for (const update of updates) {
+//     const {
+//       userEmail,
+//       productId,
+//       designNumber,
+//       colour,
+//       brandName,
+//       colourName,
+//       brandSize,
+//       standardSize,
+//       quantity,
+//       status,
+//       lastUpdatedBy
+//     } = update;
+
+//     // Find the inventory record
+//     const inventoryItem = await ManufactureInventory.findOne({
+//       userEmail,
+//       productId,
+//       designNumber,
+//       colour,
+//       brandName,
+//       colourName,
+//       brandSize,
+//       standardSize,
+//     });
+
+//     if (!inventoryItem) {
+//       throw new Error(`Inventory record not found for design: ${designNumber}`);
+//     }
+
+//     // Update quantity based on status
+//     if (status === 'add') {
+//       inventoryItem.quantity += quantity;
+//     } else if (status === 'remove') {
+//       inventoryItem.quantity -= quantity;
+//       if (inventoryItem.quantity < 0) inventoryItem.quantity = 0; // Prevent negative stock
+//     } else {
+//       throw new Error(`Invalid status for design: ${designNumber}`);
+//     }
+
+//     // Update metadata
+//     inventoryItem.lastUpdatedBy = lastUpdatedBy || 'system';
+//     inventoryItem.lastUpdatedAt = new Date();
+
+//     await inventoryItem.save();
+//     results.push(inventoryItem);
+//   }
+
+//   return results;
+// };
+
 /**
- * Bulk update inventory quantities
+ * Bulk update inventory quantities by _id
  * @param {Array} updates - Array of update objects
  * @returns {Promise<Array>}
  */
@@ -120,33 +181,17 @@ const bulkUpdateInventory = async (updates) => {
 
   for (const update of updates) {
     const {
-      userEmail,
-      productId,
-      designNumber,
-      colour,
-      brandName,
-      colourName,
-      brandSize,
-      standardSize,
+      _id, // 👈 required for updating correctly
       quantity,
       status,
-      lastUpdatedBy
+      lastUpdatedBy,
     } = update;
 
-    // Find the inventory record
-    const inventoryItem = await ManufactureInventory.findOne({
-      userEmail,
-      productId,
-      designNumber,
-      colour,
-      brandName,
-      colourName,
-      brandSize,
-      standardSize,
-    });
+    // Find the inventory record by _id
+    const inventoryItem = await ManufactureInventory.findById(_id);
 
     if (!inventoryItem) {
-      throw new Error(`Inventory record not found for design: ${designNumber}`);
+      throw new Error(`Inventory record not found for id: ${_id}`);
     }
 
     // Update quantity based on status
@@ -156,7 +201,7 @@ const bulkUpdateInventory = async (updates) => {
       inventoryItem.quantity -= quantity;
       if (inventoryItem.quantity < 0) inventoryItem.quantity = 0; // Prevent negative stock
     } else {
-      throw new Error(`Invalid status for design: ${designNumber}`);
+      throw new Error(`Invalid status for id: ${_id}`);
     }
 
     // Update metadata
@@ -169,7 +214,6 @@ const bulkUpdateInventory = async (updates) => {
 
   return results;
 };
-
 
 
 const queryInventories = async (filter, options, search) => {
