@@ -16,6 +16,12 @@ router
     );
 
 router
+  .route('/make-to-order')
+  .post(
+    auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
+    poRetailerToManufactureController.makeToOrderPO
+  )
+router
   .route('/retailers-po-list-view/manufacture/:manufacturerEmail')
   .get(
     auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),

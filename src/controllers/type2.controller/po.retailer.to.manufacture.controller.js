@@ -7,7 +7,10 @@ const createRetailerPurchaseOrderType2 = catchAsync(async (req, res) => {
   const createdPO = await poRetailerToManufactureService.createPurchaseOrderRetailerType2(req.body);
   res.status(httpStatus.CREATED).send(createdPO);
 });
-
+const makeToOrderPO = catchAsync(async (req, res) => {
+  const createdPO = await poRetailerToManufactureService.makeToOrderPO(req.body);
+  res.status(httpStatus.CREATED).send(createdPO);
+});
 const getAllPoRetailerToManufacture = catchAsync(async (req, res) => {
     const filter = pick(req.query, ['productBy', 'manufacturerEmail', 'email', 'statusAll']);
     const options = pick(req.query, ['sortBy', 'limit', 'page']);
@@ -59,4 +62,5 @@ module.exports = {
   deleteSinglePoRetailerToManufacture,
   updateSinglePoRetailerToManufacture,
   getSinglePoRetailerToManufacture,
+  makeToOrderPO,
 };

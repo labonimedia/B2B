@@ -50,6 +50,7 @@ const ApiError = require('../../utils/ApiError');
 
 //   return result;
 // };
+
 const findByDesignNumbers = async (designNumbers) => {
   const inventories = await ManufactureInventory.find({
     designNumber: { $in: designNumbers },
@@ -57,6 +58,7 @@ const findByDesignNumbers = async (designNumbers) => {
 
   return inventories;
 };
+
 const bulkInsertInventory = async (inventoryArray) => {
   if (!Array.isArray(inventoryArray) || inventoryArray.length === 0) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Request body must be a non-empty array');

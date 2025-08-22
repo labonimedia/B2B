@@ -1,6 +1,9 @@
 const httpStatus = require('http-status');
 const { PORetailerToManufacturer, RtlToMnfCart } = require('../../models');
 const ApiError = require('../../utils/ApiError');
+
+
+
 /**
  * Get PORetailerToManufacture by id
  * @param {ObjectId} id
@@ -9,7 +12,35 @@ const ApiError = require('../../utils/ApiError');
 const getSinglePoRetailerToManufacture = async (id) => {
     return PORetailerToManufacturer.findById(id);
   };
+const genratedeChallNO = async (email) => {
+  const lastPO = await PORetailerToManufacturer.findOne({ email }).sort({ poNumber: -1 }).lean();
+  return (nextdeliveryChallanNumber = lastPO ? lastPO.poNumber + 1 : 1);
+};
 
+  /**
+ * Create Retailer PO and remove matching cart entry
+ */
+const makeToOrderPO = async (reqBody) => {
+  if (!reqBody.email) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Retailer email is required to generate PO Number');
+  }
+
+  // Generate new PO number for this retailer
+  const nextPoNumber = await genratedeChallNO(reqBody.email);
+
+  // Attach generated PO number to the new PO
+  reqBody.poNumber = nextPoNumber;
+
+  // Create new PO
+  const purchaseOrder = await PORetailerToManufacturer.create(reqBody);
+
+  // OPTIONAL: remove related cart entries if cartId exists
+  if (reqBody.cartId) {
+    await RtlToMnfCart.findByIdAndDelete(reqBody.cartId);
+  }
+
+  return purchaseOrder;
+};
 /**
  * Create Retailer PO and remove matching cart entry
  */
@@ -120,4 +151,5 @@ module.exports = {
   updateSinglePoRetailerToManufacture,
   deleteSinglePoRetailerToManufacture,
   getSinglePoRetailerToManufacture,
+  makeToOrderPO,
 };

@@ -191,7 +191,8 @@ const PORetailerToManufacturerSchema = new mongoose.Schema(
       productDiscount: String,
       category: String,
     },
-
+    previousPoNumber: String,
+    previousPoId: String,
     cartId: String,
   },
   {
