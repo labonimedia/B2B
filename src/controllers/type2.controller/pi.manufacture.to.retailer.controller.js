@@ -66,6 +66,12 @@ const deleteInvoice = catchAsync(async (req, res) => {
   res.status(httpStatus.NO_CONTENT).send();
 });
 
+const getPerformaInvoiceByPoId = catchAsync(async (req, res) => {
+  const { poId } = req.params;
+  const invoice = await M2RPerformaInvoiceService.getPerformaInvoiceByPoId(poId);
+  res.status(httpStatus.OK).send(invoice);
+});
+
 module.exports = {
   createInvoice,
   getInvoiceById,
@@ -74,4 +80,5 @@ module.exports = {
   updateInvoice,
   updateDeliveryItems,
   deleteInvoice,
+  getPerformaInvoiceByPoId,
 };

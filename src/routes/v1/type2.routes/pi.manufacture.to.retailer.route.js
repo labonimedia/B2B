@@ -43,5 +43,10 @@ router
     auth('manufacture'),
     m2rPerformaInvoiceController.getInvoicesByManufacturer
   );
-
+  
+router.get(
+  '/by-po/:poId',
+  auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
+  m2rPerformaInvoiceController.getPerformaInvoiceByPoId
+);
 module.exports = router;
