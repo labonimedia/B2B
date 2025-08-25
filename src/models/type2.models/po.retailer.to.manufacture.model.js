@@ -6,10 +6,15 @@ const { paginate, toJSON } = require('../plugins');
 const bankDetailsSchema = new mongoose.Schema({
   accountHolderName: {
     type: String,
-   // required: true,
+   // required: true,w
     trim: true,
   },
   accountNumber: {
+    type: String,
+    //required: true,
+    trim: true,
+  },
+    accountType: {
     type: String,
     //required: true,
     trim: true,
