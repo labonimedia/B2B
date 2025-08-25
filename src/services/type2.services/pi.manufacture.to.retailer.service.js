@@ -3,6 +3,19 @@ const { M2RPerformaInvoice } = require('../../models');
 const ApiError = require('../../utils/ApiError');
 
 /**
+ * Get Performa Invoice by PO Id
+ * @param {ObjectId} poId
+ * @returns {Promise<M2RPerformaInvoice>}
+ */
+const getPerformaInvoiceByPoId = async (poId) => {
+  const invoice = await M2RPerformaInvoice.findOne({ poId });
+  if (!invoice) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Performa Invoice not found for this PO');
+  }
+  return invoice;
+};
+
+/**
  * Get a single M2R Performa Invoice by ID
  */
 const getSingleM2RInvoiceById = async (id) => {
@@ -117,4 +130,5 @@ module.exports = {
   updateM2RInvoiceById,
   updateM2RInvoiceDeliveryItems,
   deleteM2RInvoiceById,
+  getPerformaInvoiceByPoId,
 };
