@@ -1,7 +1,48 @@
 const mongoose = require('mongoose');
 const { paginate, toJSON } = require('../plugins');
 
-// // Embedded schema for Transport Details
+// // Embe
+// Embedded schema for Bank Details
+const bankDetailsSchema = new mongoose.Schema({
+  accountHolderName: {
+    type: String,
+   // required: true,
+    trim: true,
+  },
+  accountNumber: {
+    type: String,
+    //required: true,
+    trim: true,
+  },
+  bankName: {
+    type: String,
+   // required: true,
+    trim: true,
+  },
+  branchName: {
+    type: String,
+    trim: true,
+  },
+  ifscCode: {
+    type: String,
+   // required: true,
+    trim: true,
+  },
+  swiftCode: {
+    type: String,
+    //required: true,
+    trim: true,
+  },
+  upiId: {
+    type: String,
+    trim: true,
+  },
+  bankAddress: {
+    type: String,
+    trim: true,
+  },
+});
+
 const transportDetailsSchema = new mongoose.Schema({
   transportType: {
     type: String,
@@ -116,7 +157,7 @@ const PORetailerToManufacturerSchema = new mongoose.Schema(
         hsnDescription: {
           type: String,
         },
-               brandName: {
+        brandName: {
           type: String,
         },
       },
@@ -194,6 +235,7 @@ const PORetailerToManufacturerSchema = new mongoose.Schema(
     previousPoNumber: String,
     previousPoId: String,
     cartId: String,
+     bankDetails: bankDetailsSchema,
   },
   {
     timestamps: true,
