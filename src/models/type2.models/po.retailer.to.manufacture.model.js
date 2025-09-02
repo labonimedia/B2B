@@ -178,6 +178,7 @@ const PORetailerToManufacturerSchema = new mongoose.Schema(
         'm_partial_delivery',
         'r_order_confirmed',
         'r_order_cancelled',
+        'make_to_order',
         'shipped',
         'delivered'
       ],
