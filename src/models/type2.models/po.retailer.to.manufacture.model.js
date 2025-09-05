@@ -120,7 +120,11 @@ const PORetailerToManufacturerSchema = new mongoose.Schema(
         colourImage: String,
         colourName: String,
         size: String,
-        quantity: Number, // Requested by retailer
+        quantity: Number,
+        expectedQty: {
+          type: Number,
+      //    default: 0,
+        }, // Requested by retailer
         availableQuantity: {
           type: Number,
           default: 0,
@@ -144,7 +148,8 @@ const PORetailerToManufacturerSchema = new mongoose.Schema(
             'r_confirmed',         // Retailer confirmed
             'r_cancelled',         // Retailer cancelled
             'shipped',             // Fully shipped
-            'delivered'            // Fully delivered
+            'delivered'  ,
+            'make_to_order',          // Fully delivered
           ],
           default: 'pending',
         },
