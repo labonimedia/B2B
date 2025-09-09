@@ -234,7 +234,8 @@ const bulkUpdateInventory = async (updates) => {
       lastUpdatedBy,
       designNumber,
       colourName,
-      standardSize, // 👈 use this instead of 'size' since your schema has standardSize
+      standardSize,
+      userEmail, // 👈 use this instead of 'size' since your schema has standardSize
     } = update;
 
     let inventoryItem = null;
@@ -242,19 +243,20 @@ const bulkUpdateInventory = async (updates) => {
     if (_id) {
       // Find by _id if provided
       inventoryItem = await ManufactureInventory.findById(_id);
-    } else if (designNumber && colourName && standardSize) {
+    } else if (designNumber && colourName && standardSize && userEmail) {
       // Fallback: find by unique combination
       inventoryItem = await ManufactureInventory.findOne({
         designNumber,
         colourName,
         standardSize,
+        userEmail,
       });
     }
 
     if (!inventoryItem) {
       throw new Error(
         `Inventory record not found for update: ${
-          _id || `${designNumber}-${colourName}-${standardSize}`
+          _id || `${designNumber}-${colourName}-${standardSize}-${userEmail}`
         }`
       );
     }
