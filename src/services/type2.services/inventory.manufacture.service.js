@@ -178,22 +178,85 @@ const createInventory = async (data) => {
  * @param {Array} updates - Array of update objects
  * @returns {Promise<Array>}
  */
+
+// const bulkUpdateInventory = async (updates) => {
+//   const results = [];
+
+//   for (const update of updates) {
+//     const {
+//       _id, // 👈 required for updating correctly
+//       quantity,
+//       status,
+//       lastUpdatedBy,
+//     } = update;
+
+//     // Find the inventory record by _id
+//     const inventoryItem = await ManufactureInventory.findById(_id);
+
+//     if (!inventoryItem) {
+//       throw new Error(`Inventory record not found for id: ${_id}`);
+//     }
+
+//     // Update quantity based on status
+//     if (status === 'add') {
+//       inventoryItem.quantity += quantity;
+//     } else if (status === 'remove') {
+//       inventoryItem.quantity -= quantity;
+//       if (inventoryItem.quantity < 0) inventoryItem.quantity = 0; // Prevent negative stock
+//     } else {
+//       throw new Error(`Invalid status for id: ${_id}`);
+//     }
+
+//     // Update metadata
+//     inventoryItem.lastUpdatedBy = lastUpdatedBy || 'system';
+//     inventoryItem.lastUpdatedAt = new Date();
+
+//     await inventoryItem.save();
+//     results.push(inventoryItem);
+//   }
+
+//   return results;
+// };
+
+/**
+ * Bulk update inventory quantities by _id OR by designNumber + colourName + standardSize
+ * @param {Array} updates - Array of update objects
+ * @returns {Promise<Array>}
+ */
 const bulkUpdateInventory = async (updates) => {
   const results = [];
 
   for (const update of updates) {
     const {
-      _id, // 👈 required for updating correctly
+      _id,
       quantity,
       status,
       lastUpdatedBy,
+      designNumber,
+      colourName,
+      standardSize, // 👈 use this instead of 'size' since your schema has standardSize
     } = update;
 
-    // Find the inventory record by _id
-    const inventoryItem = await ManufactureInventory.findById(_id);
+    let inventoryItem = null;
+
+    if (_id) {
+      // Find by _id if provided
+      inventoryItem = await ManufactureInventory.findById(_id);
+    } else if (designNumber && colourName && standardSize) {
+      // Fallback: find by unique combination
+      inventoryItem = await ManufactureInventory.findOne({
+        designNumber,
+        colourName,
+        standardSize,
+      });
+    }
 
     if (!inventoryItem) {
-      throw new Error(`Inventory record not found for id: ${_id}`);
+      throw new Error(
+        `Inventory record not found for update: ${
+          _id || `${designNumber}-${colourName}-${standardSize}`
+        }`
+      );
     }
 
     // Update quantity based on status
@@ -203,7 +266,9 @@ const bulkUpdateInventory = async (updates) => {
       inventoryItem.quantity -= quantity;
       if (inventoryItem.quantity < 0) inventoryItem.quantity = 0; // Prevent negative stock
     } else {
-      throw new Error(`Invalid status for id: ${_id}`);
+      throw new Error(
+        `Invalid status for inventory: ${_id || `${designNumber}-${colourName}-${standardSize}`}`
+      );
     }
 
     // Update metadata
@@ -216,7 +281,6 @@ const bulkUpdateInventory = async (updates) => {
 
   return results;
 };
-
 
 const queryInventories = async (filter, options, search) => {
   const matchStage = { ...filter };
