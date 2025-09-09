@@ -1,4 +1,3 @@
-
 const multer = require('multer');
 const { PutObjectCommand, DeleteObjectCommand, S3Client, ListObjectsV2Command } = require('@aws-sdk/client-s3');
 const ffmpegPath = require('ffmpeg-static');
@@ -22,7 +21,7 @@ let s3Client;
 // Function to initialize the S3 client dynamically
 const initializeS3Client = async () => {
   const cdnConfig = await CDNPath.findOne({ status: 'active' }).lean();
-console.log(cdnConfig);
+  console.log(cdnConfig);
   if (!cdnConfig) {
     throw new Error('No active CDN configuration found');
   }
@@ -84,7 +83,6 @@ const compressImageStream = async (fileBuffer) => {
 
   return compressedBuffer;
 };
-
 
 const uploadFile = async (file) => {
   const cdnConfig = await initializeS3Client();

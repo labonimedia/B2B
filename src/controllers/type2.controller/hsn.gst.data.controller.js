@@ -1,12 +1,11 @@
 const path = require('path');
-const { gstHsnService } = require('../../services');
 const { join } = require('path');
+const httpStatus = require('http-status');
+const csv = require('csvtojson');
+const { gstHsnService } = require('../../services');
 const pick = require('../../utils/pick');
 const catchAsync = require('../../utils/catchAsync');
-const httpStatus = require('http-status');
 const ApiError = require('../../utils/ApiError');
-const csv = require('csvtojson');
-
 
 const staticFolder = path.join(__dirname, '../../uploads');
 const uploadsFolder = path.join(staticFolder, 'uploads');
@@ -46,7 +45,7 @@ const arrayUpload = catchAsync(async (req, res) => {
 //    res.status(httpStatus.CREATED).send(result);
 // });
 const getHsnCodes = catchAsync(async (req, res) => {
-  let filter = {};
+  const filter = {};
   const options = pick(req.query, ['limit', 'page', 'sortBy']);
 
   // If hsnCode is provided, use regex for partial match
@@ -67,9 +66,9 @@ const getHsnCodes = catchAsync(async (req, res) => {
  * Get a single M2R Invoice by ID
  */
 const getHsnCodeDetails = catchAsync(async (req, res) => {
-    const hsnDetails = await gstHsnService.getHsnCodeByCode(req.params.hsnCode);
+  const hsnDetails = await gstHsnService.getHsnCodeByCode(req.params.hsnCode);
   if (!hsnDetails) {
-    res.status(httpStatus.NOT_FOUND).send({ message:'HSN code not found' });
+    res.status(httpStatus.NOT_FOUND).send({ message: 'HSN code not found' });
     return;
   }
   res.send(hsnDetails);

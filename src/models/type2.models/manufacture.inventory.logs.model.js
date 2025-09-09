@@ -18,7 +18,7 @@ const inventoryRecordSchema = new mongoose.Schema({
   lastUpdatedBy: {
     type: String,
   },
-    reason: {
+  reason: {
     type: String,
   },
   lastUpdatedAt: {

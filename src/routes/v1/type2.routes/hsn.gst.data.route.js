@@ -10,26 +10,9 @@ const router = express.Router();
 
 const upload = multer({ dest: uploadsFolder });
 
-router
-  .route('/')
-  .get(
-    gstHsnController.getHsnCodes
-  );
-router
-  .route('/bulkupload')
-  .post(  
-    upload.single('file'),
-    gstHsnController.bulkUploadFile
-  );
-  router
-  .route('/arrayUpload')
-  .post(  
-    gstHsnController.arrayUpload
-  );
-router
-  .route('/:hsnCode')
-  .get(
-    gstHsnController.getHsnCodeDetails
-  );
+router.route('/').get(gstHsnController.getHsnCodes);
+router.route('/bulkupload').post(upload.single('file'), gstHsnController.bulkUploadFile);
+router.route('/arrayUpload').post(gstHsnController.arrayUpload);
+router.route('/:hsnCode').get(gstHsnController.getHsnCodeDetails);
 
 module.exports = router;

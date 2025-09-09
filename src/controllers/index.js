@@ -100,19 +100,19 @@ module.exports.rtlToMnfCartController = require('./type2.controller/RtlToMnf.car
 module.exports.rtlToMnfPoController = require('./type2.controller/rtlToMnf.po.controller');
 module.exports.rtlOPReuestController = require('./type2.controller/retailer.orderP.request.controller');
 module.exports.performInvoiceController = require('./type2.controller/perform.invoice.controller');
-//new flow apis
+// new flow apis
 module.exports.poRetailerToWholesalerController = require('./type2.controller/po.retailer.to.wholesaler.controller');
 module.exports.poRetailerToManufactureController = require('./type2.controller/po.retailer.to.manufacture.controller');
 module.exports.poWholesalerToManufacturerController = require('./type2.controller/po.wholesaler.to.manufacture.controller');
 // performa invoice
 module.exports.m2rPerformaInvoiceController = require('./type2.controller/pi.manufacture.to.retailer.controller');
 module.exports.m2wPerformaInvoiceController = require('./type2.controller/pi.manufacture.to.wholesaler.controller');
-// inventory 
+// inventory
 module.exports.ManufactureInventoryController = require('./type2.controller/inventory.manufacture.controller');
 module.exports.WholesalerInventoryController = require('./type2.controller/inventory.wholesaler.controller');
 module.exports.RetailerInventoryController = require('./type2.controller/inventory.retailer.controller');
 module.exports.ManufactureInventoryLogsController = require('./type2.controller/manufacture.inventory.logs.controller');
-//hsn gst 
+// hsn gst
 module.exports.gstHsnController = require('./type2.controller/hsn.gst.data.controller');
 // reason return
 module.exports.returnReasonController = require('./type2.controller/return.reason.master.controller');

@@ -43,11 +43,7 @@ const getPurchanseOrderByEmail = catchAsync(async (req, res) => {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Wholesaler email is required');
   }
 
-  const paginatedOrders = await purchaseOrderType2Service.getPurchanseOrderByEmail(
-    wholesalerEmail,
-    page,
-    limit
-  );
+  const paginatedOrders = await purchaseOrderType2Service.getPurchanseOrderByEmail(wholesalerEmail, page, limit);
 
   res.status(httpStatus.OK).send(paginatedOrders);
 });

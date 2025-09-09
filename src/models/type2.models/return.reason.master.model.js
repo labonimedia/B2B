@@ -11,7 +11,6 @@ const returnReasonSchema = new mongoose.Schema(
       unique: true,
       trim: true,
     },
-
   },
   {
     timestamps: true,

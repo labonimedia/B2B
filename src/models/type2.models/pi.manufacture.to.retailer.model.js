@@ -69,22 +69,22 @@ const transportDetailsSchema = new mongoose.Schema({
 const bankDetailsSchema = new mongoose.Schema({
   accountHolderName: {
     type: String,
-   // required: true,
+    // required: true,
     trim: true,
   },
-      accountType: {
+  accountType: {
     type: String,
-    //required: true,
+    // required: true,
     trim: true,
   },
   accountNumber: {
     type: String,
-    //required: true,
+    // required: true,
     trim: true,
   },
   bankName: {
     type: String,
-   // required: true,
+    // required: true,
     trim: true,
   },
   branchName: {
@@ -93,12 +93,12 @@ const bankDetailsSchema = new mongoose.Schema({
   },
   ifscCode: {
     type: String,
-   // required: true,
+    // required: true,
     trim: true,
   },
   swiftCode: {
     type: String,
-    //required: true,
+    // required: true,
     trim: true,
   },
   upiId: {
@@ -135,14 +135,7 @@ const performaInvoiceSchema = new mongoose.Schema(
 
     statusAll: {
       type: String,
-      enum: [
-        'created',
-        'dispatched',
-        'in_transit',
-        'partially_delivered',
-        'delivered',
-        'cancelled',
-      ],
+      enum: ['created', 'dispatched', 'in_transit', 'partially_delivered', 'delivered', 'cancelled'],
       default: 'created',
     },
 
@@ -183,7 +176,7 @@ const performaInvoiceSchema = new mongoose.Schema(
           enum: ['pending', 'dispatched', 'delivered', 'partial'],
           default: 'pending',
         },
-               brandName: {
+        brandName: {
           type: String,
         },
       },

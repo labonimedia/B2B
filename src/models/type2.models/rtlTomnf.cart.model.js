@@ -65,8 +65,8 @@ const rtlToMnfCartSchema = new mongoose.Schema(
         hsnDescription: {
           type: String,
         },
-        
-           brandName: {
+
+        brandName: {
           type: String,
         },
       },

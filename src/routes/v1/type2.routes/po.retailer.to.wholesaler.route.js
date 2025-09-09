@@ -10,10 +10,10 @@ router
     auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
     poRetailerToWholesalerController.createRetailerPurchaseOrderType2
   )
-    .get(
-      auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
-      poRetailerToWholesalerController.getAllPoRetailerToWholesaler
-    );
+  .get(
+    auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
+    poRetailerToWholesalerController.getAllPoRetailerToWholesaler
+  );
 
 router
   .route('/wholesaler/:wholesalerEmail')
@@ -25,8 +25,8 @@ router
 router
   .route('/update-item/:poId')
   .patch(
-     auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
-     poRetailerToWholesalerController.updateRetailerPOSetItem
+    auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
+    poRetailerToWholesalerController.updateRetailerPOSetItem
   );
 
 router

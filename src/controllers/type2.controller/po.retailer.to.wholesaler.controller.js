@@ -9,14 +9,11 @@ const createRetailerPurchaseOrderType2 = catchAsync(async (req, res) => {
 });
 
 const getAllPoRetailerToWholesaler = catchAsync(async (req, res) => {
-    const filter = pick(req.query, ['productBy', 'wholesalerEmail', 'email']);
-    const options = pick(req.query, ['sortBy', 'limit', 'page']);
-    const RetailerPurchaseOrderType2Items = await poRetailerToWholesalerService.getAllPoRetailerToWholesaler(
-      filter,
-      options
-    );
-    res.status(httpStatus.OK).send(RetailerPurchaseOrderType2Items);
-  });
+  const filter = pick(req.query, ['productBy', 'wholesalerEmail', 'email']);
+  const options = pick(req.query, ['sortBy', 'limit', 'page']);
+  const RetailerPurchaseOrderType2Items = await poRetailerToWholesalerService.getAllPoRetailerToWholesaler(filter, options);
+  res.status(httpStatus.OK).send(RetailerPurchaseOrderType2Items);
+});
 
 const getRetailerPOByWholesaler = catchAsync(async (req, res) => {
   const { wholesalerEmail } = req.params;
@@ -39,13 +36,10 @@ const getSinglePoRetailerToWholesaler = catchAsync(async (req, res) => {
 });
 
 const updateSinglePoRetailerToWholesaler = catchAsync(async (req, res) => {
-    const updatedCartItem = await poRetailerToWholesalerService.updateSinglePoRetailerToWholesaler(
-      req.params.id,
-      req.body
-    );
-    res.status(httpStatus.OK).send(updatedCartItem);
-  });
-  
+  const updatedCartItem = await poRetailerToWholesalerService.updateSinglePoRetailerToWholesaler(req.params.id, req.body);
+  res.status(httpStatus.OK).send(updatedCartItem);
+});
+
 const deleteSinglePoRetailerToWholesaler = catchAsync(async (req, res) => {
   await poRetailerToWholesalerService.deleteSinglePoRetailerToWholesaler(req.params.id);
   res.status(httpStatus.NO_CONTENT).send();

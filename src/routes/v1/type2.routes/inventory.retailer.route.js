@@ -1,4 +1,5 @@
 const express = require('express');
+
 const router = express.Router();
 const { RetailerInventoryController } = require('../../../controllers');
 const auth = require('../../../middlewares/auth');

@@ -7,26 +7,24 @@ const ApiError = require('../../utils/ApiError');
  * @returns {Promise<PORetailerToWholesaler>}
  */
 const getSinglePoRetailerToWholesaler = async (id) => {
-    return PORetailerToWholesaler.findById(id);
-  };
+  return PORetailerToWholesaler.findById(id);
+};
 
 /**
  * Create Retailer PO and remove matching cart entry
  */
 const createPurchaseOrderRetailerType2 = async (reqBody) => {
-    const { cartId } = reqBody;
+  const { cartId } = reqBody;
 
-    if (!cartId) {
-      throw new ApiError(httpStatus.BAD_REQUEST, "'cartId' is required.");
-    }
-    
-    await RetailerCartType2.findByIdAndDelete({_id:cartId});
+  if (!cartId) {
+    throw new ApiError(httpStatus.BAD_REQUEST, "'cartId' is required.");
+  }
+
+  await RetailerCartType2.findByIdAndDelete({ _id: cartId });
 
   const purchaseOrder = await PORetailerToWholesaler.create(reqBody);
   return purchaseOrder;
 };
-
-
 
 /**
  * Query for PurchaseOrderRetailerType2
@@ -58,12 +56,7 @@ const updateRetailerPOSetItem = async (poId, updateBody) => {
   const po = await PORetailerToWholesaler.findById(poId);
   if (!po) throw new ApiError(httpStatus.NOT_FOUND, 'Purchase Order not found');
 
-  const item = po.set.find(
-    (item) =>
-      item.designNumber === designNumber &&
-      item.colour === colour &&
-      item.size === size
-  );
+  const item = po.set.find((item) => item.designNumber === designNumber && item.colour === colour && item.size === size);
 
   if (!item) throw new ApiError(httpStatus.NOT_FOUND, 'Set item not found in PO');
 
@@ -75,8 +68,6 @@ const updateRetailerPOSetItem = async (poId, updateBody) => {
   return po;
 };
 
-
-
 /**
  * Update PORetailerToWholesaler by id
  * @param {ObjectId} id
@@ -84,29 +75,29 @@ const updateRetailerPOSetItem = async (poId, updateBody) => {
  * @returns {Promise<PORetailerToWholesaler>}
  */
 const updateSinglePoRetailerToWholesaler = async (id, updateBody) => {
-    const cart = await getSinglePoRetailerToWholesaler(id);
-    if (!cart) {
-      throw new ApiError(httpStatus.NOT_FOUND, 'Purchase Order not found');
-    }
-    Object.assign(cart, updateBody);
-    await cart.save();
-    return cart;
-  };
-  
-  /**
-   * Delete PORetailerToWholesaler by id
-   * @param {ObjectId} id
-   * @returns {Promise<PORetailerToWholesaler>}
-   */
-  const deleteSinglePoRetailerToWholesaler = async (id) => {
-    const cart = await getSinglePoRetailerToWholesaler(id);
-    if (!cart) {
-      throw new ApiError(httpStatus.NOT_FOUND, 'Purchase Order not found');
-    }
-    await cart.remove();
-    return cart;
-  };
-  
+  const cart = await getSinglePoRetailerToWholesaler(id);
+  if (!cart) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Purchase Order not found');
+  }
+  Object.assign(cart, updateBody);
+  await cart.save();
+  return cart;
+};
+
+/**
+ * Delete PORetailerToWholesaler by id
+ * @param {ObjectId} id
+ * @returns {Promise<PORetailerToWholesaler>}
+ */
+const deleteSinglePoRetailerToWholesaler = async (id) => {
+  const cart = await getSinglePoRetailerToWholesaler(id);
+  if (!cart) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Purchase Order not found');
+  }
+  await cart.remove();
+  return cart;
+};
+
 const getPOsByIds = async (ids) => {
   if (!Array.isArray(ids) || ids.length === 0) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'IDs array is required');

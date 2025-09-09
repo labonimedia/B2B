@@ -10,17 +10,14 @@ router
     auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
     poRetailerToManufactureController.createRetailerPurchaseOrderType2
   )
-    .get(
-      auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
-      poRetailerToManufactureController.getAllPoRetailerToManufacture
-    );
+  .get(
+    auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
+    poRetailerToManufactureController.getAllPoRetailerToManufacture
+  );
 
 router
   .route('/make-to-order')
-  .post(
-    auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
-    poRetailerToManufactureController.makeToOrderPO
-  )
+  .post(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), poRetailerToManufactureController.makeToOrderPO);
 router
   .route('/retailers-po-list-view/manufacture/:manufacturerEmail')
   .get(
@@ -32,8 +29,8 @@ router
 router
   .route('/update-po-data/:poId')
   .patch(
-     auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
-     poRetailerToManufactureController.updateRetailerPOSetItem
+    auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
+    poRetailerToManufactureController.updateRetailerPOSetItem
   );
 
 router

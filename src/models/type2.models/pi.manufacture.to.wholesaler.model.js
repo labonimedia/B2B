@@ -59,7 +59,6 @@ const { paginate, toJSON } = require('../plugins');
 //   },
 // });
 
-
 // Embedded Bank Details Schema
 const bankDetailsSchema = new mongoose.Schema({
   accountHolderName: { type: String, required: true, trim: true },
@@ -132,9 +131,8 @@ const m2wPerformaInvoiceSchema = new mongoose.Schema(
       logo: String,
     },
 
-
     bankDetails: bankDetailsSchema,
-//transportDetails: transportDetailsSchema,
+    // transportDetails: transportDetailsSchema,
     deliveryItems: [
       {
         designNumber: String,
@@ -147,7 +145,7 @@ const m2wPerformaInvoiceSchema = new mongoose.Schema(
         gender: String,
         clothing: String,
         subCategory: String,
-               hsnCode: {
+        hsnCode: {
           type: String,
         },
         hsnGst: {
@@ -158,7 +156,7 @@ const m2wPerformaInvoiceSchema = new mongoose.Schema(
           enum: ['pending', 'dispatched', 'delivered', 'partial'],
           default: 'pending',
         },
-          wholesalerConfirmed: {
+        wholesalerConfirmed: {
           type: Boolean,
           default: false, // Confirmed by wholesaler (true = accepted, false = not yet acted or cancelled)
         },
@@ -169,20 +167,13 @@ const m2wPerformaInvoiceSchema = new mongoose.Schema(
     totalAmount: Number,
     discountApplied: Number,
     finalAmount: Number,
-     wholesalerInvoiceConfirmed: {
-          type: Boolean,
-          default: false, // Confirmed by wholesaler (true = accepted, false = not yet acted or cancelled)
-        },
+    wholesalerInvoiceConfirmed: {
+      type: Boolean,
+      default: false, // Confirmed by wholesaler (true = accepted, false = not yet acted or cancelled)
+    },
     statusAll: {
       type: String,
-      enum: [
-        'created',
-        'dispatched',
-        'in_transit',
-        'partially_delivered',
-        'delivered',
-        'cancelled',
-      ],
+      enum: ['created', 'dispatched', 'in_transit', 'partially_delivered', 'delivered', 'cancelled'],
       default: 'created',
     },
   },

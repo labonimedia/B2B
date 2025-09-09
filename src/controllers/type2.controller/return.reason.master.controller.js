@@ -1,8 +1,7 @@
-
+const httpStatus = require('http-status');
 const { returnReasonService } = require('../../services');
 const pick = require('../../utils/pick');
 const catchAsync = require('../../utils/catchAsync');
-const httpStatus = require('http-status');
 const ApiError = require('../../utils/ApiError');
 
 const arrayUpload = catchAsync(async (req, res) => {
@@ -15,7 +14,6 @@ const arrayUpload = catchAsync(async (req, res) => {
   const result = await returnReasonService.bulkUploadReturnReason(data);
   res.status(httpStatus.CREATED).send({ message: 'Bulk upload completed', result });
 });
-
 
 const queryReturnReason = catchAsync(async (req, res) => {
   const filter = pick(req.query, ['reason']);
@@ -42,11 +40,10 @@ const deleteReturnReasonById = catchAsync(async (req, res) => {
   res.status(httpStatus.NO_CONTENT).send();
 });
 
-
 module.exports = {
- arrayUpload,
- deleteReturnReasonById,
- updateReturnReasonById,
- getReturnReasonById,
-queryReturnReason
+  arrayUpload,
+  deleteReturnReasonById,
+  updateReturnReasonById,
+  getReturnReasonById,
+  queryReturnReason,
 };

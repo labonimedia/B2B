@@ -16,11 +16,10 @@ const queryHsnCodes = async (filter, options) => {
  * @returns {Object|null} HSN code details or null if not found
  */
 const getHsnCodeByCode = async (hsnCode) => {
-/**
- * Get a single M2R Performa Invoice by ID
- */
-  return HsnGst.findOne({hsnCode:hsnCode});
-
+  /**
+   * Get a single M2R Performa Invoice by ID
+   */
+  return HsnGst.findOne({ hsnCode });
 };
 /**
  * Bulk Upload HSN-GST Records from CSV
@@ -29,7 +28,7 @@ const getHsnCodeByCode = async (hsnCode) => {
  * @param {Object} user - Logged-in user (optional, can log uploader info if needed)
  * @returns {Promise<Array<Object>>} - Created or updated HSN entries
  */
-const bulkUpload = async (hsnArray = [], csvFilePath = null,) => {
+const bulkUpload = async (hsnArray = [], csvFilePath = null) => {
   if (!hsnArray || !Array.isArray(hsnArray) || !hsnArray.length) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Missing or empty HSN data array');
   }

@@ -16,16 +16,11 @@ const createM2WInvoice = async (reqBody) => {
   const { manufacturerEmail } = reqBody;
 
   if (!manufacturerEmail) {
-    throw new ApiError(
-      httpStatus.BAD_REQUEST,
-      "'manufacturerEmail' is required to generate invoice number."
-    );
+    throw new ApiError(httpStatus.BAD_REQUEST, "'manufacturerEmail' is required to generate invoice number.");
   }
 
   // Get latest invoiceNumber for that manufacturer
-  const lastInvoice = await M2WPerformaInvoice.findOne({ manufacturerEmail })
-    .sort({ invoiceNumber: -1 })
-    .lean();
+  const lastInvoice = await M2WPerformaInvoice.findOne({ manufacturerEmail }).sort({ invoiceNumber: -1 }).lean();
 
   let nextInvoiceNumber = '1';
   if (lastInvoice && lastInvoice.invoiceNumber) {

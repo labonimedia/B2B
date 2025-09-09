@@ -94,10 +94,7 @@ const deleteWholesalerCategoryById = async (id) => {
   }
 
   // Remove the category from Retailers' discountGiven array
-  await Wholesaler.updateMany(
-    { 'discountGiven.id': id },
-    { $pull: { discountGiven: { id: id } } }
-  );
+  await Wholesaler.updateMany({ 'discountGiven.id': id }, { $pull: { discountGiven: { id } } });
 
   // Remove the category itself
   await user.remove();

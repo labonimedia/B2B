@@ -12,7 +12,7 @@ const getInventoriesByDesignNumbers = catchAsync(async (req, res) => {
 
   const result = await ManufactureInventoryService.findByDesignNumbers(designNumbers);
   res.status(200).json({ success: true, data: result });
-})
+});
 // const bulkCreateInventories = catchAsync(async (req, res) => {
 //   const inventories = await ManufactureInventoryService.bulkInsertInventory(req.body);
 //   res.status(httpStatus.CREATED).send({ success: true, data: inventories });
@@ -27,7 +27,7 @@ const createInventory = catchAsync(async (req, res) => {
 });
 
 const bulkUpdateInventory = catchAsync(async (req, res) => {
-  const updates = req.body.updates;
+  const { updates } = req.body;
 
   if (!Array.isArray(updates) || updates.length === 0) {
     return res.status(400).json({ message: 'Updates array is required' });
@@ -75,7 +75,16 @@ const bulkUpdateInventory = catchAsync(async (req, res) => {
 // });
 
 const getInventories = catchAsync(async (req, res) => {
-  const filter = pick(req.query, ['userEmail', 'brandName', 'designNumber', 'colour', 'brandSize', 'standardSize', 'colourName', 'productId']);
+  const filter = pick(req.query, [
+    'userEmail',
+    'brandName',
+    'designNumber',
+    'colour',
+    'brandSize',
+    'standardSize',
+    'colourName',
+    'productId',
+  ]);
   const options = pick(req.query, ['sortBy', 'limit', 'page']);
   const search = req.query.search || '';
 

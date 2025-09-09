@@ -37,9 +37,7 @@ const createM2RInvoice = async (reqBody) => {
   }
 
   // Find the highest invoice number for this manufacturer
-  const lastInvoice = await M2RPerformaInvoice.findOne({ manufacturerEmail })
-    .sort({ invoiceNumber: -1 })
-    .lean();
+  const lastInvoice = await M2RPerformaInvoice.findOne({ manufacturerEmail }).sort({ invoiceNumber: -1 }).lean();
 
   let nextInvoiceNumber = '1';
 

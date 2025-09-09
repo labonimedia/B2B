@@ -6,22 +6,22 @@ const { paginate, toJSON } = require('../plugins');
 const bankDetailsSchema = new mongoose.Schema({
   accountHolderName: {
     type: String,
-   // required: true,w
+    // required: true,w
     trim: true,
   },
   accountNumber: {
     type: String,
-    //required: true,
+    // required: true,
     trim: true,
   },
-    accountType: {
+  accountType: {
     type: String,
-    //required: true,
+    // required: true,
     trim: true,
   },
   bankName: {
     type: String,
-   // required: true,
+    // required: true,
     trim: true,
   },
   branchName: {
@@ -30,12 +30,12 @@ const bankDetailsSchema = new mongoose.Schema({
   },
   ifscCode: {
     type: String,
-   // required: true,
+    // required: true,
     trim: true,
   },
   swiftCode: {
     type: String,
-    //required: true,
+    // required: true,
     trim: true,
   },
   upiId: {
@@ -75,7 +75,7 @@ const transportDetailsSchema = new mongoose.Schema({
   },
   modeOfTransport: {
     type: String,
-    enum: ['road', 'railway', 'air', 'sea', 'other',  'self'],
+    enum: ['road', 'railway', 'air', 'sea', 'other', 'self'],
   },
   dispatchDate: {
     type: Date,
@@ -123,7 +123,7 @@ const PORetailerToManufacturerSchema = new mongoose.Schema(
         quantity: Number,
         expectedQty: {
           type: Number,
-      //    default: 0,
+          //    default: 0,
         }, // Requested by retailer
         availableQuantity: {
           type: Number,
@@ -141,15 +141,15 @@ const PORetailerToManufacturerSchema = new mongoose.Schema(
           type: String,
           // enum: ['pending', 'manufacturer_updated', 'retailer_confirmed', 'cancelled', 'processing', 'shipped', 'delivered', 'partial'],
           enum: [
-            'pending',             // Initial status
-            'm_confirmed',         // Manufacturer confirmed
-            'm_cancelled',         // Manufacturer cancelled
-            'm_partial_delivery',  // Manufacturer partially delivered
-            'r_confirmed',         // Retailer confirmed
-            'r_cancelled',         // Retailer cancelled
-            'shipped',             // Fully shipped
-            'delivered'  ,
-            'make_to_order',          // Fully delivered
+            'pending', // Initial status
+            'm_confirmed', // Manufacturer confirmed
+            'm_cancelled', // Manufacturer cancelled
+            'm_partial_delivery', // Manufacturer partially delivered
+            'r_confirmed', // Retailer confirmed
+            'r_cancelled', // Retailer cancelled
+            'shipped', // Fully shipped
+            'delivered',
+            'make_to_order', // Fully delivered
           ],
           default: 'pending',
         },
@@ -185,9 +185,9 @@ const PORetailerToManufacturerSchema = new mongoose.Schema(
         'r_order_cancelled',
         'make_to_order',
         'shipped',
-        'delivered'
+        'delivered',
       ],
-      default: 'pending'
+      default: 'pending',
     },
 
     expDeliveryDate: {
@@ -246,7 +246,7 @@ const PORetailerToManufacturerSchema = new mongoose.Schema(
     previousPoNumber: String,
     previousPoId: String,
     cartId: String,
-     bankDetails: bankDetailsSchema,
+    bankDetails: bankDetailsSchema,
   },
   {
     timestamps: true,
@@ -258,9 +258,6 @@ PORetailerToManufacturerSchema.plugin(toJSON);
 PORetailerToManufacturerSchema.plugin(paginate);
 
 // Model
-const PORetailerToManufacturer = mongoose.model(
-  'PORetailerToManufacturer',
-  PORetailerToManufacturerSchema
-);
+const PORetailerToManufacturer = mongoose.model('PORetailerToManufacturer', PORetailerToManufacturerSchema);
 
 module.exports = PORetailerToManufacturer;
