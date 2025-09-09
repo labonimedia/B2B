@@ -1,5 +1,5 @@
 const httpStatus = require('http-status');
-const { RetailerCategory , Retailer } = require('../models');
+const { RetailerCategory, Retailer } = require('../models');
 const ApiError = require('../utils/ApiError');
 
 /**
@@ -95,10 +95,7 @@ const deleteRetailerCategoryById = async (id) => {
   }
 
   // Remove the category from Retailers' discountGiven array
-  await Retailer.updateMany(
-    { 'discountGiven.id': id },
-    { $pull: { discountGiven: { id: id } } }
-  );
+  await Retailer.updateMany({ 'discountGiven.id': id }, { $pull: { discountGiven: { id } } });
 
   // Remove the category itself
   await category.remove();

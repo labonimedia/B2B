@@ -8,10 +8,10 @@ const ApiError = require('../../utils/ApiError');
  * @returns {Promise<Array<PurchaseOrderType2>>}
  */
 const createPerformInvoice = async (reqBody) => {
-    const { email, poNumber } = reqBody;
+  const { email, poNumber } = reqBody;
 
-    await PurchaseOrderType2.findOneAndUpdate({ email, poNumber }, { $set: { status: 'shipped' } }, { new: true });
-    return await PerformInvoice.create(reqBody);
+  await PurchaseOrderType2.findOneAndUpdate({ email, poNumber }, { $set: { status: 'shipped' } }, { new: true });
+  return await PerformInvoice.create(reqBody);
 };
 
 /**
@@ -24,8 +24,8 @@ const createPerformInvoice = async (reqBody) => {
  * @returns {Promise<QueryResult>}
  */
 const queryPerformInvoice = async (filter, options) => {
-    const mnfDeliveryChallans = await PerformInvoice.paginate(filter, options);
-    return mnfDeliveryChallans;
+  const mnfDeliveryChallans = await PerformInvoice.paginate(filter, options);
+  return mnfDeliveryChallans;
 };
 
 /**
@@ -34,7 +34,7 @@ const queryPerformInvoice = async (filter, options) => {
  * @returns {Promise<PurchaseOrderType2>}
  */
 const getPerformInvoiceById = async (id) => {
-    return PerformInvoice.findById(id);
+  return PerformInvoice.findById(id);
 };
 
 /**
@@ -43,13 +43,12 @@ const getPerformInvoiceById = async (id) => {
  * @returns {Promise<PerformInvoice>}
  */
 const genratedeChallNO = async (manufacturerEmail) => {
-    const lastPO = await PerformInvoice.findOne({ productBy: manufacturerEmail }).sort({ deliveryChallanNumber: -1 }).lean();
-    const nextdeliveryChallanNumber = lastPO ? lastPO.deliveryChallanNumber + 1 : 1;
-    return {
-        deliveryChallanNumber: nextdeliveryChallanNumber,
-    };
+  const lastPO = await PerformInvoice.findOne({ productBy: manufacturerEmail }).sort({ deliveryChallanNumber: -1 }).lean();
+  const nextdeliveryChallanNumber = lastPO ? lastPO.deliveryChallanNumber + 1 : 1;
+  return {
+    deliveryChallanNumber: nextdeliveryChallanNumber,
+  };
 };
-
 
 /**
  * get perform invoice  with old available data
@@ -57,30 +56,29 @@ const genratedeChallNO = async (manufacturerEmail) => {
  * @returns {Promise<PerformInvoice>}
  */
 const getPurchaseOrderWithOldAvailebleData = async (id) => {
-    // Fetch the purchase order by ID and convert it to a plain object.
-    const purchaseOrderDoc = await PurchaseOrderType2.findById(id);
-    if (!purchaseOrderDoc) {
-        throw new ApiError(httpStatus.NOT_FOUND, 'Purchase Order not found');
-    }
-    const purchaseOrder = purchaseOrderDoc.toObject();
+  // Fetch the purchase order by ID and convert it to a plain object.
+  const purchaseOrderDoc = await PurchaseOrderType2.findById(id);
+  if (!purchaseOrderDoc) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Purchase Order not found');
+  }
+  const purchaseOrder = purchaseOrderDoc.toObject();
 
-    // Fetch the corresponding delivery challan for the purchase order.
-    const mnfDeliveryChallanDoc = await MnfDeliveryChallan.findOne({
-        email: purchaseOrder.email,
-        poNumber: purchaseOrder.poNumber,
-    });
-    if (!mnfDeliveryChallanDoc) {
-        throw new ApiError(httpStatus.NOT_FOUND, 'Delivery Challan not found');
-    }
-    const mnfDeliveryChallan = mnfDeliveryChallanDoc.toObject();
+  // Fetch the corresponding delivery challan for the purchase order.
+  const mnfDeliveryChallanDoc = await MnfDeliveryChallan.findOne({
+    email: purchaseOrder.email,
+    poNumber: purchaseOrder.poNumber,
+  });
+  if (!mnfDeliveryChallanDoc) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Delivery Challan not found');
+  }
+  const mnfDeliveryChallan = mnfDeliveryChallanDoc.toObject();
 
-    // Merge the availableSet from the delivery challan into the purchase order object.
-    return {
-        ...purchaseOrder,
-        avilableSet: mnfDeliveryChallan.avilableSet,
-    };
+  // Merge the availableSet from the delivery challan into the purchase order object.
+  return {
+    ...purchaseOrder,
+    avilableSet: mnfDeliveryChallan.avilableSet,
+  };
 };
-
 
 /**
  * Update PurchaseOrderType2 by id
@@ -89,13 +87,13 @@ const getPurchaseOrderWithOldAvailebleData = async (id) => {
  * @returns {Promise<PerformInvoice>}
  */
 const updatePerformInvoiceById = async (id, updateBody) => {
-    const cart = await getMnfDeliveryChallanById(id);
-    if (!cart) {
-        throw new ApiError(httpStatus.NOT_FOUND, 'Purchase Order not found');
-    }
-    Object.assign(cart, updateBody);
-    await cart.save();
-    return cart;
+  const cart = await getMnfDeliveryChallanById(id);
+  if (!cart) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Purchase Order not found');
+  }
+  Object.assign(cart, updateBody);
+  await cart.save();
+  return cart;
 };
 
 /**
@@ -104,37 +102,37 @@ const updatePerformInvoiceById = async (id, updateBody) => {
  * @returns {Promise<PurchaseOrderType2>}
  */
 const deletePerformInvoiceById = async (id) => {
-    const cart = await getPerformInvoiceById(id);
-    if (!cart) {
-        throw new ApiError(httpStatus.NOT_FOUND, 'Purchase Order not found');
-    }
-    await cart.remove();
-    return cart;
+  const cart = await getPerformInvoiceById(id);
+  if (!cart) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Purchase Order not found');
+  }
+  await cart.remove();
+  return cart;
 };
 
 const getPerformInvoiceByManufactureEmail = async (manufacturerEmail, filter, options) => {
-    // Apply additional filters
-    if (filter) {
-        const parsedFilter = JSON.parse(filter);
-        Object.assign(query, parsedFilter);
-    }
-    // Use Mongoose paginate plugin
-    const result = await PerformInvoice.paginate(query, {
-        ...options,
-        customLabels: { docs: 'mnfdeliverychallans' },
-    });
+  // Apply additional filters
+  if (filter) {
+    const parsedFilter = JSON.parse(filter);
+    Object.assign(query, parsedFilter);
+  }
+  // Use Mongoose paginate plugin
+  const result = await PerformInvoice.paginate(query, {
+    ...options,
+    customLabels: { docs: 'mnfdeliverychallans' },
+  });
 
-    return result;
+  return result;
 };
 
 // Create combined PO for wholesaler
 module.exports = {
-    createPerformInvoice,
-    queryPerformInvoice,
-    getPerformInvoiceById,
-    genratedeChallNO,
-    updatePerformInvoiceById,
-    deletePerformInvoiceById,
-    getPerformInvoiceByManufactureEmail,
-    getPurchaseOrderWithOldAvailebleData,
+  createPerformInvoice,
+  queryPerformInvoice,
+  getPerformInvoiceById,
+  genratedeChallNO,
+  updatePerformInvoiceById,
+  deletePerformInvoiceById,
+  getPerformInvoiceByManufactureEmail,
+  getPurchaseOrderWithOldAvailebleData,
 };

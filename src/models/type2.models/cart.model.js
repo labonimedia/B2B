@@ -17,7 +17,7 @@ const CartSchema = new mongoose.Schema(
     },
     set: [
       {
-        //d: false,
+        // d: false,
         // productId: {
         //   type: mongoose.Schema.Types.ObjectId,
         //   ref: 'ProductType2',
@@ -56,7 +56,7 @@ const CartSchema = new mongoose.Schema(
         subCategory: {
           type: String,
         },
-                 hsnCode: {
+        hsnCode: {
           type: String,
         },
         hsnGst: {

@@ -1,8 +1,7 @@
-
+const httpStatus = require('http-status');
 const { mtoRCreditNoteService } = require('../../services');
 const pick = require('../../utils/pick');
 const catchAsync = require('../../utils/catchAsync');
-const httpStatus = require('http-status');
 const ApiError = require('../../utils/ApiError');
 
 const arrayUpload = catchAsync(async (req, res) => {
@@ -46,12 +45,11 @@ const deleteMtoRCreditNoteById = catchAsync(async (req, res) => {
   res.status(httpStatus.NO_CONTENT).send();
 });
 
-
 module.exports = {
- arrayUpload,
- deleteMtoRCreditNoteById,
- updateMtoRCreditNoteById,
- getMtoRCreditNoteById,
-queryMtoRCreditNote,
-createCreditNote
+  arrayUpload,
+  deleteMtoRCreditNoteById,
+  updateMtoRCreditNoteById,
+  getMtoRCreditNoteById,
+  queryMtoRCreditNote,
+  createCreditNote,
 };

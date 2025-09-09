@@ -6,10 +6,7 @@ const router = express.Router();
 
 router
   .route('/')
-  .post
-   (
-  auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
-   retailerCartType2Controller.createRetailerCartType2) // Create CartType2
+  .post(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), retailerCartType2Controller.createRetailerCartType2) // Create CartType2
   .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), retailerCartType2Controller.queryRetailerCartType2); // Query CartType2
 
 router
@@ -23,12 +20,9 @@ router
     auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
     retailerCartType2Controller.deleteRetailerCartType2ById
   ); // Delete CartType2 by ID
-  router
+router
   .route('/:cartId/set/:setId')
-  .delete(
-auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
-    retailerCartType2Controller.deleteCartSetItem
-  );
+  .delete(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), retailerCartType2Controller.deleteCartSetItem);
 router
   .route('/place-order/products/:id')
   .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), retailerCartType2Controller.genratePORetailerCartType2);
@@ -41,8 +35,5 @@ router
 //   .patch(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), retailerCartType2Controller.updateSetItem);
 router
   .route('/updatecart/:cartId/set/:setId')
-  .patch
-  (
-  auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
-   retailerCartType2Controller.updateSetItem);
+  .patch(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), retailerCartType2Controller.updateSetItem);
 module.exports = router;

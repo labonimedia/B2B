@@ -79,5 +79,5 @@ module.exports = {
   getMtoRCreditNoteById,
   updateMtoRCreditNoteById,
   deleteMtoRCreditNoteById,
-  bulkUploadMtoRCreditNote
+  bulkUploadMtoRCreditNote,
 };

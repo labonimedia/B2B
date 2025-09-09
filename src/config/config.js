@@ -73,6 +73,3 @@ module.exports = {
     bucketName: envVars.BUCKET_NAME,
   },
 };
-
-
-

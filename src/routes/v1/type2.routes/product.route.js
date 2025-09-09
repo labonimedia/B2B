@@ -17,8 +17,9 @@ router.route('/upload/colour-collection/:id').post(
 router
   .route('/')
   .post(
-    //auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
-   productType2Controller.createProduct)
+    // auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
+    productType2Controller.createProduct
+  )
   .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), productType2Controller.queryProduct);
 
 router

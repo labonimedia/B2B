@@ -11,9 +11,9 @@ const pick = require('../../utils/pick');
 // const createRetailerPurchaseOrderType2 = catchAsync(async (req, res) => {
 //     const wholesalerEmail = req.body.wholesalerEmail; // or req.body.wholesalerEmail
 //     const combinedPOData = req.body.data;
-  
+
 //     const result = await poWholesalerToManufactureService.createPoToManufacturer(wholesalerEmail, combinedPOData);
-  
+
 //     res.status(201).json({
 //       success: true,
 //       ...result
@@ -21,35 +21,35 @@ const pick = require('../../utils/pick');
 //   });
 
 const createRetailerPurchaseOrderType2 = catchAsync(async (req, res) => {
-    const wholesalerEmail = req.body.wholesalerEmail;
-    const singlePOData = req.body;
-  
-    const result = await poWholesalerToManufactureService.createPoToManufacturer(wholesalerEmail, [singlePOData]);
-  
-    res.status(201).json({
-      success: true,
-      ...result
-    });
+  const { wholesalerEmail } = req.body;
+  const singlePOData = req.body;
+
+  const result = await poWholesalerToManufactureService.createPoToManufacturer(wholesalerEmail, [singlePOData]);
+
+  res.status(201).json({
+    success: true,
+    ...result,
   });
-  const generatePOToManufacturer = catchAsync(async (req, res) => {
-    const { wholesalerEmail, manufacturerEmail } = req.params;
-    const generatedPO = await poWholesalerToManufactureService.generatePOToManufacturer(wholesalerEmail, manufacturerEmail);
-  
-    res.status(200).send({
-      success: true,
-      message: 'PO to manufacturer generated (not saved)',
-      data: generatedPO,
-    });
+});
+const generatePOToManufacturer = catchAsync(async (req, res) => {
+  const { wholesalerEmail, manufacturerEmail } = req.params;
+  const generatedPO = await poWholesalerToManufactureService.generatePOToManufacturer(wholesalerEmail, manufacturerEmail);
+
+  res.status(200).send({
+    success: true,
+    message: 'PO to manufacturer generated (not saved)',
+    data: generatedPO,
   });
+});
 const getAllPoWholesalerToManufacturer = catchAsync(async (req, res) => {
-    const filter = pick(req.query, ['productBy', 'wholesalerEmail', 'manufacturerEmail', 'statusAll']);
-    const options = pick(req.query, ['sortBy', 'limit', 'page']);
-    const RetailerPurchaseOrderType2Items = await poWholesalerToManufactureService.getAllPOWholesalerToManufacturer(
-      filter,
-      options
-    );
-    res.status(httpStatus.OK).send(RetailerPurchaseOrderType2Items);
-  });
+  const filter = pick(req.query, ['productBy', 'wholesalerEmail', 'manufacturerEmail', 'statusAll']);
+  const options = pick(req.query, ['sortBy', 'limit', 'page']);
+  const RetailerPurchaseOrderType2Items = await poWholesalerToManufactureService.getAllPOWholesalerToManufacturer(
+    filter,
+    options
+  );
+  res.status(httpStatus.OK).send(RetailerPurchaseOrderType2Items);
+});
 
 const getRetailerPOByWholesaler = catchAsync(async (req, res) => {
   const { wholesalerEmail } = req.params;
@@ -72,36 +72,35 @@ const getSinglePoWholesalerToManufacturer = catchAsync(async (req, res) => {
 });
 
 const updateSinglePoWholesalerToManufacturer = catchAsync(async (req, res) => {
-    const updatedCartItem = await poWholesalerToManufactureService.updateSinglePOWholesalerToManufacturer(
-      req.params.id,
-      req.body
-    );
-    res.status(httpStatus.OK).send(updatedCartItem);
-  });
-  
+  const updatedCartItem = await poWholesalerToManufactureService.updateSinglePOWholesalerToManufacturer(
+    req.params.id,
+    req.body
+  );
+  res.status(httpStatus.OK).send(updatedCartItem);
+});
+
 const deleteSinglePoWholesalerToManufacturer = catchAsync(async (req, res) => {
   await poWholesalerToManufactureService.deleteSinglePOWholesalerToManufacturer(req.params.id);
   res.status(httpStatus.NO_CONTENT).send();
 });
 
 const getCombinedRetailerItems = catchAsync(async (req, res) => {
-    const { wholesalerEmail } = req.query;
+  const { wholesalerEmail } = req.query;
 
-    if (!wholesalerEmail) {
+  if (!wholesalerEmail) {
+    return res.status(400).json({
+      success: false,
+      message: 'wholesalerEmail is required',
+    });
+  }
 
-      return res.status(400).json({
-        success: false,
-        message: 'wholesalerEmail is required',
-      });
-    }
-
-    const resultArray = await poWholesalerToManufactureService.combinePendingRetailerPOItems(wholesalerEmail);
-    res.status(httpStatus.OK).send({ success: true, data: resultArray });
-  });
-  const updatePoData = catchAsync(async (req, res) => {
-    const updatedPO = await poWholesalerToManufactureService.updatePoData(req.params.poId, req.body);
-    res.status(200).json({ success: true, data: updatedPO });
-  });
+  const resultArray = await poWholesalerToManufactureService.combinePendingRetailerPOItems(wholesalerEmail);
+  res.status(httpStatus.OK).send({ success: true, data: resultArray });
+});
+const updatePoData = catchAsync(async (req, res) => {
+  const updatedPO = await poWholesalerToManufactureService.updatePoData(req.params.poId, req.body);
+  res.status(200).json({ success: true, data: updatedPO });
+});
 
 module.exports = {
   createRetailerPurchaseOrderType2,

@@ -8,7 +8,7 @@ const router = express.Router();
 router
   .route('/')
   .post(
-   // auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
+    // auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
     commonUploadMiddleware([{ name: 'brandLogo', maxCount: 1 }]),
     brandController.createBrand
   )

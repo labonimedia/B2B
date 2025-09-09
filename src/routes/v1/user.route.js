@@ -13,7 +13,6 @@ router
 
 router.route('/update-pass').patch(validate(userValidation.updateUserByEmail), userController.updateUserByEmail);
 
-
 router.route('/delete-unwanted-user').delete(userController.deleteUserByEmail);
 router
   .route('/:userId')

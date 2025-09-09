@@ -1,8 +1,7 @@
-
 const mongoose = require('mongoose');
 const { paginate, toJSON } = require('../plugins');
 
- // Embedded schema for Transport Details
+// Embedded schema for Transport Details
 // const transportDetailsSchema = new mongoose.Schema({
 //    transportType: {
 //     type: String,
@@ -76,20 +75,13 @@ const POWholesalerToManufacturerSchema = new mongoose.Schema(
         },
         status: {
           type: String,
-          enum: [
-            'pending',
-            'm_cancelled',
-            'm_confirmed',
-            'm_partial_delivery',
-            'w_confirmed',
-            'w_cancelled'
-          ],
+          enum: ['pending', 'm_cancelled', 'm_confirmed', 'm_partial_delivery', 'w_confirmed', 'w_cancelled'],
           default: 'pending',
         },
         clothing: String,
         gender: String,
         subCategory: String,
-                 hsnCode: {
+        hsnCode: {
           type: String,
         },
         hsnGst: {
@@ -97,18 +89,18 @@ const POWholesalerToManufacturerSchema = new mongoose.Schema(
         },
         productType: String,
         manufacturerPrice: String,
-          //transportDetails: transportDetailsSchema,
+        // transportDetails: transportDetailsSchema,
         price: String,
         retailerPoLinks: [
           {
             poId: mongoose.Schema.Types.ObjectId,
             setItemId: mongoose.Schema.Types.ObjectId,
-            quantity: Number
-          }
-        ]
-      }
+            quantity: Number,
+          },
+        ],
+      },
     ],
-     // transportDetails: transportDetailsSchema,
+    // transportDetails: transportDetailsSchema,
     wholesaler: {
       email: String,
       fullName: String,
@@ -139,21 +131,21 @@ const POWholesalerToManufacturerSchema = new mongoose.Schema(
     },
     manufacturerEmail: String,
     wholesalerEmail: String,
-    
+
     statusAll: {
       type: String,
       enum: [
         'pending',
         'm_order_confirmed',
-         'm_order_updated',
+        'm_order_updated',
         'm_order_cancelled',
         'm_partial_delivery',
         'w_order_confirmed',
         'w_order_cancelled',
         'shipped',
-        'delivered'
+        'delivered',
       ],
-      default: 'pending'
+      default: 'pending',
     },
 
     expDeliveryDate: {
@@ -178,25 +170,22 @@ const POWholesalerToManufacturerSchema = new mongoose.Schema(
     poNumber: Number,
     wholesalerPODateCreated: {
       type: Date,
-      default: Date.now
+      default: Date.now,
     },
     createdFromRetailerPoIds: [mongoose.Schema.Types.ObjectId],
     createdAt: {
       type: Date,
-      default: Date.now
-    }
+      default: Date.now,
+    },
   },
   {
-    timestamps: true
+    timestamps: true,
   }
 );
 
 POWholesalerToManufacturerSchema.plugin(toJSON);
 POWholesalerToManufacturerSchema.plugin(paginate);
 
-const POWholesalerToManufacturer = mongoose.model(
-  'POWholesalerToManufacturer',
-  POWholesalerToManufacturerSchema
-);
+const POWholesalerToManufacturer = mongoose.model('POWholesalerToManufacturer', POWholesalerToManufacturerSchema);
 
 module.exports = POWholesalerToManufacturer;

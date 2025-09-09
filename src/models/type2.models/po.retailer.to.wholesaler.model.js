@@ -70,21 +70,21 @@ const PORetailerToWholesalerSchema = new mongoose.Schema(
         colourImage: String,
         colourName: String,
         size: String,
-               brandName: {
+        brandName: {
           type: String,
         },
         quantity: Number, // Requested by retailer
-        availableQuantity:{
+        availableQuantity: {
           type: Number,
-          default: 0, 
-        } , // Updated by wholesaler
+          default: 0,
+        }, // Updated by wholesaler
         confirmed: {
           type: Boolean,
           default: false, // Confirmed by retailer if changes are made
         },
         status: {
           type: String,
-          enum: ['pending','partial' ,'confirmed', 'processing', 'shipped', 'delivered', 'cancelled'],
+          enum: ['pending', 'partial', 'confirmed', 'processing', 'shipped', 'delivered', 'cancelled'],
           default: 'pending',
         },
         manufacturerPrice: String,
@@ -93,21 +93,21 @@ const PORetailerToWholesalerSchema = new mongoose.Schema(
         gender: String,
         clothing: String,
         subCategory: String,
-                 hsnCode: {
+        hsnCode: {
           type: String,
         },
         hsnGst: {
           type: String,
         },
-           hsnDescription: {
+        hsnDescription: {
           type: String,
         },
       },
     ],
-      //transportDetails: transportDetailsSchema,
+    // transportDetails: transportDetailsSchema,
     statusAll: {
       type: String,
-      enum: ['pending','wholesaler_updated', 'processing', 'delivered', 'cancelled'],
+      enum: ['pending', 'wholesaler_updated', 'processing', 'delivered', 'cancelled'],
       default: 'pending',
     },
     email: String, // Retailer email
@@ -143,7 +143,7 @@ const PORetailerToWholesalerSchema = new mongoose.Schema(
       productDiscount: String,
       category: String,
     },
-    cartId:String,
+    cartId: String,
   },
   {
     timestamps: true,
@@ -152,7 +152,6 @@ const PORetailerToWholesalerSchema = new mongoose.Schema(
 
 PORetailerToWholesalerSchema.plugin(toJSON);
 PORetailerToWholesalerSchema.plugin(paginate);
-
 
 const PORetailerToWholesaler = mongoose.model('PORetailerToWholesaler', PORetailerToWholesalerSchema);
 

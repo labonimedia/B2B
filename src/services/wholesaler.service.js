@@ -316,7 +316,7 @@ const assignOrUpdateDiscount = async (email, id, discountGivenBy, category, prod
     wholesaler.discountGiven[existingDiscountIndex].shippingDiscount = shippingDiscount;
   } else {
     // Add new discount entry
-    wholesaler.discountGiven.push({ discountGivenBy, id,  category, productDiscount, shippingDiscount });
+    wholesaler.discountGiven.push({ discountGivenBy, id, category, productDiscount, shippingDiscount });
   }
 
   await wholesaler.save();
@@ -341,7 +341,7 @@ const assignOrUpdateDiscountToRetailer = async (email, id, discountGivenBy, cate
     wholesaler.discountGiven[existingDiscountIndex].shippingDiscount = shippingDiscount;
   } else {
     // Add new discount entry
-    wholesaler.discountGiven.push({ discountGivenBy, id ,category, productDiscount, shippingDiscount });
+    wholesaler.discountGiven.push({ discountGivenBy, id, category, productDiscount, shippingDiscount });
   }
 
   await wholesaler.save();

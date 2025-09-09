@@ -2,22 +2,20 @@ const httpStatus = require('http-status');
 const { PORetailerToManufacturer, RtlToMnfCart } = require('../../models');
 const ApiError = require('../../utils/ApiError');
 
-
-
 /**
  * Get PORetailerToManufacture by id
  * @param {ObjectId} id
  * @returns {Promise<PORetailerToManufacturer>}
  */
 const getSinglePoRetailerToManufacture = async (id) => {
-    return PORetailerToManufacturer.findById(id);
-  };
+  return PORetailerToManufacturer.findById(id);
+};
 const genratedeChallNO = async (email) => {
   const lastPO = await PORetailerToManufacturer.findOne({ email }).sort({ poNumber: -1 }).lean();
   return (nextdeliveryChallanNumber = lastPO ? lastPO.poNumber + 1 : 1);
 };
 
-  /**
+/**
  * Create Retailer PO and remove matching cart entry
  */
 const makeToOrderPO = async (reqBody) => {
@@ -45,13 +43,13 @@ const makeToOrderPO = async (reqBody) => {
  * Create Retailer PO and remove matching cart entry
  */
 const createPurchaseOrderRetailerType2 = async (reqBody) => {
-    const { cartId } = reqBody;
+  const { cartId } = reqBody;
 
-    if (!cartId) {
-      throw new ApiError(httpStatus.BAD_REQUEST, "'cartId' is required.");
-    }
-    
-    await RtlToMnfCart.findByIdAndDelete({_id:cartId});
+  if (!cartId) {
+    throw new ApiError(httpStatus.BAD_REQUEST, "'cartId' is required.");
+  }
+
+  await RtlToMnfCart.findByIdAndDelete({ _id: cartId });
 
   const purchaseOrder = await PORetailerToManufacturer.create(reqBody);
   return purchaseOrder;
@@ -111,8 +109,6 @@ const updateRetailerPOSetItem = async (poId, updateBody) => {
   return po;
 };
 
-
-
 /**
  * Update PORetailerToManufacturer by id
  * @param {ObjectId} id
@@ -120,28 +116,28 @@ const updateRetailerPOSetItem = async (poId, updateBody) => {
  * @returns {Promise<PORetailerToManufacturer>}
  */
 const updateSinglePoRetailerToManufacture = async (id, updateBody) => {
-    const cart = await getSinglePoRetailerToManufacture(id);
-    if (!cart) {
-      throw new ApiError(httpStatus.NOT_FOUND, 'Purchase Order not found');
-    }
-    Object.assign(cart, updateBody);
-    await cart.save();
-    return cart;
-  };
-  
-  /**
-   * Delete PORetailerToManufacture by id
-   * @param {ObjectId} id
-   * @returns {Promise<PORetailerToManufacturer>}
-   */
-  const deleteSinglePoRetailerToManufacture = async (id) => {
-    const cart = await getSinglePoRetailerToManufacture(id);
-    if (!cart) {
-      throw new ApiError(httpStatus.NOT_FOUND, 'Purchase Order not found');
-    }
-    await cart.remove();
-    return cart;
-  };
+  const cart = await getSinglePoRetailerToManufacture(id);
+  if (!cart) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Purchase Order not found');
+  }
+  Object.assign(cart, updateBody);
+  await cart.save();
+  return cart;
+};
+
+/**
+ * Delete PORetailerToManufacture by id
+ * @param {ObjectId} id
+ * @returns {Promise<PORetailerToManufacturer>}
+ */
+const deleteSinglePoRetailerToManufacture = async (id) => {
+  const cart = await getSinglePoRetailerToManufacture(id);
+  if (!cart) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Purchase Order not found');
+  }
+  await cart.remove();
+  return cart;
+};
 
 module.exports = {
   createPurchaseOrderRetailerType2,

@@ -399,7 +399,7 @@ const updatePurchaseOrderQuantities = async (purchaseOrderId) => {
       })
       .filter((item) => item !== null);
 
-      purchaseOrder.status = 'updated';
+    purchaseOrder.status = 'updated';
     await purchaseOrder.save();
     return purchaseOrder;
   } catch (error) {
@@ -419,5 +419,5 @@ module.exports = {
   deleteCartType2ById,
   getPurchaseOrdersByManufactureEmail,
   updatePurchaseOrderQuantities,
-  getSinglePurchaseOrderDataByWholesalerEmail
+  getSinglePurchaseOrderDataByWholesalerEmail,
 };

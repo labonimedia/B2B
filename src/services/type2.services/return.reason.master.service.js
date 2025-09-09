@@ -79,5 +79,5 @@ module.exports = {
   getReturnReasonById,
   updateReturnReasonById,
   deleteReturnReasonById,
-  bulkUploadReturnReason
+  bulkUploadReturnReason,
 };

@@ -103,27 +103,23 @@ const rtlToMnfCartRoute = require('./type2.routes/rtlToMnf.cart.route');
 const rtlToMnfPORoute = require('./type2.routes/rtlToMnf.po.route');
 const rtlOrderPRequestRoute = require('./type2.routes/retailer.orderP.request.route');
 const performInvoiceRoute = require('./type2.routes/perform.invoice.route');
-//new flow apis
+// new flow apis
 const PORetailerToWholesalerRoute = require('./type2.routes/po.retailer.to.wholesaler.route');
 const PORetailerToManufactureRoute = require('./type2.routes/po.retailer.to.manufacture.route');
 const POWholesalerToManufactureRoute = require('./type2.routes/po.wholesaler.to.manufacture.route');
 // performa invoice
-const M2RPerformaInvoiceRoute =  require('./type2.routes/pi.manufacture.to.retailer.route');
-const M2WPerformaInvoiceRoute =  require('./type2.routes/pi.manufacture.to.wholesaler.route');
+const M2RPerformaInvoiceRoute = require('./type2.routes/pi.manufacture.to.retailer.route');
+const M2WPerformaInvoiceRoute = require('./type2.routes/pi.manufacture.to.wholesaler.route');
 // inventory
-const ManufactureInventoryRoute =  require('./type2.routes/inventory.manufacture.route');
-const WholesalerInventoryRoute =  require('./type2.routes/inventory.wholesaler.route');
-const RetailerInventoryRoute =  require('./type2.routes/inventory.retailer.route');
-const ManufactureInventoryLogsRoute =  require('./type2.routes/manufacture.inventory.logs.route');
+const ManufactureInventoryRoute = require('./type2.routes/inventory.manufacture.route');
+const WholesalerInventoryRoute = require('./type2.routes/inventory.wholesaler.route');
+const RetailerInventoryRoute = require('./type2.routes/inventory.retailer.route');
+const ManufactureInventoryLogsRoute = require('./type2.routes/manufacture.inventory.logs.route');
 // hsn gst route
-const HsnGstRoute =  require('./type2.routes/hsn.gst.data.route');
-const ReturnReasonRoute =  require('./type2.routes/return.reason.master.route');
+const HsnGstRoute = require('./type2.routes/hsn.gst.data.route');
+const ReturnReasonRoute = require('./type2.routes/return.reason.master.route');
 // credit note
 const mToRCreditNoteRoute = require('./type2.routes/credit.note.manufacture.to.retailer.route');
-
-
-
-
 
 const router = express.Router();
 
@@ -540,7 +536,7 @@ const defaultRoutes = [
     path: '/perform-invoice',
     route: performInvoiceRoute,
   },
-  //new flow apis for order flow
+  // new flow apis for order flow
   {
     path: '/po-retailer-to-wholesaler',
     route: PORetailerToWholesalerRoute,
@@ -553,42 +549,42 @@ const defaultRoutes = [
     path: '/po-wholesaler-to-manufacture',
     route: POWholesalerToManufactureRoute,
   },
-  //performa invoice
-   {
+  // performa invoice
+  {
     path: '/pi-manufacture-to-retailer',
     route: M2RPerformaInvoiceRoute,
   },
-     {
+  {
     path: '/pi-manufacture-to-wholesaler',
     route: M2WPerformaInvoiceRoute,
   },
-      //inventory
-     {
+  // inventory
+  {
     path: '/manufacture-inventory',
     route: ManufactureInventoryRoute,
   },
-      {
+  {
     path: '/wholesaler-inventory',
     route: WholesalerInventoryRoute,
   },
-      {
+  {
     path: '/retailer-inventory',
     route: RetailerInventoryRoute,
-  },   //inventory
-     {
+  }, // inventory
+  {
     path: '/manufacture-inventory-logs',
     route: ManufactureInventoryLogsRoute,
   },
-    {
+  {
     path: '/hsn-gst',
     route: HsnGstRoute,
   },
-     {
+  {
     path: '/return-reason',
     route: ReturnReasonRoute,
   },
   // credit note
-     {
+  {
     path: '/m-r-credit-note',
     route: mToRCreditNoteRoute,
   },

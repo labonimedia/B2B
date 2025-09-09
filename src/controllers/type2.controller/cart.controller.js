@@ -59,8 +59,8 @@ const updateSetItem = catchAsync(async (req, res) => {
 });
 
 const deleteCartSetItem = catchAsync(async (req, res) => {
-  const { cartId, setId } = req.params; 
-   await cartType2Service. deleteCartSetItem(cartId, setId);
+  const { cartId, setId } = req.params;
+  await cartType2Service.deleteCartSetItem(cartId, setId);
   res.status(httpStatus.NO_CONTENT).send();
 });
 

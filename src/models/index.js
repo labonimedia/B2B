@@ -115,11 +115,11 @@ module.exports.RtlToMnfCart = require('./type2.models/rtlTomnf.cart.model');
 module.exports.RtlToMnfPo = require('./type2.models/rtlToMnf.po.model');
 module.exports.RetailerPartialReq = require('./type2.models/retailer.orderP.request.model');
 module.exports.PerformInvoice = require('./type2.models/perform.invoice.model');
-/// new models PO 
+/// new models PO
 module.exports.PORetailerToWholesaler = require('./type2.models/po.retailer.to.wholesaler.model');
 module.exports.PORetailerToManufacturer = require('./type2.models/po.retailer.to.manufacture.model');
 module.exports.POWholesalerToManufacturer = require('./type2.models/po.wholesaler.to.manufacture.model');
-//Performa Invoice
+// Performa Invoice
 module.exports.M2RPerformaInvoice = require('./type2.models/pi.manufacture.to.retailer.model');
 module.exports.M2WPerformaInvoice = require('./type2.models/pi.manufacture.to.wholesaler.model');
 // inventory model
@@ -127,9 +127,9 @@ module.exports.ManufactureInventory = require('./type2.models/inventory.manufact
 module.exports.WholesalerInventory = require('./type2.models/inventory.wholesaler.model');
 module.exports.RetailerInventory = require('./type2.models/inventory.retailer.model');
 module.exports.ManufactureInventoryLogs = require('./type2.models/manufacture.inventory.logs.model');
-//credit Note model
+// credit Note model
 module.exports.MtoRCreditNote = require('./type2.models/credit.note.manufacture.to.retailer.model');
-// hsn 
-module.exports.HsnGst =  require('./type2.models/hsn.gst.data.model');  
+// hsn
+module.exports.HsnGst = require('./type2.models/hsn.gst.data.model');
 // return reason
-module.exports.ReturnReason =  require('./type2.models/return.reason.master.model');  
+module.exports.ReturnReason = require('./type2.models/return.reason.master.model');

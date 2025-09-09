@@ -10,21 +10,21 @@ router
     auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
     poWholesalerToManufacturerController.createRetailerPurchaseOrderType2
   )
-    .get(
-      auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
-      poWholesalerToManufacturerController.getAllPoWholesalerToManufacturer
-    );
-    // router.get(
-    //     '/generate-po-data-to-manufacturer/:wholesalerEmail',
-    //     auth('wholesaler'),
-    //     poWholesalerToManufacturerController.generatePOToManufacturer
-    //   );
-    router.get(
-        '/generate-po-data-to-manufacturer/:wholesalerEmail/:manufacturerEmail',
-        auth('wholesaler'),
-        poWholesalerToManufacturerController.generatePOToManufacturer
-      );
-      
+  .get(
+    auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
+    poWholesalerToManufacturerController.getAllPoWholesalerToManufacturer
+  );
+// router.get(
+//     '/generate-po-data-to-manufacturer/:wholesalerEmail',
+//     auth('wholesaler'),
+//     poWholesalerToManufacturerController.generatePOToManufacturer
+//   );
+router.get(
+  '/generate-po-data-to-manufacturer/:wholesalerEmail/:manufacturerEmail',
+  auth('wholesaler'),
+  poWholesalerToManufacturerController.generatePOToManufacturer
+);
+
 router
   .route('/wholesaler/:wholesalerEmail')
   .get(
@@ -38,7 +38,7 @@ router
 //      auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
 //      poWholesalerToManufacturerController.updateRetailerPOSetItem
 //   );
-  router.get('/get-combined-po-items', auth('wholesaler'), poWholesalerToManufacturerController.getCombinedRetailerItems);
+router.get('/get-combined-po-items', auth('wholesaler'), poWholesalerToManufacturerController.getCombinedRetailerItems);
 
 router
   .route('/:id')
@@ -57,8 +57,6 @@ router
 router.get('/get-combined-po-items', auth('wholesaler'), poWholesalerToManufacturerController.getCombinedRetailerItems);
 
 // router.post('/create-po-to-manufacturer', auth('wholesaler'), poWholesalerToManufacturerController.createPoToManufacturer);
-router
-  .route('/update-po-data/:poId')
-  .patch(auth('manufacture'), poWholesalerToManufacturerController.updatePoData);
-  
+router.route('/update-po-data/:poId').patch(auth('manufacture'), poWholesalerToManufacturerController.updatePoData);
+
 module.exports = router;

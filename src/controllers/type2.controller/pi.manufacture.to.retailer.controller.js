@@ -27,7 +27,7 @@ const getInvoiceById = catchAsync(async (req, res) => {
  * Get all M2R invoices with filter, sort, paginate
  */
 const getAllInvoices = catchAsync(async (req, res) => {
-  const filter = pick(req.query, ['manufacturerEmail', 'retailerEmail', 'statusAll','poNumber', 'invoiceNumber']);
+  const filter = pick(req.query, ['manufacturerEmail', 'retailerEmail', 'statusAll', 'poNumber', 'invoiceNumber']);
   const options = pick(req.query, ['sortBy', 'limit', 'page']);
   const result = await M2RPerformaInvoiceService.getAllM2RInvoices(filter, options);
   res.send(result);

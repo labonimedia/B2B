@@ -19,10 +19,19 @@ const createInventory = catchAsync(async (req, res) => {
 });
 
 const getInventories = catchAsync(async (req, res) => {
- const filter = pick(req.query, ['userEmail','brandName' , 'designNumber', 'colour', 'brandSize', 'standardSize', 'colourName', 'productId']);
+  const filter = pick(req.query, [
+    'userEmail',
+    'brandName',
+    'designNumber',
+    'colour',
+    'brandSize',
+    'standardSize',
+    'colourName',
+    'productId',
+  ]);
   const options = pick(req.query, ['sortBy', 'limit', 'page']);
- const search = req.query.search || '';
-//   // Convert productId to ObjectId
+  const search = req.query.search || '';
+  //   // Convert productId to ObjectId
   if (filter.productId) {
     const mongoose = require('mongoose');
     try {
@@ -34,8 +43,6 @@ const getInventories = catchAsync(async (req, res) => {
   const result = await ManufactureInventoryLogsService.queryInventories(filter, options, search);
   res.send(result);
 });
-
-
 
 // const getInventories = catchAsync(async (req, res) => {
 //   const filter = pick(req.query, ['userEmail','brandName' , 'designNumber', 'colour', 'brandSize', 'standardSize', 'colourName', 'productId']);
