@@ -196,7 +196,10 @@ const PORetailerToManufacturerSchema = new mongoose.Schema(
     partialDeliveryDate: {
       type: Date, // partail or actual delivery date
     },
-
+    invoiceGenerated: {
+      type: Boolean,
+      default: false // partail or actual delivery date
+    },
     retailerConfirmedAt: {
       type: Date, // When retailer confirms the PO
     },
