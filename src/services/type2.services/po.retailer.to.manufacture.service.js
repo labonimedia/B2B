@@ -55,6 +55,8 @@ const createPurchaseOrderRetailerType2 = async (reqBody) => {
   return purchaseOrder;
 };
 
+
+
 /**
  * Query for PurchaseOrderRetailerType2
  * @param {Object} filter - Mongo filter
