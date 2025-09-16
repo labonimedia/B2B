@@ -198,7 +198,11 @@ const PORetailerToManufacturerSchema = new mongoose.Schema(
     },
     invoiceGenerated: {
       type: Boolean,
-      default: false // partail or actual delivery date
+      default: false, // partail or actual delivery date
+    },
+    invoiceId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'M2RPerformaInvoice',
     },
     retailerConfirmedAt: {
       type: Date, // When retailer confirms the PO
