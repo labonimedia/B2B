@@ -133,3 +133,5 @@ module.exports.MtoRCreditNote = require('./type2.models/credit.note.manufacture.
 module.exports.HsnGst = require('./type2.models/hsn.gst.data.model');
 // return reason
 module.exports.ReturnReason = require('./type2.models/return.reason.master.model');
+// return request 
+module.exports.ReturnR2M = require('./type2.models/return.retailer.to.manufacture.model');
