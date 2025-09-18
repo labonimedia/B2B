@@ -115,7 +115,8 @@ const returnRequestSchema = new mongoose.Schema(
         // Return-related details
         returnReason: String,
         otherReturnReason: String,
-
+        manufacturerComments: String,
+        retailerComments: String,
         // 🔹 Per-set return status
         returnStatus: {
           type: String,
