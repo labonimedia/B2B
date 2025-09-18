@@ -120,6 +120,8 @@ const HsnGstRoute = require('./type2.routes/hsn.gst.data.route');
 const ReturnReasonRoute = require('./type2.routes/return.reason.master.route');
 // credit note
 const mToRCreditNoteRoute = require('./type2.routes/credit.note.manufacture.to.retailer.route');
+// return request
+const rToMReturnRoute = require('./type2.routes/return.retailer.to.manufacture.model');
 
 const router = express.Router();
 
@@ -587,6 +589,11 @@ const defaultRoutes = [
   {
     path: '/m-r-credit-note',
     route: mToRCreditNoteRoute,
+  },
+  // return request
+   {
+    path: '/return-r2m',
+    route: rToMReturnRoute,
   },
 ];
 
