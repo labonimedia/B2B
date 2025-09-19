@@ -211,6 +211,10 @@ const performaInvoiceSchema = new mongoose.Schema(
     totalAmount: Number,
     discountApplied: Number,
     finalAmount: Number,
+        returnRequestGenerated: {
+          type: Boolean,
+          default: false,
+        },
   },
   {
     timestamps: true,
