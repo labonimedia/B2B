@@ -65,7 +65,6 @@ const returnRequestSchema = new mongoose.Schema(
     },
        poDate: {
       type: Date,
-      
     },
     // 🔹 Overall status of this Return Request
     statusAll: {
@@ -82,9 +81,7 @@ const returnRequestSchema = new mongoose.Schema(
       ],
       default: 'return_requested',
     },
-
     bankDetails: bankDetailsSchema,
-
     manufacturerEmail: {
       type: String,
       required: true,
@@ -93,7 +90,6 @@ const returnRequestSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-
     deliveryItems: [
       {
         designNumber: String,
@@ -111,7 +107,6 @@ const returnRequestSchema = new mongoose.Schema(
         hsnGst: Number,
         hsnDescription: String,
         brandName: String,
-
         // Return-related details
         returnReason: String,
         otherReturnReason: String,
@@ -133,7 +128,6 @@ const returnRequestSchema = new mongoose.Schema(
         },
       },
     ],
-
     manufacturer: {
       email: String,
       fullName: String,
@@ -159,7 +153,6 @@ const returnRequestSchema = new mongoose.Schema(
       productDiscount: String,
       category: String,
     },
-    
     totalQuantity: Number,
     transportDetails: transportDetailsSchema,
     totalAmount: Number,
