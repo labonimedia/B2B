@@ -32,4 +32,8 @@ router.get(
   auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
   m2rPerformaInvoiceController.getPerformaInvoiceByPoId
 );
+router.patch(
+  '/mark-return-request/:id',
+  m2rPerformaInvoiceController.markReturnRequestGenerated
+);
 module.exports = router;

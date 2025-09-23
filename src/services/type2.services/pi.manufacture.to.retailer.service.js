@@ -120,6 +120,21 @@ const deleteM2RInvoiceById = async (id) => {
   return invoice;
 };
 
+/**
+ * Set returnRequestGenerated = "true" for an invoice
+ */
+const markReturnRequestGenerated = async (id) => {
+  const invoice = await M2RPerformaInvoice.findById(id);
+
+  if (!invoice) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Invoice not found');
+  }
+
+  invoice.returnRequestGenerated = "true"; // explicitly set to string "true"
+  await invoice.save();
+
+  return invoice;
+};
 module.exports = {
   createM2RInvoice,
   getSingleM2RInvoiceById,
@@ -129,4 +144,5 @@ module.exports = {
   updateM2RInvoiceDeliveryItems,
   deleteM2RInvoiceById,
   getPerformaInvoiceByPoId,
+  markReturnRequestGenerated
 };
