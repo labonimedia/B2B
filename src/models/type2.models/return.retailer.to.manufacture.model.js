@@ -51,6 +51,10 @@ const returnRequestSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+     returnRequestNumber: {
+      type: Number,
+      required: true,
+    },
     invoiceId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'M2RPerformaInvoice',

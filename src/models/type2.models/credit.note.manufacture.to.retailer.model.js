@@ -64,6 +64,9 @@ const creditNoteSchema = new mongoose.Schema(
         gender: String,
         clothing: String,
         subCategory: String,
+         quantity: Number,
+               returnReason: String,
+        otherReturnReason: String,
         hsnCode: {
           type: String,
         },
