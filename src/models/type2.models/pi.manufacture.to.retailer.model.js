@@ -213,7 +213,7 @@ const performaInvoiceSchema = new mongoose.Schema(
     finalAmount: Number,
         returnRequestGenerated: {
           type: String,
-          default: 'false',
+          // default: 'false',
         },
   },
   {
