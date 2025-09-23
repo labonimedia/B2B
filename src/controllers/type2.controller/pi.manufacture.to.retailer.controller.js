@@ -71,7 +71,13 @@ const getPerformaInvoiceByPoId = catchAsync(async (req, res) => {
   const invoice = await M2RPerformaInvoiceService.getPerformaInvoiceByPoId(poId);
   res.status(httpStatus.OK).send(invoice);
 });
-
+/**
+ * Mark return request as generated for an invoice
+ */
+const markReturnRequestGenerated = catchAsync(async (req, res) => {
+  const updatedInvoice = await M2RPerformaInvoiceService.markReturnRequestGenerated(req.params.id);
+  res.send(updatedInvoice);
+});
 module.exports = {
   createInvoice,
   getInvoiceById,
@@ -81,4 +87,5 @@ module.exports = {
   updateDeliveryItems,
   deleteInvoice,
   getPerformaInvoiceByPoId,
+  markReturnRequestGenerated,
 };
