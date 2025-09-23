@@ -103,6 +103,7 @@ const returnRequestSchema = new mongoose.Schema(
         size: String,
         orderQuantity: Number,
         returnQuantity: Number,
+         rate: Number,
         productType: String,
         gender: String,
         clothing: String,
