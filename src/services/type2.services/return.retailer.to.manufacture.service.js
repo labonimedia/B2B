@@ -3,15 +3,42 @@ const { ReturnR2M } = require('../../models');
 const ApiError = require('../../utils/ApiError');
 
 
+// /**
+//  * Create a BackStyle
+//  * @param {Object} reqBody
+//  * @returns {Promise<BackStyle>}
+//  */
+// const createMtoRReturnRequest = async (reqBody) => {
+//   return ReturnR2M.create(reqBody);
+// };
 /**
- * Create a BackStyle
- * @param {Object} reqBody
- * @returns {Promise<BackStyle>}
+ * Create a new Return Request (Retailer → Manufacturer)
  */
 const createMtoRReturnRequest = async (reqBody) => {
-  return ReturnR2M.create(reqBody);
-};
+  const { manufacturerEmail } = reqBody;
 
+  if (!manufacturerEmail) {
+    throw new ApiError(
+      httpStatus.BAD_REQUEST,
+      "'manufacturerEmail' is required to generate return request number."
+    );
+  }
+
+  // Get last return request for this manufacturer
+  const lastRequest = await ReturnR2M.findOne({ manufacturerEmail })
+    .sort({ returnRequestNumber: -1 }) // highest number first
+    .lean();
+
+  let nextNumber = 1;
+  if (lastRequest && lastRequest.returnRequestNumber) {
+    nextNumber = lastRequest.returnRequestNumber + 1;
+  }
+
+  reqBody.returnRequestNumber = nextNumber;
+
+  const returnRequest = await ReturnR2M.create(reqBody);
+  return returnRequest;
+};
 /**
  * Query for BackStyle
  * @param {Object} filter - Mongo filter

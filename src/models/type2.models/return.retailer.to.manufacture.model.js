@@ -53,7 +53,7 @@ const returnRequestSchema = new mongoose.Schema(
     },
      returnRequestNumber: {
       type: Number,
-      required: true,
+      //required: true,
     },
     invoiceId: {
       type: mongoose.Schema.Types.ObjectId,
@@ -166,6 +166,12 @@ const returnRequestSchema = new mongoose.Schema(
   {
     timestamps: true,
   }
+);
+
+// ✅ Add the compound index here
+returnRequestSchema.index(
+  { manufacturerEmail: 1, returnRequestNumber: 1 },
+  { unique: true }
 );
 
 returnRequestSchema.plugin(toJSON);
