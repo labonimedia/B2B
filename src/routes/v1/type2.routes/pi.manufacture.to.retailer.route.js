@@ -8,24 +8,24 @@ const auth = require('../../../middlewares/auth'); // Uncomment if using role-ba
 router
   .route('/')
   .post(
-    auth('manufacture'), // Add auth if needed
+    auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), // Add auth if needed
     m2rPerformaInvoiceController.createInvoice
   )
-  .get(auth('manufacture', 'retailer'), m2rPerformaInvoiceController.getAllInvoices);
+  .get( auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), m2rPerformaInvoiceController.getAllInvoices);
 
 // Get, update, patch deliveryItems, and delete by ID
 router
   .route('/:id')
 
-  .get(auth('manufacture', 'retailer'), m2rPerformaInvoiceController.getInvoiceById)
-  .put(auth('manufacture'), m2rPerformaInvoiceController.updateInvoice)
-  .patch(auth('manufacture'), m2rPerformaInvoiceController.updateDeliveryItems)
-  .delete(auth('manufacture'), m2rPerformaInvoiceController.deleteInvoice);
+  .get( auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), m2rPerformaInvoiceController.getInvoiceById)
+  .put( auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), m2rPerformaInvoiceController.updateInvoice)
+  .patch( auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), m2rPerformaInvoiceController.updateDeliveryItems)
+  .delete( auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), m2rPerformaInvoiceController.deleteInvoice);
 
 // Get all invoices by manufacturer email (direct fetch)
 router
   .route('/manufacturer/:manufacturerEmail')
-  .get(auth('manufacture'), m2rPerformaInvoiceController.getInvoicesByManufacturer);
+  .get( auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), m2rPerformaInvoiceController.getInvoicesByManufacturer);
 
 router.get(
   '/by-po/:poId',
