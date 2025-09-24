@@ -98,7 +98,7 @@ const creditNoteSchema = new mongoose.Schema(
     },
 
     usedAt: {
-      type: Date,
+      type: Date,     
     },
 
     createdAt: {

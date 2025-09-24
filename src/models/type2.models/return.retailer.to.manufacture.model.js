@@ -163,6 +163,7 @@ const returnRequestSchema = new mongoose.Schema(
     totalAmount: Number,
     discountApplied: Number,
     finalAmount: Number,
+    manufacturerReturnRemarks: String,
   },
   {
     timestamps: true,
