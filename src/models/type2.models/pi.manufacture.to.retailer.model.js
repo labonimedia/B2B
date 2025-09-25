@@ -132,7 +132,9 @@ const performaInvoiceSchema = new mongoose.Schema(
       type: Date,
       default: Date.now,
     },
-
+    invoiceRecievedDate: {
+      type: Date,
+    },
     statusAll: {
       type: String,
       enum: ['created', 'dispatched', 'in_transit', 'partially_delivered', 'delivered', 'cancelled'],
@@ -211,7 +213,7 @@ const performaInvoiceSchema = new mongoose.Schema(
     totalAmount: Number,
     discountApplied: Number,
     finalAmount: Number,
-    returnRequestGenerated: String,    
+    returnRequestGenerated: String,
   },
   {
     timestamps: true,
