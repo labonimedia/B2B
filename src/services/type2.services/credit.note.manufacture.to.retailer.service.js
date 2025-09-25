@@ -11,13 +11,47 @@ const bulkUploadMtoRCreditNote = async (dataArray) => {
   return results;
 };
 
+
+
+
+// /**
+//  * Create a MtoRCreditNote
+//  * @param {Object} reqBody
+//  * @returns {Promise<MtoRCreditNote>}
+//  */
+// const createMtoRCreditNote = async (reqBody) => {
+//   return MtoRCreditNote.create(reqBody);
+// };
+
 /**
- * Create a MtoRCreditNote
+ * Create a MtoRCreditNote with unique creditNoteNumber per manufacturer
  * @param {Object} reqBody
  * @returns {Promise<MtoRCreditNote>}
  */
 const createMtoRCreditNote = async (reqBody) => {
-  return MtoRCreditNote.create(reqBody);
+  const { manufacturerEmail } = reqBody;
+
+  if (!manufacturerEmail) {
+    throw new ApiError(
+      httpStatus.BAD_REQUEST,
+      "'manufacturerEmail' is required to generate credit note number."
+    );
+  }
+
+  // Get last credit note for this manufacturer
+  const lastCreditNote = await MtoRCreditNote.findOne({ manufacturerEmail })
+    .sort({ creditNoteNumber: -1 }) // highest number first
+    .lean();
+
+  let nextNumber = 1;
+  if (lastCreditNote && lastCreditNote.creditNoteNumber) {
+    nextNumber = lastCreditNote.creditNoteNumber + 1;
+  }
+
+  reqBody.creditNoteNumber = nextNumber;
+
+  const creditNote = await MtoRCreditNote.create(reqBody);
+  return creditNote;
 };
 
 /**

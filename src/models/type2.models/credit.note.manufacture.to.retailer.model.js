@@ -4,53 +4,23 @@ const { toJSON, paginate } = require('../plugins');
 const creditNoteSchema = new mongoose.Schema(
   {
     creditNoteNumber: {
-      type: String,
-      unique: true,
-      required: true,
+      type: Number,
     },
     invoiceId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Invoice',
+      ref: 'M2RPerformaInvoice',
       required: true,
     },
-    createdByEmail: {
+    manufacturerEmail: {
       type: String,
       required: true,
     },
-    createdByName: String,
-
-    sender: {
-      email: String,
-      fullName: String,
-      companyName: String,
-      contactNumber: String,
-    },
-    receiver: {
-      email: String,
-      fullName: String,
-      companyName: String,
-      contactNumber: String,
+    retailerEmail: {
+      type: String,
+      required: true,
     },
 
     set: [
-      // {
-      //     designNumber: String,
-      //     hsnCode: {
-      //         type: String,
-      //     },
-      //     hsnGst: {
-      //         type: String,
-      //     },
-      //     hsnDescription: {
-      //         type: String,
-      //     },
-      //     size: String,
-      //     color: String,
-      //     quantity: Number,
-      //     price: Number,
-      //     totalAmount: Number, // price * quantity
-      //     reason: String,
-      // }
       {
         productBy: String, // Manufacturer email
         designNumber: String,
@@ -64,8 +34,8 @@ const creditNoteSchema = new mongoose.Schema(
         gender: String,
         clothing: String,
         subCategory: String,
-         quantity: Number,
-               returnReason: String,
+        quantity: Number,
+        returnReason: String,
         otherReturnReason: String,
         hsnCode: {
           type: String,
@@ -86,7 +56,10 @@ const creditNoteSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
-
+      totalReturnItem: {
+      type: Number,
+      // required: true,
+    },
     used: {
       type: Boolean,
       default: false,
@@ -94,11 +67,11 @@ const creditNoteSchema = new mongoose.Schema(
 
     usedInInvoiceId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Invoice',
+      ref: 'M2RPerformaInvoice',
     },
 
     usedAt: {
-      type: Date,     
+      type: Date,
     },
 
     createdAt: {
@@ -115,7 +88,8 @@ const creditNoteSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
-
+// ✅ Add the compound index here
+creditNoteSchema.index({ manufacturerEmail: 1, creditNoteNumber: 1 }, { unique: true });
 creditNoteSchema.plugin(toJSON);
 creditNoteSchema.plugin(paginate);
 
