@@ -6,6 +6,10 @@ const creditNoteSchema = new mongoose.Schema(
     creditNoteNumber: {
       type: Number,
     },
+    invoiceNumber: {
+      type: Number,
+      required: true,
+    },
     invoiceId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'M2RPerformaInvoice',
@@ -28,7 +32,8 @@ const creditNoteSchema = new mongoose.Schema(
         colourImage: String,
         colourName: String,
         size: String,
-        returnQuantity: Number, // Requested by retailer
+        returnQuantity: Number,
+        acceptedQuantity: Number, 
         price: String,
         productType: String,
         gender: String,
@@ -56,7 +61,11 @@ const creditNoteSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
-      totalReturnItem: {
+    totalReturnItem: {
+      type: Number,
+      // required: true,
+    },
+    totalAcceptedReturnItem: {
       type: Number,
       // required: true,
     },
@@ -68,6 +77,11 @@ const creditNoteSchema = new mongoose.Schema(
     usedInInvoiceId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'M2RPerformaInvoice',
+    },
+
+    usedInInvoiceNumber: {
+      type: Number,
+      //  required: true,
     },
 
     usedAt: {
