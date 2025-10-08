@@ -23,7 +23,6 @@ const creditNoteSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-
     set: [
       {
         productBy: String, // Manufacturer email
@@ -33,7 +32,7 @@ const creditNoteSchema = new mongoose.Schema(
         colourName: String,
         size: String,
         returnQuantity: Number,
-        acceptedQuantity: Number, 
+        acceptedQuantity: Number,
         price: String,
         productType: String,
         gender: String,
@@ -56,7 +55,6 @@ const creditNoteSchema = new mongoose.Schema(
         },
       },
     ],
-
     totalCreditAmount: {
       type: Number,
       required: true,
@@ -73,26 +71,21 @@ const creditNoteSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
-
     usedInInvoiceId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'M2RPerformaInvoice',
     },
-
     usedInInvoiceNumber: {
       type: Number,
       //  required: true,
     },
-
     usedAt: {
       type: Date,
     },
-
     createdAt: {
       type: Date,
       default: Date.now,
     },
-
     isDeleted: {
       type: Boolean,
       default: false,
