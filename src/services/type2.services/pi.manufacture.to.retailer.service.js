@@ -29,6 +29,7 @@ const getSingleM2RInvoiceById = async (id) => {
 //   const invoice = await M2RPerformaInvoice.create(reqBody);
 //   return invoice;
 // };
+
 const createM2RInvoice = async (reqBody) => {
   const { manufacturerEmail } = reqBody;
 
@@ -82,13 +83,40 @@ const updateM2RInvoiceById = async (id, updateBody) => {
   return invoice;
 };
 
-/**
- * Update deliveryItems inside an M2R Invoice
- */
+// /**
+//  * Update deliveryItems inside an M2R Invoice
+//  */
+// const updateM2RInvoiceDeliveryItems = async (invoiceId, updateBody) => {
+//   const invoice = await M2RPerformaInvoice.findById(invoiceId);
+//   if (!invoice) throw new ApiError(httpStatus.NOT_FOUND, 'Invoice not found');
+//   if (Array.isArray(updateBody.deliveryItems)) {
+//     updateBody.deliveryItems.forEach((incomingItem) => {
+//       if (!incomingItem._id) return;
+//       const existingItem = invoice.deliveryItems.id(incomingItem._id);
+//       if (existingItem) {
+//         Object.keys(incomingItem).forEach((field) => {
+//           if (field !== '_id') {
+//             existingItem[field] = incomingItem[field];
+//           }
+//         });
+//       }
+//     });
+//   }
+//   await invoice.save();
+//   return invoice;
+// };
 const updateM2RInvoiceDeliveryItems = async (invoiceId, updateBody) => {
   const invoice = await M2RPerformaInvoice.findById(invoiceId);
   if (!invoice) throw new ApiError(httpStatus.NOT_FOUND, 'Invoice not found');
 
+  // ✅ Step 1: Update top-level fields (like statusAll, invoiceRecievedDate)
+  Object.keys(updateBody).forEach((key) => {
+    if (key !== 'deliveryItems') {
+      invoice[key] = updateBody[key];
+    }
+  });
+
+  // ✅ Step 2: Update nested deliveryItems if present
   if (Array.isArray(updateBody.deliveryItems)) {
     updateBody.deliveryItems.forEach((incomingItem) => {
       if (!incomingItem._id) return;
@@ -104,7 +132,9 @@ const updateM2RInvoiceDeliveryItems = async (invoiceId, updateBody) => {
     });
   }
 
+  // ✅ Step 3: Save the updated invoice
   await invoice.save();
+
   return invoice;
 };
 
@@ -144,5 +174,5 @@ module.exports = {
   updateM2RInvoiceDeliveryItems,
   deleteM2RInvoiceById,
   getPerformaInvoiceByPoId,
-  markReturnRequestGenerated
+  markReturnRequestGenerated,
 };
