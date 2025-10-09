@@ -160,7 +160,7 @@ const performaInvoiceSchema = new mongoose.Schema(
         colourImage: String,
         size: String,
         quantity: Number,
-         returnQuantity: Number,
+        returnQuantity: Number,
         productType: String,
         gender: String,
         clothing: String,
