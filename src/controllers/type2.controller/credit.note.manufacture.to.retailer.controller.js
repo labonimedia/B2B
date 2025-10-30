@@ -21,12 +21,21 @@ const createCreditNote = catchAsync(async (req, res) => {
 });
 
 const queryMtoRCreditNote = catchAsync(async (req, res) => {
-  const filter = pick(req.query, ['createdByEmail']);
+  const filter = pick(req.query, ['retailerEmail', 'manufacturerEmail', 'used', 'isDeleted']);
   const options = pick(req.query, ['sortBy', 'limit', 'page']);
   const result = await mtoRCreditNoteService.queryMtoRCreditNote(filter, options);
   res.send(result);
 });
+const groupMtoRCreditNote = catchAsync(async (req, res) => {
+  const query = pick(req.query, ['retailerEmail', 'manufacturerEmail', 'page', 'limit']);
+  const result = await mtoRCreditNoteService.groupMtoRCreditNote(query);
 
+  res.status(httpStatus.OK).send({
+    success: true,
+    message: 'Grouped credit notes fetched successfully',
+    result,
+  });
+});
 const getMtoRCreditNoteById = catchAsync(async (req, res) => {
   const user = await mtoRCreditNoteService.getMtoRCreditNoteById(req.params.id);
   if (!user) {
@@ -52,4 +61,5 @@ module.exports = {
   getMtoRCreditNoteById,
   queryMtoRCreditNote,
   createCreditNote,
+  groupMtoRCreditNote,
 };

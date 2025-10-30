@@ -67,7 +67,75 @@ const queryMtoRCreditNote = async (filter, options) => {
   const mtoRCreditNote = await MtoRCreditNote.paginate(filter, options);
   return mtoRCreditNote;
 };
+const groupMtoRCreditNote = async (query) => {
+  const { retailerEmail, manufacturerEmail, page = 1, limit = 10 } = query;
 
+  if (!retailerEmail && !manufacturerEmail) {
+    throw new Error('Either retailerEmail or manufacturerEmail must be provided');
+  }
+
+  const matchStage = retailerEmail
+    ? { retailerEmail }
+    : { manufacturerEmail };
+
+  const groupByField = retailerEmail ? "$manufacturerEmail" : "$retailerEmail";
+
+  const skip = (Number(page) - 1) * Number(limit);
+
+  // ✅ Single aggregation for used true and false
+  const pipeline = [
+    { $match: matchStage },
+    {
+      $group: {
+        _id: { groupKey: groupByField, used: "$used" },
+        totalCreditNotes: { $sum: 1 },
+        totalCreditAmount: { $sum: "$totalCreditAmount" },
+        creditNotes: {
+          $push: {
+            _id: "$_id",
+            creditNoteNumber: "$creditNoteNumber",
+            invoiceNumber: "$invoiceNumber",
+            manufacturerEmail: "$manufacturerEmail",
+            retailerEmail: "$retailerEmail",
+            totalCreditAmount: "$totalCreditAmount",
+            createdAt: "$createdAt",
+            used: "$used",
+          },
+        },
+      },
+    },
+    { $sort: { "_id.groupKey": 1 } },
+  ];
+
+  const grouped = await MtoRCreditNote.aggregate(pipeline);
+
+  // ✅ Split the grouped result efficiently
+  const usedTrueGroups = grouped.filter((g) => g._id.used === true);
+  const usedFalseGroups = grouped.filter((g) => g._id.used === false);
+
+  // ✅ Paginate at app level (after aggregation)
+  const paginateArray = (arr) => {
+    const totalCount = arr.length;
+    const paginatedData = arr.slice(skip, skip + Number(limit));
+    return {
+      totalCount,
+      totalPages: Math.ceil(totalCount / limit),
+      page: Number(page),
+      limit: Number(limit),
+      data: paginatedData.map((g) => ({
+        groupKey: g._id.groupKey,
+        totalCreditNotes: g.totalCreditNotes,
+        totalCreditAmount: g.totalCreditAmount,
+        creditNotes: g.creditNotes,
+      })),
+    };
+  };
+
+  return {
+    usedTrue: paginateArray(usedTrueGroups),
+    usedFalse: paginateArray(usedFalseGroups),
+  };
+};
 /**
  * Get MtoRCreditNote by id
  * @param {ObjectId} id
@@ -114,4 +182,5 @@ module.exports = {
   updateMtoRCreditNoteById,
   deleteMtoRCreditNoteById,
   bulkUploadMtoRCreditNote,
+  groupMtoRCreditNote,
 };

@@ -105,6 +105,7 @@ const updateM2RInvoiceById = async (id, updateBody) => {
 //   await invoice.save();
 //   return invoice;
 // };
+
 const updateM2RInvoiceDeliveryItems = async (invoiceId, updateBody) => {
   const invoice = await M2RPerformaInvoice.findById(invoiceId);
   if (!invoice) throw new ApiError(httpStatus.NOT_FOUND, 'Invoice not found');
