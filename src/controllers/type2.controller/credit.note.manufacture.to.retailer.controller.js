@@ -26,8 +26,9 @@ const queryMtoRCreditNote = catchAsync(async (req, res) => {
   const result = await mtoRCreditNoteService.queryMtoRCreditNote(filter, options);
   res.send(result);
 });
+
 const groupMtoRCreditNote = catchAsync(async (req, res) => {
-  const query = pick(req.query, ['retailerEmail', 'manufacturerEmail', 'page', 'limit']);
+  const query = pick(req.query, ['retailerEmail', 'manufacturerEmail', 'used', 'page', 'limit']);
   const result = await mtoRCreditNoteService.groupMtoRCreditNote(query);
 
   res.status(httpStatus.OK).send({
