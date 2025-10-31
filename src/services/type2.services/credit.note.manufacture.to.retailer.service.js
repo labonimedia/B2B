@@ -1,5 +1,5 @@
 const httpStatus = require('http-status');
-const { MtoRCreditNote } = require('../../models');
+const { MtoRCreditNote, Retailer, Manufacture } = require('../../models');
 const ApiError = require('../../utils/ApiError');
 /**
  * Bulk upload HSN GST records (allowing duplicates)
@@ -67,22 +67,88 @@ const queryMtoRCreditNote = async (filter, options) => {
   const mtoRCreditNote = await MtoRCreditNote.paginate(filter, options);
   return mtoRCreditNote;
 };
+// const groupMtoRCreditNote = async (query) => {
+//   const { retailerEmail, manufacturerEmail, page = 1, limit = 10 } = query;
+
+//   if (!retailerEmail && !manufacturerEmail) {
+//     throw new Error('Either retailerEmail or manufacturerEmail must be provided');
+//   }
+
+//   const matchStage = retailerEmail
+//     ? { retailerEmail }
+//     : { manufacturerEmail };
+
+//   const groupByField = retailerEmail ? "$manufacturerEmail" : "$retailerEmail";
+
+//   const skip = (Number(page) - 1) * Number(limit);
+
+//   // ✅ Single aggregation for used true and false
+//   const pipeline = [
+//     { $match: matchStage },
+//     {
+//       $group: {
+//         _id: { groupKey: groupByField, used: "$used" },
+//         totalCreditNotes: { $sum: 1 },
+//         totalCreditAmount: { $sum: "$totalCreditAmount" },
+//         creditNotes: {
+//           $push: {
+//             _id: "$_id",
+//             creditNoteNumber: "$creditNoteNumber",
+//             invoiceNumber: "$invoiceNumber",
+//             manufacturerEmail: "$manufacturerEmail",
+//             retailerEmail: "$retailerEmail",
+//             totalCreditAmount: "$totalCreditAmount",
+//             createdAt: "$createdAt",
+//             used: "$used",
+//           },
+//         },
+//       },
+//     },
+//     { $sort: { "_id.groupKey": 1 } },
+//   ];
+
+//   const grouped = await MtoRCreditNote.aggregate(pipeline);
+
+//   // ✅ Split the grouped result efficiently
+//   const usedTrueGroups = grouped.filter((g) => g._id.used === true);
+//   const usedFalseGroups = grouped.filter((g) => g._id.used === false);
+
+//   // ✅ Paginate at app level (after aggregation)
+//   const paginateArray = (arr) => {
+//     const totalCount = arr.length;
+//     const paginatedData = arr.slice(skip, skip + Number(limit));
+//     return {
+//       totalCount,
+//       totalPages: Math.ceil(totalCount / limit),
+//       page: Number(page),
+//       limit: Number(limit),
+//       data: paginatedData.map((g) => ({
+//         groupKey: g._id.groupKey,
+//         totalCreditNotes: g.totalCreditNotes,
+//         totalCreditAmount: g.totalCreditAmount,
+//         creditNotes: g.creditNotes,
+//       })),
+//     };
+//   };
+
+//   return {
+//     usedTrue: paginateArray(usedTrueGroups),
+//     usedFalse: paginateArray(usedFalseGroups),
+//   };
+// };
 const groupMtoRCreditNote = async (query) => {
   const { retailerEmail, manufacturerEmail, page = 1, limit = 10 } = query;
 
   if (!retailerEmail && !manufacturerEmail) {
-    throw new Error('Either retailerEmail or manufacturerEmail must be provided');
+    throw new Error("Either retailerEmail or manufacturerEmail must be provided");
   }
 
-  const matchStage = retailerEmail
-    ? { retailerEmail }
-    : { manufacturerEmail };
-
+  const matchStage = retailerEmail ? { retailerEmail } : { manufacturerEmail };
   const groupByField = retailerEmail ? "$manufacturerEmail" : "$retailerEmail";
 
   const skip = (Number(page) - 1) * Number(limit);
 
-  // ✅ Single aggregation for used true and false
+  // ✅ Aggregation pipeline for grouping
   const pipeline = [
     { $match: matchStage },
     {
@@ -90,18 +156,7 @@ const groupMtoRCreditNote = async (query) => {
         _id: { groupKey: groupByField, used: "$used" },
         totalCreditNotes: { $sum: 1 },
         totalCreditAmount: { $sum: "$totalCreditAmount" },
-        creditNotes: {
-          $push: {
-            _id: "$_id",
-            creditNoteNumber: "$creditNoteNumber",
-            invoiceNumber: "$invoiceNumber",
-            manufacturerEmail: "$manufacturerEmail",
-            retailerEmail: "$retailerEmail",
-            totalCreditAmount: "$totalCreditAmount",
-            createdAt: "$createdAt",
-            used: "$used",
-          },
-        },
+        creditNotes: { $push: "$$ROOT" }, // include entire credit note document
       },
     },
     { $sort: { "_id.groupKey": 1 } },
@@ -109,11 +164,11 @@ const groupMtoRCreditNote = async (query) => {
 
   const grouped = await MtoRCreditNote.aggregate(pipeline);
 
-  // ✅ Split the grouped result efficiently
+  // ✅ Split into used:true and used:false
   const usedTrueGroups = grouped.filter((g) => g._id.used === true);
   const usedFalseGroups = grouped.filter((g) => g._id.used === false);
 
-  // ✅ Paginate at app level (after aggregation)
+  // ✅ Pagination helper
   const paginateArray = (arr) => {
     const totalCount = arr.length;
     const paginatedData = arr.slice(skip, skip + Number(limit));
@@ -122,18 +177,56 @@ const groupMtoRCreditNote = async (query) => {
       totalPages: Math.ceil(totalCount / limit),
       page: Number(page),
       limit: Number(limit),
-      data: paginatedData.map((g) => ({
-        groupKey: g._id.groupKey,
-        totalCreditNotes: g.totalCreditNotes,
-        totalCreditAmount: g.totalCreditAmount,
-        creditNotes: g.creditNotes,
-      })),
+      data: paginatedData,
     };
   };
 
+  // ✅ Function to attach Manufacture and Retailer data (full profile)
+  const enrichWithProfiles = async (groups) => {
+    return Promise.all(
+      groups.map(async (group) => {
+        const groupKeyEmail = group._id.groupKey;
+
+        let manufacturerData = null;
+        let retailerData = null;
+
+        if (retailerEmail) {
+          // grouped by manufacturerEmail
+          manufacturerData = await Manufacture.findOne({ email: groupKeyEmail }).lean();
+          retailerData = await Retailer.findOne({ email: retailerEmail }).lean();
+        } else {
+          // grouped by retailerEmail
+          retailerData = await Retailer.findOne({ email: groupKeyEmail }).lean();
+          manufacturerData = await Manufacture.findOne({ email: manufacturerEmail }).lean();
+        }
+
+        return {
+          groupKey: group._id.groupKey,
+          used: group._id.used,
+          totalCreditNotes: group.totalCreditNotes,
+          totalCreditAmount: group.totalCreditAmount,
+          creditNotes: group.creditNotes, // full documents
+          manufacturer: manufacturerData || null,
+          retailer: retailerData || null,
+        };
+      })
+    );
+  };
+
+  // ✅ Enrich both used:true and used:false groups with full profiles
+  const usedTrueEnriched = await enrichWithProfiles(paginateArray(usedTrueGroups).data);
+  const usedFalseEnriched = await enrichWithProfiles(paginateArray(usedFalseGroups).data);
+
+  // ✅ Final structured response
   return {
-    usedTrue: paginateArray(usedTrueGroups),
-    usedFalse: paginateArray(usedFalseGroups),
+    usedTrue: {
+      ...paginateArray(usedTrueGroups),
+      data: usedTrueEnriched,
+    },
+    usedFalse: {
+      ...paginateArray(usedFalseGroups),
+      data: usedFalseEnriched,
+    },
   };
 };
 /**
