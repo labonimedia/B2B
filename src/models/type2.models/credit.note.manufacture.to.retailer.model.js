@@ -10,6 +10,10 @@ const creditNoteSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
+    returnOrderNumber: {
+      type: Number,
+      required: true,
+    },
     invoiceId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'M2RPerformaInvoice',
