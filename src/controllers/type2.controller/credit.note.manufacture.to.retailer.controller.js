@@ -55,6 +55,15 @@ const deleteMtoRCreditNoteById = catchAsync(async (req, res) => {
   res.status(httpStatus.NO_CONTENT).send();
 });
 
+const bulkUpdateCreditNotes = catchAsync(async (req, res) => {
+  const result = await mtoRCreditNoteService.bulkUpdateCreditNotes(req.body);
+  res.status(200).send({
+    message: 'Credit Notes updated successfully',
+    count: result.length,
+    data: result,
+  });
+});
+
 module.exports = {
   arrayUpload,
   deleteMtoRCreditNoteById,
@@ -63,4 +72,5 @@ module.exports = {
   queryMtoRCreditNote,
   createCreditNote,
   groupMtoRCreditNote,
+  bulkUpdateCreditNotes,
 };
