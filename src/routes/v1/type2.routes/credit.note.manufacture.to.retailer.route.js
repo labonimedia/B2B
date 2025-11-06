@@ -12,5 +12,6 @@ router
   .patch(mtoRCreditNoteController.updateMtoRCreditNoteById)
   .delete(mtoRCreditNoteController.deleteMtoRCreditNoteById);
 
-  
+router.route('/bulk-update').post(mtoRCreditNoteController.bulkUpdateCreditNotes);
+
 module.exports = router;

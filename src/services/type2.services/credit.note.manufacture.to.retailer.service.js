@@ -361,6 +361,60 @@ const deleteMtoRCreditNoteById = async (id) => {
   return mtoRCreditNote;
 };
 
+// const bulkUpdateCreditNotes = async (creditNotes) => {
+//   if (!Array.isArray(creditNotes) || creditNotes.length === 0) {
+//     throw new Error('Invalid request: creditNotes array required');
+//   }
+
+//   const bulkOps = creditNotes.map((note) => {
+//     return {
+//       updateOne: {
+//         filter: { _id: note.id },
+//         update: {
+//           $set: {
+//             used: note.used,
+//             usedInInvoiceId: note.usedInInvoiceId || null,
+//             usedInInvoiceNumber: note.usedInInvoiceNumber || null,
+//             usedAt: note.used ? note.usedAt || new Date() : null,
+//           },
+//         },
+//       },
+//     };
+//   });
+
+//   const result = await MtoRCreditNote.bulkWrite(bulkOps, { ordered: false });
+//   return result;
+// };
+const bulkUpdateCreditNotes = async (creditNotes) => {
+  if (!Array.isArray(creditNotes) || creditNotes.length === 0) {
+    throw new Error('Invalid request: creditNotes array required');
+  }
+
+  const ids = creditNotes.map((note) => note.id);
+
+  const bulkOps = creditNotes.map((note) => ({
+    updateOne: {
+      filter: { _id: note.id },
+      update: {
+        $set: {
+          used: note.used,
+          usedInInvoiceId: note.usedInInvoiceId || null,
+          usedInInvoiceNumber: note.usedInInvoiceNumber || null,
+          usedAt: note.used ? note.usedAt || new Date() : null,
+        },
+      },
+    },
+  }));
+
+  // Perform bulk update
+  await MtoRCreditNote.bulkWrite(bulkOps, { ordered: false });
+
+  // Fetch updated documents
+  const updatedDocs = await MtoRCreditNote.find({ _id: { $in: ids } });
+
+  return updatedDocs;
+};
+
 module.exports = {
   createMtoRCreditNote,
   queryMtoRCreditNote,
@@ -369,4 +423,5 @@ module.exports = {
   deleteMtoRCreditNoteById,
   bulkUploadMtoRCreditNote,
   groupMtoRCreditNote,
+  bulkUpdateCreditNotes,
 };
