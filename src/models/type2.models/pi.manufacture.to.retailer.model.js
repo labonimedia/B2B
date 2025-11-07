@@ -317,6 +317,7 @@ const performaInvoiceSchema = new mongoose.Schema(
         productType: String,
         gender: String,
         clothing: String,
+        price: Number,
         subCategory: String,
         hsnCode: { type: String },
         hsnGst: { type: Number },
