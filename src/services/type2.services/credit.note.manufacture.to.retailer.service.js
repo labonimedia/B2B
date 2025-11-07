@@ -13,7 +13,6 @@ const bulkUploadMtoRCreditNote = async (dataArray) => {
 
 
 
-
 // /**
 //  * Create a MtoRCreditNote
 //  * @param {Object} reqBody
@@ -67,6 +66,7 @@ const queryMtoRCreditNote = async (filter, options) => {
   const mtoRCreditNote = await MtoRCreditNote.paginate(filter, options);
   return mtoRCreditNote;
 };
+
 // const groupMtoRCreditNote = async (query) => {
 //   const { retailerEmail, manufacturerEmail, page = 1, limit = 10 } = query;
 
@@ -385,6 +385,7 @@ const deleteMtoRCreditNoteById = async (id) => {
 //   const result = await MtoRCreditNote.bulkWrite(bulkOps, { ordered: false });
 //   return result;
 // };
+
 const bulkUpdateCreditNotes = async (creditNotes) => {
   if (!Array.isArray(creditNotes) || creditNotes.length === 0) {
     throw new Error('Invalid request: creditNotes array required');
