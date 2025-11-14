@@ -44,6 +44,8 @@ const creditNoteSchema = new mongoose.Schema(
         subCategory: String,
         quantity: Number,
         returnReason: String,
+        manufacturerComments: String,
+        acceptedQuantity: Number,
         otherReturnReason: String,
         hsnCode: {
           type: String,
