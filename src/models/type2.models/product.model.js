@@ -127,6 +127,7 @@ const productSchema = mongoose.Schema(
     hsnDescription: {
       type: String,
     },
+  
     hsnGst: {
       type: Number,
     },
@@ -171,6 +172,7 @@ const productSchema = mongoose.Schema(
         weight: { type: String },
         manufacturerPrice: { type: String },
         RtlPrice: { type: Number },
+        onlinePrice: { type: Number },
         singleMRP: { type: String },
       },
     ],
