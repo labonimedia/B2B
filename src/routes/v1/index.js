@@ -122,6 +122,8 @@ const ReturnReasonRoute = require('./type2.routes/return.reason.master.route');
 const mToRCreditNoteRoute = require('./type2.routes/credit.note.manufacture.to.retailer.route');
 // return request
 const rToMReturnRoute = require('./type2.routes/return.retailer.to.manufacture.model');
+// wallet manufacture to retailer
+const mToRWalletRoute = require('./type2.routes/wallet.m.to.r.route');
 
 const router = express.Router();
 
@@ -594,6 +596,11 @@ const defaultRoutes = [
    {
     path: '/return-r2m',
     route: rToMReturnRoute,
+  },
+  // wallet manufacture to retailer
+  {
+    path: '/m-to-r-wallet',
+    route: mToRWalletRoute,
   },
 ];
 

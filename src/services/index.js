@@ -124,3 +124,5 @@ module.exports.returnReasonService = require('./type2.services/return.reason.mas
 module.exports.mtoRCreditNoteService = require('./type2.services/credit.note.manufacture.to.retailer.service');
 // return request
 module.exports.rtoMReturnRequestService = require('./type2.services/return.retailer.to.manufacture.service');
+// wallet manufacture to retailer
+module.exports.mtoRWalletService = require('./type2.services/wallet.m.to.r.service');
