@@ -120,3 +120,5 @@ module.exports.returnReasonController = require('./type2.controller/return.reaso
 module.exports.mtoRCreditNoteController = require('./type2.controller/credit.note.manufacture.to.retailer.controller');
 // return request
 module.exports.rtoMReturnRequestController = require('./type2.controller/return.retailer.to.manufacture.controller');
+// wallet manufacture to retailer
+module.exports.mToRWalletController = require('./type2.controller/wallet.m.to.r.controller');

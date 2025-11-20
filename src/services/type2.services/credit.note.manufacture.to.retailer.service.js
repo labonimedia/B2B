@@ -14,21 +14,43 @@ const bulkUploadMtoRCreditNote = async (dataArray) => {
 
 
 // /**
-//  * Create a MtoRCreditNote
+//  * Create a MtoRCreditNote with unique creditNoteNumber per manufacturer
 //  * @param {Object} reqBody
 //  * @returns {Promise<MtoRCreditNote>}
 //  */
 // const createMtoRCreditNote = async (reqBody) => {
-//   return MtoRCreditNote.create(reqBody);
-// };
+//   const { manufacturerEmail } = reqBody;
 
+//   if (!manufacturerEmail) {
+//     throw new ApiError(
+//       httpStatus.BAD_REQUEST,
+//       "'manufacturerEmail' is required to generate credit note number."
+//     );
+//   }
+
+//   // Get last credit note for this manufacturer
+//   const lastCreditNote = await MtoRCreditNote.findOne({ manufacturerEmail })
+//     .sort({ creditNoteNumber: -1 }) // highest number first
+//     .lean();
+
+//   let nextNumber = 1;
+//   if (lastCreditNote && lastCreditNote.creditNoteNumber) {
+//     nextNumber = lastCreditNote.creditNoteNumber + 1;
+//   }
+
+//   reqBody.creditNoteNumber = nextNumber;
+
+//   const creditNote = await MtoRCreditNote.create(reqBody);
+//   return creditNote;
+// };
 /**
  * Create a MtoRCreditNote with unique creditNoteNumber per manufacturer
+ * AND update MtoRWallet (credit entry)
  * @param {Object} reqBody
  * @returns {Promise<MtoRCreditNote>}
  */
 const createMtoRCreditNote = async (reqBody) => {
-  const { manufacturerEmail } = reqBody;
+  const { manufacturerEmail, retailerEmail, totalCreditAmount } = reqBody;
 
   if (!manufacturerEmail) {
     throw new ApiError(
@@ -37,7 +59,21 @@ const createMtoRCreditNote = async (reqBody) => {
     );
   }
 
-  // Get last credit note for this manufacturer
+  if (!retailerEmail) {
+    throw new ApiError(
+      httpStatus.BAD_REQUEST,
+      "'retailerEmail' is required to update wallet."
+    );
+  }
+
+  if (!totalCreditAmount || totalCreditAmount <= 0) {
+    throw new ApiError(
+      httpStatus.BAD_REQUEST,
+      "'totalCreditAmount' must be a positive number to create a credit note."
+    );
+  }
+
+  // 1️⃣ Get last credit note for this manufacturer to generate next number
   const lastCreditNote = await MtoRCreditNote.findOne({ manufacturerEmail })
     .sort({ creditNoteNumber: -1 }) // highest number first
     .lean();
@@ -49,9 +85,89 @@ const createMtoRCreditNote = async (reqBody) => {
 
   reqBody.creditNoteNumber = nextNumber;
 
+  // 2️⃣ Create the credit note
   const creditNote = await MtoRCreditNote.create(reqBody);
+
+  // 3️⃣ Fetch / Create Wallet entry for (manufacturerEmail + retailerEmail)
+  let wallet = await MtoRWallet.findOne({
+    manufacturerEmail: creditNote.manufacturerEmail,
+    retailerEmail: creditNote.retailerEmail,
+  });
+
+  // If wallet not exists -> create new wallet
+  if (!wallet) {
+    wallet = await MtoRWallet.create({
+      manufacturerEmail: creditNote.manufacturerEmail,
+      retailerEmail: creditNote.retailerEmail,
+      balance: 0,
+      totalCredited: 0,
+      totalDebited: 0,
+      currency: 'INR',
+      transactions: [],
+    });
+  } else {
+    // 3️⃣.a Recalculate balance, totalCredited, totalDebited from existing transactions
+    let recomputedBalance = 0;
+    let recomputedTotalCredited = 0;
+    let recomputedTotalDebited = 0;
+
+    if (Array.isArray(wallet.transactions) && wallet.transactions.length > 0) {
+      wallet.transactions.forEach((tx) => {
+        if (tx.type === 'credit') {
+          recomputedBalance += tx.amount;
+          recomputedTotalCredited += tx.amount;
+        } else if (tx.type === 'debit') {
+          recomputedBalance -= tx.amount;
+          recomputedTotalDebited += tx.amount;
+        }
+      });
+    }
+
+    // overwrite with recomputed safe values
+    wallet.balance = recomputedBalance;
+    wallet.totalCredited = recomputedTotalCredited;
+    wallet.totalDebited = recomputedTotalDebited;
+  }
+
+  const creditAmount = creditNote.totalCreditAmount;
+  const newBalance = wallet.balance + creditAmount;
+
+  // 🧾 Build description including invoiceNumber + returnOrderNumber
+  let description = `Credit Note #${creditNote.creditNoteNumber} generated`;
+
+  const inv = creditNote.invoiceNumber;
+  const ret = creditNote.returnOrderNumber;
+
+  if (inv && ret) {
+    description = `Credit Note #${creditNote.creditNoteNumber} generated for Return Order #${ret} against Invoice #${inv}`;
+  } else if (ret) {
+    description = `Credit Note #${creditNote.creditNoteNumber} generated for Return Order #${ret}`;
+  } else if (inv) {
+    description = `Credit Note #${creditNote.creditNoteNumber} generated against Invoice #${inv}`;
+  }
+
+  // 4️⃣ Build transaction object according to your schema
+  const transaction = {
+    type: 'credit',
+    amount: creditAmount,
+    balanceAfter: newBalance,
+    creditNoteNumber: creditNote.creditNoteNumber,
+    creditInvoiceNumber: creditNote.invoiceNumber || null,
+    debitInvoiceNumber: null,
+    description,
+    createdAt: new Date(),
+  };
+
+  // 5️⃣ Push transaction and update wallet numbers
+  wallet.transactions.push(transaction);
+  wallet.balance = newBalance;
+  wallet.totalCredited += creditAmount;
+
+  await wallet.save();
+
   return creditNote;
 };
+
 
 /**
  * Query for MtoRCreditNote

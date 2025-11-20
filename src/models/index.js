@@ -135,3 +135,4 @@ module.exports.HsnGst = require('./type2.models/hsn.gst.data.model');
 module.exports.ReturnReason = require('./type2.models/return.reason.master.model');
 // return request
 module.exports.ReturnR2M = require('./type2.models/return.retailer.to.manufacture.model');
+module.exports.MtoRWallet = require('./type2.models/wallet.m.to.r.model');
