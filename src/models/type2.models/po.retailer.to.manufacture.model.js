@@ -186,6 +186,7 @@ const PORetailerToManufacturerSchema = new mongoose.Schema(
         'make_to_order',
         'shipped',
         'delivered',
+        'invoice_generated',
       ],
       default: 'pending',
     },
