@@ -15,6 +15,7 @@ const queryWarehouses = catchAsync(async (req, res) => {
   const filter = pick(req.query, [
     'manufacturerEmail',
     'warehouseName',
+     'code',
     'isActive',
     'city',
   ]);

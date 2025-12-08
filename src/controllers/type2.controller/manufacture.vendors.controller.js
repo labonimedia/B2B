@@ -15,6 +15,7 @@ const queryVendors = catchAsync(async (req, res) => {
   const filter = pick(req.query, [
     'manufacturerEmail',
     'vendorEmail',
+        'code',
     'vendorName',
     'companyName',
     'isActive',
