@@ -88,6 +88,7 @@ manufacturerWarehouseSchema.index(
   { manufacturerEmail: 1, warehouseName: 1 },
   { unique: true }
 );
+manufacturerWarehouseSchema.index({ code: 1 }, { unique: true });
 
 manufacturerWarehouseSchema.plugin(toJSON);
 manufacturerWarehouseSchema.plugin(paginate);
