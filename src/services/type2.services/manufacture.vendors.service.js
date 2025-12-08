@@ -1,6 +1,21 @@
 const httpStatus = require('http-status');
 const ApiError = require('../../utils/ApiError');
-const { ManufacturerVendor } = require('../../models'); // ensure exported in models/index.js
+const { ManufacturerVendor } = require('../../models'); 
+
+const generateNextVendorCode = async () => {
+  const lastVendor = await ManufacturerVendor.findOne({ code: /^VND\d+$/ })
+    .sort({ code: -1 }) // sort descending
+    .lean();
+
+  if (!lastVendor || !lastVendor.code) {
+    return 'VND1';
+  }
+
+  const lastNumber = parseInt(lastVendor.code.replace('VND', ''), 10);
+  const nextNumber = lastNumber + 1;
+
+  return `VND${nextNumber}`;
+};
 
 /**
  * Create a vendor for a manufacturer
@@ -15,7 +30,7 @@ const createVendor = async (vendorBody) => {
     );
   }
 
-  // Optional extra duplicate check (unique index will also enforce)
+  // Dupe check
   const existing = await ManufacturerVendor.findOne({ manufacturerEmail, vendorEmail });
   if (existing) {
     throw new ApiError(
@@ -23,6 +38,9 @@ const createVendor = async (vendorBody) => {
       'Vendor already exists for this manufacturer with this email'
     );
   }
+
+  // Generate unique vendor code auto
+  vendorBody.code = await generateNextVendorCode();
 
   const vendor = await ManufacturerVendor.create(vendorBody);
   return vendor;

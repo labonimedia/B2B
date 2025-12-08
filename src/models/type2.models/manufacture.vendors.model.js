@@ -125,6 +125,11 @@ const manufacturerVendorSchema = new Schema(
       type: Boolean,
       default: true,
     },
+     code: {
+      type: String,
+      trim: true, 
+       // unique: true,// e.g. WH001, PUNE_WH, etc.
+    },
   },
   {
     timestamps: true,
@@ -136,6 +141,7 @@ manufacturerVendorSchema.index(
   { manufacturerEmail: 1, vendorEmail: 1 },
   { unique: true }
 );
+manufacturerVendorSchema.index({ code: 1 }, { unique: true });
 
 manufacturerVendorSchema.plugin(toJSON);
 manufacturerVendorSchema.plugin(paginate);
