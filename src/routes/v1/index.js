@@ -124,6 +124,10 @@ const mToRCreditNoteRoute = require('./type2.routes/credit.note.manufacture.to.r
 const rToMReturnRoute = require('./type2.routes/return.retailer.to.manufacture.model');
 // wallet manufacture to retailer
 const mToRWalletRoute = require('./type2.routes/wallet.m.to.r.route');
+// manufacture vendors
+const manufacturerVendorRoute = require('./type2.routes/manufacture.vendors.route');
+// manufacture warehouse
+const manufactureWarehouseRoute = require('./type2.routes/manufacture.warehouse.route');
 
 const router = express.Router();
 
@@ -602,6 +606,16 @@ const defaultRoutes = [
     path: '/m-to-r-wallet',
     route: mToRWalletRoute,
   },
+  //
+  {
+    path: '/manufacturer-vendors',
+    route: manufacturerVendorRoute,
+  },
+  // manufacture warehouse
+  {
+    path: '/manufacture-warehouse',
+    route: manufactureWarehouseRoute,
+  }
 ];
 
 const devRoutes = [

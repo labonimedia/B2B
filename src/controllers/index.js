@@ -122,3 +122,7 @@ module.exports.mtoRCreditNoteController = require('./type2.controller/credit.not
 module.exports.rtoMReturnRequestController = require('./type2.controller/return.retailer.to.manufacture.controller');
 // wallet manufacture to retailer
 module.exports.mToRWalletController = require('./type2.controller/wallet.m.to.r.controller');
+// manufacture vendors
+module.exports.manufacturerVendorController = require('./type2.controller/manufacture.vendors.controller');
+// manufacture warehouse
+module.exports.manufactureWarehouseController = require('./type2.controller/manufacture.warehouse.controller');
