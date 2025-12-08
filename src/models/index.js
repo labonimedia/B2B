@@ -136,3 +136,7 @@ module.exports.ReturnReason = require('./type2.models/return.reason.master.model
 // return request
 module.exports.ReturnR2M = require('./type2.models/return.retailer.to.manufacture.model');
 module.exports.MtoRWallet = require('./type2.models/wallet.m.to.r.model');
+// manufacture vendors
+module.exports.ManufacturerVendor = require('./type2.models/manufacture.vendors.model');
+// manufacture warehouse
+module.exports.ManufactureWarehouse = require('./type2.models/manufacture.warehouse.model');

@@ -126,3 +126,7 @@ module.exports.mtoRCreditNoteService = require('./type2.services/credit.note.man
 module.exports.rtoMReturnRequestService = require('./type2.services/return.retailer.to.manufacture.service');
 // wallet manufacture to retailer
 module.exports.mtoRWalletService = require('./type2.services/wallet.m.to.r.service');
+// manufacture vendors
+module.exports.manufacturerVendorService = require('./type2.services/manufacture.vendors.service');
+// manufacture warehouse
+module.exports.manufactureWarehouseService = require('./type2.services/manufacture.warehouse.service');
