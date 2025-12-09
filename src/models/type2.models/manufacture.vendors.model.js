@@ -3,45 +3,45 @@ const { paginate, toJSON } = require('../plugins');
 
 const { Schema } = mongoose;
 
-// // Reuse-style embedded Bank Details schema
-// const bankDetailsSchema = new Schema({
-//   accountHolderName: {
-//     type: String,
-//     trim: true,
-//   },
-//   accountNumber: {
-//     type: String,
-//     trim: true,
-//   },
-//   accountType: {
-//     type: String,
-//     trim: true,
-//   },
-//   bankName: {
-//     type: String,
-//     trim: true,
-//   },
-//   branchName: {
-//     type: String,
-//     trim: true,
-//   },
-//   ifscCode: {
-//     type: String,
-//     trim: true,
-//   },
-//   swiftCode: {
-//     type: String,
-//     trim: true,
-//   },
-//   upiId: {
-//     type: String,
-//     trim: true,
-//   },
-//   bankAddress: {
-//     type: String,
-//     trim: true,
-//   },
-// });
+// Reuse-style embedded Bank Details schema
+const bankDetailsSchema = new Schema({
+  accountHolderName: {
+    type: String,
+    trim: true,
+  },
+  accountNumber: {
+    type: String,
+    trim: true,
+  },
+  accountType: {
+    type: String,
+    trim: true,
+  },
+  bankName: {
+    type: String,
+    trim: true,
+  },
+  branchName: {
+    type: String,
+    trim: true,
+  },
+  ifscCode: {
+    type: String,
+    trim: true,
+  },
+  swiftCode: {
+    type: String,
+    trim: true,
+  },
+  upiId: {
+    type: String,
+    trim: true,
+  },
+  bankAddress: {
+    type: String,
+    trim: true,
+  },
+});
 
 const manufacturerVendorSchema = new Schema(
   {
