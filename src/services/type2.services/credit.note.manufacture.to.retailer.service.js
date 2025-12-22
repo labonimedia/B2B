@@ -1,6 +1,7 @@
 const httpStatus = require('http-status');
 const { MtoRCreditNote, Retailer, Manufacture, MtoRWallet } = require('../../models');
 const ApiError = require('../../utils/ApiError');
+
 /**
  * Bulk upload HSN GST records (allowing duplicates)
  * @param {Array<Object>} dataArray
@@ -10,39 +11,6 @@ const bulkUploadMtoRCreditNote = async (dataArray) => {
   const results = await MtoRCreditNote.insertMany(dataArray, { ordered: false });
   return results;
 };
-
-
-
-// /**
-//  * Create a MtoRCreditNote with unique creditNoteNumber per manufacturer
-//  * @param {Object} reqBody
-//  * @returns {Promise<MtoRCreditNote>}
-//  */
-// const createMtoRCreditNote = async (reqBody) => {
-//   const { manufacturerEmail } = reqBody;
-
-//   if (!manufacturerEmail) {
-//     throw new ApiError(
-//       httpStatus.BAD_REQUEST,
-//       "'manufacturerEmail' is required to generate credit note number."
-//     );
-//   }
-
-//   // Get last credit note for this manufacturer
-//   const lastCreditNote = await MtoRCreditNote.findOne({ manufacturerEmail })
-//     .sort({ creditNoteNumber: -1 }) // highest number first
-//     .lean();
-
-//   let nextNumber = 1;
-//   if (lastCreditNote && lastCreditNote.creditNoteNumber) {
-//     nextNumber = lastCreditNote.creditNoteNumber + 1;
-//   }
-
-//   reqBody.creditNoteNumber = nextNumber;
-
-//   const creditNote = await MtoRCreditNote.create(reqBody);
-//   return creditNote;
-// };
 /**
  * Create a MtoRCreditNote with unique creditNoteNumber per manufacturer
  * AND update MtoRWallet (credit entry)

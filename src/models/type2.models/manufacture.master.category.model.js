@@ -23,6 +23,7 @@ const categorySchema = new mongoose.Schema(
       type: Boolean,
       default: true,
     },
+      note: String,
   },
   {
     timestamps: true,

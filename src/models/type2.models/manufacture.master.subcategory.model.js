@@ -36,6 +36,7 @@ const subcategorySchema = new Schema(
       type: Boolean,
       default: true,
     },
+      note: String,
   },
   { timestamps: true }
 );
