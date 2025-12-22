@@ -16,7 +16,8 @@ const addressSchema = new Schema({
 const rackSimpleSchema = new Schema(
   {
     rackName: { type: String, trim: true }, // e.g. "A", "B", "C"
-    columnsCount: { type: Number, default: 0 }, // number of columns in the rack
+    columnsCount: { type: Number, default: 0 },
+     rowCount: { type: Number, default: 0 }, // number of columns in the rack
     notes: { type: String, trim: true },
     columnNaming: { type: String, trim: true },
   },
