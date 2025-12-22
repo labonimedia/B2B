@@ -13,5 +13,8 @@ router
   .get(manufactureWarehouseController.getWarehouseById)
   .patch(manufactureWarehouseController.updateWarehouseById)
   .delete(manufactureWarehouseController.deleteWarehouseById);
-
+router
+  .route('/perment/:id')
+  .delete(manufactureWarehouseController.deleteWarehousePerment);
+  
 module.exports = router;

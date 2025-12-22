@@ -48,9 +48,9 @@ const createWarehouse = async (warehouseBody) => {
  * filter: { manufacturerEmail, warehouseName, city, isActive }
  */
 const queryWarehouses = async (filter, options) => {
-  if (filter.isActive === undefined) {
-    filter.isActive = true;
-  }
+  // if (filter.isActive === undefined) {
+  //   filter.isActive = true;
+  // }
   const warehouses = await ManufactureWarehouse.paginate(filter, options);
   return warehouses;
 };
@@ -95,10 +95,23 @@ const deleteWarehouseById = async (warehouseId) => {
   return warehouse;
 };
 
+/**
+ * Delete warehouse by id (soft delete)
+ */
+const deleteWarehousePerment = async (warehouseId) => {
+  const warehouse = await getWarehouseById(warehouseId);
+  if (!warehouse) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Warehouse not found');
+  }
+  await warehouse.save();
+  return warehouse;
+};
+
 module.exports = {
   createWarehouse,
   queryWarehouses,
   getWarehouseById,
   updateWarehouseById,
   deleteWarehouseById,
+  deleteWarehousePerment,
 };
