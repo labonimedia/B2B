@@ -46,10 +46,16 @@ const deleteVendorById = catchAsync(async (req, res) => {
   res.status(httpStatus.NO_CONTENT).send();
 });
 
+const deleteVendorPerment = catchAsync(async (req, res) => {
+  await manufacturerVendorService.deleteVendorPerment(req.params.id);
+  res.status(httpStatus.NO_CONTENT).send();
+});
+
 module.exports = {
   createVendor,
   queryVendors,
   getVendorById,
   updateVendorById,
   deleteVendorById,
+  deleteVendorPerment,
 };

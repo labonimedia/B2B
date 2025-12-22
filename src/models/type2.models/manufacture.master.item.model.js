@@ -57,6 +57,11 @@ const itemSchema = new Schema(
     //  required: true,
       trim: true,
     },
+        categoryCode: {
+      type: String,
+    //  required: true,
+      trim: true,
+    },
 
     subcategoryId: {
       type: mongoose.Schema.Types.ObjectId,
@@ -64,6 +69,13 @@ const itemSchema = new Schema(
     //  required: true,
     },
 
+  subcategoryCode: {
+        type: String,
+    //  required: true,
+      trim: true,
+    //  required: true,
+    },
+    
     subcategoryName: {
       type: String,
       //required: true,
