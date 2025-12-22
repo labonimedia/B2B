@@ -45,10 +45,16 @@ const deleteWarehouseById = catchAsync(async (req, res) => {
   res.status(httpStatus.NO_CONTENT).send();
 });
 
+const deleteWarehousePerment = catchAsync(async (req, res) => {
+  await manufactureWarehouseService.deleteWarehousePerment(req.params.id);
+  res.status(httpStatus.NO_CONTENT).send();
+});
+
 module.exports = {
   createWarehouse,
   queryWarehouses,
   getWarehouseById,
   updateWarehouseById,
   deleteWarehouseById,
+  deleteWarehousePerment,
 };
