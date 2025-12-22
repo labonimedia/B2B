@@ -3,14 +3,37 @@ const catchAsync = require("../../utils/catchAsync");
 const pick = require("../../utils/pick");
 const { manufactureItemService } = require("../../services");
 
+// Convert uploaded file arrays to string URLs
+const normalizePhotos = (body) => {
+  if (body.photo1 && Array.isArray(body.photo1)) {
+    body.photo1 = body.photo1[0]; // Take 1st uploaded file
+  }
+  if (body.photo2 && Array.isArray(body.photo2)) {
+    body.photo2 = body.photo2[0];
+  }
+  return body;
+};
+
 const createItem = catchAsync(async (req, res) => {
-  const item = await manufactureItemService.createItem(req.body);
+  const normalizedBody = normalizePhotos(req.body);
+  const item = await manufactureItemService.createItem(normalizedBody);
   res.status(httpStatus.CREATED).send({ success: true, data: item });
 });
 
 const getItems = catchAsync(async (req, res) => {
-  const filter = pick(req.query, ["categoryName", "subcategoryName", "name","code","subcategoryCode","categoryCode", "itemName", "isActive"]);
+  const filter = pick(req.query, [
+    "categoryName",
+    "subcategoryName",
+    "name",
+    "code",
+    "subcategoryCode",
+    "categoryCode",
+    "itemName",
+    "isActive",
+  ]);
+
   const options = pick(req.query, ["sortBy", "limit", "page"]);
+
   const result = await manufactureItemService.queryItems(filter, options);
   res.send({ success: true, data: result });
 });
@@ -18,11 +41,17 @@ const getItems = catchAsync(async (req, res) => {
 const getItemById = catchAsync(async (req, res) => {
   const item = await manufactureItemService.getItemById(req.params.id);
   if (!item) return res.status(404).send({ message: "Item not found" });
+
   res.send({ success: true, data: item });
 });
 
 const updateItemById = catchAsync(async (req, res) => {
-  const updated = await manufactureItemService.updateItemById(req.params.id, req.body);
+  const normalizedBody = normalizePhotos(req.body);
+  const updated = await manufactureItemService.updateItemById(
+    req.params.id,
+    normalizedBody
+  );
+
   res.send({ success: true, data: updated });
 });
 
