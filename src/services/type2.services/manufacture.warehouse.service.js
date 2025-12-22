@@ -25,19 +25,13 @@ const createWarehouse = async (warehouseBody) => {
   const { manufacturerEmail, warehouseName } = warehouseBody;
 
   if (!manufacturerEmail || !warehouseName) {
-    throw new ApiError(
-      httpStatus.BAD_REQUEST,
-      'manufacturerEmail and warehouseName are required'
-    );
+    throw new ApiError(httpStatus.BAD_REQUEST, 'manufacturerEmail and warehouseName are required');
   }
 
   // Check duplicate name per manufacturer
   const existing = await ManufactureWarehouse.findOne({ manufacturerEmail, warehouseName });
   if (existing) {
-    throw new ApiError(
-      httpStatus.BAD_REQUEST,
-      'Warehouse with this name already exists for this manufacturer'
-    );
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Warehouse with this name already exists for this manufacturer');
   }
 
   // Auto-generate code if not provided

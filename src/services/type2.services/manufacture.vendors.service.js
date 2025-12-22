@@ -51,9 +51,6 @@ const createVendor = async (vendorBody) => {
  * filter: { manufacturerEmail, vendorName, companyName, isActive }
  */
 const queryVendors = async (filter, options) => {
-  if (filter.isActive === undefined) {
-    filter.isActive = true;
-  }
   const vendors = await ManufacturerVendor.paginate(filter, options);
   return vendors;
 };
