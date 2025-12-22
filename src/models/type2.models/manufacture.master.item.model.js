@@ -123,6 +123,11 @@ const itemSchema = new Schema(
     note: String,
 
     isActive: { type: Boolean, default: true },
+      manufacturerEmail: {
+      type: String,
+      required: true,
+      trim: true,
+    },
   },
 
   { timestamps: true }

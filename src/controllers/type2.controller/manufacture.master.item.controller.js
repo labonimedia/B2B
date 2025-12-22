@@ -30,6 +30,7 @@ const getItems = catchAsync(async (req, res) => {
     "categoryCode",
     "itemName",
     "isActive",
+    "manufacturerEmail"
   ]);
 
   const options = pick(req.query, ["sortBy", "limit", "page"]);

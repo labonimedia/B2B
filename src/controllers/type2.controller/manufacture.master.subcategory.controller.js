@@ -9,7 +9,7 @@ const createSubcategory = catchAsync(async (req, res) => {
 });
 
 const getSubcategories = catchAsync(async (req, res) => {
-  const filter = pick(req.query, ["categoryName", "name","code", "isActive"]);
+  const filter = pick(req.query, ["categoryName", "name","code", "isActive","manufacturerEmail"]);
   const options = pick(req.query, ["sortBy", "limit", "page"]);
   const result = await manufactureSubCategoryService.querySubcategories(filter, options);
   res.send({ success: true, data: result });
