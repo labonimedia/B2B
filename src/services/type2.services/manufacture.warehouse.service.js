@@ -1,10 +1,10 @@
 const httpStatus = require('http-status');
 const ApiError = require('../../utils/ApiError');
-const { ManufacturerWarehouse } = require('../../models'); // 👈 make sure this matches models/index.js
+const { ManufactureWarehouse } = require('../../models'); // 👈 make sure this matches models/index.js
 
 // 🔹 Helper: Generate next incremental warehouse code: "WH1", "WH2", ...
 const generateNextWarehouseCode = async () => {
-  const lastWarehouse = await ManufacturerWarehouse.findOne({ code: /^WH\d+$/ })
+  const lastWarehouse = await ManufactureWarehouse.findOne({ code: /^WH\d+$/ })
     .sort({ code: -1 }) // highest code string-wise, e.g. WH10 > WH9
     .lean();
 
@@ -32,7 +32,7 @@ const createWarehouse = async (warehouseBody) => {
   }
 
   // Check duplicate name per manufacturer
-  const existing = await ManufacturerWarehouse.findOne({ manufacturerEmail, warehouseName });
+  const existing = await ManufactureWarehouse.findOne({ manufacturerEmail, warehouseName });
   if (existing) {
     throw new ApiError(
       httpStatus.BAD_REQUEST,
@@ -45,7 +45,7 @@ const createWarehouse = async (warehouseBody) => {
     warehouseBody.code = await generateNextWarehouseCode();
   }
 
-  const warehouse = await ManufacturerWarehouse.create(warehouseBody);
+  const warehouse = await ManufactureWarehouse.create(warehouseBody);
   return warehouse;
 };
 
@@ -57,7 +57,7 @@ const queryWarehouses = async (filter, options) => {
   if (filter.isActive === undefined) {
     filter.isActive = true;
   }
-  const warehouses = await ManufacturerWarehouse.paginate(filter, options);
+  const warehouses = await ManufactureWarehouse.paginate(filter, options);
   return warehouses;
 };
 
@@ -65,7 +65,7 @@ const queryWarehouses = async (filter, options) => {
  * Get warehouse by id
  */
 const getWarehouseById = async (id) => {
-  return ManufacturerWarehouse.findById(id);
+  return ManufactureWarehouse.findById(id);
 };
 
 /**
