@@ -9,7 +9,7 @@ const createCategory = catchAsync(async (req, res) => {
 });
 
 const getCategories = catchAsync(async (req, res) => {
-  const filter = pick(req.query, ["categoryName", "isActive"]);
+  const filter = pick(req.query, ["name", "isActive", "code"]);
   const options = pick(req.query, ["sortBy", "limit", "page"]);
   const result = await manufactureCategoryService.queryCategories(filter, options);
   res.send({ success: true, data: result });

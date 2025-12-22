@@ -130,3 +130,9 @@ module.exports.mtoRWalletService = require('./type2.services/wallet.m.to.r.servi
 module.exports.manufacturerVendorService = require('./type2.services/manufacture.vendors.service');
 // manufacture warehouse
 module.exports.manufactureWarehouseService = require('./type2.services/manufacture.warehouse.service');
+// manufacture master category
+module.exports.manufactureCategoryService = require('./type2.services/manufacture.master.category.service');
+// manufacture master subcategory
+module.exports.manufactureSubCategoryService = require('./type2.services/manufacture.master.subcategory.service');
+// manufacture master item
+module.exports.manufactureItemService = require('./type2.services/manufacture.master.item.service');
