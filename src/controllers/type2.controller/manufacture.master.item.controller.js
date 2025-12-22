@@ -9,7 +9,7 @@ const createItem = catchAsync(async (req, res) => {
 });
 
 const getItems = catchAsync(async (req, res) => {
-  const filter = pick(req.query, ["categoryId", "subcategoryId", "itemName", "isActive"]);
+  const filter = pick(req.query, ["categoryName", "subcategoryName", "name","code","subcategoryCode","categoryCode", "itemName", "isActive"]);
   const options = pick(req.query, ["sortBy", "limit", "page"]);
   const result = await manufactureItemService.queryItems(filter, options);
   res.send({ success: true, data: result });

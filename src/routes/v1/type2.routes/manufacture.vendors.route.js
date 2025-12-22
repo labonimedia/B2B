@@ -12,5 +12,9 @@ router
   .get(manufacturerVendorController.getVendorById)
   .patch(manufacturerVendorController.updateVendorById)
   .delete(manufacturerVendorController.deleteVendorById);
+  
+router
+  .route('/perment/:id')
+  .delete(manufacturerVendorController.deleteVendorPerment);
 
 module.exports = router;

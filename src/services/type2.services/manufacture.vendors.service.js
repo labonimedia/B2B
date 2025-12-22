@@ -90,10 +90,24 @@ const deleteVendorById = async (vendorId) => {
   return vendor;
 };
 
+/**
+ * Delete Vendor by ID
+ */
+const deleteVendorPerment = async (id) => {
+  const item = await getVendorById(id);
+  if (!item) {
+    throw new ApiError(httpStatus.NOT_FOUND, "Vendor not found");
+  }
+
+  await item.remove();
+  return item;
+};
+
 module.exports = {
   createVendor,
   queryVendors,
   getVendorById,
   updateVendorById,
   deleteVendorById,
+  deleteVendorPerment,
 };
