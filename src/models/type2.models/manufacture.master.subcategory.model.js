@@ -15,6 +15,11 @@ const subcategorySchema = new Schema(
      type: String,
       required: true,
     },
+      manufacturerEmail: {
+      type: String,
+      required: true,
+      trim: true,
+    },
 
     name: {
       type: String,

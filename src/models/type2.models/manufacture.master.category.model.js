@@ -3,6 +3,12 @@ const { toJSON, paginate } = require("../plugins");
 
 const categorySchema = new mongoose.Schema(
   {
+      manufacturerEmail: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    
     name: {
       type: String,
       required: true,
