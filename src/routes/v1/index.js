@@ -124,10 +124,12 @@ const mToRCreditNoteRoute = require('./type2.routes/credit.note.manufacture.to.r
 const rToMReturnRoute = require('./type2.routes/return.retailer.to.manufacture.model');
 // wallet manufacture to retailer
 const mToRWalletRoute = require('./type2.routes/wallet.m.to.r.route');
-// manufacture vendors
+// manufacture Masters
 const manufacturerVendorRoute = require('./type2.routes/manufacture.vendors.route');
-// manufacture warehouse
 const manufactureWarehouseRoute = require('./type2.routes/manufacture.warehouse.route');
+const manufactureCategoryRoute = require('./type2.routes/manufacture.master.category.route');
+const manufactureSubCategoryRoute = require('./type2.routes/manufacture.master.subcategory.route');
+const manufactureItemRoute = require('./type2.routes/manufacture.master.item.route');
 
 const router = express.Router();
 
@@ -615,7 +617,21 @@ const defaultRoutes = [
   {
     path: '/manufacture-warehouse',
     route: manufactureWarehouseRoute,
-  }
+  },
+    // manufacture category
+  {
+    path: '/manufacture-category',
+    route: manufactureCategoryRoute,
+  },
+   {
+    path: '/manufacture-subcategory',
+    route: manufactureSubCategoryRoute,
+  },
+    {
+    path: '/manufacture-item',
+    route: manufactureItemRoute,
+  },
+  
 ];
 
 const devRoutes = [

@@ -126,3 +126,9 @@ module.exports.mToRWalletController = require('./type2.controller/wallet.m.to.r.
 module.exports.manufacturerVendorController = require('./type2.controller/manufacture.vendors.controller');
 // manufacture warehouse
 module.exports.manufactureWarehouseController = require('./type2.controller/manufacture.warehouse.controller');
+// manufacture master category
+module.exports.manufactureCategoryController = require('./type2.controller/manufacture.master.category.controller');
+// manufacture master subcategory
+module.exports.manufactureSubCategoryController = require('./type2.controller/manufacture.master.subcategory.controller');
+// manufacture master item
+module.exports.manufactureItemController = require('./type2.controller/manufacture.master.item.controller');

@@ -140,3 +140,9 @@ module.exports.MtoRWallet = require('./type2.models/wallet.m.to.r.model');
 module.exports.ManufacturerVendor = require('./type2.models/manufacture.vendors.model');
 // manufacture warehouse
 module.exports.ManufactureWarehouse = require('./type2.models/manufacture.warehouse.model');
+// manufacture master category
+module.exports.ManufactureMasterCategory = require('./type2.models/manufacture.master.category.model');
+// manufacture master item
+module.exports.ManufactureMasterItem = require('./type2.models/manufacture.master.item.model');
+// manufacture master subcategory
+module.exports.ManufactureMasterSubCategory = require('./type2.models/manufacture.master.subcategory.model');

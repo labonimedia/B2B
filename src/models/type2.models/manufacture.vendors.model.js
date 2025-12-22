@@ -114,7 +114,7 @@ const manufacturerVendorSchema = new Schema(
       trim: true, // e.g. "30 days credit", "Advance", etc.
     },
 
-   // bankDetails: bankDetailsSchema,
+   bankDetails: bankDetailsSchema,
 
     notes: {
       type: String,
