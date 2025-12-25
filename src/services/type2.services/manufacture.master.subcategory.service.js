@@ -2,11 +2,43 @@ const httpStatus = require("http-status");
 const ApiError = require("../../utils/ApiError");
 const { ManufactureMasterSubCategory } = require("../../models");
 
+// /**
+//  * Create Subcategory
+//  */
+// const createSubcategory = async (reqBody) => {
+//   return ManufactureMasterSubCategory.create(reqBody);
+// };
 /**
- * Create Subcategory
+ * Create Subcategory (Single or Bulk)
  */
 const createSubcategory = async (reqBody) => {
-  return ManufactureMasterSubCategory.create(reqBody);
+  // CASE 1: Bulk Insert (Array)
+  if (Array.isArray(reqBody)) {
+    if (reqBody.length === 0) {
+      throw new ApiError(httpStatus.BAD_REQUEST, "Subcategory array cannot be empty");
+    }
+
+    // Insert multiple subcategories
+    const created = await ManufactureMasterSubCategory.insertMany(reqBody, {
+      ordered: false, // continues even if some fail
+    });
+
+    return {
+      success: true,
+      message: "Subcategories created successfully",
+      count: created.length,
+      data: created,
+    };
+  }
+
+  // CASE 2: Single Subcategory Create
+  const created = await ManufactureMasterSubCategory.create(reqBody);
+
+  return {
+    success: true,
+    message: "Subcategory created successfully",
+    data: created,
+  };
 };
 
 /**

@@ -103,7 +103,7 @@ const deleteWarehousePerment = async (warehouseId) => {
   if (!warehouse) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Warehouse not found');
   }
-  await warehouse.save();
+  await warehouse.remove();
   return warehouse;
 };
 
