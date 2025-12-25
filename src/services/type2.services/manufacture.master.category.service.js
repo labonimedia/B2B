@@ -2,10 +2,27 @@ const httpStatus = require('http-status');
 const { ManufactureMasterCategory } = require('../../models');
 const ApiError = require('../../utils/ApiError');
 
+// /**
+//  * Create Category
+//  */
+// const createCategory = async (reqBody) => {
+//   return ManufactureMasterCategory.create(reqBody);
+// };
 /**
- * Create Category
+ * Create one or multiple categories
  */
+
 const createCategory = async (reqBody) => {
+  // If array → bulk insert
+  if (Array.isArray(reqBody)) {
+    if (reqBody.length === 0) {
+      throw new ApiError(httpStatus.BAD_REQUEST, "Category array cannot be empty");
+    }
+
+    return ManufactureMasterCategory.insertMany(reqBody, { ordered: false });
+  }
+
+  // If single object → normal insert
   return ManufactureMasterCategory.create(reqBody);
 };
 
