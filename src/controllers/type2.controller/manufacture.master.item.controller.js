@@ -24,6 +24,8 @@ const getItems = catchAsync(async (req, res) => {
   const filter = pick(req.query, [
     "categoryName",
     "subcategoryName",
+    "categoryId",,
+    "subcategoryId",
     "name",
     "code",
     "subcategoryCode",
