@@ -21,7 +21,7 @@ const subcategorySchema = new Schema(
       trim: true,
     },
 
-    name: {
+    subcategoryName: {
       type: String,
       required: true,
       trim: true,
