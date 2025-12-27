@@ -27,7 +27,7 @@ const subcategorySchema = new Schema(
       trim: true,
     },
 
-    code: {
+    subcategoryCode: {
       type: String,  
       trim: true,  // Auto-generated: SUB001, SUB002...
     },
