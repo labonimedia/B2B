@@ -47,8 +47,12 @@ const subcategorySchema = new Schema(
 );
 
 // Ensure unique subcategory name inside same category
+// subcategorySchema.index(
+//   { categoryId: 1, name: 1 },
+//   { unique: true }
+// );
 subcategorySchema.index(
-  { categoryId: 1, name: 1 },
+  { categoryId: 1, subcategoryName: 1 },
   { unique: true }
 );
 
