@@ -11,17 +11,47 @@ const { ManufactureMasterSubCategory } = require("../../models");
 /**
  * Create Subcategory (Single or Bulk)
  */
+// const createSubcategory = async (reqBody) => {
+//   // CASE 1: Bulk Insert (Array)
+//   if (Array.isArray(reqBody)) {
+//     if (reqBody.length === 0) {
+//       throw new ApiError(httpStatus.BAD_REQUEST, "Subcategory array cannot be empty");
+//     }
+
+//     // Insert multiple subcategories
+//     const created = await ManufactureMasterSubCategory.insertMany(reqBody, {
+//       ordered: false, // continues even if some fail
+//     });
+
+//     return {
+//       success: true,
+//       message: "Subcategories created successfully",
+//       count: created.length,
+//       data: created,
+//     };
+//   }
+
+//   // CASE 2: Single Subcategory Create
+//   const created = await ManufactureMasterSubCategory.create(reqBody);
+
+//   return {
+//     success: true,
+//     message: "Subcategory created successfully",
+//     data: created,
+//   };
+// };
+/**
+ * Create Single or Multiple Subcategories
+ */
 const createSubcategory = async (reqBody) => {
-  // CASE 1: Bulk Insert (Array)
+  // 1️⃣ If request is an array → Bulk insert
   if (Array.isArray(reqBody)) {
     if (reqBody.length === 0) {
-      throw new ApiError(httpStatus.BAD_REQUEST, "Subcategory array cannot be empty");
+      throw new ApiError(httpStatus.BAD_REQUEST, "Subcategory list cannot be empty");
     }
 
-    // Insert multiple subcategories
-    const created = await ManufactureMasterSubCategory.insertMany(reqBody, {
-      ordered: false, // continues even if some fail
-    });
+    // Insert many
+    const created = await ManufactureMasterSubCategory.insertMany(reqBody);
 
     return {
       success: true,
@@ -31,7 +61,7 @@ const createSubcategory = async (reqBody) => {
     };
   }
 
-  // CASE 2: Single Subcategory Create
+  // 2️⃣ If single object → Normal insert
   const created = await ManufactureMasterSubCategory.create(reqBody);
 
   return {
