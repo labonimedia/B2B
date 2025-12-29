@@ -78,7 +78,7 @@ const parseIfString = (value) => {
 const createItem = catchAsync(async (req, res) => {
   req.body.vendorDetails = parseIfString(req.body.vendorDetails);
   req.body.warehouseDetails = parseIfString(req.body.warehouseDetails);
-
+  req.body.rackRowMappings = parseIfString(req.body.rackRowMappings);
   const normalizedBody = normalizePhotos(req.body);
 
   const item = await manufactureItemService.createItem(normalizedBody);
