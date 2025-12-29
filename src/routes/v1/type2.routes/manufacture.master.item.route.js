@@ -75,5 +75,10 @@ router
     auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
     manufactureItemController.deleteItemById
   );
-
+  
+router.post(
+  '/filter',
+  auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
+  manufactureItemController.getItemsByCategorySubcategory
+);
 module.exports = router;

@@ -62,11 +62,30 @@ const deleteItemById = catchAsync(async (req, res) => {
   await manufactureItemService.deleteItemById(req.params.id);
   res.status(httpStatus.NO_CONTENT).send();
 });
+// const getItemsByCategorySubcategory = catchAsync(async (req, res) => {
+//   const result = await manufactureItemService.getItemsByCategorySubcategory(req.body);
+//   res.status(httpStatus.OK).send({ success: true, data: result });
+// });
 
+const getItemsByCategorySubcategory = catchAsync(async (req, res) => {
+  const filter = pick(req.body, [
+    "categoryId",
+    "subcategoryId",
+    "categoryName",
+    "subcategoryName",
+    "itemName"
+  ]);
+
+  const options = pick(req.body, ["sortBy", "limit", "page"]);
+
+  const result = await manufactureItemService.getItemsByCategorySubcategory(filter, options);
+  res.send({ success: true, data: result });
+});
 module.exports = {
   createItem,
   getItems,
   getItemById,
   updateItemById,
   deleteItemById,
+  getItemsByCategorySubcategory,
 };

@@ -125,11 +125,55 @@ const deleteItemById = async (id) => {
   await item.deleteOne();
   return item;
 };
+/**
+ * Get items by category + subcategory + optional itemName search
+ */
+// const getItemsByCategorySubcategory = async (body) => {
+//   const { categoryId, subcategoryId, itemName, categoryName, subcategoryName } = body;
 
+//   const filter = {};
+
+//   if (categoryId) filter.categoryId = categoryId;
+//   if (subcategoryId) filter.subcategoryId = subcategoryId;
+
+//   if (categoryName) filter.categoryName = new RegExp(categoryName, 'i');
+//   if (subcategoryName) filter.subcategoryName = new RegExp(subcategoryName, 'i');
+
+//   if (itemName) filter.itemName = { $regex: itemName, $options: "i" };
+
+//   const items = await ManufactureMasterItem.find(filter).lean();
+
+//   return items;
+// };
+const getItemsByCategorySubcategory = async (filter, options) => {
+  const query = {};
+
+  if (filter.categoryId) query.categoryId = filter.categoryId;
+  if (filter.subcategoryId) query.subcategoryId = filter.subcategoryId;
+
+  if (filter.categoryName)
+    query.categoryName = { $regex: filter.categoryName, $options: "i" };
+
+  if (filter.subcategoryName)
+    query.subcategoryName = { $regex: filter.subcategoryName, $options: "i" };
+
+  if (filter.itemName)
+    query.itemName = { $regex: filter.itemName, $options: "i" };
+
+  // Default pagination options
+  options.limit = options.limit || 10;
+  options.page = options.page || 1;
+  options.sortBy = options.sortBy || "createdAt:desc";
+
+  const result = await ManufactureMasterItem.paginate(query, options);
+
+  return result;
+};
 module.exports = {
   createItem,
   queryItems,
   getItemById,
   updateItemById,
   deleteItemById,
+  getItemsByCategorySubcategory,
 };
