@@ -54,11 +54,8 @@ const warehouseDetailsSchema = new Schema(
     },
 
     // NEW FIELD (VALID ARRAY)
-    rackRowMappings: {
-      type: [rackRowMappingSchema],
-      default: [],
-    },
-
+   //rackRowMappings: parsedRackRowMappings,
+   
     isPrimary: Boolean,
     storageCapacity: String,
   },
