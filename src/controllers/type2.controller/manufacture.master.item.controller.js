@@ -2,7 +2,6 @@ const httpStatus = require('http-status');
 const catchAsync = require('../../utils/catchAsync');
 const pick = require('../../utils/pick');
 const { manufactureItemService } = require('../../services');
-
 const normalizePhotos = (body) => {
   if (Array.isArray(body.photo1)) body.photo1 = body.photo1[0];
   if (Array.isArray(body.photo2)) body.photo2 = body.photo2[0];
