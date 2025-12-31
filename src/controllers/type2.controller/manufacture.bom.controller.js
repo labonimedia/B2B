@@ -40,11 +40,18 @@ const deleteBOMById = catchAsync(async (req, res) => {
 
 /* Get BOM by design + color (all sizes) */
 const getBOMByDesignColor = catchAsync(async (req, res) => {
-  const { manufacturerEmail, designNumber, color } = req.query;
-  const data = await manufactureBOMService.getBOMByDesignColor(manufacturerEmail, designNumber, color, size);
+  const { manufacturerEmail, designNumber } = req.query;
+  const data = await manufactureBOMService.getBOMByDesignColor(manufacturerEmail, designNumber);
   res.send({ success: true, data });
 });
 
+const searchBOM = catchAsync(async (req, res) => {
+  const result = await manufactureBOMService.searchBOM(req.body);
+  res.status(httpStatus.OK).send({
+    success: true,
+    ...result,
+  });
+});
 module.exports = {
   createBOM,
   getBOMs,
@@ -52,4 +59,5 @@ module.exports = {
   updateBOMById,
   deleteBOMById,
   getBOMByDesignColor,
+  searchBOM,
 };

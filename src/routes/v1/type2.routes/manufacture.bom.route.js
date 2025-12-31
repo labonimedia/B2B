@@ -28,4 +28,10 @@ router
   .patch(auth("manufacture", "superadmin"), manufactureBOMController.updateBOMById)
   .delete(auth("manufacture", "superadmin"), manufactureBOMController.deleteBOMById);
 
+router.post(
+  "/search",
+  auth("superadmin", "manufacture"),
+  manufactureBOMController.searchBOM
+);
+
 module.exports = router;
