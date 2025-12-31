@@ -51,10 +51,8 @@ const warehouseDetailsSchema = new Schema(
       country: String,
       pinCode: String,
     },
-
     // NEW FIELD (VALID ARRAY)
     //rackRowMappings: parsedRackRowMappings,
-
     isPrimary: Boolean,
     storageCapacity: String,
   },
@@ -72,20 +70,15 @@ const itemSchema = new Schema(
     subcategoryCode: { type: String, trim: true },
     subcategoryName: { type: String, trim: true },
     itemName: { type: String, required: true, trim: true },
-
     code: { type: String, trim: true },
     parameter: { type: String, trim: true },
     vendorDetails: vendorDetailsSchema,
     warehouseDetails: warehouseDetailsSchema,
-
     stockInHand: { type: Number, default: 0 },
-
     photo1: String,
     photo2: String,
-
     details: String,
     note: String,
-
     isActive: { type: Boolean, default: true },
     rackRowMappings: [rackRowMappingSchema],
     manufacturerEmail: {

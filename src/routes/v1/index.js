@@ -130,6 +130,7 @@ const manufactureWarehouseRoute = require('./type2.routes/manufacture.warehouse.
 const manufactureCategoryRoute = require('./type2.routes/manufacture.master.category.route');
 const manufactureSubCategoryRoute = require('./type2.routes/manufacture.master.subcategory.route');
 const manufactureItemRoute = require('./type2.routes/manufacture.master.item.route');
+const manufactureBOMRoute = require('./type2.routes/manufacture.bom.route');
 
 const router = express.Router();
 
@@ -630,6 +631,10 @@ const defaultRoutes = [
     {
     path: '/manufacture-item',
     route: manufactureItemRoute,
+  },
+   {
+    path: '/manufacture-bom',
+    route: manufactureBOMRoute,
   },
   
 ];
