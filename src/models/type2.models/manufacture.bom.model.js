@@ -7,6 +7,10 @@ const { Schema } = mongoose;
 const materialSchema = new Schema(
   {
     materialCode: { type: String, trim: true },
+    categoryName: { type: String, trim: true },
+    categoryCode: { type: String, trim: true },
+    subcategoryCode: { type: String, trim: true },
+    subcategoryName: { type: String, trim: true },
     note: { type: String, trim: true },
     details: { type: String, trim: true },
     quantityParameter: { type: String, trim: true },
@@ -23,7 +27,7 @@ const materialSchema = new Schema(
 /* ---------- Size-level BOM Schema ---------- */
 const sizeSchema = new Schema(
   {
-     designNumber: {
+    designNumber: {
       type: String,
       required: true,
       trim: true,

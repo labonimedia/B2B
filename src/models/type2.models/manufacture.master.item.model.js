@@ -65,7 +65,6 @@ const itemSchema = new Schema(
     categoryId: { type: mongoose.Schema.Types.ObjectId, ref: 'ManufactureCategory' },
     categoryName: { type: String, trim: true },
     categoryCode: { type: String, trim: true },
-
     subcategoryId: { type: mongoose.Schema.Types.ObjectId, ref: 'ManufactureSubcategory' },
     subcategoryCode: { type: String, trim: true },
     subcategoryName: { type: String, trim: true },

@@ -45,8 +45,72 @@ const deleteBOMById = async (id) => {
 };
 
 /* Get BOM for a Product by Design + Color (all sizes) */
-const getBOMByDesignColor = async (manufacturerEmail, designNumber, color, size) => {
-  return ManufactureBOM.find({ manufacturerEmail, designNumber, color, size});
+const getBOMByDesignColor = async (manufacturerEmail, designNumber) => {
+  return ManufactureBOM.find({ manufacturerEmail, designNumber });
+};
+
+
+/**
+ * Search BOM with pagination & multiple filters
+ */
+const searchBOM = async (reqBody) => {
+  let {
+    search,
+    productId,
+    manufacturerEmail,
+    designNumber,
+    color,
+    size,
+    page = 1,
+    limit = 10,
+  } = reqBody;
+
+  const filter = {};
+
+  // ✔ Exact filters
+  if (productId) filter.productId = productId;
+  if (manufacturerEmail) filter.manufacturerEmail = manufacturerEmail;
+  if (designNumber) filter.designNumber = designNumber;
+
+  // ✔ Size + Color filter (inside nested array)
+  if (color || size) {
+    filter.sizes = {
+      $elemMatch: {},
+    };
+
+    if (color) filter.sizes.$elemMatch.color = color;
+    if (size) filter.sizes.$elemMatch.size = size;
+  }
+
+  // ✔ Global search (partial match across fields)
+  if (search && search.trim() !== "") {
+    const regex = new RegExp(search, "i");
+
+    filter.$or = [
+      { manufacturerEmail: regex },
+      { designNumber: regex },
+      { "sizes.color": regex },
+      { "sizes.size": regex },
+      { "sizes.materials.materialName": regex },
+      { "sizes.materials.materialCode": regex },
+    ];
+  }
+
+  const options = {
+    page: Number(page),
+    limit: Number(limit),
+    sortBy: "createdAt:desc",
+  };
+
+  const result = await ManufactureBOM.paginate(filter, options);
+
+  return {
+    total: result.totalResults,
+    totalPages: result.totalPages,
+    page: result.page,
+    limit: result.limit,
+    data: result.results,
+  };
 };
 
 module.exports = {
@@ -56,4 +120,5 @@ module.exports = {
   updateBOMById,
   deleteBOMById,
   getBOMByDesignColor,
+  searchBOM,
 };
