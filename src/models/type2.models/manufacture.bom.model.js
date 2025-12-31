@@ -3,81 +3,96 @@ const { paginate, toJSON } = require('../plugins');
 
 const { Schema } = mongoose;
 
-/* ---------- Material Line Item Schema ---------- */
+/* ---------------- MATERIAL SCHEMA ---------------- */
 const materialSchema = new Schema(
   {
-    materialCode: { type: String, trim: true },
-    categoryName: { type: String, trim: true },
-    categoryCode: { type: String, trim: true },
-    subcategoryCode: { type: String, trim: true },
-    subcategoryName: { type: String, trim: true },
-    note: { type: String, trim: true },
-    details: { type: String, trim: true },
-    quantityParameter: { type: String, trim: true },
-    materialName: { type: String, required: true, trim: true },
-    materialType: { type: String, trim: true }, // Fabric, Button, etc.
-    uom: { type: String, required: true }, // Unit of Measurement
-    qtyPerPiece: { type: Number, required: true },
-    wastagePercent: { type: Number, default: 0 },
-    colorDependent: { type: Boolean, default: false },
+    materialCode: String,
+    materialName: { type: String, required: true },
+    materialType: String,
+
+    categoryName: String,
+    categoryCode: String,
+    subcategoryName: String,
+    subcategoryCode: String,
+
+    quantityParameter: String,
+    uom: String,
+    qtyPerPiece: Number,
+    wastagePercent: Number,
+    colorDependent: Boolean,
+
+    note: String,
+    details: String
   },
   { _id: false }
 );
 
-/* ---------- Size-level BOM Schema ---------- */
+/* ---------------- SIZE-WISE BOM ---------------- */
 const sizeSchema = new Schema(
   {
-    designNumber: {
-      type: String,
-      required: true,
-      trim: true,
-    },
-    color: {
-      type: String,
-      required: true,
-      trim: true,
-    },
-    size: { type: String, required: true, trim: true }, // XS, S, M, L, XL
-    notes: { type: String, trim: true },
-    materials: [materialSchema], // Material list per size
+    size: { type: String, required: true }, // XS, M, L
+    notes: String,
+    materials: [materialSchema]
   },
   { _id: false }
 );
 
-/* ---------- Main BOM Schema ---------- */
+/* ---------------- COLOR-WISE GROUP ---------------- */
+const colorSchema = new Schema(
+  {
+    color: { type: String, required: true },
+    sizes: [sizeSchema]   // Sizes under this color
+  },
+  { _id: false }
+);
+
+/* ---------------- MAIN BOM SCHEMA ---------------- */
 const bomSchema = new Schema(
   {
     productId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'ProductType2',
-      required: true,
+      ref: "ProductType2",
+      required: true
     },
 
     manufacturerEmail: {
       type: String,
       required: true,
-      trim: true,
+      trim: true
     },
 
     designNumber: {
       type: String,
-      required: true,
-      trim: true,
+      required: true
     },
 
-    sizes: [sizeSchema], // BOM per size
+    colors: [colorSchema]  // Color → Sizes → Materials
   },
   { timestamps: true }
 );
 
-/* --- UNIQUE BOM RULE ---
-   Single BOM for:
-   Product + Manufacturer + Design + Color
-*/
-bomSchema.index({ productId: 1, manufacturerEmail: 1, designNumber: 1 }, { unique: true });
+/* ------------ SEARCH INDEXES ------------- */
+bomSchema.index(
+  { productId: 1, manufacturerEmail: 1, designNumber: 1 },
+  { unique: true }
+);
 
+bomSchema.index({
+  designNumber: 1,
+  manufacturerEmail: 1,
+  "colors.color": 1,
+  "colors.sizes.size": 1
+});
+
+bomSchema.index({
+  "colors.sizes.materials.materialName": "text",
+  "colors.sizes.materials.materialCode": "text",
+  "colors.sizes.materials.categoryName": "text",
+  "colors.sizes.materials.subcategoryName": "text"
+});
+
+/* plugins */
 bomSchema.plugin(toJSON);
 bomSchema.plugin(paginate);
 
-const ManufactureBOM = mongoose.model('ManufactureBOM', bomSchema);
-module.exports = ManufactureBOM;
+module.exports = mongoose.model("ManufactureBOM", bomSchema);

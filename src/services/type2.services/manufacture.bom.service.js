@@ -2,39 +2,47 @@ const httpStatus = require("http-status");
 const ApiError = require("../../utils/ApiError");
 const { ManufactureBOM } = require('../../models');
 
-/* Create BOM (Single or Multiple Sizes) */
+/* -----------------------------------------------------------
+    CREATE BOM (Single or Multiple)
+------------------------------------------------------------ */
 const createBOM = async (reqBody) => {
-  // If array -> bulk insert
   if (Array.isArray(reqBody)) {
     return ManufactureBOM.insertMany(reqBody);
   }
-
-  // Single BOM
   return ManufactureBOM.create(reqBody);
 };
 
-/* Query BOM with pagination */
+/* -----------------------------------------------------------
+    PAGINATED QUERY
+------------------------------------------------------------ */
 const queryBOMs = async (filter, options) => {
   return ManufactureBOM.paginate(filter, options);
 };
 
-/* Get BOM by ID */
+/* -----------------------------------------------------------
+    GET BOM BY ID
+------------------------------------------------------------ */
 const getBOMById = async (id) => {
   return ManufactureBOM.findById(id);
 };
 
-/* Update BOM */
+/* -----------------------------------------------------------
+    UPDATE BOM BY ID
+------------------------------------------------------------ */
 const updateBOMById = async (id, updateBody) => {
   const bom = await getBOMById(id);
   if (!bom) {
     throw new ApiError(httpStatus.NOT_FOUND, "BOM not found");
   }
+
   Object.assign(bom, updateBody);
   await bom.save();
   return bom;
 };
 
-/* Delete BOM */
+/* -----------------------------------------------------------
+    DELETE BOM BY ID
+------------------------------------------------------------ */
 const deleteBOMById = async (id) => {
   const bom = await getBOMById(id);
   if (!bom) {
@@ -44,15 +52,17 @@ const deleteBOMById = async (id) => {
   return bom;
 };
 
-/* Get BOM for a Product by Design + Color (all sizes) */
-const getBOMByDesignColor = async (manufacturerEmail, designNumber) => {
+/* -----------------------------------------------------------
+    GET BOM — By manufacturer + design
+------------------------------------------------------------ */
+const getBOMByDesign = async (manufacturerEmail, designNumber) => {
   return ManufactureBOM.find({ manufacturerEmail, designNumber });
 };
 
-
-/**
- * Search BOM with pagination & multiple filters
- */
+/* -----------------------------------------------------------
+    ADVANCED SEARCH (with pagination)
+    - Supports: global search, nested search, multiple filters
+------------------------------------------------------------ */
 const searchBOM = async (reqBody) => {
   let {
     search,
@@ -67,35 +77,43 @@ const searchBOM = async (reqBody) => {
 
   const filter = {};
 
-  // ✔ Exact filters
+  /* ---- BASIC FILTERS ---- */
   if (productId) filter.productId = productId;
   if (manufacturerEmail) filter.manufacturerEmail = manufacturerEmail;
   if (designNumber) filter.designNumber = designNumber;
 
-  // ✔ Size + Color filter (inside nested array)
-  if (color || size) {
-    filter.sizes = {
-      $elemMatch: {},
-    };
+  /* ---- NESTED FILTERS ---- */
+  const andFilters = [];
 
-    if (color) filter.sizes.$elemMatch.color = color;
-    if (size) filter.sizes.$elemMatch.size = size;
+  if (color) {
+    andFilters.push({ "colors.color": color });
   }
 
-  // ✔ Global search (partial match across fields)
+  if (size) {
+    andFilters.push({ "colors.sizes.size": size });
+  }
+
+  if (andFilters.length > 0) {
+    filter.$and = andFilters;
+  }
+
+  /* ---- GLOBAL SEARCH ---- */
   if (search && search.trim() !== "") {
     const regex = new RegExp(search, "i");
 
     filter.$or = [
       { manufacturerEmail: regex },
       { designNumber: regex },
-      { "sizes.color": regex },
-      { "sizes.size": regex },
-      { "sizes.materials.materialName": regex },
-      { "sizes.materials.materialCode": regex },
+      { "colors.color": regex },
+      { "colors.sizes.size": regex },
+      { "colors.sizes.materials.materialName": regex },
+      { "colors.sizes.materials.materialCode": regex },
+      { "colors.sizes.materials.categoryName": regex },
+      { "colors.sizes.materials.subcategoryName": regex },
     ];
   }
 
+  /* ---- PAGINATION OPTIONS ---- */
   const options = {
     page: Number(page),
     limit: Number(limit),
@@ -119,6 +137,6 @@ module.exports = {
   getBOMById,
   updateBOMById,
   deleteBOMById,
-  getBOMByDesignColor,
+  getBOMByDesign,
   searchBOM,
 };
