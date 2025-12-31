@@ -25,7 +25,7 @@ const searchProducts = catchAsync(async (req, res) => {
   filter.productBy = req.body.productBy;
 
   // Add optional filters only if they have values
-  ['brand', 'clothing', 'gender', 'productType', 'subCategory'].forEach((key) => {
+  ['brand', 'clothing', 'gender', 'productType', 'subCategory', 'bomFilled'].forEach((key) => {
     if (req.body[key] && req.body[key].trim() !== '') {
       filter[key] = req.body[key].trim();
     }
@@ -80,7 +80,7 @@ const searchForWSProducts = catchAsync(async (req, res) => {
 });
 
 const queryProduct = catchAsync(async (req, res) => {
-  const filter = pick(req.query, ['name', 'status', 'productBy']);
+  const filter = pick(req.query, ['name', 'status', 'productBy', 'bomFilled']);
   const options = pick(req.query, ['sortBy', 'limit', 'page']);
   const result = await productType2Service.queryProduct(filter, options);
   res.send(result);

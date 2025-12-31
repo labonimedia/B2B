@@ -19,6 +19,7 @@ const productSchema = mongoose.Schema(
       ref: 'Subscription',
       // required: true,
     },
+    bomFilled: { type: Boolean, default: false },
     FSIN: {
       type: String,
       unique: true,
