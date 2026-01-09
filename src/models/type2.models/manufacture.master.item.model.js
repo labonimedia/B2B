@@ -71,6 +71,7 @@ const itemSchema = new Schema(
     itemName: { type: String, required: true, trim: true },
     code: { type: String, trim: true },
     parameter: { type: String, trim: true },
+    stockUnit: { type: String, trim: true },
     vendorDetails: vendorDetailsSchema,
     warehouseDetails: warehouseDetailsSchema,
     stockInHand: { type: Number, default: 0 },
