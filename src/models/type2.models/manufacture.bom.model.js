@@ -14,7 +14,8 @@ const materialSchema = new Schema(
     categoryCode: String,
     subcategoryName: String,
     subcategoryCode: String,
-
+    photo1: String,
+    photo2: String,
     quantityParameter: String,
     uom: String,
     qtyPerPiece: Number,
@@ -22,7 +23,7 @@ const materialSchema = new Schema(
     colorDependent: Boolean,
 
     note: String,
-    details: String
+    details: String,
   },
   { _id: false }
 );
@@ -32,7 +33,7 @@ const sizeSchema = new Schema(
   {
     size: { type: String, required: true }, // XS, M, L
     notes: String,
-    materials: [materialSchema]
+    materials: [materialSchema],
   },
   { _id: false }
 );
@@ -41,7 +42,7 @@ const sizeSchema = new Schema(
 const colorSchema = new Schema(
   {
     color: { type: String, required: true },
-    sizes: [sizeSchema]   // Sizes under this color
+    sizes: [sizeSchema], // Sizes under this color
   },
   { _id: false }
 );
@@ -51,48 +52,45 @@ const bomSchema = new Schema(
   {
     productId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "ProductType2",
-      required: true
+      ref: 'ProductType2',
+      required: true,
     },
 
     manufacturerEmail: {
       type: String,
       required: true,
-      trim: true
+      trim: true,
     },
 
     designNumber: {
       type: String,
-      required: true
+      required: true,
     },
 
-    colors: [colorSchema]  // Color → Sizes → Materials
+    colors: [colorSchema], // Color → Sizes → Materials
   },
   { timestamps: true }
 );
 
 /* ------------ SEARCH INDEXES ------------- */
-bomSchema.index(
-  { productId: 1, manufacturerEmail: 1, designNumber: 1 },
-  { unique: true }
-);
+bomSchema.index({ productId: 1, manufacturerEmail: 1, designNumber: 1 }, { unique: true });
 
 bomSchema.index({
   designNumber: 1,
   manufacturerEmail: 1,
-  "colors.color": 1,
-  "colors.sizes.size": 1
+  'colors.color': 1,
+  'colors.sizes.size': 1,
 });
 
 bomSchema.index({
-  "colors.sizes.materials.materialName": "text",
-  "colors.sizes.materials.materialCode": "text",
-  "colors.sizes.materials.categoryName": "text",
-  "colors.sizes.materials.subcategoryName": "text"
+  'colors.sizes.materials.materialName': 'text',
+  'colors.sizes.materials.materialCode': 'text',
+  'colors.sizes.materials.categoryName': 'text',
+  'colors.sizes.materials.subcategoryName': 'text',
 });
 
 /* plugins */
 bomSchema.plugin(toJSON);
 bomSchema.plugin(paginate);
 
-module.exports = mongoose.model("ManufactureBOM", bomSchema);
+module.exports = mongoose.model('ManufactureBOM', bomSchema);
