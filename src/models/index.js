@@ -148,3 +148,5 @@ module.exports.ManufactureMasterItem = require('./type2.models/manufacture.maste
 module.exports.ManufactureMasterSubCategory = require('./type2.models/manufacture.master.subcategory.model');
 // manufacture BOM
 module.exports.ManufactureBOM = require('./type2.models/manufacture.bom.model');
+// manufacture raw material
+module.exports.ManufactureRawMaterialInventory = require('./type2.models/manufacture.raw.material.inventory.logs.model');

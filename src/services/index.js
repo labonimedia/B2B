@@ -138,3 +138,5 @@ module.exports.manufactureSubCategoryService = require('./type2.services/manufac
 module.exports.manufactureItemService = require('./type2.services/manufacture.master.item.service');
 // manufacture bom service
 module.exports.manufactureBOMService = require('./type2.services/manufacture.bom.service');
+// manufacture raw material inventory logs service
+module.exports.manufactureRawMaterialInventoryLogsService = require('./type2.services/manufacture.raw.material.inventory.logs.service');
