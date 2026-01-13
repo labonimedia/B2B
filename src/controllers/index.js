@@ -134,3 +134,5 @@ module.exports.manufactureSubCategoryController = require('./type2.controller/ma
 module.exports.manufactureItemController = require('./type2.controller/manufacture.master.item.controller');
 // manufacture bom
 module.exports.manufactureBOMController = require('./type2.controller/manufacture.bom.controller');
+// manufacture raw material inventory logs
+module.exports.manufactureRawMaterialInventoryLogsController = require('./type2.controller/manufacture.raw.material.inventory.logs.controller');

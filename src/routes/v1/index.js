@@ -131,7 +131,7 @@ const manufactureCategoryRoute = require('./type2.routes/manufacture.master.cate
 const manufactureSubCategoryRoute = require('./type2.routes/manufacture.master.subcategory.route');
 const manufactureItemRoute = require('./type2.routes/manufacture.master.item.route');
 const manufactureBOMRoute = require('./type2.routes/manufacture.bom.route');
-
+const ManufactureRawMaterialInventoryLogsRoute = require('./type2.routes/manufacture.raw.material.inventory.logs.route');
 const router = express.Router();
 
 const defaultRoutes = [
@@ -600,7 +600,7 @@ const defaultRoutes = [
     route: mToRCreditNoteRoute,
   },
   // return request
-   {
+  {
     path: '/return-r2m',
     route: rToMReturnRoute,
   },
@@ -619,24 +619,27 @@ const defaultRoutes = [
     path: '/manufacture-warehouse',
     route: manufactureWarehouseRoute,
   },
-    // manufacture category
+  // manufacture category
   {
     path: '/manufacture-category',
     route: manufactureCategoryRoute,
   },
-   {
+  {
     path: '/manufacture-subcategory',
     route: manufactureSubCategoryRoute,
   },
-    {
+  {
     path: '/manufacture-item',
     route: manufactureItemRoute,
   },
-   {
+  {
     path: '/manufacture-bom',
     route: manufactureBOMRoute,
   },
-  
+  {
+    path: '/manufacture-raw-material-inventory-logs',
+    route: ManufactureRawMaterialInventoryLogsRoute,
+  },
 ];
 
 const devRoutes = [
