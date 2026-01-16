@@ -2,14 +2,44 @@ const httpStatus = require('http-status');
 const ApiError = require('../../utils/ApiError');
 const { ManufactureRawMaterialInventory } = require('../../models');
 
-/**
- * Create inventory
- */
-const createInventory = async (masterItemId) => {
-  const exists = await ManufactureRawMaterialInventory.findOne({ masterItemId });
-  if (exists) throw new Error('Inventory already exists for this item');
+// /**
+//  * Create inventory
+//  */
+// const createInventory = async (masterItemId) => {
+//   const exists = await ManufactureRawMaterialInventory.findOne({ masterItemId });
+//   if (exists) throw new Error('Inventory already exists for this item');
 
-  return ManufactureRawMaterialInventory.create({ masterItemId });
+//   return ManufactureRawMaterialInventory.create({ masterItemId });
+// };
+const createInventory = async (payload) => {
+  const { masterItemId, manufacturerEmail } = payload;
+
+  // 1. Check existing inventory
+  const exists = await ManufactureRawMaterialInventory.findOne({ masterItemId });
+  if (exists) {
+    throw new Error('Inventory already exists for this item');
+  }
+
+  // 2. Fetch master item
+  const masterItem = await ManufactureMasterItem.findById(masterItemId);
+  if (!masterItem) {
+    throw new Error('Master item not found');
+  }
+
+  // 3. Create inventory with required fields
+  return ManufactureRawMaterialInventory.create({
+    masterItemId,
+    manufacturerEmail,
+
+    // copied from master item
+    itemName: masterItem.itemName,
+    code: masterItem.code,
+    categoryId: masterItem.categoryId,
+    categoryName: masterItem.categoryName,
+    subcategoryId: masterItem.subcategoryId,
+    subcategoryName: masterItem.subcategoryName,
+    stockUnit: masterItem.stockUnit,
+  });
 };
 
 /**
