@@ -1,6 +1,6 @@
 const httpStatus = require('http-status');
 const ApiError = require('../../utils/ApiError');
-const { ManufactureRawMaterialInventory } = require('../../models');
+const { ManufactureRawMaterialInventory, ManufactureMasterItem } = require('../../models');
 
 // /**
 //  * Create inventory
