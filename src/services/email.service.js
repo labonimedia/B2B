@@ -109,13 +109,14 @@ www.fashiontradershub.com`;
   await sendEmail(to, subject, text);
 };
 
+
 /**
  * Send verification email
  * @param {string} to
  * @param {string} token
  * @returns {Promise}
  */
-const sendInvitationToDistributer = async (to, fullName) => {
+const sendInvitationToDistributer = async (to, fullName, manufacturerName) => {
   const subject = ' Exclusive Invitation: Join Fashion Traders Hub for Seamless B2B Transactions!';
 
   const text = `Dear ${fullName},
@@ -126,7 +127,7 @@ As one of our trusted distributors, by joining Fashion Traders Hub, you'll gain 
 
 - View the Latest Product Listings: Stay updated with our newest collections and product releases in real time.
 - Place Orders Online: Conveniently browse, select, and order products directly through the platform, saving you time and effort.
-- Generate Proforma Invoices: Instantly create and download professional invoices for your orders, making transactions seamless.
+- Generate Invoices: Instantly create and download professional invoices for your orders, making transactions seamless.
 - Track Orders and Shipments: Stay informed about your order status, inventory updates, and delivery timelines, all in one place.
 
 Ready to simplify your business processes? Click the link below to register and join Fashion Traders Hub:
@@ -137,9 +138,9 @@ This platform will help us both collaborate more efficiently and drive success i
 We look forward to seeing you on Fashion Traders Hub!
 
 Best regards,
-[Manufacturer Name]
+${manufacturerName}
 Registered Manufacturer at Fashion Traders Hub
-www.fashiontradershub.com`;
+fashiontradershub.com`;
   await sendEmail(to, subject, text);
 };
 module.exports = {
