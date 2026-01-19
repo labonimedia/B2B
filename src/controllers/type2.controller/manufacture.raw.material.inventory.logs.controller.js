@@ -5,20 +5,6 @@ const {
   manufactureRawMaterialInventoryLogsService,
 } = require('../../services');
 
-// /**
-//  * Create Raw Material Inventory
-//  */
-// const createInventory = catchAsync(async (req, res) => {
-//   const inventory =
-//     await manufactureRawMaterialInventoryLogsService.createInventory(
-//       req.body.masterItemId
-//     );
-
-//   res.status(httpStatus.CREATED).send({
-//     success: true,
-//     data: inventory,
-//   });
-// });
 const createInventory = catchAsync(async (req, res) => {
   const inventory =
     await manufactureRawMaterialInventoryLogsService.createInventory(req.body);
