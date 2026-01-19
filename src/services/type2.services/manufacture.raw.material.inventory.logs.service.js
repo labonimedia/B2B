@@ -2,15 +2,6 @@ const httpStatus = require('http-status');
 const ApiError = require('../../utils/ApiError');
 const { ManufactureRawMaterialInventory, ManufactureMasterItem } = require('../../models');
 
-// /**
-//  * Create inventory
-//  */
-// const createInventory = async (masterItemId) => {
-//   const exists = await ManufactureRawMaterialInventory.findOne({ masterItemId });
-//   if (exists) throw new Error('Inventory already exists for this item');
-
-//   return ManufactureRawMaterialInventory.create({ masterItemId });
-// };
 const createInventory = async (payload) => {
   const { masterItemId, manufacturerEmail } = payload;
 
