@@ -143,6 +143,7 @@ Registered Manufacturer at Fashion Traders Hub
 fashiontradershub.com`;
   await sendEmail(to, subject, text);
 };
+
 module.exports = {
   transport,
   sendEmail,
