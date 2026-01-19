@@ -25,12 +25,10 @@ const createInventory = async (payload) => {
   if (!masterItem) {
     throw new Error('Master item not found');
   }
-
   // 3. Create inventory with required fields
   return ManufactureRawMaterialInventory.create({
     masterItemId,
     manufacturerEmail,
-
     // copied from master item
     itemName: masterItem.itemName,
     code: masterItem.code,
