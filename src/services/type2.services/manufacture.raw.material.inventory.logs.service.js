@@ -2,8 +2,40 @@ const httpStatus = require('http-status');
 const ApiError = require('../../utils/ApiError');
 const { ManufactureRawMaterialInventory, ManufactureMasterItem } = require('../../models');
 
+// const createInventory = async (payload) => {
+//   const { masterItemId, manufacturerEmail } = payload;
+
+//   // 1. Check existing inventory
+//   const exists = await ManufactureRawMaterialInventory.findOne({ masterItemId });
+//   if (exists) {
+//     throw new Error('Inventory already exists for this item');
+//   }
+
+//   // 2. Fetch master item
+//   const masterItem = await ManufactureMasterItem.findById(masterItemId);
+//   if (!masterItem) {
+//     throw new Error('Master item not found');
+//   }
+//   // 3. Create inventory with required fields
+//   return ManufactureRawMaterialInventory.create({
+//     masterItemId,
+//     manufacturerEmail,
+//     // copied from master item
+//     itemName: masterItem.itemName,
+//     code: masterItem.code,
+//     categoryId: masterItem.categoryId,
+//     categoryName: masterItem.categoryName,
+//     subcategoryId: masterItem.subcategoryId,
+//     subcategoryName: masterItem.subcategoryName,
+//     stockUnit: masterItem.stockUnit,
+//   });
+// };
 const createInventory = async (payload) => {
-  const { masterItemId, manufacturerEmail } = payload;
+  const { masterItemId, manufacturerEmail, data } = payload;
+
+  if (!masterItemId || !manufacturerEmail) {
+    throw new Error('masterItemId and manufacturerEmail are required');
+  }
 
   // 1. Check existing inventory
   const exists = await ManufactureRawMaterialInventory.findOne({ masterItemId });
@@ -16,18 +48,34 @@ const createInventory = async (payload) => {
   if (!masterItem) {
     throw new Error('Master item not found');
   }
-  // 3. Create inventory with required fields
+
+  // 3. Create inventory (MERGED DATA)
   return ManufactureRawMaterialInventory.create({
     masterItemId,
     manufacturerEmail,
+
     // copied from master item
     itemName: masterItem.itemName,
     code: masterItem.code,
     categoryId: masterItem.categoryId,
     categoryName: masterItem.categoryName,
+    categoryCode: masterItem.categoryCode,
     subcategoryId: masterItem.subcategoryId,
     subcategoryName: masterItem.subcategoryName,
+    subcategoryCode: masterItem.subcategoryCode,
     stockUnit: masterItem.stockUnit,
+
+    // from payload.data
+    vendorDetails: data.vendorDetails,
+    warehouseDetails: data.warehouseDetails,
+    rackRowMappings: data.rackRowMappings,
+    details: data.details,
+    note: data.note,
+    photo1: data.photo1,
+    isActive: data.isActive ?? true,
+
+    // inventory specific
+    currentStock: data.stockInHand || 0,
   });
 };
 
