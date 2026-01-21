@@ -1,6 +1,7 @@
 const httpStatus = require('http-status');
 const { M2RPerformaInvoice } = require('../../models');
 const ApiError = require('../../utils/ApiError');
+const { M2RInvoiceCounterService } = require('../../services');
 
 /**
  * Get Performa Invoice by PO Id
@@ -22,39 +23,54 @@ const getSingleM2RInvoiceById = async (id) => {
   return M2RPerformaInvoice.findById(id);
 };
 
-// /**
-//  * Create a new M2R Performa Invoice
-//  */
 // const createM2RInvoice = async (reqBody) => {
+//   const { manufacturerEmail } = reqBody;
+
+//   if (!manufacturerEmail) {
+//     throw new ApiError(httpStatus.BAD_REQUEST, "'manufacturerEmail' is required to generate invoice number.");
+//   }
+
+//   // Find the highest invoice number for this manufacturer
+//   const lastInvoice = await M2RPerformaInvoice.findOne({ manufacturerEmail }).sort({ invoiceNumber: -1 }).lean();
+
+//   let nextInvoiceNumber = '1';
+
+//   if (lastInvoice && lastInvoice.invoiceNumber) {
+//     const lastNumber = parseInt(lastInvoice.invoiceNumber, 10);
+//     if (!isNaN(lastNumber)) {
+//       nextInvoiceNumber = (lastNumber + 1).toString();
+//     }
+//   }
+
+//   reqBody.invoiceNumber = nextInvoiceNumber;
+
 //   const invoice = await M2RPerformaInvoice.create(reqBody);
 //   return invoice;
 // };
-
 const createM2RInvoice = async (reqBody) => {
   const { manufacturerEmail } = reqBody;
 
   if (!manufacturerEmail) {
-    throw new ApiError(httpStatus.BAD_REQUEST, "'manufacturerEmail' is required to generate invoice number.");
+    throw new ApiError(httpStatus.BAD_REQUEST, "'manufacturerEmail' is required");
   }
 
-  // Find the highest invoice number for this manufacturer
-  const lastInvoice = await M2RPerformaInvoice.findOne({ manufacturerEmail }).sort({ invoiceNumber: -1 }).lean();
+  // 🔐 ATOMIC & SAFE
+  const invoiceNumber = await M2RInvoiceCounterService.getNextM2RInvoiceNumber(manufacturerEmail);
 
-  let nextInvoiceNumber = '1';
+  try {
+    const invoice = await M2RPerformaInvoice.create({
+      ...reqBody,
+      invoiceNumber,
+    });
 
-  if (lastInvoice && lastInvoice.invoiceNumber) {
-    const lastNumber = parseInt(lastInvoice.invoiceNumber, 10);
-    if (!isNaN(lastNumber)) {
-      nextInvoiceNumber = (lastNumber + 1).toString();
+    return invoice;
+  } catch (error) {
+    if (error.code === 11000) {
+      throw new ApiError(httpStatus.CONFLICT, 'Invoice number conflict. Please retry.');
     }
+    throw error;
   }
-
-  reqBody.invoiceNumber = nextInvoiceNumber;
-
-  const invoice = await M2RPerformaInvoice.create(reqBody);
-  return invoice;
 };
-
 /**
  * Get paginated list of M2R Invoices
  */
@@ -161,7 +177,7 @@ const markReturnRequestGenerated = async (id) => {
     throw new ApiError(httpStatus.NOT_FOUND, 'Invoice not found');
   }
 
-  invoice.returnRequestGenerated = "true"; // explicitly set to string "true"
+  invoice.returnRequestGenerated = 'true'; // explicitly set to string "true"
   await invoice.save();
 
   return invoice;
