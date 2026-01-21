@@ -1,7 +1,7 @@
 const httpStatus = require('http-status');
 const { M2RPerformaInvoice } = require('../../models');
 const ApiError = require('../../utils/ApiError');
-const { M2RInvoiceCounterService } = require('../../services');
+const { getNextM2RInvoiceNumber } = require('../type2.services/m2r.invoicegenerator.service');
 
 /**
  * Get Performa Invoice by PO Id
@@ -53,10 +53,7 @@ const createM2RInvoice = async (reqBody) => {
   if (!manufacturerEmail) {
     throw new ApiError(httpStatus.BAD_REQUEST, "'manufacturerEmail' is required");
   }
-
-  // 🔐 ATOMIC & SAFE
-  const invoiceNumber = await M2RInvoiceCounterService.getNextM2RInvoiceNumber(manufacturerEmail);
-
+  const invoiceNumber = await getNextM2RInvoiceNumber(manufacturerEmail);
   try {
     const invoice = await M2RPerformaInvoice.create({
       ...reqBody,
