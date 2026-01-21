@@ -61,7 +61,7 @@ const performaInvoiceSchema = new mongoose.Schema(
   {
     poId: { type: mongoose.Schema.Types.ObjectId, ref: 'PORetailerToManufacturer', required: true },
     poNumber: { type: Number, required: true },
-    invoiceNumber: { type: String, required: true, unique: true },
+    invoiceNumber: { type: String },
     invoiceDate: { type: Date, default: Date.now },
     invoiceRecievedDate: { type: Date },
 
@@ -147,6 +147,11 @@ const performaInvoiceSchema = new mongoose.Schema(
     returnRequestGenerated: String,
   },
   { timestamps: true }
+);
+
+performaInvoiceSchema.index(
+  { manufacturerEmail: 1, invoiceNumber: 1 },
+  { unique: true }
 );
 
 performaInvoiceSchema.plugin(toJSON);
