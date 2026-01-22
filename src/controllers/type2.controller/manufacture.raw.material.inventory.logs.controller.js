@@ -141,6 +141,14 @@ const deleteInventoryById = catchAsync(async (req, res) => {
   res.status(httpStatus.NO_CONTENT).send();
 });
 
+const getCapacity = catchAsync(async (req, res) => {
+  const result = await manufactureRawMaterialInventoryLogsService.getProductionCapacity(req.body);
+  res.status(httpStatus.OK).send({
+    success: true,
+    data: result,
+  });
+});
+
 module.exports = {
   createInventory,
   updateStock,
@@ -148,4 +156,5 @@ module.exports = {
   getInventoryById,
   getLowStockMaterials,
   deleteInventoryById,
+  getCapacity,
 };

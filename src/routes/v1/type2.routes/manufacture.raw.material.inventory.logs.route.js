@@ -5,6 +5,26 @@ const router = express.Router();
 const { manufactureRawMaterialInventoryLogsController } = require('../../../controllers');
 
 // CREATE INVENTORY
+// FILTER INVENTORY
+router.post(
+  '/filter',
+  auth('superadmin', 'manufacture', 'wholesaler'),
+  manufactureRawMaterialInventoryLogsController.getInventories
+);
+
+// LOW STOCK MATERIALS
+router.get(
+  '/low-stock/list',
+  auth('superadmin', 'manufacture', 'wholesaler'),
+  manufactureRawMaterialInventoryLogsController.getLowStockMaterials
+);
+router.post(
+  '/production-capacity',
+  auth('superadmin', 'manufacture', 'wholesaler'),
+  manufactureRawMaterialInventoryLogsController.getCapacity
+);
+
+
 router
   .route('/')
   .post(auth('superadmin', 'manufacture', 'wholesaler'), manufactureRawMaterialInventoryLogsController.createInventory)
@@ -20,18 +40,5 @@ router
     manufactureRawMaterialInventoryLogsController.deleteInventoryById
   );
 
-// FILTER INVENTORY
-router.post(
-  '/filter',
-  auth('superadmin', 'manufacture', 'wholesaler'),
-  manufactureRawMaterialInventoryLogsController.getInventories
-);
-
-// LOW STOCK MATERIALS
-router.get(
-  '/low-stock/list',
-  auth('superadmin', 'manufacture', 'wholesaler'),
-  manufactureRawMaterialInventoryLogsController.getLowStockMaterials
-);
 
 module.exports = router;
