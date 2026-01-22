@@ -1,6 +1,6 @@
 const httpStatus = require('http-status');
 const ApiError = require('../../utils/ApiError');
-const { ManufactureRawMaterialInventory, ManufactureMasterItem } = require('../../models');
+const { ManufactureRawMaterialInventory, ManufactureMasterItem, ManufactureBOM } = require('../../models');
 
 // const createInventory = async (payload) => {
 //   const { masterItemId, manufacturerEmail } = payload;
@@ -182,6 +182,81 @@ const deleteInventoryById = async (id) => {
   return ManufactureRawMaterialInventory.findByIdAndDelete(id);
 };
 
+const getProductionCapacity = async ({
+  manufacturerEmail,
+  designNumber,
+  color,
+  size,
+}) => {
+  // 1️⃣ Find BOM
+  const bom = await ManufactureBOM.findOne({
+    manufacturerEmail,
+    designNumber,
+  }).lean();
+
+  if (!bom) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'BOM not found');
+  }
+
+  // 2️⃣ Find color group
+  const colorGroup = bom.colors.find((c) => c.color === color);
+  if (!colorGroup) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Color not found in BOM');
+  }
+
+  // 3️⃣ Find size group
+  const sizeGroup = colorGroup.sizes.find((s) => s.size === size);
+  if (!sizeGroup) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Size not found in BOM');
+  }
+
+  const materialResults = [];
+
+  // 4️⃣ For each material → find inventory & calculate capacity
+  for (const material of sizeGroup.materials) {
+    const inventory = await ManufactureRawMaterialInventory.findOne({
+      manufacturerEmail,
+      itemName: material.materialName,
+    }).lean();
+
+    if (!inventory) {
+      materialResults.push({
+        materialName: material.materialName,
+        requiredQtyPerPiece: material.qtyPerPiece,
+        availableStock: 0,
+        possibleQuantity: 0,
+        status: 'NO_INVENTORY',
+      });
+      continue;
+    }
+
+    const possibleQty = Math.floor(
+      inventory.currentStock / material.qtyPerPiece
+    );
+
+    materialResults.push({
+      materialName: material.materialName,
+      requiredQtyPerPiece: material.qtyPerPiece,
+      availableStock: inventory.currentStock,
+      possibleQuantity: possibleQty,
+      status: possibleQty > 0 ? 'OK' : 'INSUFFICIENT',
+    });
+  }
+
+  // 5️⃣ Bottleneck (minimum)
+  const producibleQuantity = Math.min(
+    ...materialResults.map((m) => m.possibleQuantity)
+  );
+
+  return {
+    designNumber,
+    color,
+    size,
+    producibleQuantity,
+    materials: materialResults,
+  };
+};
+
 module.exports = {
   createInventory,
   updateStock,
@@ -189,4 +264,5 @@ module.exports = {
   getInventoryById,
   getLowStockMaterials,
   deleteInventoryById,
+  getProductionCapacity,
 };
