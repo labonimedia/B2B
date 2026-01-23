@@ -14,11 +14,7 @@ router
     auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
     poWholesalerToManufacturerController.getAllPoWholesalerToManufacturer
   );
-// router.get(
-//     '/generate-po-data-to-manufacturer/:wholesalerEmail',
-//     auth('wholesaler'),
-//     poWholesalerToManufacturerController.generatePOToManufacturer
-//   );
+
 router.get(
   '/generate-po-data-to-manufacturer/:wholesalerEmail/:manufacturerEmail',
   auth('wholesaler'),
@@ -32,12 +28,6 @@ router
     poWholesalerToManufacturerController.getRetailerPOByWholesaler
   );
 
-// router
-//   .route('/update-item/:poId')
-//   .patch(
-//      auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
-//      poWholesalerToManufacturerController.updateRetailerPOSetItem
-//   );
 router.get('/get-combined-po-items', auth('wholesaler'), poWholesalerToManufacturerController.getCombinedRetailerItems);
 
 router
@@ -56,7 +46,6 @@ router
   ); // Delete SinglePoWholesalerToManufacturer by ID
 router.get('/get-combined-po-items', auth('wholesaler'), poWholesalerToManufacturerController.getCombinedRetailerItems);
 
-// router.post('/create-po-to-manufacturer', auth('wholesaler'), poWholesalerToManufacturerController.createPoToManufacturer);
 router.route('/update-po-data/:poId').patch(auth('manufacture'), poWholesalerToManufacturerController.updatePoData);
 
 module.exports = router;

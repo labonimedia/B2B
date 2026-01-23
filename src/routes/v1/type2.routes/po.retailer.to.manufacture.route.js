@@ -25,7 +25,6 @@ router
     poRetailerToManufactureController.getRetailerPOByManufacture
   );
 
-// update set quantity and other details for retailer PO ( manufacture and retailer can update the any data in po )
 router
   .route('/update-po-data/:poId')
   .patch(

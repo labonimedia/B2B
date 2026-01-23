@@ -21,8 +21,5 @@ router
     wishListType2Controller.deleteWishListType2SchemaById
   );
 
-router.route('/get/wishlist/:email').get(
-  // auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
-  wishListType2Controller.getWishListType2SchemaByEmail
-);
+router.route('/get/wishlist/:email').get(wishListType2Controller.getWishListType2SchemaByEmail);
 module.exports = router;

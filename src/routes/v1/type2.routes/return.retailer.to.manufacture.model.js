@@ -12,7 +12,13 @@ router
 router
   .route('/:id')
   .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), rtoMReturnRequestController.getMtoRReturnRequestById)
-  .patch(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), rtoMReturnRequestController.updateMtoRReturnRequestById)
-  .delete(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), rtoMReturnRequestController.deleteMtoRReturnRequestById);
+  .patch(
+    auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
+    rtoMReturnRequestController.updateMtoRReturnRequestById
+  )
+  .delete(
+    auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
+    rtoMReturnRequestController.deleteMtoRReturnRequestById
+  );
 
 module.exports = router;
