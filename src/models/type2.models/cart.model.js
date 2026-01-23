@@ -17,12 +17,6 @@ const CartSchema = new mongoose.Schema(
     },
     set: [
       {
-        // d: false,
-        // productId: {
-        //   type: mongoose.Schema.Types.ObjectId,
-        //   ref: 'ProductType2',
-        //   required: true,
-        // },
         designNumber: {
           type: String,
         },

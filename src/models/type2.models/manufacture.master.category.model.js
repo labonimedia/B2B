@@ -8,23 +8,17 @@ const categorySchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
-    
     name: {
       type: String,
       required: true,
       trim: true,
     },
-
     code: {
       type: String,
- // Auto-generated CAT001, CAT002...
     },
-
     description: {
       type: String,
-    //   trim: true,
     },
-
     isActive: {
       type: Boolean,
       default: true,
@@ -36,10 +30,8 @@ const categorySchema = new mongoose.Schema(
   }
 );
 
-// Unique category name (optional, you can remove if not needed)
 categorySchema.index({ categoryName: 1 }, { unique: true });
 
-// Plugin
 categorySchema.plugin(toJSON);
 categorySchema.plugin(paginate);
 

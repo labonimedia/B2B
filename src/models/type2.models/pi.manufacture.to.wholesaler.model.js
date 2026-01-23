@@ -1,65 +1,6 @@
 const mongoose = require('mongoose');
 const { paginate, toJSON } = require('../plugins');
 
-// const transportDetailsSchema = new mongoose.Schema({
-//    transportType: {
-//     type: String,
-//     trim: true,
-//   },
-//   transporterCompanyName: {
-//     type: String,
-//     trim: true,
-//   },
-//   vehicleNumber: {
-//     type: String,
-//     trim: true,
-//   },
-//   contactNumber: {
-//     type: Number,
-//     trim: true,
-//   },
-//   altContactNumber: {
-//     type: Number,
-//     trim: true,
-//   },
-//   trackingId: {
-//     type: String,
-//     trim: true,
-//   },
-//   modeOfTransport: {
-//     type: String,
-//     enum: ['road', 'railway', 'air', 'sea', 'other'],
-//   },
-//   dispatchDate: {
-//     type: Date,
-//     required: true,
-//   },
-//   expectedDeliveryDate: {
-//     type: Date,
-//   },
-//   deliveryDate: {
-//     type: Date,
-//   },
-//   deliveryAddress: {
-//     type: String,
-//     required: true,
-//   },
-//   remarks: {
-//     type: String,
-//     trim: true,
-//   },
-//   gstNumber: {
-//     type: String,
-//     trim: true,
-//     required: true,
-//   },
-//   contactPersonName: {
-//     type: String,
-//     trim: true,
-//   },
-// });
-
-// Embedded Bank Details Schema
 const bankDetailsSchema = new mongoose.Schema({
   accountHolderName: { type: String, required: true, trim: true },
   accountNumber: { type: String, required: true, trim: true },
@@ -70,8 +11,6 @@ const bankDetailsSchema = new mongoose.Schema({
   upiId: { type: String, trim: true },
   bankAddress: { type: String, trim: true },
 });
-
-// Main Schema
 const m2wPerformaInvoiceSchema = new mongoose.Schema(
   {
     poId: {
@@ -92,7 +31,6 @@ const m2wPerformaInvoiceSchema = new mongoose.Schema(
       type: Date,
       default: Date.now,
     },
-
     manufacturerEmail: {
       type: String,
       required: true,
@@ -101,7 +39,6 @@ const m2wPerformaInvoiceSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-
     manufacturer: {
       email: String,
       fullName: String,
@@ -130,9 +67,7 @@ const m2wPerformaInvoiceSchema = new mongoose.Schema(
       profileImg: String,
       logo: String,
     },
-
     bankDetails: bankDetailsSchema,
-    // transportDetails: transportDetailsSchema,
     deliveryItems: [
       {
         designNumber: String,
@@ -158,18 +93,17 @@ const m2wPerformaInvoiceSchema = new mongoose.Schema(
         },
         wholesalerConfirmed: {
           type: Boolean,
-          default: false, // Confirmed by wholesaler (true = accepted, false = not yet acted or cancelled)
+          default: false,
         },
       },
     ],
-
     totalQuantity: Number,
     totalAmount: Number,
     discountApplied: Number,
     finalAmount: Number,
     wholesalerInvoiceConfirmed: {
       type: Boolean,
-      default: false, // Confirmed by wholesaler (true = accepted, false = not yet acted or cancelled)
+      default: false,
     },
     statusAll: {
       type: String,
@@ -182,11 +116,9 @@ const m2wPerformaInvoiceSchema = new mongoose.Schema(
   }
 );
 
-// Plugins
 m2wPerformaInvoiceSchema.plugin(toJSON);
 m2wPerformaInvoiceSchema.plugin(paginate);
 
-// Model
 const M2WPerformaInvoice = mongoose.model('M2WPerformaInvoice', m2wPerformaInvoiceSchema);
 
 module.exports = M2WPerformaInvoice;

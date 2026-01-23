@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 const { paginate, toJSON } = require('../plugins');
 
-// Embedded schema for Transport Details
 const transportDetailsSchema = new mongoose.Schema({
   transportType: { type: String, trim: true },
   transporterCompanyName: { type: String, trim: true },
@@ -20,7 +19,6 @@ const transportDetailsSchema = new mongoose.Schema({
   note: { type: String, trim: true },
 });
 
-// Embedded schema for Bank Details
 const bankDetailsSchema = new mongoose.Schema({
   accountHolderName: { type: String, trim: true },
   accountType: { type: String, trim: true },
@@ -33,30 +31,22 @@ const bankDetailsSchema = new mongoose.Schema({
   bankAddress: { type: String, trim: true },
 });
 
-/**
- * NEW SCHEMA to attach multiple Credit Notes
- */
 const appliedCreditNoteSchema = new mongoose.Schema({
   creditNoteId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'MtoRCreditNote',
-   // required: true,
   },
   creditNoteNumber: {
     type: Number,
-   // required: true,
   },
   usedAmount: {
     type: Number,
-  //  required: true, // Amount from this CN used on this invoice
   },
   appliedOn: {
     type: Date,
-    //default: Date.now,
   },
 });
 
-// Main PerformaInvoice schema
 const performaInvoiceSchema = new mongoose.Schema(
   {
     poId: { type: mongoose.Schema.Types.ObjectId, ref: 'PORetailerToManufacturer', required: true },
@@ -64,18 +54,14 @@ const performaInvoiceSchema = new mongoose.Schema(
     invoiceNumber: { type: String },
     invoiceDate: { type: Date, default: Date.now },
     invoiceRecievedDate: { type: Date },
-
     statusAll: {
       type: String,
       enum: ['created', 'dispatched', 'in_transit', 'partially_delivered', 'delivered', 'cancelled'],
       default: 'created',
     },
-
     bankDetails: bankDetailsSchema,
-
     manufacturerEmail: { type: String, required: true },
     retailerEmail: { type: String, required: true },
-
     deliveryItems: [
       {
         designNumber: String,
@@ -97,7 +83,6 @@ const performaInvoiceSchema = new mongoose.Schema(
         brandName: { type: String },
       },
     ],
-
     manufacturer: {
       email: String,
       fullName: String,
@@ -123,36 +108,25 @@ const performaInvoiceSchema = new mongoose.Schema(
       productDiscount: String,
       category: String,
     },
-
     totalQuantity: Number,
     transportDetails: transportDetailsSchema,
-    totalAmount: Number, // Before discount
-    discountApplied: Number, // Manufacturer discount
-    finalAmount: Number, // Final invoice value before CN use
-
-    /**
-     * 🆕 MULTIPLE CREDIT NOTES APPLIED
-     */
+    totalAmount: Number,
+    discountApplied: Number,
+    finalAmount: Number,
     appliedCreditNotes: [appliedCreditNoteSchema],
-
     totalCreditNoteAmountUsed: {
       type: Number,
       default: 0,
     },
-
     finalAmountPayable: {
-      type: Number, // finalAmount - totalCreditNoteAmountUsed
+      type: Number,
     },
-
     returnRequestGenerated: String,
   },
   { timestamps: true }
 );
 
-performaInvoiceSchema.index(
-  { manufacturerEmail: 1, invoiceNumber: 1 },
-  { unique: true }
-);
+performaInvoiceSchema.index({ manufacturerEmail: 1, invoiceNumber: 1 }, { unique: true });
 
 performaInvoiceSchema.plugin(toJSON);
 performaInvoiceSchema.plugin(paginate);

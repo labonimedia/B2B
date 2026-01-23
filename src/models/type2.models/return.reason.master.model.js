@@ -1,5 +1,3 @@
-// models/ReturnReason.js
-
 const mongoose = require('mongoose');
 const { toJSON, paginate } = require('../plugins');
 

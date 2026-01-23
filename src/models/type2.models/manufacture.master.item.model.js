@@ -3,7 +3,6 @@ const { toJSON, paginate } = require('../plugins');
 
 const { Schema } = mongoose;
 
-/* -------------------- Vendor Details Schema -------------------- */
 const vendorDetailsSchema = new Schema(
   {
     vendorName: String,
@@ -25,7 +24,6 @@ const vendorDetailsSchema = new Schema(
   { _id: false }
 );
 
-/* -------------------- Warehouse Row Mapping -------------------- */
 const rackRowMappingSchema = new Schema(
   {
     rackName: { type: String, trim: true },
@@ -34,7 +32,6 @@ const rackRowMappingSchema = new Schema(
   { _id: false }
 );
 
-/* -------------------- Warehouse Details Schema -------------------- */
 const warehouseDetailsSchema = new Schema(
   {
     warehouseName: String,
@@ -51,15 +48,12 @@ const warehouseDetailsSchema = new Schema(
       country: String,
       pinCode: String,
     },
-    // NEW FIELD (VALID ARRAY)
-    //rackRowMappings: parsedRackRowMappings,
     isPrimary: Boolean,
     storageCapacity: String,
   },
   { _id: false }
 );
 
-/* ------------------------------ Item Schema ------------------------------ */
 const itemSchema = new Schema(
   {
     categoryId: { type: mongoose.Schema.Types.ObjectId, ref: 'ManufactureCategory' },
@@ -90,9 +84,7 @@ const itemSchema = new Schema(
   { timestamps: true }
 );
 
-// Unique item name per subcategory
 itemSchema.index({ subcategoryId: 1, itemName: 1 }, { unique: true });
-
 itemSchema.plugin(toJSON);
 itemSchema.plugin(paginate);
 
