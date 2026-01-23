@@ -3,23 +3,6 @@ const catchAsync = require('../../utils/catchAsync');
 const { poWholesalerToManufactureService } = require('../../services');
 const pick = require('../../utils/pick');
 
-// const createRetailerPurchaseOrderType2 = catchAsync(async (req, res) => {
-//   const createdPO  = await poWholesalerToManufactureService.createPoToManufacturer(req.user.email, req.body);
-//   res.status(httpStatus.CREATED).send(createdPO);
-// });
-
-// const createRetailerPurchaseOrderType2 = catchAsync(async (req, res) => {
-//     const wholesalerEmail = req.body.wholesalerEmail; // or req.body.wholesalerEmail
-//     const combinedPOData = req.body.data;
-
-//     const result = await poWholesalerToManufactureService.createPoToManufacturer(wholesalerEmail, combinedPOData);
-
-//     res.status(201).json({
-//       success: true,
-//       ...result
-//     });
-//   });
-
 const createRetailerPurchaseOrderType2 = catchAsync(async (req, res) => {
   const { wholesalerEmail } = req.body;
   const singlePOData = req.body;

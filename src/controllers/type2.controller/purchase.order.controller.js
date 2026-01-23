@@ -29,13 +29,6 @@ const getPurchaseOrderType2ById = catchAsync(async (req, res) => {
   res.status(httpStatus.OK).send(cartItem);
 });
 
-// const getPurchanseOrderByEmail = catchAsync(async (req, res) => {
-//   const cartItem = await purchaseOrderType2Service.getPurchanseOrderByEmail(req.query.wholesalerEmail);
-//   if (!cartItem) {
-//     throw new ApiError(httpStatus.NOT_FOUND, 'Cart not found');
-//   }
-//   res.status(httpStatus.OK).send(cartItem);
-// });
 const getPurchanseOrderByEmail = catchAsync(async (req, res) => {
   const { wholesalerEmail, page, limit } = req.query;
 

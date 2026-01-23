@@ -13,10 +13,7 @@ const getInventoriesByDesignNumbers = catchAsync(async (req, res) => {
   const result = await ManufactureInventoryService.findByDesignNumbers(designNumbers);
   res.status(200).json({ success: true, data: result });
 });
-// const bulkCreateInventories = catchAsync(async (req, res) => {
-//   const inventories = await ManufactureInventoryService.bulkInsertInventory(req.body);
-//   res.status(httpStatus.CREATED).send({ success: true, data: inventories });
-// });
+
 const bulkCreateInventories = catchAsync(async (req, res) => {
   const { status, updatedData } = await ManufactureInventoryService.bulkInsertInventory(req.body);
   res.status(httpStatus.CREATED).send({ success: true, status, data: updatedData });
@@ -39,40 +36,6 @@ const bulkUpdateInventory = catchAsync(async (req, res) => {
     data: result,
   });
 });
-
-// const getInventories = catchAsync(async (req, res) => {
-//   const filter = pick(req.query, ['userEmail', 'designNumber', 'colour', 'size', 'colourName']);
-//   const options = pick(req.query, ['sortBy', 'limit', 'page']);
-//   const result = await ManufactureInventoryService.queryInventories(filter, options);
-//   res.send(result);
-// });
-// const getInventories = catchAsync(async (req, res) => {
-//   const filter = pick(req.query, ['userEmail', 'designNumber', 'colour', 'brandSize', 'standardSize', 'colourName', 'productId']);
-//   const options = pick(req.query, ['sortBy', 'limit', 'page']);
-//   const search = req.query.search || ''; // optional designNumber search
-
-//   const result = await ManufactureInventoryService.queryInventories(filter, options, search);
-//   res.send(result);
-// });
-
-// const getInventories = catchAsync(async (req, res) => {
-//   const filter = pick(req.query, ['userEmail','brandName' , 'designNumber', 'colour', 'brandSize', 'standardSize', 'colourName', 'productId']);
-//   const options = pick(req.query, ['sortBy', 'limit', 'page']);
-//   const search = req.query.search || '';
-
-//   // Convert productId to ObjectId
-//   if (filter.productId) {
-//     const mongoose = require('mongoose');
-//     try {
-//       filter.productId = new mongoose.Types.ObjectId(filter.productId);
-//     } catch (error) {
-//       return res.status(400).send({ message: 'Invalid productId' });
-//     }
-//   }
-
-//   const result = await ManufactureInventoryService.queryInventories(filter, options, search);
-//   res.send(result);
-// });
 
 const getInventories = catchAsync(async (req, res) => {
   const filter = pick(req.query, [

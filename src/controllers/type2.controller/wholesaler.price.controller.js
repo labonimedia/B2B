@@ -10,8 +10,6 @@ const createWholesalerPrice = catchAsync(async (req, res) => {
 });
 
 const queryWholesalerPrice = catchAsync(async (req, res) => {
-  //   const filter = pick(req.query, ['productBy', 'email']);
-
   const options = pick(req.query, ['sortBy', 'limit', 'page']);
   const cartType2Items = await wholesalerPriceService.queryWholesalerPriceType2(req.query.wholesalerEmail, options);
   res.status(httpStatus.OK).send(cartType2Items);

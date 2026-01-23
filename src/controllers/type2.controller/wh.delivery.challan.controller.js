@@ -42,17 +42,6 @@ const deleteWhDeliveryChallanById = catchAsync(async (req, res) => {
   res.status(httpStatus.NO_CONTENT).send();
 });
 
-// const getDeliveryChallanByManufactureEmail = async (req, res) => {
-//     const { manufacturerEmail, page, limit, sortBy, filter } = req.query;
-//     const options = {
-//         page: parseInt(page, 10) || 1,
-//         limit: parseInt(limit, 10) || 10,
-//         sortBy: sortBy || '-createdAt', // default sorting by newest first
-//     };
-//     const data = await whDeliveryChallanService.getDeliveryChallanByManufactureEmail(manufacturerEmail, filter, options);
-//     res.status(200).send({ success: true, data });
-// };
-
 module.exports = {
   createWhDeliveryChallan,
   queryWhDeliveryChallan,
@@ -60,5 +49,4 @@ module.exports = {
   genratedeChallNO,
   updateWhDeliveryChallanById,
   deleteWhDeliveryChallanById,
-  // getDeliveryChallanByManufactureEmail,
 };

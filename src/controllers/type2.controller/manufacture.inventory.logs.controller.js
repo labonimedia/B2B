@@ -3,11 +3,6 @@ const catchAsync = require('../../utils/catchAsync');
 const { ManufactureInventoryLogsService } = require('../../services');
 const pick = require('../../utils/pick');
 
-// const bulkCreateInventories = catchAsync(async (req, res) => {
-//   const inventories = await ManufactureInventoryService.bulkInsertInventory(req.body);
-//   res.status(httpStatus.CREATED).send({ success: true, data: inventories });
-// });
-
 const bulkCreateInventories = catchAsync(async (req, res) => {
   const { status, updatedData } = await ManufactureInventoryLogsService.bulkInsertInventory(req.body);
   res.status(httpStatus.CREATED).send({ success: true, status, data: updatedData });
@@ -31,7 +26,6 @@ const getInventories = catchAsync(async (req, res) => {
   ]);
   const options = pick(req.query, ['sortBy', 'limit', 'page']);
   const search = req.query.search || '';
-  //   // Convert productId to ObjectId
   if (filter.productId) {
     const mongoose = require('mongoose');
     try {
@@ -43,25 +37,6 @@ const getInventories = catchAsync(async (req, res) => {
   const result = await ManufactureInventoryLogsService.queryInventories(filter, options, search);
   res.send(result);
 });
-
-// const getInventories = catchAsync(async (req, res) => {
-//   const filter = pick(req.query, ['userEmail','brandName' , 'designNumber', 'colour', 'brandSize', 'standardSize', 'colourName', 'productId']);
-//   const options = pick(req.query, ['sortBy', 'limit', 'page']);
-//   const search = req.query.search || '';
-
-//   // Convert productId to ObjectId
-//   if (filter.productId) {
-//     const mongoose = require('mongoose');
-//     try {
-//       filter.productId = new mongoose.Types.ObjectId(filter.productId);
-//     } catch (error) {
-//       return res.status(400).send({ message: 'Invalid productId' });
-//     }
-//   }
-
-//   const result = await ManufactureInventoryLogsService.queryInventories(filter, options, search);
-//   res.send(result);
-// });
 
 const getInventoryById = catchAsync(async (req, res) => {
   const inventory = await ManufactureInventoryLogsService.getInventoryById(req.params.id);
