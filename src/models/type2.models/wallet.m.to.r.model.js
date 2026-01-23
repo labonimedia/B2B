@@ -3,7 +3,6 @@ const { toJSON, paginate } = require('../plugins');
 
 const { Schema } = mongoose;
 
-// Individual transaction (credit / debit)
 const walletTransactionSchema = new Schema(
   {
     type: {
@@ -11,48 +10,23 @@ const walletTransactionSchema = new Schema(
       enum: ['credit', 'debit'], // credit = credit note created, debit = used in invoice
       required: true,
     },
-
-    // Amount of this transaction
     amount: {
       type: Number,
       required: true,
     },
-
-    // After this transaction, what is the wallet balance?
     balanceAfter: {
       type: Number,
       required: true,
     },
-
-    // // Optional references (for tracking)
-    // creditNoteId: {
-    //   type: Schema.Types.ObjectId,
-    //   ref: 'MtoRCreditNote',
-    // },
-
     creditNoteNumber: {
       type: Number,
     },
-
-    // creditInvoiceId: {
-    //   type: Schema.Types.ObjectId,
-    //   ref: 'M2RPerformaInvoice',
-    // },
-
     creditInvoiceNumber: {
       type: Number,
     },
-
-    //     debitInvoiceId: {
-    //   type: Schema.Types.ObjectId,
-    //   ref: 'M2RPerformaInvoice',
-    // },
-    
     debitInvoiceNumber: {
       type: Number,
     },
-
-    // Extra info / remarks
     description: {
       type: String,
       trim: true,
@@ -66,7 +40,6 @@ const walletTransactionSchema = new Schema(
   { _id: false }
 );
 
-// Wallet schema for (manufacturerEmail + retailerEmail)
 const walletSchema = new Schema(
   {
     manufacturerEmail: {
@@ -79,14 +52,10 @@ const walletSchema = new Schema(
       required: true,
       trim: true,
     },
-
-    // Current available balance for this pair
     balance: {
       type: Number,
       default: 0,
     },
-
-    // For reporting
     totalCredited: {
       type: Number,
       default: 0,
@@ -95,15 +64,11 @@ const walletSchema = new Schema(
       type: Number,
       default: 0,
     },
-
-    // All transactions in order (credits + debits)
     transactions: [walletTransactionSchema],
-
     currency: {
       type: String,
       default: 'INR',
     },
-
     isActive: {
       type: Boolean,
       default: true,

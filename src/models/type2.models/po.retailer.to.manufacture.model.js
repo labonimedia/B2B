@@ -1,27 +1,21 @@
 const mongoose = require('mongoose');
 const { paginate, toJSON } = require('../plugins');
 
-// // Embe
-// Embedded schema for Bank Details
 const bankDetailsSchema = new mongoose.Schema({
   accountHolderName: {
     type: String,
-    // required: true,w
     trim: true,
   },
   accountNumber: {
     type: String,
-    // required: true,
     trim: true,
   },
   accountType: {
     type: String,
-    // required: true,
     trim: true,
   },
   bankName: {
     type: String,
-    // required: true,
     trim: true,
   },
   branchName: {
@@ -30,12 +24,10 @@ const bankDetailsSchema = new mongoose.Schema({
   },
   ifscCode: {
     type: String,
-    // required: true,
     trim: true,
   },
   swiftCode: {
     type: String,
-    // required: true,
     trim: true,
   },
   upiId: {
@@ -79,7 +71,6 @@ const transportDetailsSchema = new mongoose.Schema({
   },
   dispatchDate: {
     type: Date,
-    // required: true,
   },
   expectedDeliveryDate: {
     type: Date,
@@ -89,7 +80,6 @@ const transportDetailsSchema = new mongoose.Schema({
   },
   deliveryAddress: {
     type: String,
-    // required: true,
   },
   remarks: {
     type: String,
@@ -98,7 +88,6 @@ const transportDetailsSchema = new mongoose.Schema({
   gstNumber: {
     type: String,
     trim: true,
-    // required: true,
   },
   contactPersonName: {
     type: String,
@@ -123,23 +112,21 @@ const PORetailerToManufacturerSchema = new mongoose.Schema(
         quantity: Number,
         expectedQty: {
           type: Number,
-          //    default: 0,
-        }, // Requested by retailer
+        },
         availableQuantity: {
           type: Number,
           default: 0,
-        }, // Updated by manufacturer
+        },
         confirmed: {
           type: Boolean,
-          default: false, // Confirmed by retailer (true = accepted, false = not yet acted or cancelled)
+          default: false,
         },
         rejected: {
           type: Boolean,
-          default: false, // Retailer rejects the updated quantity
+          default: false,
         },
         status: {
           type: String,
-          // enum: ['pending', 'manufacturer_updated', 'retailer_confirmed', 'cancelled', 'processing', 'shipped', 'delivered', 'partial'],
           enum: [
             'pending', // Initial status
             'm_confirmed', // Manufacturer confirmed
@@ -223,9 +210,7 @@ const PORetailerToManufacturerSchema = new mongoose.Schema(
       type: Date,
       default: Date.now,
     },
-
     poNumber: Number,
-
     manufacturer: {
       email: String,
       fullName: String,
@@ -261,11 +246,9 @@ const PORetailerToManufacturerSchema = new mongoose.Schema(
   }
 );
 
-// Plugins
 PORetailerToManufacturerSchema.plugin(toJSON);
 PORetailerToManufacturerSchema.plugin(paginate);
 
-// Model
 const PORetailerToManufacturer = mongoose.model('PORetailerToManufacturer', PORetailerToManufacturerSchema);
 
 module.exports = PORetailerToManufacturer;

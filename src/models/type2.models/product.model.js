@@ -290,22 +290,11 @@ productSchema.pre('find', function (next) {
   this.where({ dateOfListing: { $lte: currentDate } }); // Apply filter on every 'find' query
   next();
 });
-
-// productSchema.pre('findOne', function (next) {
-//   const currentDate = new Date();
-//   this.where({ dateOfListing: { $lte: currentDate } }); // Apply filter on 'findOne' query
-//   next();
-// });
-
 productSchema.statics.findUpcomingProducts = function () {
   const currentDate = new Date();
 
   return this.find({ dateOfListing: { $gt: currentDate } }); // Filter products where dateOfListing is greater than the current date
 };
-
-/**
- * @typedef ProductType2
- */
 
 const ProductType2 = mongoose.model('ProductType2', productSchema);
 module.exports = ProductType2;

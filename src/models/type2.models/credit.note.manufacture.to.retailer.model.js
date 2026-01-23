@@ -67,11 +67,9 @@ const creditNoteSchema = new mongoose.Schema(
     },
     totalReturnItem: {
       type: Number,
-      // required: true,
     },
     totalAcceptedReturnItem: {
       type: Number,
-      // required: true,
     },
     used: {
       type: Boolean,
@@ -83,7 +81,6 @@ const creditNoteSchema = new mongoose.Schema(
     },
     usedInInvoiceNumber: {
       type: Number,
-      //  required: true,
     },
     usedAt: {
       type: Date,

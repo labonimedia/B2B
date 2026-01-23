@@ -17,12 +17,6 @@ const rtlToMnfCartSchema = new mongoose.Schema(
     },
     set: [
       {
-        // _id: false,
-        // productId: {
-        //   type: mongoose.Schema.Types.ObjectId,
-        //   ref: 'ProductType2',
-        //   required: true,
-        // },
         designNumber: {
           type: String,
         },

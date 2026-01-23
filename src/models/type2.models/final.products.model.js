@@ -25,7 +25,6 @@ const finalProductWSchema = mongoose.Schema(
     status: {
       type: String,
       enum: ['pending', 'delivered', 'proceed'],
-      // default: 'pending',
     },
     poNumber: Number,
     deliveryChallanNumber: Number,
