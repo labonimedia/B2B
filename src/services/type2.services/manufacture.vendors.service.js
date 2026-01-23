@@ -1,6 +1,6 @@
 const httpStatus = require('http-status');
 const ApiError = require('../../utils/ApiError');
-const { ManufacturerVendor } = require('../../models'); 
+const { ManufacturerVendor } = require('../../models');
 
 const generateNextVendorCode = async () => {
   const lastVendor = await ManufacturerVendor.findOne({ code: /^VND\d+$/ })
@@ -17,54 +17,31 @@ const generateNextVendorCode = async () => {
   return `VND${nextNumber}`;
 };
 
-/**
- * Create a vendor for a manufacturer
- */
 const createVendor = async (vendorBody) => {
   const { manufacturerEmail, vendorEmail } = vendorBody;
 
   if (!manufacturerEmail || !vendorEmail) {
-    throw new ApiError(
-      httpStatus.BAD_REQUEST,
-      'manufacturerEmail and vendorEmail are required'
-    );
+    throw new ApiError(httpStatus.BAD_REQUEST, 'manufacturerEmail and vendorEmail are required');
   }
 
-  // Dupe check
   const existing = await ManufacturerVendor.findOne({ manufacturerEmail, vendorEmail });
   if (existing) {
-    throw new ApiError(
-      httpStatus.BAD_REQUEST,
-      'Vendor already exists for this manufacturer with this email'
-    );
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Vendor already exists for this manufacturer with this email');
   }
-
-  // Generate unique vendor code auto
   vendorBody.code = await generateNextVendorCode();
-
   const vendor = await ManufacturerVendor.create(vendorBody);
   return vendor;
 };
 
-/**
- * Query vendors with pagination
- * filter: { manufacturerEmail, vendorName, companyName, isActive }
- */
 const queryVendors = async (filter, options) => {
   const vendors = await ManufacturerVendor.paginate(filter, options);
   return vendors;
 };
 
-/**
- * Get vendor by id
- */
 const getVendorById = async (id) => {
   return ManufacturerVendor.findById(id);
 };
 
-/**
- * Update vendor by id
- */
 const updateVendorById = async (vendorId, updateBody) => {
   const vendor = await getVendorById(vendorId);
   if (!vendor) {
@@ -76,9 +53,6 @@ const updateVendorById = async (vendorId, updateBody) => {
   return vendor;
 };
 
-/**
- * Delete vendor by id (soft delete: set isActive=false)
- */
 const deleteVendorById = async (vendorId) => {
   const vendor = await getVendorById(vendorId);
   if (!vendor) {
@@ -90,13 +64,10 @@ const deleteVendorById = async (vendorId) => {
   return vendor;
 };
 
-/**
- * Delete Vendor by ID
- */
 const deleteVendorPerment = async (id) => {
   const item = await getVendorById(id);
   if (!item) {
-    throw new ApiError(httpStatus.NOT_FOUND, "Vendor not found");
+    throw new ApiError(httpStatus.NOT_FOUND, 'Vendor not found');
   }
 
   await item.remove();

@@ -10,9 +10,6 @@ const getSinglePoRetailerToWholesaler = async (id) => {
   return PORetailerToWholesaler.findById(id);
 };
 
-/**
- * Create Retailer PO and remove matching cart entry
- */
 const createPurchaseOrderRetailerType2 = async (reqBody) => {
   const { cartId } = reqBody;
 
@@ -40,16 +37,10 @@ const getAllPoRetailerToWholesaler = async (filter, options) => {
   return poRetailerToWholesaler;
 };
 
-/**
- * Wholesaler views retailer POs
- */
 const getRetailerPOByWholesaler = async (wholesalerEmail) => {
   return PORetailerToWholesaler.find({ wholesalerEmail }).sort({ createdAt: -1 });
 };
 
-/**
- * Wholesaler updates a specific set item in the PO
- */
 const updateRetailerPOSetItem = async (poId, updateBody) => {
   const { designNumber, colour, size, updatedFields } = updateBody;
 

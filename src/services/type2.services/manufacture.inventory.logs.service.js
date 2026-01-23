@@ -1,20 +1,17 @@
 const httpStatus = require('http-status');
 const { ManufactureInventoryLogs } = require('../../models');
 const ApiError = require('../../utils/ApiError');
- const mongoose = require('mongoose');
- 
-
+const mongoose = require('mongoose');
 
 const bulkInsertInventory = async (inventoryArray) => {
   if (!Array.isArray(inventoryArray) || inventoryArray.length === 0) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Request body must be a non-empty array');
   }
-
   const bulkOps = inventoryArray.map((item) => {
     const filter = {
       userEmail: item.userEmail,
       designNumber: item.designNumber,
-      brandName:item.brandName,
+      brandName: item.brandName,
       colour: item.colour,
       brandSize: item.brandSize,
       standardSize: item.standardSize,
@@ -41,10 +38,7 @@ const bulkInsertInventory = async (inventoryArray) => {
   });
 
   const result = await ManufactureInventoryLogs.bulkWrite(bulkOps);
-
-  // Optionally fetch updated documents to return in response
   const updatedDesignNumbers = inventoryArray.map((item) => item.designNumber);
-
   const updatedDocs = await ManufactureInventoryLogs.find({
     designNumber: { $in: updatedDesignNumbers },
   });
@@ -55,22 +49,12 @@ const bulkInsertInventory = async (inventoryArray) => {
   };
 };
 
-
 const createInventory = async (dataArray) => {
   const results = [];
 
   for (const data of dataArray) {
-    const {
-      userEmail,
-      productId,
-      designNumber,
-      colour,
-      brandName,
-      colourName,
-      brandSize,
-      standardSize,
-      recordsArray
-    } = data;
+    const { userEmail, productId, designNumber, colour, brandName, colourName, brandSize, standardSize, recordsArray } =
+      data;
 
     const filter = {
       userEmail,
@@ -106,58 +90,52 @@ const queryInventories = async (filter = {}, options = {}, search = '') => {
   const limit = parseInt(options.limit) || 10;
   const skip = (page - 1) * limit;
 
-  // Add search logic for brandName or designNumber
   const matchStage = { ...filter };
-
   if (search) {
-    matchStage.$or = [
-      { designNumber: { $regex: search, $options: 'i' } },
-      { brandName: { $regex: search, $options: 'i' } },
-    ];
+    matchStage.$or = [{ designNumber: { $regex: search, $options: 'i' } }, { brandName: { $regex: search, $options: 'i' } }];
   }
-
   const aggregation = await ManufactureInventoryLogs.aggregate([
     { $match: matchStage },
 
-    { $unwind: "$recordsArray" },
+    { $unwind: '$recordsArray' },
 
     {
       $group: {
         _id: {
-          designNumber: "$designNumber",
-          brandName: "$brandName"
+          designNumber: '$designNumber',
+          brandName: '$brandName',
         },
         totalUpdates: { $sum: 1 },
         totalQuantityAdded: {
           $sum: {
-            $cond: [{ $eq: ["$recordsArray.status", "stock_added"] }, "$recordsArray.updatedQuantity", 0],
+            $cond: [{ $eq: ['$recordsArray.status', 'stock_added'] }, '$recordsArray.updatedQuantity', 0],
           },
         },
         totalQuantityRemoved: {
           $sum: {
-            $cond: [{ $eq: ["$recordsArray.status", "stock_removed"] }, "$recordsArray.updatedQuantity", 0],
+            $cond: [{ $eq: ['$recordsArray.status', 'stock_removed'] }, '$recordsArray.updatedQuantity', 0],
           },
         },
-        latestUpdatedAt: { $max: "$recordsArray.lastUpdatedAt" },
+        latestUpdatedAt: { $max: '$recordsArray.lastUpdatedAt' },
         entries: {
           $push: {
-            _id: "$_id",
-            userEmail: "$userEmail",
-            productId: "$productId",
-            colour: "$colour",
-            colourName: "$colourName",
-            brandSize: "$brandSize",
-            standardSize: "$standardSize",
-            records: "$recordsArray",
-          }
+            _id: '$_id',
+            userEmail: '$userEmail',
+            productId: '$productId',
+            colour: '$colour',
+            colourName: '$colourName',
+            brandSize: '$brandSize',
+            standardSize: '$standardSize',
+            records: '$recordsArray',
+          },
         },
       },
     },
 
     {
       $addFields: {
-        designNumber: "$_id.designNumber",
-        brandName: "$_id.brandName",
+        designNumber: '$_id.designNumber',
+        brandName: '$_id.brandName',
       },
     },
 
@@ -167,10 +145,7 @@ const queryInventories = async (filter = {}, options = {}, search = '') => {
 
     {
       $facet: {
-        paginatedResults: [
-          { $skip: skip },
-          { $limit: limit },
-        ],
+        paginatedResults: [{ $skip: skip }, { $limit: limit }],
         totalCount: [{ $count: 'count' }],
       },
     },
@@ -187,181 +162,6 @@ const queryInventories = async (filter = {}, options = {}, search = '') => {
     totalResults: totalCount,
   };
 };
-
-
-
-// const queryInventories = async (filter, options, search) => {
-//   const matchStage = { ...filter };
-
-//   if (search) {
-//     matchStage.designNumber = { $regex: search, $options: 'i' };
-//   }
-
-//   const page = parseInt(options.page, 10) || 1;
-//   const limit = parseInt(options.limit, 10) || 10;
-//   const skip = (page - 1) * limit;
-
-//   const aggregation = await ManufactureInventoryLogs.aggregate([
-//     { $match: matchStage },
-
-//     // Flag if quantity is less than or equal to minimum alert
-//     {
-//       $addFields: {
-//         isLowStock: { $lte: ['$quantity', '$minimumQuantityAlert'] },
-//       },
-//     },
-
-//     // Group by designNumber and check if any entry isLowStock
-//     {
-//       $group: {
-//         _id: '$designNumber',
-//         totalQuantity: { $sum: '$quantity' },
-//         hasLowStock: { $max: { $cond: ['$isLowStock', 1, 0] } },
-//         entries: {
-//           $push: {
-//             _id: '$_id',
-//             userEmail: '$userEmail',
-//             designNumber: '$designNumber',
-//             colour: '$colour',
-//             colourName: '$colourName',
-//             brandSize: '$brandSize',
-//             standardSize: '$standardSize',
-//             quantity: '$quantity',
-//             minimumQuantityAlert: '$minimumQuantityAlert',
-//             lastUpdatedAt: '$lastUpdatedAt',
-//             productId: '$productId',
-//             isLowStock: '$isLowStock',
-//             brandName: '$brandName',
-//           },
-//         },
-//       },
-//     },
-
-//     // Sort: first groups where any item is low or below alert
-//     { $sort: { hasLowStock: -1, _id: 1 } },
-
-//     // Pagination
-//     {
-//       $facet: {
-//         paginatedResults: [
-//           { $skip: skip },
-//           { $limit: limit },
-//         ],
-//         totalCount: [{ $count: 'count' }],
-//       },
-//     },
-//   ]).allowDiskUse(true);
-
-//   const results = aggregation[0]?.paginatedResults || [];
-//   const totalCount = aggregation[0]?.totalCount[0]?.count || 0;
-
-//   return {
-//     results,
-//     page,
-//     limit,
-//     totalPages: Math.ceil(totalCount / limit),
-//     totalResults: totalCount,
-//   };
-// };
-
-// const queryInventories = async (filter, options, search) => {
-//   const matchStage = { ...filter };
-
-//   if (search) {
-//     matchStage.designNumber = { $regex: search, $options: 'i' };
-//   }
-
-//   const page = parseInt(options.page, 10) || 1;
-//   const limit = parseInt(options.limit, 10) || 10;
-//   const skip = (page - 1) * limit;
-
-//   const aggregation = await ManufactureInventoryLogs.aggregate([
-//     { $match: matchStage },
-
-//     // Project the last record entry and compute quantity
-//     {
-//       $addFields: {
-//         lastRecord: { $arrayElemAt: ['$recordsArray', -1] }, // latest record
-//       },
-//     },
-//     {
-//       $addFields: {
-//         quantity: {
-//           $subtract: [
-//             '$lastRecord.previousRemainingQuantity',
-//             {
-//               $cond: [
-//                 { $eq: ['$lastRecord.status', 'stock_removed'] },
-//                 '$lastRecord.updatedQuantity',
-//                 0,
-//               ],
-//             },
-//           ],
-//         },
-//       },
-//     },
-
-//     // Check if low stock
-//     {
-//       $addFields: {
-//         isLowStock: {
-//           $lte: ['$quantity', '$minimumQuantityAlert'],
-//         },
-//       },
-//     },
-
-//     // Group by designNumber for summary
-//     {
-//       $group: {
-//         _id: '$designNumber',
-//         totalQuantity: { $sum: '$quantity' },
-//         hasLowStock: { $max: { $cond: ['$isLowStock', 1, 0] } },
-//         entries: {
-//           $push: {
-//             _id: '$_id',
-//             userEmail: '$userEmail',
-//             productId: '$productId',
-//             designNumber: '$designNumber',
-//             colour: '$colour',
-//             colourName: '$colourName',
-//             brandSize: '$brandSize',
-//             standardSize: '$standardSize',
-//             brandName: '$brandName',
-//             quantity: '$quantity',
-//             lastUpdatedAt: '$lastRecord.lastUpdatedAt',
-//             status: '$lastRecord.status',
-//             isLowStock: '$isLowStock',
-//           },
-//         },
-//       },
-//     },
-
-//     // Sort by low stock priority
-//     { $sort: { hasLowStock: -1, _id: 1 } },
-
-//     // Pagination
-//     {
-//       $facet: {
-//         paginatedResults: [
-//           { $skip: skip },
-//           { $limit: limit },
-//         ],
-//         totalCount: [{ $count: 'count' }],
-//       },
-//     },
-//   ]).allowDiskUse(true);
-
-//   const results = aggregation[0]?.paginatedResults || [];
-//   const totalCount = aggregation[0]?.totalCount[0]?.count || 0;
-
-//   return {
-//     results,
-//     page,
-//     limit,
-//     totalPages: Math.ceil(totalCount / limit),
-//     totalResults: totalCount,
-//   };
-// };
 
 const getInventoryById = async (id) => {
   return ManufactureInventoryLogs.findById(id);

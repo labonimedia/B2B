@@ -17,10 +17,7 @@ const createCartType2 = async (reqBody) => {
     // Iterate over each new set item
     set.forEach((newItem) => {
       const existingItem = existingCart.set.find(
-        (item) =>
-          item.designNumber === newItem.designNumber &&
-          item.colour === newItem.colour &&
-          item.size === newItem.size
+        (item) => item.designNumber === newItem.designNumber && item.colour === newItem.colour && item.size === newItem.size
       );
 
       if (existingItem) {
@@ -76,12 +73,11 @@ const queryCartType2 = async (filter, options) => {
     email: { $in: productByEmails },
   }).select('email fullName companyName address state country pinCode mobNumber GSTIN');
   let wholesaler;
-if(filter.email){
-  wholesaler = await Wholesaler.findOne({
-    email: filter.email,
-  }).select('email fullName companyName address state country pinCode mobNumber GSTIN');
-
-}
+  if (filter.email) {
+    wholesaler = await Wholesaler.findOne({
+      email: filter.email,
+    }).select('email fullName companyName address state country pinCode mobNumber GSTIN');
+  }
 
   // Create a mapping of email to manufacturer details
   const manufacturerMap = manufacturers.reduce((acc, manufacturer) => {
@@ -109,8 +105,6 @@ if(filter.email){
   return cartType2Items;
 };
 
-
-
 /**
  * Get CartType2 by id
  * @param {ObjectId} id
@@ -129,7 +123,7 @@ const genratePOCartType2 = async (id) => {
   // Fetch the CartType2 document by its ID
   const cartItem = await CartType2.findById(id);
   if (!cartItem) {
-    throw new Error("Cart item not found");
+    throw new Error('Cart item not found');
   }
 
   // Fetch manufacturer details based on the `productBy` email
@@ -145,15 +139,11 @@ const genratePOCartType2 = async (id) => {
     // Fetch wholesaler details and discount array
     wholesaler = await Wholesaler.findOne({
       email: cartItem.email,
-    }).select(
-      'email fullName companyName address state country pinCode mobNumber GSTIN logo discountGiven'
-    );
+    }).select('email fullName companyName address state country pinCode mobNumber GSTIN logo discountGiven');
 
     if (wholesaler) {
       // Find the discount entry for the `productBy` field
-      const discountEntry = wholesaler.discountGiven.find(
-        (discount) => discount.discountGivenBy === cartItem.productBy
-      );
+      const discountEntry = wholesaler.discountGiven.find((discount) => discount.discountGivenBy === cartItem.productBy);
 
       if (discountEntry) {
         discountDetails = {
@@ -168,9 +158,7 @@ const genratePOCartType2 = async (id) => {
   const now = new Date();
   const currentMonth = now.getMonth();
   let financialYear =
-    currentMonth < 2 || (currentMonth === 2 && now.getDate() < 1)
-      ? now.getFullYear() - 1
-      : now.getFullYear();
+    currentMonth < 2 || (currentMonth === 2 && now.getDate() < 1) ? now.getFullYear() - 1 : now.getFullYear();
 
   // Get the current order count for the wholesaler and financial year
   let orderCount;
@@ -226,9 +214,6 @@ const genratePOCartType2 = async (id) => {
   return enrichedCartItem;
 };
 
-
-
-
 /**
  * Get cart items for a specific user and productBy
  * @param {string} email - User's email
@@ -276,24 +261,24 @@ const getCartByEmailToPlaceOrder = async (email, productBy) => {
   // Determine the financial year based on the current date
   const now = new Date();
   const currentMonth = now.getMonth();
-  let financialYear = currentMonth < 2 || (currentMonth === 2 && now.getDate() < 1) ? now.getFullYear() - 1 : now.getFullYear();
+  let financialYear =
+    currentMonth < 2 || (currentMonth === 2 && now.getDate() < 1) ? now.getFullYear() - 1 : now.getFullYear();
 
   // Ensure wholesaler is present for roles that require it
   if (!wholesaler) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Wholesaler information is missing.');
   }
 
-
   // Prepare the cart and order details with the desired format
   const orderDetails = carts.map((cart) => ({
     _id: cart._id,
     productId: {
-      designNumber: cart.designNumber || "",
+      designNumber: cart.designNumber || '',
       brand: cart.productId.brand,
       id: cart.productId._id,
     },
     set: cart.set.map((setItem) => ({
-      designNumber: cart.designNumber || "",
+      designNumber: cart.designNumber || '',
       colour: setItem.colour,
       colourImage: setItem.colourImage || null,
       colourName: setItem.colourName,
@@ -325,11 +310,10 @@ const getCartByEmailToPlaceOrder = async (email, productBy) => {
   return result;
 };
 
-
 /**
- * 
- * @param {} email 
- * @returns 
+ *
+ * @param {} email
+ * @returns
  */
 const getCartByEmail = async (email) => {
   // Find all cart items by email and populate the product details (productId)
@@ -377,12 +361,11 @@ const getCartByEmail = async (email) => {
     return acc;
   }, {});
 
- // Convert the grouped object to an array of objects
+  // Convert the grouped object to an array of objects
   const formattedCart = Object.values(groupedCart);
 
   return formattedCart;
 };
-
 
 /**
  * Update CartType2 by id
@@ -433,7 +416,6 @@ const updateSetItem = async (cartId, setId, updateBody) => {
   await cart.save();
   return cart;
 };
-
 
 const deleteCartSetItem = async (cartId, setId) => {
   const cart = await getCartType2ById(cartId);

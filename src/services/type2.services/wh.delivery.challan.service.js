@@ -8,12 +8,6 @@ const ApiError = require('../../utils/ApiError');
  * @returns {Promise<Array<PurchaseOrderType2>>}
  */
 const createWhDeliveryChallan = async (reqBody) => {
-  // const { email, poNumber } = reqBody;
-  // await PurchaseOrderType2.findOneAndUpdate(
-  //     { email: email, poNumber: poNumber },
-  //     { $set: { status: 'shipped' } },
-  //     { new: true })
-
   return await WhDeliveryChallan.create(reqBody);
 };
 
@@ -83,22 +77,6 @@ const deleteWhDeliveryChallanById = async (id) => {
   return cart;
 };
 
-// const getDeliveryChallanByManufactureEmail = async (manufacturerEmail, filter, options) => {
-//     // Apply additional filters
-//     if (filter) {
-//         const parsedFilter = JSON.parse(filter);
-//         Object.assign(query, parsedFilter);
-//     }
-
-//     // Use Mongoose paginate plugin
-//     const result = await WhDeliveryChallan.paginate(query, {
-//         ...options,
-//         customLabels: { docs: 'mnfdeliverychallans' },
-//     });
-
-//     return result;
-// };
-// Create combined PO for wholesaler
 module.exports = {
   createWhDeliveryChallan,
   queryWhDeliveryChallan,
@@ -106,5 +84,4 @@ module.exports = {
   genratedeChallNO,
   updateWhDeliveryChallanById,
   deleteWhDeliveryChallanById,
-  // getDeliveryChallanByManufactureEmail,
 };
