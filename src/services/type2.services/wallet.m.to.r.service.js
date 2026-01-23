@@ -207,7 +207,7 @@ const debitWalletById = async (walletId, body) => {
   const newBalance = wallet.balance - amount;
 
   // 3️⃣ Build description (nice grammar)
-  let finalDescription = description || `₹${amount} debited against Invoice #${debitInvoiceNumber}`;
+  const finalDescription = description || `₹${amount} debited against Invoice #${debitInvoiceNumber}`;
 
   // 4️⃣ Create debit transaction
   const transaction = {

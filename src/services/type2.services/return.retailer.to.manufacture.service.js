@@ -6,10 +6,7 @@ const createMtoRReturnRequest = async (reqBody) => {
   const { manufacturerEmail } = reqBody;
 
   if (!manufacturerEmail) {
-    throw new ApiError(
-      httpStatus.BAD_REQUEST,
-      "'manufacturerEmail' is required to generate return request number."
-    );
+    throw new ApiError(httpStatus.BAD_REQUEST, "'manufacturerEmail' is required to generate return request number.");
   }
 
   // Get last return request for this manufacturer

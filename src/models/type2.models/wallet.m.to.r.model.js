@@ -80,10 +80,7 @@ const walletSchema = new Schema(
 );
 
 // ✅ Make manufacturer + retailer pair unique
-walletSchema.index(
-  { manufacturerEmail: 1, retailerEmail: 1 },
-  { unique: true }
-);
+walletSchema.index({ manufacturerEmail: 1, retailerEmail: 1 }, { unique: true });
 
 walletSchema.plugin(toJSON);
 walletSchema.plugin(paginate);

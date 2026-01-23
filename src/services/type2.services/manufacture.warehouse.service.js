@@ -4,7 +4,7 @@ const { ManufactureWarehouse } = require('../../models');
 
 const generateNextWarehouseCode = async () => {
   const lastWarehouse = await ManufactureWarehouse.findOne({ code: /^WH\d+$/ })
-    .sort({ code: -1 }) 
+    .sort({ code: -1 })
     .lean();
 
   if (!lastWarehouse || !lastWarehouse.code) {

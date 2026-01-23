@@ -1,9 +1,9 @@
-const mongoose = require("mongoose");
-const { toJSON, paginate } = require("../plugins");
+const mongoose = require('mongoose');
+const { toJSON, paginate } = require('../plugins');
 
 const categorySchema = new mongoose.Schema(
   {
-      manufacturerEmail: {
+    manufacturerEmail: {
       type: String,
       required: true,
       trim: true,
@@ -23,7 +23,7 @@ const categorySchema = new mongoose.Schema(
       type: Boolean,
       default: true,
     },
-      note: String,
+    note: String,
   },
   {
     timestamps: true,
@@ -35,5 +35,5 @@ categorySchema.index({ categoryName: 1 }, { unique: true });
 categorySchema.plugin(toJSON);
 categorySchema.plugin(paginate);
 
-const ManufactureMasterCategory = mongoose.model("ManufactureCategory", categorySchema);
+const ManufactureMasterCategory = mongoose.model('ManufactureCategory', categorySchema);
 module.exports = ManufactureMasterCategory;

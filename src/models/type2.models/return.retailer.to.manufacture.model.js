@@ -51,9 +51,9 @@ const returnRequestSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-     returnRequestNumber: {
+    returnRequestNumber: {
       type: Number,
-      //required: true,
+      // required: true,
     },
     invoiceId: {
       type: mongoose.Schema.Types.ObjectId,
@@ -63,11 +63,11 @@ const returnRequestSchema = new mongoose.Schema(
     invoiceDate: {
       type: Date,
     },
-        returnRequestGenerateDate: {
+    returnRequestGenerateDate: {
       type: Date,
-       default: Date.now,
+      default: Date.now,
     },
-       poDate: {
+    poDate: {
       type: Date,
     },
     // 🔹 Overall status of this Return Request
@@ -104,7 +104,7 @@ const returnRequestSchema = new mongoose.Schema(
         orderQuantity: Number,
         acceptedQuantity: Number,
         returnQuantity: Number,
-         rate: Number,
+        rate: Number,
         productType: String,
         gender: String,
         clothing: String,
@@ -172,10 +172,7 @@ const returnRequestSchema = new mongoose.Schema(
 );
 
 // ✅ Add the compound index here
-returnRequestSchema.index(
-  { manufacturerEmail: 1, returnRequestNumber: 1 },
-  { unique: true }
-);
+returnRequestSchema.index({ manufacturerEmail: 1, returnRequestNumber: 1 }, { unique: true });
 
 returnRequestSchema.plugin(toJSON);
 returnRequestSchema.plugin(paginate);
