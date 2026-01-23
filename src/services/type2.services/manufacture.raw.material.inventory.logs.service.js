@@ -144,6 +144,7 @@ const deleteInventoryById = async (id) => {
 //   color,
 //   size,
 // }) => {
+
 //   const bom = await ManufactureBOM.findOne({
 //     manufacturerEmail,
 //     designNumber,
@@ -183,9 +184,12 @@ const deleteInventoryById = async (id) => {
 //     if (!inventory) {
 //       return {
 //         materialName: material.materialName,
+//         itemCode: material.materialCode || null,
 //         requiredQtyPerPiece: material.qtyPerPiece,
 //         availableStock: 0,
 //         possibleQuantity: 0,
+//         vendorDetails: null,
+//         warehouseDetails: null,
 //         status: 'NO_INVENTORY',
 //       };
 //     }
@@ -196,16 +200,20 @@ const deleteInventoryById = async (id) => {
 
 //     return {
 //       materialName: material.materialName,
+//       itemCode: inventory.code || null,
 //       requiredQtyPerPiece: material.qtyPerPiece,
 //       availableStock: inventory.currentStock,
 //       possibleQuantity: possibleQty,
+//       vendorDetails: inventory.vendorDetails || null,
+//       warehouseDetails: inventory.warehouseDetails || null,
 //       status: possibleQty > 0 ? 'OK' : 'INSUFFICIENT',
 //     };
 //   });
 
-//   const producibleQuantity = Math.min(
-//     ...materialResults.map((m) => m.possibleQuantity)
-//   );
+//   const producibleQuantity =
+//     materialResults.length > 0
+//       ? Math.min(...materialResults.map((m) => m.possibleQuantity))
+//       : 0;
 
 //   return {
 //     designNumber,
@@ -215,7 +223,6 @@ const deleteInventoryById = async (id) => {
 //     materials: materialResults,
 //   };
 // };
-
 const getProductionCapacity = async ({
   manufacturerEmail,
   designNumber,
@@ -242,22 +249,32 @@ const getProductionCapacity = async ({
     throw new ApiError(httpStatus.NOT_FOUND, 'Size not found in BOM');
   }
 
-  const materialNames = sizeGroup.materials.map(
-    (m) => m.materialName
-  );
+  const materialCodes = sizeGroup.materials
+    .map((m) => m.materialCode)
+    .filter(Boolean);
+
+  const materialNames = sizeGroup.materials.map((m) => m.materialName);
 
   const inventories = await ManufactureRawMaterialInventory.find({
     manufacturerEmail,
-    itemName: { $in: materialNames },
+    $or: [
+      { code: { $in: materialCodes } },
+      { itemName: { $in: materialNames } },
+    ],
   }).lean();
 
-  const inventoryMap = new Map();
+  const inventoryByCode = new Map();
+  const inventoryByName = new Map();
+
   inventories.forEach((inv) => {
-    inventoryMap.set(inv.itemName, inv);
+    if (inv.code) inventoryByCode.set(inv.code, inv);
+    inventoryByName.set(inv.itemName, inv);
   });
 
   const materialResults = sizeGroup.materials.map((material) => {
-    const inventory = inventoryMap.get(material.materialName);
+    const inventory =
+      inventoryByCode.get(material.materialCode) ||
+      inventoryByName.get(material.materialName);
 
     if (!inventory) {
       return {
