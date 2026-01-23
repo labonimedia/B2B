@@ -20,12 +20,7 @@ router
     auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
     whDeliveryChallanController.deleteWhDeliveryChallanById
   ); // Delete PurchaseOrderType2 by ID
-// router
-//     .route('/purchase-orders/wholesaler-email')
-//     .get(
-//         auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
-//         whDeliveryChallanController.
-//     );
+
 router
   .route('/purchase-orders/genrate-chall-no')
   .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), whDeliveryChallanController.genratedeChallNO);

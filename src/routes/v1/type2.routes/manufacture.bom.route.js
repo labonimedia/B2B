@@ -3,6 +3,7 @@ const auth = require('../../../middlewares/auth');
 const { manufactureBOMController } = require('../../../controllers');
 
 const router = express.Router();
+
 router
   .route('/')
   .post(auth('manufacture', 'superadmin'), manufactureBOMController.createBOM)
@@ -14,4 +15,5 @@ router
   .get(auth('manufacture', 'superadmin'), manufactureBOMController.getBOMById)
   .patch(auth('manufacture', 'superadmin'), manufactureBOMController.updateBOMById)
   .delete(auth('manufacture', 'superadmin'), manufactureBOMController.deleteBOMById);
+
 module.exports = router;

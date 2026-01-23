@@ -30,9 +30,7 @@ router
 router
   .route('/catr/products')
   .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailesr'), retailerCartType2Controller.getCartByEmail);
-// router
-//   .route('/update-set-item')
-//   .patch(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), retailerCartType2Controller.updateSetItem);
+
 router
   .route('/updatecart/:cartId/set/:setId')
   .patch(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), retailerCartType2Controller.updateSetItem);

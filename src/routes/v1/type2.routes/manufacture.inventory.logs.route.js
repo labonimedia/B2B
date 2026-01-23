@@ -1,8 +1,7 @@
 const express = require('express');
-
 const router = express.Router();
-const { ManufactureInventoryLogsController } = require('../../../controllers');
 const auth = require('../../../middlewares/auth');
+const { ManufactureInventoryLogsController } = require('../../../controllers');
 
 router
   .route('/bulk')

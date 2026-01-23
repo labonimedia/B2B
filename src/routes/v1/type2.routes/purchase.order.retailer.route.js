@@ -7,7 +7,7 @@ const router = express.Router();
 router
   .route('/')
   .post(
-    // auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
+    auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
     retailerPurchaseOrderType2Controller.createRetailerPurchaseOrderType2
   )
   .get(

@@ -15,8 +15,5 @@ router
   .patch(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), mToRWalletController.updateWallet)
   .delete(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), mToRWalletController.deleteWallet);
 
-router
-  .route('/debit/:walletId')
-  // .patch(auth('manageWallet'), mtoRWalletController.debitWalletById);
-  .patch(mToRWalletController.debitWalletById);
+router.route('/debit/:walletId').patch(mToRWalletController.debitWalletById);
 module.exports = router;
