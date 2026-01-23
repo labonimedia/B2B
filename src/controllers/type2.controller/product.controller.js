@@ -17,21 +17,16 @@ const createProduct = catchAsync(async (req, res) => {
 const searchProducts = catchAsync(async (req, res) => {
   const filter = {};
   const options = {};
-
-  // Ensure 'productBy' is mandatory
   if (!req.body.productBy) {
     return res.status(httpStatus.BAD_REQUEST).send({ message: "'productBy' is required." });
   }
   filter.productBy = req.body.productBy;
 
-  // Add optional filters only if they have values
   ['brand', 'clothing', 'gender', 'productType', 'subCategory', 'bomFilled'].forEach((key) => {
     if (req.body[key] && req.body[key].trim() !== '') {
       filter[key] = req.body[key].trim();
     }
   });
-
-  // Handle pagination and sorting options from the body
   if (req.body.sortBy) {
     options.sortBy = req.body.sortBy;
   }
@@ -44,8 +39,6 @@ const searchProducts = catchAsync(async (req, res) => {
   if (req.body.page) {
     options.page = parseInt(req.body.page, 10);
   }
-
-  // Fetch products based on the filter and options
   const products = await productType2Service.searchProducts(filter, options);
   res.status(httpStatus.OK).send(products);
 });
@@ -54,14 +47,11 @@ const searchForWSProducts = catchAsync(async (req, res) => {
   const filter = {};
   const options = {};
 
-  // Extract filter parameters from req.body
   Object.keys(req.body).forEach((key) => {
     if (req.body[key] && !['sortBy', 'populate', 'limit', 'page'].includes(key)) {
       filter[key] = req.body[key];
     }
   });
-
-  // Extract pagination and other query options from req.query
   if (req.query.sortBy) {
     options.sortBy = req.query.sortBy;
   }
@@ -74,7 +64,6 @@ const searchForWSProducts = catchAsync(async (req, res) => {
   if (req.query.page) {
     options.page = parseInt(req.query.page, 10);
   }
-  // Call the service to search products
   const products = await productType2Service.searchForWSProducts(filter, options, req.query.wholesalerEmail);
   res.status(httpStatus.OK).send(products);
 });
@@ -113,31 +102,26 @@ const deleteProductById = catchAsync(async (req, res) => {
   res.status(httpStatus.NO_CONTENT).send();
 });
 
-// Update
 const updateColorCollection = catchAsync(async (req, res) => {
   const user = await productType2Service.updateColorCollection(req, req.query.id);
   res.status(httpStatus.OK).send(user);
 });
 
-// Update
 const updateProductVideo = catchAsync(async (req, res) => {
   const user = await productType2Service.updateProductVideo(req, req.query.id);
   res.status(httpStatus.OK).send(user);
 });
 
-// delete
 const deleteProductVideo = catchAsync(async (req, res) => {
   const user = await productType2Service.deleteProductVideo(req.query.id, req.query.collectionId);
   res.status(httpStatus.OK).send(user);
 });
 
-// const
 const updateProductImages = catchAsync(async (req, res) => {
   const user = await productType2Service.updateProductImages(req);
   res.status(httpStatus.OK).send(user);
 });
 
-// Delete
 const deleteColorCollection = catchAsync(async (req, res) => {
   await productType2Service.deleteColorCollection(req.query.id, req.query.collectionId);
   res.status(httpStatus.NO_CONTENT).send();

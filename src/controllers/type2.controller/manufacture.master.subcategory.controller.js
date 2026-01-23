@@ -1,7 +1,7 @@
-const httpStatus = require("http-status");
-const catchAsync = require("../../utils/catchAsync");
-const pick = require("../../utils/pick");
-const { manufactureSubCategoryService } = require("../../services");
+const httpStatus = require('http-status');
+const catchAsync = require('../../utils/catchAsync');
+const pick = require('../../utils/pick');
+const { manufactureSubCategoryService } = require('../../services');
 
 const createSubcategory = catchAsync(async (req, res) => {
   const subcategory = await manufactureSubCategoryService.createSubcategory(req.body);
@@ -9,23 +9,27 @@ const createSubcategory = catchAsync(async (req, res) => {
 });
 
 const getSubcategories = catchAsync(async (req, res) => {
-  const filter = pick(req.query, ["categoryName", "subcategoryName","categoryId","subcategoryCode", "isActive","manufacturerEmail"]);
-  const options = pick(req.query, ["sortBy", "limit", "page"]);
+  const filter = pick(req.query, [
+    'categoryName',
+    'subcategoryName',
+    'categoryId',
+    'subcategoryCode',
+    'isActive',
+    'manufacturerEmail',
+  ]);
+  const options = pick(req.query, ['sortBy', 'limit', 'page']);
   const result = await manufactureSubCategoryService.querySubcategories(filter, options);
   res.send({ success: true, data: result });
 });
 
 const getSubcategoryById = catchAsync(async (req, res) => {
   const subcategory = await manufactureSubCategoryService.getSubcategoryById(req.params.id);
-  if (!subcategory) return res.status(404).send({ message: "Subcategory not found" });
+  if (!subcategory) return res.status(404).send({ message: 'Subcategory not found' });
   res.send({ success: true, data: subcategory });
 });
 
 const updateSubcategoryById = catchAsync(async (req, res) => {
-  const updated = await manufactureSubCategoryService.updateSubcategoryById(
-    req.params.id,
-    req.body
-  );
+  const updated = await manufactureSubCategoryService.updateSubcategoryById(req.params.id, req.body);
   res.send({ success: true, data: updated });
 });
 

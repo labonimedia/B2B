@@ -72,7 +72,7 @@ const getPurchaseOrdersByManufactureEmail = async (req, res) => {
   const options = {
     page: parseInt(page, 10) || 1,
     limit: parseInt(limit, 10) || 10,
-    sortBy: sortBy || '-createdAt', // default sorting by newest first
+    sortBy: sortBy || '-createdAt',
   };
   const data = await RetailerPurchaseOrderType2Service.getProductOrderBySupplyer(manufacturerEmail, filter, options);
   res.status(200).send({ success: true, data });

@@ -32,23 +32,9 @@ const arrayUpload = catchAsync(async (req, res) => {
   res.status(httpStatus.CREATED).send({ message: 'Bulk upload completed', result });
 });
 
-// /**
-//  * GET /api/hsn
-//  * Get list of GST HSN codes, optional filters & pagination
-//  */
-// const getHsnCodes = catchAsync(async (req, res) => {
-//   // Example: Allow query params like `limit`, `page`, or `search`
-//   const filter = pick(req.query, ['hsnCode']); // extend filters as needed
-//   const options = pick(req.query, ['limit', 'page', 'sortBy']);
-
-//   const result = await gstHsnService.queryHsnCodes(filter, options);
-//    res.status(httpStatus.CREATED).send(result);
-// });
 const getHsnCodes = catchAsync(async (req, res) => {
   const filter = {};
   const options = pick(req.query, ['limit', 'page', 'sortBy']);
-
-  // If hsnCode is provided, use regex for partial match
   if (req.query.hsnCode) {
     filter.hsnCode = { $regex: req.query.hsnCode, $options: 'i' }; // case-insensitive
   }
@@ -57,14 +43,6 @@ const getHsnCodes = catchAsync(async (req, res) => {
   res.status(httpStatus.OK).send(result);
 });
 
-/**
- * GET /api/hsn/:hsnCode
- * Get details of specific HSN code
- */
-
-/**
- * Get a single M2R Invoice by ID
- */
 const getHsnCodeDetails = catchAsync(async (req, res) => {
   const hsnDetails = await gstHsnService.getHsnCodeByCode(req.params.hsnCode);
   if (!hsnDetails) {
