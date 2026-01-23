@@ -1,4 +1,3 @@
-const httpStatus = require('http-status');
 const { S3Client } = require('@aws-sdk/client-s3');
 const CDNPath = require('../models/cdn.path.model');
 

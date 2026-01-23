@@ -39,9 +39,7 @@ const deleteItemById = async (id) => {
     if (item.photo2) {
       await deleteFile(item.photo2);
     }
-  } catch (err) {
-    console.error('Error deleting item images:', err.message);
-  }
+  } catch (err) {}
 
   await item.deleteOne();
   return item;

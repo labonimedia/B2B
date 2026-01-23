@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const { paginate, toJSON } = require('../plugins');
+
 const { Schema } = mongoose;
 
 const addressSchema = new Schema({

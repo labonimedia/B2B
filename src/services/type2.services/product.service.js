@@ -218,9 +218,7 @@ const updateColorCollection = async (req, productId) => {
     // Save the product
     await product.save();
   } catch (err) {
-    console.error('Error occurred:', err.message);
-
-    // Rollback: Delete uploaded files
+    //Rollback: Delete uploaded files
     try {
       if (uploadedFiles.length > 0) {
         console.log('Rolling back uploaded files:', uploadedFiles);
@@ -229,8 +227,6 @@ const updateColorCollection = async (req, productId) => {
     } catch (deleteErr) {
       console.error('Error during rollback:', deleteErr.message);
     }
-
-    // Re-throw the original error
     throw err;
   }
 };

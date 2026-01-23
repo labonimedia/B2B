@@ -1,6 +1,4 @@
-const httpStatus = require('http-status');
 const { WholesalerReturn } = require('../../models');
-const ApiError = require('../../utils/ApiError');
 
 /**
  * Create multiple WholesalerReturn items

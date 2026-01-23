@@ -1,7 +1,7 @@
 const httpStatus = require('http-status');
 const { M2RPerformaInvoice } = require('../../models');
 const ApiError = require('../../utils/ApiError');
-const { getNextM2RInvoiceNumber } = require('../type2.services/m2r.invoicegenerator.service');
+const { getNextM2RInvoiceNumber } = require('./m2r.invoicegenerator.service');
 
 /**
  * Get Performa Invoice by PO Id

@@ -50,13 +50,13 @@ const getReturnReasonById = async (id) => {
  * @returns {Promise<ReturnReason>}
  */
 const updateReturnReasonById = async (id, updateBody) => {
-  const ReturnReason = await getReturnReasonById(id);
-  if (!ReturnReason) {
+  const returnReason = await getReturnReasonById(id);
+  if (!returnReason) {
     throw new ApiError(httpStatus.NOT_FOUND, 'ReturnReason not found');
   }
-  Object.assign(ReturnReason, updateBody);
-  await ReturnReason.save();
-  return ReturnReason;
+  Object.assign(returnReason, updateBody);
+  await returnReason.save();
+  return returnReason;
 };
 
 /**
@@ -65,12 +65,12 @@ const updateReturnReasonById = async (id, updateBody) => {
  * @returns {Promise<ReturnReason>}
  */
 const deleteReturnReasonById = async (id) => {
-  const ReturnReason = await getReturnReasonById(id);
-  if (!ReturnReason) {
+  const returnReason = await getReturnReasonById(id);
+  if (!returnReason) {
     throw new ApiError(httpStatus.NOT_FOUND, 'ReturnReason not found');
   }
-  await ReturnReason.remove();
-  return ReturnReason;
+  await returnReason.remove();
+  return returnReason;
 };
 
 module.exports = {

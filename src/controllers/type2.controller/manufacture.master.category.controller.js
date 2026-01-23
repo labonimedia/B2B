@@ -1,7 +1,7 @@
-const httpStatus = require("http-status");
-const catchAsync = require("../../utils/catchAsync");
-const pick = require("../../utils/pick");
-const { manufactureCategoryService } = require("../../services");
+const httpStatus = require('http-status');
+const catchAsync = require('../../utils/catchAsync');
+const pick = require('../../utils/pick');
+const { manufactureCategoryService } = require('../../services');
 
 const createCategory = catchAsync(async (req, res) => {
   const category = await manufactureCategoryService.createCategory(req.body);
@@ -9,15 +9,15 @@ const createCategory = catchAsync(async (req, res) => {
 });
 
 const getCategories = catchAsync(async (req, res) => {
-  const filter = pick(req.query, ["name", "isActive", "code","manufacturerEmail"]);
-  const options = pick(req.query, ["sortBy", "limit", "page"]);
+  const filter = pick(req.query, ['name', 'isActive', 'code', 'manufacturerEmail']);
+  const options = pick(req.query, ['sortBy', 'limit', 'page']);
   const result = await manufactureCategoryService.queryCategories(filter, options);
   res.send({ success: true, data: result });
 });
 
 const getCategoryById = catchAsync(async (req, res) => {
   const category = await manufactureCategoryService.getCategoryById(req.params.id);
-  if (!category) return res.status(404).send({ message: "Category not found" });
+  if (!category) return res.status(404).send({ message: 'Category not found' });
   res.send({ success: true, data: category });
 });
 

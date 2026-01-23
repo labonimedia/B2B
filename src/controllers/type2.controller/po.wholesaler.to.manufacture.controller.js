@@ -1,5 +1,6 @@
 const httpStatus = require('http-status');
 const catchAsync = require('../../utils/catchAsync');
+const ApiError = require('../../utils/ApiError');
 const { poWholesalerToManufactureService } = require('../../services');
 const pick = require('../../utils/pick');
 

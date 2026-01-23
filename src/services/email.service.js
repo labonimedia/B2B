@@ -109,7 +109,6 @@ www.fashiontradershub.com`;
   await sendEmail(to, subject, text);
 };
 
-
 /**
  * Send verification email
  * @param {string} to

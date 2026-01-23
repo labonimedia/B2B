@@ -42,7 +42,7 @@ const getBOMByDesign = async (manufacturerEmail, designNumber) => {
 };
 
 const searchBOM = async (reqBody) => {
-  let { search, productId, manufacturerEmail, designNumber, color, size, page = 1, limit = 10 } = reqBody;
+  const { search, productId, manufacturerEmail, designNumber, color, size, page = 1, limit = 10 } = reqBody;
 
   const filter = {};
   if (productId) filter.productId = productId;
