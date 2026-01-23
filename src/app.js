@@ -4,7 +4,6 @@ const xss = require('xss-clean');
 const mongoSanitize = require('express-mongo-sanitize');
 const compression = require('compression');
 const cors = require('cors');
-const socketIo = require('socket.io');
 const passport = require('passport');
 const httpStatus = require('http-status');
 const config = require('./config/config');
@@ -14,7 +13,6 @@ const { authLimiter } = require('./middlewares/rateLimiter');
 const routes = require('./routes/v1');
 const { errorConverter, errorHandler } = require('./middlewares/error');
 const ApiError = require('./utils/ApiError');
-const logger = require('./config/logger');
 require('./utils/worker');
 
 const app = express();
