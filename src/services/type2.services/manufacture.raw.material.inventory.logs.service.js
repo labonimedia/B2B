@@ -138,8 +138,12 @@ const deleteInventoryById = async (id) => {
   return ManufactureRawMaterialInventory.findByIdAndDelete(id);
 };
 
-const getProductionCapacity = async ({ manufacturerEmail, designNumber, color, size }) => {
-  // 1️⃣ Find BOM
+const getProductionCapacity = async ({
+  manufacturerEmail,
+  designNumber,
+  color,
+  size,
+}) => {
   const bom = await ManufactureBOM.findOne({
     manufacturerEmail,
     designNumber,
@@ -149,51 +153,59 @@ const getProductionCapacity = async ({ manufacturerEmail, designNumber, color, s
     throw new ApiError(httpStatus.NOT_FOUND, 'BOM not found');
   }
 
-  // 2️⃣ Find color group
   const colorGroup = bom.colors.find((c) => c.color === color);
   if (!colorGroup) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Color not found in BOM');
   }
 
-  // 3️⃣ Find size group
   const sizeGroup = colorGroup.sizes.find((s) => s.size === size);
   if (!sizeGroup) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Size not found in BOM');
   }
 
-  const materialResults = [];
+  const materialNames = sizeGroup.materials.map(
+    (m) => m.materialName
+  );
 
-  // 4️⃣ For each material → find inventory & calculate capacity
-  for (const material of sizeGroup.materials) {
-    const inventory = await ManufactureRawMaterialInventory.findOne({
-      manufacturerEmail,
-      itemName: material.materialName,
-    }).lean();
+  const inventories = await ManufactureRawMaterialInventory.find({
+    manufacturerEmail,
+    itemName: { $in: materialNames },
+  }).lean();
+
+  const inventoryMap = new Map();
+  inventories.forEach((inv) => {
+    inventoryMap.set(inv.itemName, inv);
+  });
+
+  const materialResults = sizeGroup.materials.map((material) => {
+    const inventory = inventoryMap.get(material.materialName);
 
     if (!inventory) {
-      materialResults.push({
+      return {
         materialName: material.materialName,
         requiredQtyPerPiece: material.qtyPerPiece,
         availableStock: 0,
         possibleQuantity: 0,
         status: 'NO_INVENTORY',
-      });
-      continue;
+      };
     }
 
-    const possibleQty = Math.floor(inventory.currentStock / material.qtyPerPiece);
+    const possibleQty = Math.floor(
+      inventory.currentStock / material.qtyPerPiece
+    );
 
-    materialResults.push({
+    return {
       materialName: material.materialName,
       requiredQtyPerPiece: material.qtyPerPiece,
       availableStock: inventory.currentStock,
       possibleQuantity: possibleQty,
       status: possibleQty > 0 ? 'OK' : 'INSUFFICIENT',
-    });
-  }
+    };
+  });
 
-  // 5️⃣ Bottleneck (minimum)
-  const producibleQuantity = Math.min(...materialResults.map((m) => m.possibleQuantity));
+  const producibleQuantity = Math.min(
+    ...materialResults.map((m) => m.possibleQuantity)
+  );
 
   return {
     designNumber,
