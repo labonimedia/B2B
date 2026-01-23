@@ -15,33 +15,20 @@ const genratedeChallNO = async (email) => {
   return (nextdeliveryChallanNumber = lastPO ? lastPO.poNumber + 1 : 1);
 };
 
-/**
- * Create Retailer PO and remove matching cart entry
- */
 const makeToOrderPO = async (reqBody) => {
   if (!reqBody.email) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Retailer email is required to generate PO Number');
   }
-
-  // Generate new PO number for this retailer
   const nextPoNumber = await genratedeChallNO(reqBody.email);
-
-  // Attach generated PO number to the new PO
   reqBody.poNumber = nextPoNumber;
-
-  // Create new PO
   const purchaseOrder = await PORetailerToManufacturer.create(reqBody);
-
-  // OPTIONAL: remove related cart entries if cartId exists
   if (reqBody.cartId) {
     await RtlToMnfCart.findByIdAndDelete(reqBody.cartId);
   }
 
   return purchaseOrder;
 };
-/**
- * Create Retailer PO and remove matching cart entry
- */
+
 const createPurchaseOrderRetailerType2 = async (reqBody) => {
   const { cartId } = reqBody;
 

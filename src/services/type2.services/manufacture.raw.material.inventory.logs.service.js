@@ -2,34 +2,6 @@ const httpStatus = require('http-status');
 const ApiError = require('../../utils/ApiError');
 const { ManufactureRawMaterialInventory, ManufactureMasterItem, ManufactureBOM } = require('../../models');
 
-// const createInventory = async (payload) => {
-//   const { masterItemId, manufacturerEmail } = payload;
-
-//   // 1. Check existing inventory
-//   const exists = await ManufactureRawMaterialInventory.findOne({ masterItemId });
-//   if (exists) {
-//     throw new Error('Inventory already exists for this item');
-//   }
-
-//   // 2. Fetch master item
-//   const masterItem = await ManufactureMasterItem.findById(masterItemId);
-//   if (!masterItem) {
-//     throw new Error('Master item not found');
-//   }
-//   // 3. Create inventory with required fields
-//   return ManufactureRawMaterialInventory.create({
-//     masterItemId,
-//     manufacturerEmail,
-//     // copied from master item
-//     itemName: masterItem.itemName,
-//     code: masterItem.code,
-//     categoryId: masterItem.categoryId,
-//     categoryName: masterItem.categoryName,
-//     subcategoryId: masterItem.subcategoryId,
-//     subcategoryName: masterItem.subcategoryName,
-//     stockUnit: masterItem.stockUnit,
-//   });
-// };
 const createInventory = async (payload) => {
   const { masterItemId, manufacturerEmail, data } = payload;
 
@@ -119,27 +91,21 @@ const updateStock = async (payload) => {
   return inventory;
 };
 
-/**
- * Query inventories (advanced filtering)
- */
 const queryInventories = async (filter, customFilters, options) => {
   const query = { ...filter };
 
-  // Stock range filter
   if (customFilters.minStock || customFilters.maxStock) {
     query.currentStock = {};
     if (customFilters.minStock) query.currentStock.$gte = Number(customFilters.minStock);
     if (customFilters.maxStock) query.currentStock.$lte = Number(customFilters.maxStock);
   }
 
-  // Low stock only
   if (customFilters.lowStockOnly === 'true') {
     query.$expr = {
       $lte: ['$currentStock', '$minimumStockLevel'],
     };
   }
 
-  // Vendor filter
   if (customFilters.vendorName) {
     query['vendorDetails.vendorName'] = {
       $regex: customFilters.vendorName,
@@ -147,7 +113,6 @@ const queryInventories = async (filter, customFilters, options) => {
     };
   }
 
-  // Warehouse filter
   if (customFilters.warehouseName) {
     query['warehouseDetails.warehouseName'] = {
       $regex: customFilters.warehouseName,
@@ -158,16 +123,10 @@ const queryInventories = async (filter, customFilters, options) => {
   return ManufactureRawMaterialInventory.paginate(query, options);
 };
 
-/**
- * Get inventory by ID
- */
 const getInventoryById = async (id) => {
   return ManufactureRawMaterialInventory.findById(id);
 };
 
-/**
- * Low stock materials
- */
 const getLowStockMaterials = async (manufacturerEmail) => {
   return ManufactureRawMaterialInventory.find({
     manufacturerEmail,
@@ -175,19 +134,11 @@ const getLowStockMaterials = async (manufacturerEmail) => {
   });
 };
 
-/**
- * Delete inventory
- */
 const deleteInventoryById = async (id) => {
   return ManufactureRawMaterialInventory.findByIdAndDelete(id);
 };
 
-const getProductionCapacity = async ({
-  manufacturerEmail,
-  designNumber,
-  color,
-  size,
-}) => {
+const getProductionCapacity = async ({ manufacturerEmail, designNumber, color, size }) => {
   // 1️⃣ Find BOM
   const bom = await ManufactureBOM.findOne({
     manufacturerEmail,
@@ -230,9 +181,7 @@ const getProductionCapacity = async ({
       continue;
     }
 
-    const possibleQty = Math.floor(
-      inventory.currentStock / material.qtyPerPiece
-    );
+    const possibleQty = Math.floor(inventory.currentStock / material.qtyPerPiece);
 
     materialResults.push({
       materialName: material.materialName,
@@ -244,9 +193,7 @@ const getProductionCapacity = async ({
   }
 
   // 5️⃣ Bottleneck (minimum)
-  const producibleQuantity = Math.min(
-    ...materialResults.map((m) => m.possibleQuantity)
-  );
+  const producibleQuantity = Math.min(...materialResults.map((m) => m.possibleQuantity));
 
   return {
     designNumber,

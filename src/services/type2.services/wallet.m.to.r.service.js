@@ -1,21 +1,12 @@
-// src/services/mtoRWallet.service.js
-
 const httpStatus = require('http-status');
 const ApiError = require('../../utils/ApiError');
 const { MtoRWallet } = require('../../models');
 
-/**
- * Create a wallet for manufacturer + retailer pair
- * Will throw error if wallet already exists because of unique index
- */
 const createWallet = async (walletBody) => {
   const { manufacturerEmail, retailerEmail } = walletBody;
 
   if (!manufacturerEmail || !retailerEmail) {
-    throw new ApiError(
-      httpStatus.BAD_REQUEST,
-      'manufacturerEmail and retailerEmail are required'
-    );
+    throw new ApiError(httpStatus.BAD_REQUEST, 'manufacturerEmail and retailerEmail are required');
   }
 
   const existing = await MtoRWallet.findOne({ manufacturerEmail, retailerEmail });
@@ -32,9 +23,6 @@ const createWallet = async (walletBody) => {
   return wallet;
 };
 
-/**
- * Query wallets with pagination
- */
 const queryWallets = async (filter, options) => {
   // default: only active wallets
   if (filter.isActive === undefined) {
@@ -44,47 +32,19 @@ const queryWallets = async (filter, options) => {
   return wallets;
 };
 
-/**
- * Get wallet by ID
- */
 const getWalletById = async (id) => {
   return MtoRWallet.findById(id);
 };
 
-/**
- * Helper: get wallet by manufacturer + retailer pair
- */
 const getWalletByPair = async (manufacturerEmail, retailerEmail) => {
   return MtoRWallet.findOne({ manufacturerEmail, retailerEmail });
 };
 
-/**
- * Add CREDIT transaction
- * Body expected:
- * {
- *   manufacturerEmail,
- *   retailerEmail,
- *   amount,
- *   creditNoteNumber,
- *   creditInvoiceNumber,
- *   description
- * }
- */
 const addCredit = async (body) => {
-  const {
-    manufacturerEmail,
-    retailerEmail,
-    amount,
-    creditNoteNumber,
-    creditInvoiceNumber,
-    description,
-  } = body;
+  const { manufacturerEmail, retailerEmail, amount, creditNoteNumber, creditInvoiceNumber, description } = body;
 
   if (!manufacturerEmail || !retailerEmail || !amount) {
-    throw new ApiError(
-      httpStatus.BAD_REQUEST,
-      'manufacturerEmail, retailerEmail and amount are required'
-    );
+    throw new ApiError(httpStatus.BAD_REQUEST, 'manufacturerEmail, retailerEmail and amount are required');
   }
 
   if (amount <= 0) {
@@ -125,31 +85,11 @@ const addCredit = async (body) => {
   return wallet;
 };
 
-/**
- * Add DEBIT transaction
- * Body expected:
- * {
- *   manufacturerEmail,
- *   retailerEmail,
- *   amount,
- *   debitInvoiceNumber,
- *   description
- * }
- */
 const addDebit = async (body) => {
-  const {
-    manufacturerEmail,
-    retailerEmail,
-    amount,
-    debitInvoiceNumber,
-    description,
-  } = body;
+  const { manufacturerEmail, retailerEmail, amount, debitInvoiceNumber, description } = body;
 
   if (!manufacturerEmail || !retailerEmail || !amount) {
-    throw new ApiError(
-      httpStatus.BAD_REQUEST,
-      'manufacturerEmail, retailerEmail and amount are required'
-    );
+    throw new ApiError(httpStatus.BAD_REQUEST, 'manufacturerEmail, retailerEmail and amount are required');
   }
 
   if (amount <= 0) {
@@ -186,17 +126,11 @@ const addDebit = async (body) => {
   return wallet;
 };
 
-/**
- * Update wallet (for fields like isActive, currency, etc.)
- * Not recommended to update balance/transactions manually here.
- */
 const updateWallet = async (walletId, updateBody) => {
   const wallet = await getWalletById(walletId);
   if (!wallet) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Wallet not found');
   }
-
-  // Do NOT allow manual manipulation of financial fields by default
   const blockedFields = ['balance', 'totalCredited', 'totalDebited', 'transactions'];
   blockedFields.forEach((field) => {
     if (updateBody[field] !== undefined) {
@@ -209,9 +143,6 @@ const updateWallet = async (walletId, updateBody) => {
   return wallet;
 };
 
-/**
- * Delete wallet (soft delete: set isActive = false)
- */
 const deleteWallet = async (walletId) => {
   const wallet = await getWalletById(walletId);
   if (!wallet) {
@@ -221,9 +152,7 @@ const deleteWallet = async (walletId) => {
   wallet.isActive = false;
   await wallet.save();
 };
-/**
- * Helper: recompute balance, totalCredited, totalDebited from transactions[]
- */
+
 const recomputeWalletNumbers = (wallet) => {
   let balance = 0;
   let totalCredited = 0;
@@ -256,17 +185,11 @@ const debitWalletById = async (walletId, body) => {
   const { amount, debitInvoiceNumber, description } = body;
 
   if (!amount || amount <= 0) {
-    throw new ApiError(
-      httpStatus.BAD_REQUEST,
-      "'amount' must be a positive number"
-    );
+    throw new ApiError(httpStatus.BAD_REQUEST, "'amount' must be a positive number");
   }
 
   if (!debitInvoiceNumber) {
-    throw new ApiError(
-      httpStatus.BAD_REQUEST,
-      "'debitInvoiceNumber' is required"
-    );
+    throw new ApiError(httpStatus.BAD_REQUEST, "'debitInvoiceNumber' is required");
   }
 
   const wallet = await MtoRWallet.findById(walletId);
@@ -274,22 +197,17 @@ const debitWalletById = async (walletId, body) => {
     throw new ApiError(httpStatus.NOT_FOUND, 'Wallet not found');
   }
 
-  // 1️⃣ Recompute balance & totals from existing transactions for safety
   recomputeWalletNumbers(wallet);
 
   // 2️⃣ Check sufficient balance
   if (wallet.balance < amount) {
-    throw new ApiError(
-      httpStatus.BAD_REQUEST,
-      'Insufficient wallet balance to debit this amount'
-    );
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Insufficient wallet balance to debit this amount');
   }
 
   const newBalance = wallet.balance - amount;
 
   // 3️⃣ Build description (nice grammar)
-  let finalDescription =
-    description || `₹${amount} debited against Invoice #${debitInvoiceNumber}`;
+  let finalDescription = description || `₹${amount} debited against Invoice #${debitInvoiceNumber}`;
 
   // 4️⃣ Create debit transaction
   const transaction = {

@@ -2,19 +2,6 @@ const httpStatus = require('http-status');
 const { ReturnR2M } = require('../../models');
 const ApiError = require('../../utils/ApiError');
 
-
-// /**
-//  * Create a BackStyle
-//  * @param {Object} reqBody
-//  * @returns {Promise<BackStyle>}
-//  */
-// const createMtoRReturnRequest = async (reqBody) => {
-//   return ReturnR2M.create(reqBody);
-// };
-/**
- * Create a new Return Request (Retailer → Manufacturer)
- */
-
 const createMtoRReturnRequest = async (reqBody) => {
   const { manufacturerEmail } = reqBody;
 

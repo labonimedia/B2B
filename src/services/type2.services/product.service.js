@@ -235,59 +235,6 @@ const updateColorCollection = async (req, productId) => {
   }
 };
 
-// const updateColorCollection = async (req, productId) => {
-//   const product = await ProductType2.findById(productId);
-
-//   if (!product) {
-//     throw new ApiError(httpStatus.NOT_FOUND, 'Product not found');
-//   }
-
-//   const { colour, colourName } = req.body;
-//   const extractPath = (url) => new URL(url).pathname;
-
-//   // Extract and trim file paths from req.body
-//   const colourImage = req.body.colourImage ? extractPath(req.body.colourImage[0]) : null;
-//   const productImages = req.body.productImages ? req.body.productImages.map(extractPath) : [];
-//   const productVideo = req.body.productVideo ? extractPath(req.body.productVideo[0]) : null;
-
-//   const newColourCollection = {
-//     colour,
-//     colourName,
-//     colourImage,
-//     productImages,
-//     productVideo,
-//   };
-
-//   const collectionIndex = product.colourCollections.findIndex(
-//     (c) => c._id.toString() === req.query.collectionId
-//   );
-
-//   if (collectionIndex === -1) {
-//     try {
-//       // Attempt to delete uploaded files
-//       if (colourImage) {
-//         await deleteFile(colourImage);
-//       }
-//       if (productImages && productImages.length > 0) {
-//         await Promise.all(productImages.map((image) => deleteFile(image)));
-//       }
-//       if (productVideo) {
-//         await deleteFile(productVideo);
-//       }
-//     } catch (deleteError) {
-//       console.error('Error deleting files:', deleteError.message);
-//     }
-
-//     // Throw the error after cleanup
-//     throw new ApiError(httpStatus.NOT_FOUND, 'Colour collection not found');
-//   }
-
-//   // Update the existing collection
-//   product.colourCollections[collectionIndex] = newColourCollection;
-
-//   return product.save();
-// };
-
 const updateProductVideo = async (req, productId) => {
   try {
     const { productVideo } = req.body;
@@ -309,7 +256,6 @@ const updateProductVideo = async (req, productId) => {
 
     return product;
   } catch (err) {
-    console.error('Error updating product video:', err.message);
     throw err;
   }
 };
@@ -430,65 +376,10 @@ const deleteProductVideo = async (productId, collectionId) => {
     await deleteFile(collection.productVideo);
   }
 
-  // Remove productVideo from the collection (set it to null)
   product.colourCollections[collectionIndex].productVideo = null;
 
   await product.save();
 };
-
-// const filterProductsAndFetchManufactureDetails = async (filters) => {
-//   const query = {};
-
-//   // Build the query based on the filters provided
-//   // eslint-disable-next-line no-param-reassign
-//   if (filters.productType) {
-//     query.productType = filters.productType;
-//   }
-//   // eslint-disable-next-line no-param-reassign
-//   if (filters.gender) {
-//     query.gender = filters.gender;
-//   }
-//   // eslint-disable-next-line no-param-reassign
-//   if (filters.clothing) {
-//     query.clothing = filters.clothing;
-//   }
-//   // eslint-disable-next-line no-param-reassign
-//   if (filters.subCategory) {
-//     query.subCategory = filters.subCategory;
-//   }
-//   // eslint-disable-next-line no-param-reassign
-//   if (filters.productTitle) {
-//     query.productTitle = { $regex: filters.productTitle, $options: 'i' };
-//   }
-//   // eslint-disable-next-line no-param-reassign
-//   if (filters.country) {
-//     query.country = filters.country;
-//   }
-//   // eslint-disable-next-line no-param-reassign
-//   if (filters.city) {
-//     query.city = filters.city;
-//   }
-//   // eslint-disable-next-line no-param-reassign
-//   if (filters.state) {
-//     query.state = filters.state;
-//   }
-
-//   // Get filtered products
-//   const products = await ProductType2.find(query);
-
-//   // Fetch manufacturer details for each product
-//   const productManufacturers = await Promise.all(
-//     products.map(async (product) => {
-//       const manufacturer = await Manufacture.findOne({ email: product.productBy });
-//       return {
-//         product,
-//         manufacturer,
-//       };
-//     })
-//   );
-
-//   return productManufacturers;
-// };
 
 const filterProductsAndFetchManufactureDetails = async (filters) => {
   const query = {};

@@ -2,53 +2,33 @@ const httpStatus = require('http-status');
 const { ManufactureMasterCategory } = require('../../models');
 const ApiError = require('../../utils/ApiError');
 
-// /**
-//  * Create Category
-//  */
-// const createCategory = async (reqBody) => {
-//   return ManufactureMasterCategory.create(reqBody);
-// };
-/**
- * Create one or multiple categories
- */
-
 const createCategory = async (reqBody) => {
   // If array → bulk insert
   if (Array.isArray(reqBody)) {
     if (reqBody.length === 0) {
-      throw new ApiError(httpStatus.BAD_REQUEST, "Category array cannot be empty");
+      throw new ApiError(httpStatus.BAD_REQUEST, 'Category array cannot be empty');
     }
 
     return ManufactureMasterCategory.insertMany(reqBody, { ordered: false });
   }
 
-  // If single object → normal insert
   return ManufactureMasterCategory.create(reqBody);
 };
 
-/**
- * Query Categories (with pagination)
- */
 const queryCategories = async (filter, options) => {
   const categories = await ManufactureMasterCategory.paginate(filter, options);
   return categories;
 };
 
-/**
- * Get Category by ID
- */
 const getCategoryById = async (id) => {
   return ManufactureMasterCategory.findById(id);
 };
 
-/**
- * Update Category by ID
- */
 const updateCategoryById = async (id, updateBody) => {
   const category = await getCategoryById(id);
 
   if (!category) {
-    throw new ApiError(httpStatus.NOT_FOUND, "Category not found");
+    throw new ApiError(httpStatus.NOT_FOUND, 'Category not found');
   }
 
   Object.assign(category, updateBody);
@@ -56,14 +36,11 @@ const updateCategoryById = async (id, updateBody) => {
   return category;
 };
 
-/**
- * Delete Category by ID
- */
 const deleteCategoryById = async (id) => {
   const category = await getCategoryById(id);
 
   if (!category) {
-    throw new ApiError(httpStatus.NOT_FOUND, "Category not found");
+    throw new ApiError(httpStatus.NOT_FOUND, 'Category not found');
   }
 
   await category.remove();

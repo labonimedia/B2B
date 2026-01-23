@@ -1,5 +1,15 @@
 const httpStatus = require('http-status');
-const { RetailerCartType2, User, Wholesaler, Retailer, Manufacture, POCountertype2, WishListType2, PurchaseOrderRetailerType2, PORetailerToWholesaler} = require('../../models');
+const {
+  RetailerCartType2,
+  User,
+  Wholesaler,
+  Retailer,
+  Manufacture,
+  POCountertype2,
+  WishListType2,
+  PurchaseOrderRetailerType2,
+  PORetailerToWholesaler,
+} = require('../../models');
 const ApiError = require('../../utils/ApiError');
 
 /**
@@ -8,24 +18,6 @@ const ApiError = require('../../utils/ApiError');
  * @returns {Promise<Array<RetailerCartType2>>}
  */
 
-// const createRetailerCartType2 = async (reqBody) => {
-//   const { email, wholesalerEmail, set } = reqBody;
-//   // Check if a cart already exists with the same email and productBy
-//   const existingCart = await RetailerCartType2.findOne({ email, wholesalerEmail });
-//   if (existingCart) {
-//     // Push new set data into the existing cart's set array
-//     existingCart.set.push(...set);
-//     await existingCart.save();
-//     await WishListType2.findOneAndDelete({ productId: reqBody.productId, email })
-//     return existingCart
-//   } else {
-//     // If no cart exists, create a new one
-//     const newCart = await RetailerCartType2.create(reqBody);
-//     await WishListType2.findOneAndDelete({ productId: reqBody.productId, email })
-//     return newCart;
-//   }
-// };
-
 const createRetailerCartType2 = async (reqBody) => {
   const { email, wholesalerEmail, set } = reqBody;
   const existingCart = await RetailerCartType2.findOne({ email, wholesalerEmail });
@@ -33,10 +25,7 @@ const createRetailerCartType2 = async (reqBody) => {
     // Iterate over each new item
     set.forEach((newItem) => {
       const existingItem = existingCart.set.find(
-        (item) =>
-          item.designNumber === newItem.designNumber &&
-          item.colour === newItem.colour &&
-          item.size === newItem.size
+        (item) => item.designNumber === newItem.designNumber && item.colour === newItem.colour && item.size === newItem.size
       );
 
       if (existingItem) {
@@ -59,7 +48,6 @@ const createRetailerCartType2 = async (reqBody) => {
   }
 };
 
-
 /**
  * Query for RetailerCartType2
  * @param {Object} filter - Mongo filter
@@ -69,10 +57,6 @@ const createRetailerCartType2 = async (reqBody) => {
  * @param {number} [options.page] - Current page (default = 1)
  * @returns {Promise<QueryResult>}
  */
-// const queryRetailerCartType2 = async (filter, options) => {
-//   const RetailerCartType2Items = await RetailerCartType2.paginate(filter, options);
-//   return RetailerCartType2Items;
-// };
 
 const queryRetailerCartType2 = async (filter, options) => {
   // Paginate the RetailerCartType2 items
@@ -93,7 +77,6 @@ const queryRetailerCartType2 = async (filter, options) => {
     retailer = await Retailer.findOne({
       email: filter.email,
     }).select('email fullName companyName address state country pinCode profileImg mobNumber GSTIN');
-
   }
 
   // Create a mapping of email to manufacturer details
@@ -137,10 +120,9 @@ const getRetailerCartType2ById = async (id) => {
  * @param {string} productBy - Product's manufacturer email
  */
 
-
 const genratePORetailerCartType2 = async (id) => {
   const cartItem = await RetailerCartType2.findById(id);
-  if (!cartItem) throw new Error("Cart item not found");
+  if (!cartItem) throw new Error('Cart item not found');
 
   // ✅ Fetch wholesaler details (include profileImg and other fields)
   const wholesaler = await Wholesaler.findOne({ email: cartItem.wholesalerEmail }).select(
@@ -157,9 +139,7 @@ const genratePORetailerCartType2 = async (id) => {
     );
 
     if (retailer) {
-      const discountEntry = retailer.discountGiven.find(
-        (discount) => discount.discountGivenBy === cartItem.wholesalerEmail
-      );
+      const discountEntry = retailer.discountGiven.find((discount) => discount.discountGivenBy === cartItem.wholesalerEmail);
 
       if (discountEntry) {
         discountDetails = {
@@ -171,9 +151,7 @@ const genratePORetailerCartType2 = async (id) => {
   }
 
   // ✅ Get last PO number for retailer
-  const lastPO = await PORetailerToWholesaler.findOne({ email: cartItem.email })
-    .sort({ poNumber: -1 })
-    .lean();
+  const lastPO = await PORetailerToWholesaler.findOne({ email: cartItem.email }).sort({ poNumber: -1 }).lean();
 
   const orderNumber = lastPO ? lastPO.poNumber + 1 : 1;
 
@@ -244,11 +222,11 @@ const getCartByEmailToPlaceOrder = async (email, productBy) => {
     wholesaler =
       user.role === 'wholesaler'
         ? await Wholesaler.findOne({ email }).select(
-          'fullName companyName email address country state city pinCode mobNumber GSTIN code profileImg'
-        )
+            'fullName companyName email address country state city pinCode mobNumber GSTIN code profileImg'
+          )
         : await Retailer.findOne({ email }).select(
-          'fullName companyName email address country state city pinCode mobNumber GSTIN code profileImg'
-        );
+            'fullName companyName email address country state city pinCode mobNumber GSTIN code profileImg'
+          );
 
     if (!wholesaler) {
       throw new ApiError(httpStatus.NOT_FOUND, user.role === 'wholesaler' ? 'Wholesaler not found' : 'Retailer not found');
@@ -267,24 +245,24 @@ const getCartByEmailToPlaceOrder = async (email, productBy) => {
   // Determine the financial year based on the current date
   const now = new Date();
   const currentMonth = now.getMonth();
-  let financialYear = currentMonth < 2 || (currentMonth === 2 && now.getDate() < 1) ? now.getFullYear() - 1 : now.getFullYear();
+  let financialYear =
+    currentMonth < 2 || (currentMonth === 2 && now.getDate() < 1) ? now.getFullYear() - 1 : now.getFullYear();
 
   // Ensure wholesaler is present for roles that require it
   if (!wholesaler) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Wholesaler information is missing.');
   }
 
-
   // Prepare the cart and order details with the desired format
   const orderDetails = carts.map((cart) => ({
     _id: cart._id,
     productId: {
-      designNumber: cart.designNumber || "",
+      designNumber: cart.designNumber || '',
       brand: cart.productId.brand,
       id: cart.productId._id,
     },
     set: cart.set.map((setItem) => ({
-      designNumber: cart.designNumber || "",
+      designNumber: cart.designNumber || '',
       colour: setItem.colour,
       colourImage: setItem.colourImage || null,
       colourName: setItem.colourName,
@@ -316,65 +294,10 @@ const getCartByEmailToPlaceOrder = async (email, productBy) => {
   return result;
 };
 
-
-
-// const getCartByEmail = async (email) => {
-//   // Find all cart items by email and populate the product details (productId)
-//   const cartItems = await RetailerCartType2.find({ email }).populate('productId');
-//   if (!cartItems || cartItems.length === 0) {
-//     throw new ApiError(httpStatus.NOT_FOUND, 'No carts found for this email');
-//   }
-
-//   // Extract unique manufacturer emails from all cart products (based on productBy)
-//   const productByEmails = [...new Set(cartItems.map((item) => item.productBy))];
-
-//   // Fetch manufacturers based on the extracted emails
-//   const manufacturers = await Manufacture.find({ email: { $in: productByEmails } });
-//   const manufacturerMap = new Map(manufacturers.map((manufacturer) => [manufacturer.email, manufacturer]));
-
-//   // Group the cart items by the `productBy` field
-//   const groupedCart = cartItems.reduce((acc, item) => {
-//     const { productBy } = item;
-//     const manufacturer = manufacturerMap.get(productBy);
-
-//     if (!acc[productBy]) {
-//       acc[productBy] = {
-//         fullName: manufacturer ? manufacturer.fullName : 'Unknown Manufacturer',
-//         manufacturer: productBy, // Add manufacturer email
-//         manufacturerEmail: manufacturer ? manufacturer.email : 'Unknown', // Include manufacturer email
-//         products: [],
-//       };
-//     }
-
-//     acc[productBy].products.push({
-//       set: item.set.map((setItem) => ({
-//         designNumber: setItem.designNumber || "" ,
-//         colour: setItem.colour,
-//         colourImage: setItem.colourImage,
-//         colourName: setItem.colourName,
-//         size: setItem.size,
-//         quantity: setItem.quantity,
-//         price: setItem.price,
-//       })),
-//       _id: item._id,
-//       productId: {
-//         designNumber: item.productId.designNumber,
-//         brand: item.productId.brand,
-//         id: item.productId._id,
-//       },
-//     });
-
-//     return acc;
-//   }, {});
-
-//   return groupedCart;
-// };
-
-
 /**
- * 
- * @param {} email 
- * @returns 
+ *
+ * @param {} email
+ * @returns
  */
 const getCartByEmail = async (email) => {
   // Find all cart items by email and populate the product details (productId)
@@ -428,7 +351,6 @@ const getCartByEmail = async (email) => {
   return formattedCart;
 };
 
-
 /**
  * Update RetailerCartType2 by id
  * @param {ObjectId} id
@@ -460,7 +382,7 @@ const deleteRetailerCartType2ById = async (id) => {
 };
 
 const deleteCartSetItem = async (cartId, setId) => {
-  const cart = await getRetailerCartType2ById(cartId)
+  const cart = await getRetailerCartType2ById(cartId);
   if (!cart) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Cart not found');
   }
@@ -477,7 +399,7 @@ const deleteCartSetItem = async (cartId, setId) => {
 };
 
 const updateSetItem = async (cartId, setId, updateBody) => {
-  const cart = await getRetailerCartType2ById(cartId)
+  const cart = await getRetailerCartType2ById(cartId);
 
   if (!cart) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Cart not found');
@@ -507,5 +429,5 @@ module.exports = {
   updateRetailerCartType2ById,
   deleteRetailerCartType2ById,
   deleteCartSetItem,
-  updateSetItem
+  updateSetItem,
 };
