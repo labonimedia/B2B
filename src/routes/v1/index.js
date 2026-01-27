@@ -132,6 +132,8 @@ const manufactureSubCategoryRoute = require('./type2.routes/manufacture.master.s
 const manufactureItemRoute = require('./type2.routes/manufacture.master.item.route');
 const manufactureBOMRoute = require('./type2.routes/manufacture.bom.route');
 const ManufactureRawMaterialInventoryLogsRoute = require('./type2.routes/manufacture.raw.material.inventory.logs.route');
+// manufacture dashboard counts
+const manufactureDashboardCountsRoute = require('./type2.routes/manufacture.dashboard.count.route');
 
 const router = express.Router();
 
@@ -640,6 +642,10 @@ const defaultRoutes = [
   {
     path: '/manufacture-raw-material-inventory-logs',
     route: ManufactureRawMaterialInventoryLogsRoute,
+  },
+  {
+    path: '/manufacture-dashboard',
+    route: manufactureDashboardCountsRoute,
   },
 ];
 

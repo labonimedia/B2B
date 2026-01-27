@@ -142,3 +142,5 @@ module.exports.manufactureItemService = require('./type2.services/manufacture.ma
 module.exports.manufactureBOMService = require('./type2.services/manufacture.bom.service');
 // manufacture raw material inventory logs service
 module.exports.manufactureRawMaterialInventoryLogsService = require('./type2.services/manufacture.raw.material.inventory.logs.service');
+// manufacture dashboards counts
+module.exports.manufactureDashboardCountsService = require('./type2.services/manufacture.dashboard.count.service');
