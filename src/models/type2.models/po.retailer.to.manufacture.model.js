@@ -249,6 +249,12 @@ const PORetailerToManufacturerSchema = new mongoose.Schema(
 PORetailerToManufacturerSchema.plugin(toJSON);
 PORetailerToManufacturerSchema.plugin(paginate);
 
+PORetailerToManufacturerSchema.index({
+  manufacturerEmail: 1,
+  email: 1,
+  statusAll: 1,
+});
+
 const PORetailerToManufacturer = mongoose.model('PORetailerToManufacturer', PORetailerToManufacturerSchema);
 
 module.exports = PORetailerToManufacturer;
