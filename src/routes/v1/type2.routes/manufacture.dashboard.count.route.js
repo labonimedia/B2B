@@ -8,7 +8,14 @@ router
   .route('/retailer-po-counts')
   .get(
     auth('superadmin', 'manufacture', 'retailer', 'wholesaler'),
-    manufactureDashboardCountsController.manufacturerDashboard
+    manufactureDashboardCountsController.getManufacturerPORetailerCounts
+  );
+
+router
+  .route('/product-counts')
+  .get(
+    auth('superadmin', 'manufacture', 'retailer', 'wholesaler'),
+    manufactureDashboardCountsController.getProductDashboardCounts
   );
 
 module.exports = router;

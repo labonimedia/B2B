@@ -1,30 +1,31 @@
 const { Brand } = require('../../models');
 const { PORetailerToManufacturer } = require('../../models');
 const { POWholesalerToManufacturer } = require('../../models');
+const { ProductType2 } = require('../../models');
 
-const getBrandCounts = async (manufacturerEmail) => {
-  const [result] = await Brand.aggregate([
-    { $match: { brandOwner: manufacturerEmail } },
-    {
-      $group: {
-        _id: null,
-        totalBrands: { $sum: 1 },
-        visibleBrands: {
-          $sum: { $cond: [{ $eq: ['$visibility', true] }, 1, 0] }
-        },
-        hiddenBrands: {
-          $sum: { $cond: [{ $eq: ['$visibility', false] }, 1, 0] }
-        }
-      }
-    }
-  ]);
+// const getBrandCounts = async (manufacturerEmail) => {
+//   const [result] = await Brand.aggregate([
+//     { $match: { brandOwner: manufacturerEmail } },
+//     {
+//       $group: {
+//         _id: null,
+//         totalBrands: { $sum: 1 },
+//         visibleBrands: {
+//           $sum: { $cond: [{ $eq: ['$visibility', true] }, 1, 0] }
+//         },
+//         hiddenBrands: {
+//           $sum: { $cond: [{ $eq: ['$visibility', false] }, 1, 0] }
+//         }
+//       }
+//     }
+//   ]);
 
-  return {
-    totalBrands: result?.totalBrands || 0,
-    visibleBrands: result?.visibleBrands || 0,
-    hiddenBrands: result?.hiddenBrands || 0
-  };
-};
+//   return {
+//     totalBrands: result?.totalBrands || 0,
+//     visibleBrands: result?.visibleBrands || 0,
+//     hiddenBrands: result?.hiddenBrands || 0
+//   };
+// };
 
 
 const getRetailerPoCounts = async ({ email, matchBy }) => {
@@ -85,54 +86,54 @@ const getRetailerPoCounts = async ({ email, matchBy }) => {
   };
 };
 
-const getWholesalerPoCounts = async (manufacturerEmail) => {
-  const [result] = await POWholesalerToManufacturer.aggregate([
-    { $match: { manufacturerEmail } },
-    {
-      $group: {
-        _id: null,
-        total: { $sum: 1 },
-        pending: {
-          $sum: { $cond: [{ $eq: ['$statusAll', 'pending'] }, 1, 0] }
-        },
-        confirmed: {
-          $sum: {
-            $cond: [
-              { $in: ['$statusAll', ['m_order_confirmed', 'w_order_confirmed']] },
-              1,
-              0
-            ]
-          }
-        },
-        cancelled: {
-          $sum: {
-            $cond: [
-              { $in: ['$statusAll', ['m_order_cancelled', 'w_order_cancelled']] },
-              1,
-              0
-            ]
-          }
-        },
-        delivered: {
-          $sum: { $cond: [{ $eq: ['$statusAll', 'delivered'] }, 1, 0] }
-        }
-      }
-    }
-  ]);
+// const getWholesalerPoCounts = async (manufacturerEmail) => {
+//   const [result] = await POWholesalerToManufacturer.aggregate([
+//     { $match: { manufacturerEmail } },
+//     {
+//       $group: {
+//         _id: null,
+//         total: { $sum: 1 },
+//         pending: {
+//           $sum: { $cond: [{ $eq: ['$statusAll', 'pending'] }, 1, 0] }
+//         },
+//         confirmed: {
+//           $sum: {
+//             $cond: [
+//               { $in: ['$statusAll', ['m_order_confirmed', 'w_order_confirmed']] },
+//               1,
+//               0
+//             ]
+//           }
+//         },
+//         cancelled: {
+//           $sum: {
+//             $cond: [
+//               { $in: ['$statusAll', ['m_order_cancelled', 'w_order_cancelled']] },
+//               1,
+//               0
+//             ]
+//           }
+//         },
+//         delivered: {
+//           $sum: { $cond: [{ $eq: ['$statusAll', 'delivered'] }, 1, 0] }
+//         }
+//       }
+//     }
+//   ]);
 
-  return {
-    wholesalerPO: {
-      total: result?.total || 0,
-      pending: result?.pending || 0,
-      confirmed: result?.confirmed || 0,
-      cancelled: result?.cancelled || 0,
-      delivered: result?.delivered || 0
-    }
-  };
-};
+//   return {
+//     wholesalerPO: {
+//       total: result?.total || 0,
+//       pending: result?.pending || 0,
+//       confirmed: result?.confirmed || 0,
+//       cancelled: result?.cancelled || 0,
+//       delivered: result?.delivered || 0
+//     }
+//   };
+// };
 
 
-const getManufacturerDashboardCounts = async ({ email, role }) => {
+const getManufacturerPORetailerCounts = async ({ email, role }) => {
   let retailerPO;
 
   if (role === 'manufacture') {
@@ -154,6 +155,40 @@ const getManufacturerDashboardCounts = async ({ email, role }) => {
   };
 };
 
+
+const getProductDashboardCounts = async ({ email, role }) => {
+  let matchQuery = {};
+
+  if (role === 'manufacture') {
+    matchQuery = { productBy: email };
+  }
+
+  const [result] = await ProductType2.aggregate([
+    { $match: matchQuery },
+    {
+      $group: {
+        _id: null,
+        totalProducts: { $sum: 1 },
+        bomFilledTrue: {
+          $sum: { $cond: [{ $eq: ['$bomFilled', true] }, 1, 0] }
+        },
+        bomFilledFalse: {
+          $sum: { $cond: [{ $eq: ['$bomFilled', false] }, 1, 0] }
+        }
+      }
+    }
+  ]);
+
+  return {
+    productDashboard: {
+      totalProducts: result?.totalProducts || 0,
+      bomFilled: result?.bomFilledTrue || 0,
+      bomNotFilled: result?.bomFilledFalse || 0
+    }
+  };
+};
+
 module.exports = {
-  getManufacturerDashboardCounts,
+  getManufacturerPORetailerCounts,
+  getProductDashboardCounts,
 };
