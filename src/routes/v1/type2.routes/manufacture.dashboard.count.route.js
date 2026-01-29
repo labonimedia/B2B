@@ -42,4 +42,10 @@ router.get(
   manufactureDashboardCountsController.getReferredUsersDashboardCounts
 );
 
+router.get(
+  '/wholesaler-request-counts',
+  auth('superadmin', 'manufacture', 'wholesaler'),
+  manufactureDashboardCountsController.getRequestDashboardCounts
+);
+
 module.exports = router;

@@ -89,6 +89,8 @@ const requestSchema = mongoose.Schema(
     timestamps: true,
   }
 );
+requestSchema.index({ email: 1, status: 1 });
+requestSchema.index({ requestByEmail: 1, status: 1 });
 
 // add plugin that converts mongoose to json
 requestSchema.plugin(toJSON);

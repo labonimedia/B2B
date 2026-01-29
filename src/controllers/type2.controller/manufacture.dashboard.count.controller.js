@@ -80,6 +80,22 @@ const getReferredUsersDashboardCounts = async (req, res) => {
   });
 };
 
+const getRequestDashboardCounts = async (req, res) => {
+  const { email, role } = req.query;
+
+  const data =
+    await manufactureDashboardCountsService.getRequestDashboardCounts({
+      email,
+      role
+    });
+
+  res.status(httpStatus.OK).send({
+    success: true,
+    data
+  });
+};
+
+
 module.exports = {
   getManufacturerPORetailerCounts,
   getProductDashboardCounts,
@@ -87,4 +103,5 @@ module.exports = {
   getReturnDashboardCounts,
   getCreditNoteDashboardCounts,
   getReferredUsersDashboardCounts,
+  getRequestDashboardCounts,
 };
