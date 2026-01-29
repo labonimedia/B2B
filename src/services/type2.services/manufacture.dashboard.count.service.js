@@ -1,4 +1,4 @@
-const { PORetailerToManufacturer, M2RPerformaInvoice, ProductType2, ReturnR2M, MtoRCreditNote } = require('../../models');
+const { PORetailerToManufacturer, M2RPerformaInvoice, ProductType2, ReturnR2M, MtoRCreditNote, User, Wholesaler, Retailer } = require('../../models');
 
 const getRetailerPoCounts = async ({ email, matchBy }) => {
   const matchQuery = {
@@ -278,10 +278,84 @@ const getCreditNoteDashboardCounts = async ({ email, role }) => {
   };
 };
 
+const getReferredUsersDashboardCounts = async (refByEmail) => {
+  // 1️⃣ Find referred users
+  const users = await User.find({ refByEmail }).select('email');
+
+  const referredEmails = users.map((u) => u.email);
+
+  if (!referredEmails.length) {
+    return {
+      wholesalers: { total: 0, active: 0, kycVerified: 0, discountAssigned: 0 },
+      retailers: { total: 0, active: 0, kycVerified: 0 }
+    };
+  }
+
+  // 2️⃣ WHOLESALER COUNTS
+  const wholesalerCounts = await Wholesaler.aggregate([
+    { $match: { email: { $in: referredEmails } } },
+    {
+      $group: {
+        _id: null,
+        total: { $sum: 1 },
+
+        active: {
+          $sum: { $cond: [{ $eq: ['$isActive', true] }, 1, 0] }
+        },
+
+        kycVerified: {
+          $sum: { $cond: [{ $eq: ['$kycVerified', true] }, 1, 0] }
+        },
+
+        discountAssigned: {
+          $sum: {
+            $cond: [{ $gt: [{ $size: '$discountGiven' }, 0] }, 1, 0]
+          }
+        }
+      }
+    }
+  ]);
+
+  // 3️⃣ RETAILER COUNTS
+  const retailerCounts = await Retailer.aggregate([
+    { $match: { email: { $in: referredEmails } } },
+    {
+      $group: {
+        _id: null,
+        total: { $sum: 1 },
+
+        active: {
+          $sum: { $cond: [{ $eq: ['$isActive', true] }, 1, 0] }
+        },
+
+        kycVerified: {
+          $sum: { $cond: [{ $eq: ['$kycVerified', true] }, 1, 0] }
+        }
+      }
+    }
+  ]);
+
+  return {
+    wholesalers: {
+      total: wholesalerCounts[0]?.total || 0,
+      active: wholesalerCounts[0]?.active || 0,
+      kycVerified: wholesalerCounts[0]?.kycVerified || 0,
+      discountAssigned: wholesalerCounts[0]?.discountAssigned || 0
+    },
+    retailers: {
+      total: retailerCounts[0]?.total || 0,
+      active: retailerCounts[0]?.active || 0,
+      kycVerified: retailerCounts[0]?.kycVerified || 0
+    }
+  };
+};
+
+
 module.exports = {
   getManufacturerPORetailerCounts,
   getProductDashboardCounts,
   getPerformaInvoiceDashboardCounts,
   getReturnDashboardCounts,
   getCreditNoteDashboardCounts,
+  getReferredUsersDashboardCounts,
 };

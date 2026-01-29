@@ -68,10 +68,23 @@ const getCreditNoteDashboardCounts = async (req, res) => {
   });
 };
 
+const getReferredUsersDashboardCounts = async (req, res) => {
+  const { refByEmail } = req.query;
+
+  const data =
+    await manufactureDashboardCountsService.getReferredUsersDashboardCounts(refByEmail);
+
+  res.status(httpStatus.OK).send({
+    success: true,
+    data
+  });
+};
+
 module.exports = {
   getManufacturerPORetailerCounts,
   getProductDashboardCounts,
   getPerformaInvoiceDashboardCounts,
   getReturnDashboardCounts,
   getCreditNoteDashboardCounts,
+  getReferredUsersDashboardCounts,
 };

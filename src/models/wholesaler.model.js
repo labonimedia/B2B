@@ -169,6 +169,8 @@ const wholesalerSchema = mongoose.Schema(
   }
 );
 
+wholesalerSchema.index({ email: 1, isActive: 1, kycVerified: 1 });
+
 // add plugin that converts mongoose to json
 wholesalerSchema.plugin(toJSON);
 wholesalerSchema.plugin(paginate);
