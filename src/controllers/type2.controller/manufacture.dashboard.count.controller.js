@@ -107,6 +107,19 @@ const getInvitationDashboardCounts = async (req, res) => {
   });
 };
 
+const getCategoryDashboardCounts = async (req, res) => {
+  const { manufacturerEmail } = req.query;
+
+  const data = await manufactureDashboardCountsService.getCategoryDashboardCounts(
+    manufacturerEmail
+  );
+
+  res.status(httpStatus.OK).send({
+    success: true,
+    data,
+  });
+};
+
 module.exports = {
   getManufacturerPORetailerCounts,
   getProductDashboardCounts,
@@ -116,4 +129,5 @@ module.exports = {
   getReferredUsersDashboardCounts,
   getRequestDashboardCounts,
   getInvitationDashboardCounts,
+  getCategoryDashboardCounts,
 };

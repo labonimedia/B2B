@@ -1,4 +1,4 @@
-const { PORetailerToManufacturer, M2RPerformaInvoice, ProductType2, ReturnR2M, MtoRCreditNote, User, Wholesaler, Retailer, Request, Invitation } = require('../../models');
+const { PORetailerToManufacturer, M2RPerformaInvoice, ProductType2, ReturnR2M, MtoRCreditNote, User, Wholesaler, Retailer, Request, Invitation, RetailerCategory, WholesalerCategory } = require('../../models');
 
 const getRetailerPoCounts = async ({ email, matchBy }) => {
   const matchQuery = {
@@ -432,6 +432,28 @@ const getInvitationDashboardCounts = async (manufacturerEmail) => {
   };
 };
 
+const getCategoryDashboardCounts = async (manufacturerEmail) => {
+  const [retailerCount, wholesalerCount] = await Promise.all([
+    RetailerCategory.countDocuments({ categoryBy: manufacturerEmail }),
+    WholesalerCategory.countDocuments({ categoryBy: manufacturerEmail }),
+  ]);
+
+  return {
+    categories: {
+      retailer: {
+        total: retailerCount,
+      },
+      wholesaler: {
+        total: wholesalerCount,
+      },
+      overall: {
+        total: retailerCount + wholesalerCount,
+      },
+    },
+  };
+};
+
+
 module.exports = {
   getManufacturerPORetailerCounts,
   getProductDashboardCounts,
@@ -441,4 +463,5 @@ module.exports = {
   getReferredUsersDashboardCounts,
   getRequestDashboardCounts,
   getInvitationDashboardCounts,
+  getCategoryDashboardCounts,
 };
