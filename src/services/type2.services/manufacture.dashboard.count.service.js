@@ -1,4 +1,18 @@
-const { PORetailerToManufacturer, M2RPerformaInvoice, ProductType2, ReturnR2M, MtoRCreditNote, User, Wholesaler, Retailer, Request, Invitation, RetailerCategory, WholesalerCategory } = require('../../models');
+const redisClient = require('../../utils/redis');
+const {
+  PORetailerToManufacturer,
+  M2RPerformaInvoice,
+  ProductType2,
+  ReturnR2M,
+  MtoRCreditNote,
+  User,
+  Wholesaler,
+  Retailer,
+  Request,
+  Invitation,
+  RetailerCategory,
+  WholesalerCategory,
+} = require('../../models');
 
 const getRetailerPoCounts = async ({ email, matchBy }) => {
   const matchQuery = {
@@ -287,7 +301,7 @@ const getReferredUsersDashboardCounts = async (refByEmail) => {
   if (!referredEmails.length) {
     return {
       wholesalers: { total: 0, active: 0, kycVerified: 0, discountAssigned: 0 },
-      retailers: { total: 0, active: 0, kycVerified: 0 }
+      retailers: { total: 0, active: 0, kycVerified: 0 },
     };
   }
 
@@ -300,20 +314,20 @@ const getReferredUsersDashboardCounts = async (refByEmail) => {
         total: { $sum: 1 },
 
         active: {
-          $sum: { $cond: [{ $eq: ['$isActive', true] }, 1, 0] }
+          $sum: { $cond: [{ $eq: ['$isActive', true] }, 1, 0] },
         },
 
         kycVerified: {
-          $sum: { $cond: [{ $eq: ['$kycVerified', true] }, 1, 0] }
+          $sum: { $cond: [{ $eq: ['$kycVerified', true] }, 1, 0] },
         },
 
         discountAssigned: {
           $sum: {
-            $cond: [{ $gt: [{ $size: '$discountGiven' }, 0] }, 1, 0]
-          }
-        }
-      }
-    }
+            $cond: [{ $gt: [{ $size: '$discountGiven' }, 0] }, 1, 0],
+          },
+        },
+      },
+    },
   ]);
 
   // 3️⃣ RETAILER COUNTS
@@ -325,14 +339,14 @@ const getReferredUsersDashboardCounts = async (refByEmail) => {
         total: { $sum: 1 },
 
         active: {
-          $sum: { $cond: [{ $eq: ['$isActive', true] }, 1, 0] }
+          $sum: { $cond: [{ $eq: ['$isActive', true] }, 1, 0] },
         },
 
         kycVerified: {
-          $sum: { $cond: [{ $eq: ['$kycVerified', true] }, 1, 0] }
-        }
-      }
-    }
+          $sum: { $cond: [{ $eq: ['$kycVerified', true] }, 1, 0] },
+        },
+      },
+    },
   ]);
 
   return {
@@ -340,21 +354,18 @@ const getReferredUsersDashboardCounts = async (refByEmail) => {
       total: wholesalerCounts[0]?.total || 0,
       active: wholesalerCounts[0]?.active || 0,
       kycVerified: wholesalerCounts[0]?.kycVerified || 0,
-      discountAssigned: wholesalerCounts[0]?.discountAssigned || 0
+      discountAssigned: wholesalerCounts[0]?.discountAssigned || 0,
     },
     retailers: {
       total: retailerCounts[0]?.total || 0,
       active: retailerCounts[0]?.active || 0,
-      kycVerified: retailerCounts[0]?.kycVerified || 0
-    }
+      kycVerified: retailerCounts[0]?.kycVerified || 0,
+    },
   };
 };
 
 const getRequestDashboardCounts = async ({ email, role }) => {
-  const matchCondition =
-    role === 'manufacture'
-      ? { email }
-      : { requestByEmail: email };
+  const matchCondition = role === 'manufacture' ? { email } : { requestByEmail: email };
 
   const [result] = await Request.aggregate([
     { $match: matchCondition },
@@ -364,18 +375,18 @@ const getRequestDashboardCounts = async ({ email, role }) => {
         total: { $sum: 1 },
 
         pending: {
-          $sum: { $cond: [{ $eq: ['$status', 'pending'] }, 1, 0] }
+          $sum: { $cond: [{ $eq: ['$status', 'pending'] }, 1, 0] },
         },
 
         accepted: {
-          $sum: { $cond: [{ $eq: ['$status', 'accepted'] }, 1, 0] }
+          $sum: { $cond: [{ $eq: ['$status', 'accepted'] }, 1, 0] },
         },
 
         rejected: {
-          $sum: { $cond: [{ $eq: ['$status', 'rejected'] }, 1, 0] }
-        }
-      }
-    }
+          $sum: { $cond: [{ $eq: ['$status', 'rejected'] }, 1, 0] },
+        },
+      },
+    },
   ]);
 
   return {
@@ -383,8 +394,8 @@ const getRequestDashboardCounts = async ({ email, role }) => {
       total: result?.[0]?.total || 0,
       pending: result?.[0]?.pending || 0,
       accepted: result?.[0]?.accepted || 0,
-      rejected: result?.[0]?.rejected || 0
-    }
+      rejected: result?.[0]?.rejected || 0,
+    },
   };
 };
 
@@ -392,8 +403,8 @@ const getInvitationDashboardCounts = async (manufacturerEmail) => {
   const [result] = await Invitation.aggregate([
     {
       $match: {
-        invitedBy: manufacturerEmail
-      }
+        invitedBy: manufacturerEmail,
+      },
     },
     {
       $group: {
@@ -404,21 +415,21 @@ const getInvitationDashboardCounts = async (manufacturerEmail) => {
 
         // 🔹 STATUS BASED
         pending: {
-          $sum: { $cond: [{ $eq: ['$status', 'pending'] }, 1, 0] }
+          $sum: { $cond: [{ $eq: ['$status', 'pending'] }, 1, 0] },
         },
         accepted: {
-          $sum: { $cond: [{ $eq: ['$status', 'accepted'] }, 1, 0] }
+          $sum: { $cond: [{ $eq: ['$status', 'accepted'] }, 1, 0] },
         },
 
         // 🔹 ROLE BASED
         retailer: {
-          $sum: { $cond: [{ $eq: ['$role', 'retailer'] }, 1, 0] }
+          $sum: { $cond: [{ $eq: ['$role', 'retailer'] }, 1, 0] },
         },
         wholesaler: {
-          $sum: { $cond: [{ $eq: ['$role', 'wholesaler'] }, 1, 0] }
-        }
-      }
-    }
+          $sum: { $cond: [{ $eq: ['$role', 'wholesaler'] }, 1, 0] },
+        },
+      },
+    },
   ]);
 
   return {
@@ -427,8 +438,8 @@ const getInvitationDashboardCounts = async (manufacturerEmail) => {
       pending: result?.pending || 0,
       accepted: result?.accepted || 0,
       retailer: result?.retailer || 0,
-      wholesaler: result?.wholesaler || 0
-    }
+      wholesaler: result?.wholesaler || 0,
+    },
   };
 };
 
@@ -453,6 +464,49 @@ const getCategoryDashboardCounts = async (manufacturerEmail) => {
   };
 };
 
+const getDashboardOverview = async ({ email, role }) => {
+  const cacheKey = `dashboard:${role}:${email}`;
+
+  // 🔥 1. TRY CACHE
+  const cached = await redisClient?.get(cacheKey);
+  if (cached) {
+    return JSON.parse(cached);
+  }
+
+  // 🔥 2. PARALLEL EXECUTION
+  const [
+    po,
+    products,
+    returns,
+    creditNotes,
+    requests,
+    invitations,
+    categories,
+  ] = await Promise.all([
+    getRetailerPoCounts(email, role),
+    getProductCounts(email),
+    getReturnCounts(email, role),
+    getCreditNoteCounts(email, role),
+    getRequestCounts(email),
+    getInvitationCounts(email),
+    getCategoryDashboardCounts(email),
+  ]);
+
+  const dashboardData = {
+    po,
+    products,
+    returns,
+    creditNotes,
+    requests,
+    invitations,
+    categories,
+  };
+
+  // 🔥 3. CACHE RESULT (30–60 sec is perfect)
+  await redisClient?.setEx(cacheKey, 60, JSON.stringify(dashboardData));
+
+  return dashboardData;
+};
 
 module.exports = {
   getManufacturerPORetailerCounts,
@@ -464,4 +518,5 @@ module.exports = {
   getRequestDashboardCounts,
   getInvitationDashboardCounts,
   getCategoryDashboardCounts,
+  getDashboardOverview,
 };

@@ -4,6 +4,12 @@ const { manufactureDashboardCountsController } = require('../../../controllers')
 
 const router = express.Router();
 
+router.get(
+  '/overview',
+  auth('superadmin', 'manufacture', 'retailer', 'wholesaler'),
+  manufactureDashboardCountsController.getDashboardOverview
+);
+
 router
   .route('/retailer-po-counts')
   .get(
