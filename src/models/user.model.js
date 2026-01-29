@@ -126,7 +126,7 @@ userSchema.pre('save', async function (next) {
   }
   next();
 });
-
+userSchema.index({ refByEmail: 1 });
 /**
  * @typedef User
  */

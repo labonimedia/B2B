@@ -165,6 +165,8 @@ const retailerSchema = mongoose.Schema(
   }
 );
 
+retailerSchema.index({ email: 1, isActive: 1, kycVerified: 1 });
+
 // add plugin that converts mongoose to json
 retailerSchema.plugin(toJSON);
 retailerSchema.plugin(paginate);

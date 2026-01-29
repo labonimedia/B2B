@@ -35,4 +35,11 @@ router.get(
   auth('manufacture', 'retailer', 'superadmin'),
   manufactureDashboardCountsController.getCreditNoteDashboardCounts
 );
+
+router.get(
+  '/referred-users-counts',
+  auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
+  manufactureDashboardCountsController.getReferredUsersDashboardCounts
+);
+
 module.exports = router;
