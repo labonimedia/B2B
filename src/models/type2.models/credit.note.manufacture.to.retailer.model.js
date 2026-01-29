@@ -100,6 +100,13 @@ const creditNoteSchema = new mongoose.Schema(
 );
 // ✅ Add the compound index here
 creditNoteSchema.index({ manufacturerEmail: 1, creditNoteNumber: 1 }, { unique: true });
+creditNoteSchema.index({
+  manufacturerEmail: 1,
+  retailerEmail: 1,
+  used: 1,
+  isDeleted: 1,
+});
+
 creditNoteSchema.plugin(toJSON);
 creditNoteSchema.plugin(paginate);
 
