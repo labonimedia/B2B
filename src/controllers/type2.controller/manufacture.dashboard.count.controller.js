@@ -15,30 +15,28 @@ const getManufacturerPORetailerCounts = async (req, res) => {
 
 const getProductDashboardCounts = async (req, res) => {
   const { email, role } = req.query;
-  const data =
-    await manufactureDashboardCountsService.getProductDashboardCounts({
-      email,
-      role
-    });
+  const data = await manufactureDashboardCountsService.getProductDashboardCounts({
+    email,
+    role,
+  });
 
   res.status(httpStatus.OK).send({
     success: true,
-    data
+    data,
   });
 };
 
 const getPerformaInvoiceDashboardCounts = async (req, res) => {
   const { email, role } = req.query;
 
-  const data =
-    await manufactureDashboardCountsService.getPerformaInvoiceDashboardCounts({
-      email,
-      role
-    });
+  const data = await manufactureDashboardCountsService.getPerformaInvoiceDashboardCounts({
+    email,
+    role,
+  });
 
   res.status(httpStatus.OK).send({
     success: true,
-    data
+    data,
   });
 };
 
@@ -47,19 +45,33 @@ const getReturnDashboardCounts = async (req, res) => {
 
   const data = await manufactureDashboardCountsService.getReturnDashboardCounts({
     email,
-    role
+    role,
   });
 
   res.status(httpStatus.OK).send({
     success: true,
-    data
+    data,
   });
 };
 
+const getCreditNoteDashboardCounts = async (req, res) => {
+  const { email, role } = req.query;
+
+  const data = await manufactureDashboardCountsService.getCreditNoteDashboardCounts({
+    email,
+    role,
+  });
+
+  res.status(httpStatus.OK).send({
+    success: true,
+    data,
+  });
+};
 
 module.exports = {
-   getManufacturerPORetailerCounts,
-    getProductDashboardCounts,
-    getPerformaInvoiceDashboardCounts,
-    getReturnDashboardCounts,
-   };
+  getManufacturerPORetailerCounts,
+  getProductDashboardCounts,
+  getPerformaInvoiceDashboardCounts,
+  getReturnDashboardCounts,
+  getCreditNoteDashboardCounts,
+};

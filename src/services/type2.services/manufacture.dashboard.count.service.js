@@ -1,8 +1,8 @@
-const { PORetailerToManufacturer , M2RPerformaInvoice, ProductType2, ReturnR2M } = require('../../models');
+const { PORetailerToManufacturer, M2RPerformaInvoice, ProductType2, ReturnR2M, MtoRCreditNote } = require('../../models');
 
 const getRetailerPoCounts = async ({ email, matchBy }) => {
   const matchQuery = {
-    [matchBy]: email
+    [matchBy]: email,
   };
 
   const [result] = await PORetailerToManufacturer.aggregate([
@@ -15,35 +15,35 @@ const getRetailerPoCounts = async ({ email, matchBy }) => {
 
         pending: {
           $sum: {
-            $cond: [{ $eq: ['$statusAll', 'pending'] }, 1, 0]
-          }
+            $cond: [{ $eq: ['$statusAll', 'pending'] }, 1, 0],
+          },
         },
 
         confirmed: {
           $sum: {
-            $cond: [{ $eq: ['$statusAll', 'm_order_confirmed'] }, 1, 0]
-          }
+            $cond: [{ $eq: ['$statusAll', 'm_order_confirmed'] }, 1, 0],
+          },
         },
 
         partialDelivery: {
           $sum: {
-            $cond: [{ $eq: ['$statusAll', 'm_partial_delivery'] }, 1, 0]
-          }
+            $cond: [{ $eq: ['$statusAll', 'm_partial_delivery'] }, 1, 0],
+          },
         },
 
         makeToOrder: {
           $sum: {
-            $cond: [{ $eq: ['$statusAll', 'make_to_order'] }, 1, 0]
-          }
+            $cond: [{ $eq: ['$statusAll', 'make_to_order'] }, 1, 0],
+          },
         },
 
         delivered: {
           $sum: {
-            $cond: [{ $eq: ['$statusAll', 'delivered'] }, 1, 0]
-          }
-        }
-      }
-    }
+            $cond: [{ $eq: ['$statusAll', 'delivered'] }, 1, 0],
+          },
+        },
+      },
+    },
   ]);
 
   return {
@@ -53,8 +53,8 @@ const getRetailerPoCounts = async ({ email, matchBy }) => {
       confirmed: result?.confirmed || 0,
       partialDelivery: result?.partialDelivery || 0,
       makeToOrder: result?.makeToOrder || 0,
-      delivered: result?.delivered || 0
-    }
+      delivered: result?.delivered || 0,
+    },
   };
 };
 
@@ -64,22 +64,21 @@ const getManufacturerPORetailerCounts = async ({ email, role }) => {
   if (role === 'manufacture') {
     retailerPO = await getRetailerPoCounts({
       email,
-      matchBy: 'manufacturerEmail'
+      matchBy: 'manufacturerEmail',
     });
   }
 
   if (role === 'retailer') {
     retailerPO = await getRetailerPoCounts({
       email,
-      matchBy: 'email'
+      matchBy: 'email',
     });
   }
 
   return {
-    ...retailerPO
+    ...retailerPO,
   };
 };
-
 
 const getProductDashboardCounts = async ({ email, role }) => {
   let matchQuery = {};
@@ -95,29 +94,26 @@ const getProductDashboardCounts = async ({ email, role }) => {
         _id: null,
         totalProducts: { $sum: 1 },
         bomFilledTrue: {
-          $sum: { $cond: [{ $eq: ['$bomFilled', true] }, 1, 0] }
+          $sum: { $cond: [{ $eq: ['$bomFilled', true] }, 1, 0] },
         },
         bomFilledFalse: {
-          $sum: { $cond: [{ $eq: ['$bomFilled', false] }, 1, 0] }
-        }
-      }
-    }
+          $sum: { $cond: [{ $eq: ['$bomFilled', false] }, 1, 0] },
+        },
+      },
+    },
   ]);
 
   return {
     productDashboard: {
       totalProducts: result?.totalProducts || 0,
       bomFilled: result?.bomFilledTrue || 0,
-      bomNotFilled: result?.bomFilledFalse || 0
-    }
+      bomNotFilled: result?.bomFilledFalse || 0,
+    },
   };
 };
 
 const getPerformaInvoiceDashboardCounts = async ({ email, role }) => {
-  const matchQuery =
-    role === 'manufacture'
-      ? { manufacturerEmail: email }
-      : { retailerEmail: email };
+  const matchQuery = role === 'manufacture' ? { manufacturerEmail: email } : { retailerEmail: email };
 
   const [result] = await M2RPerformaInvoice.aggregate([
     { $match: matchQuery },
@@ -127,21 +123,21 @@ const getPerformaInvoiceDashboardCounts = async ({ email, role }) => {
 
         totalInvoices: { $sum: 1 },
         delivered: {
-          $sum: { $cond: [{ $eq: ['$statusAll', 'delivered'] }, 1, 0] }
+          $sum: { $cond: [{ $eq: ['$statusAll', 'delivered'] }, 1, 0] },
         },
         inTransit: {
-          $sum: { $cond: [{ $eq: ['$statusAll', 'in_transit'] }, 1, 0] }
+          $sum: { $cond: [{ $eq: ['$statusAll', 'in_transit'] }, 1, 0] },
         },
         cancelled: {
-          $sum: { $cond: [{ $eq: ['$statusAll', 'cancelled'] }, 1, 0] }
+          $sum: { $cond: [{ $eq: ['$statusAll', 'cancelled'] }, 1, 0] },
         },
         totalAmount: { $sum: '$totalAmount' },
         finalAmount: { $sum: '$finalAmount' },
         totalDiscount: { $sum: '$discountApplied' },
         creditUsed: { $sum: '$totalCreditNoteAmountUsed' },
-        payableAmount: { $sum: '$finalAmountPayable' }
-      }
-    }
+        payableAmount: { $sum: '$finalAmountPayable' },
+      },
+    },
   ]);
 
   return {
@@ -154,16 +150,13 @@ const getPerformaInvoiceDashboardCounts = async ({ email, role }) => {
       finalAmount: result?.finalAmount || 0,
       totalDiscount: result?.totalDiscount || 0,
       creditUsed: result?.creditUsed || 0,
-      payableAmount: result?.payableAmount || 0
-    }
+      payableAmount: result?.payableAmount || 0,
+    },
   };
 };
 
 const getReturnDashboardCounts = async ({ email, role }) => {
-  const matchQuery =
-    role === 'manufacture'
-      ? { manufacturerEmail: email }
-      : { retailerEmail: email };
+  const matchQuery = role === 'manufacture' ? { manufacturerEmail: email } : { retailerEmail: email };
 
   const [result] = await ReturnR2M.aggregate([
     { $match: matchQuery },
@@ -175,33 +168,33 @@ const getReturnDashboardCounts = async ({ email, role }) => {
         total: { $sum: 1 },
 
         requested: {
-          $sum: { $cond: [{ $eq: ['$statusAll', 'return_requested'] }, 1, 0] }
+          $sum: { $cond: [{ $eq: ['$statusAll', 'return_requested'] }, 1, 0] },
         },
         approved: {
-          $sum: { $cond: [{ $eq: ['$statusAll', 'return_approved'] }, 1, 0] }
+          $sum: { $cond: [{ $eq: ['$statusAll', 'return_approved'] }, 1, 0] },
         },
         rejected: {
-          $sum: { $cond: [{ $eq: ['$statusAll', 'return_rejected'] }, 1, 0] }
+          $sum: { $cond: [{ $eq: ['$statusAll', 'return_rejected'] }, 1, 0] },
         },
         inTransit: {
-          $sum: { $cond: [{ $eq: ['$statusAll', 'return_in_transit'] }, 1, 0] }
+          $sum: { $cond: [{ $eq: ['$statusAll', 'return_in_transit'] }, 1, 0] },
         },
         received: {
-          $sum: { $cond: [{ $eq: ['$statusAll', 'return_received'] }, 1, 0] }
+          $sum: { $cond: [{ $eq: ['$statusAll', 'return_received'] }, 1, 0] },
         },
         creditNoteCreated: {
-          $sum: { $cond: [{ $eq: ['$statusAll', 'credit_note_created'] }, 1, 0] }
+          $sum: { $cond: [{ $eq: ['$statusAll', 'credit_note_created'] }, 1, 0] },
         },
         resolved: {
-          $sum: { $cond: [{ $eq: ['$statusAll', 'resolved'] }, 1, 0] }
+          $sum: { $cond: [{ $eq: ['$statusAll', 'resolved'] }, 1, 0] },
         },
 
         // 💰 AMOUNTS
         totalAmount: { $sum: '$totalAmount' },
         finalAmount: { $sum: '$finalAmount' },
-        totalDiscount: { $sum: '$discountApplied' }
-      }
-    }
+        totalDiscount: { $sum: '$discountApplied' },
+      },
+    },
   ]);
 
   return {
@@ -217,15 +210,78 @@ const getReturnDashboardCounts = async ({ email, role }) => {
 
       totalAmount: result?.totalAmount || 0,
       finalAmount: result?.finalAmount || 0,
-      totalDiscount: result?.totalDiscount || 0
-    }
+      totalDiscount: result?.totalDiscount || 0,
+    },
   };
 };
 
+const getCreditNoteDashboardCounts = async ({ email, role }) => {
+  const matchQuery = role === 'manufacture' ? { manufacturerEmail: email } : { retailerEmail: email };
+
+  const [result] = await MtoRCreditNote.aggregate([
+    { $match: matchQuery },
+    {
+      $group: {
+        _id: null,
+
+        // 📦 COUNTS
+        totalNotes: { $sum: 1 },
+
+        usedNotes: {
+          $sum: { $cond: [{ $eq: ['$used', true] }, 1, 0] },
+        },
+
+        unusedNotes: {
+          $sum: { $cond: [{ $eq: ['$used', false] }, 1, 0] },
+        },
+
+        deletedNotes: {
+          $sum: { $cond: [{ $eq: ['$isDeleted', true] }, 1, 0] },
+        },
+
+        // 📊 ITEM COUNTS
+        totalReturnItems: { $sum: '$totalReturnItem' },
+        totalAcceptedReturnItems: { $sum: '$totalAcceptedReturnItem' },
+
+        // 💰 AMOUNTS
+        totalCreditAmount: { $sum: '$totalCreditAmount' },
+
+        usedCreditAmount: {
+          $sum: {
+            $cond: [{ $eq: ['$used', true] }, '$totalCreditAmount', 0],
+          },
+        },
+
+        unusedCreditAmount: {
+          $sum: {
+            $cond: [{ $eq: ['$used', false] }, '$totalCreditAmount', 0],
+          },
+        },
+      },
+    },
+  ]);
+
+  return {
+    creditNoteDashboard: {
+      totalNotes: result?.totalNotes || 0,
+      usedNotes: result?.usedNotes || 0,
+      unusedNotes: result?.unusedNotes || 0,
+      deletedNotes: result?.deletedNotes || 0,
+
+      totalReturnItems: result?.totalReturnItems || 0,
+      totalAcceptedReturnItems: result?.totalAcceptedReturnItems || 0,
+
+      totalCreditAmount: result?.totalCreditAmount || 0,
+      usedCreditAmount: result?.usedCreditAmount || 0,
+      unusedCreditAmount: result?.unusedCreditAmount || 0,
+    },
+  };
+};
 
 module.exports = {
   getManufacturerPORetailerCounts,
   getProductDashboardCounts,
   getPerformaInvoiceDashboardCounts,
   getReturnDashboardCounts,
+  getCreditNoteDashboardCounts,
 };

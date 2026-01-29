@@ -30,4 +30,9 @@ router.get(
   manufactureDashboardCountsController.getReturnDashboardCounts
 );
 
+router.get(
+  '/retailer-credit-note-counts',
+  auth('manufacture', 'retailer', 'superadmin'),
+  manufactureDashboardCountsController.getCreditNoteDashboardCounts
+);
 module.exports = router;
