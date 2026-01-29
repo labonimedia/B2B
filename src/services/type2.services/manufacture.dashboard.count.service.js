@@ -1,4 +1,4 @@
-const { PORetailerToManufacturer , M2RPerformaInvoice, ProductType2,  } = require('../../models');
+const { PORetailerToManufacturer , M2RPerformaInvoice, ProductType2, ReturnR2M } = require('../../models');
 
 const getRetailerPoCounts = async ({ email, matchBy }) => {
   const matchQuery = {
@@ -159,8 +159,73 @@ const getPerformaInvoiceDashboardCounts = async ({ email, role }) => {
   };
 };
 
+const getReturnDashboardCounts = async ({ email, role }) => {
+  const matchQuery =
+    role === 'manufacture'
+      ? { manufacturerEmail: email }
+      : { retailerEmail: email };
+
+  const [result] = await ReturnR2M.aggregate([
+    { $match: matchQuery },
+    {
+      $group: {
+        _id: null,
+
+        // 📦 COUNTS
+        total: { $sum: 1 },
+
+        requested: {
+          $sum: { $cond: [{ $eq: ['$statusAll', 'return_requested'] }, 1, 0] }
+        },
+        approved: {
+          $sum: { $cond: [{ $eq: ['$statusAll', 'return_approved'] }, 1, 0] }
+        },
+        rejected: {
+          $sum: { $cond: [{ $eq: ['$statusAll', 'return_rejected'] }, 1, 0] }
+        },
+        inTransit: {
+          $sum: { $cond: [{ $eq: ['$statusAll', 'return_in_transit'] }, 1, 0] }
+        },
+        received: {
+          $sum: { $cond: [{ $eq: ['$statusAll', 'return_received'] }, 1, 0] }
+        },
+        creditNoteCreated: {
+          $sum: { $cond: [{ $eq: ['$statusAll', 'credit_note_created'] }, 1, 0] }
+        },
+        resolved: {
+          $sum: { $cond: [{ $eq: ['$statusAll', 'resolved'] }, 1, 0] }
+        },
+
+        // 💰 AMOUNTS
+        totalAmount: { $sum: '$totalAmount' },
+        finalAmount: { $sum: '$finalAmount' },
+        totalDiscount: { $sum: '$discountApplied' }
+      }
+    }
+  ]);
+
+  return {
+    returnDashboard: {
+      total: result?.total || 0,
+      requested: result?.requested || 0,
+      approved: result?.approved || 0,
+      rejected: result?.rejected || 0,
+      inTransit: result?.inTransit || 0,
+      received: result?.received || 0,
+      creditNoteCreated: result?.creditNoteCreated || 0,
+      resolved: result?.resolved || 0,
+
+      totalAmount: result?.totalAmount || 0,
+      finalAmount: result?.finalAmount || 0,
+      totalDiscount: result?.totalDiscount || 0
+    }
+  };
+};
+
+
 module.exports = {
   getManufacturerPORetailerCounts,
   getProductDashboardCounts,
   getPerformaInvoiceDashboardCounts,
+  getReturnDashboardCounts,
 };
