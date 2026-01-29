@@ -1,4 +1,4 @@
-const { PORetailerToManufacturer, M2RPerformaInvoice, ProductType2, ReturnR2M, MtoRCreditNote, User, Wholesaler, Retailer } = require('../../models');
+const { PORetailerToManufacturer, M2RPerformaInvoice, ProductType2, ReturnR2M, MtoRCreditNote, User, Wholesaler, Retailer, Request } = require('../../models');
 
 const getRetailerPoCounts = async ({ email, matchBy }) => {
   const matchQuery = {
@@ -350,6 +350,43 @@ const getReferredUsersDashboardCounts = async (refByEmail) => {
   };
 };
 
+const getRequestDashboardCounts = async ({ email, role }) => {
+  const matchCondition =
+    role === 'manufacture'
+      ? { email }
+      : { requestByEmail: email };
+
+  const [result] = await Request.aggregate([
+    { $match: matchCondition },
+    {
+      $group: {
+        _id: null,
+        total: { $sum: 1 },
+
+        pending: {
+          $sum: { $cond: [{ $eq: ['$status', 'pending'] }, 1, 0] }
+        },
+
+        accepted: {
+          $sum: { $cond: [{ $eq: ['$status', 'accepted'] }, 1, 0] }
+        },
+
+        rejected: {
+          $sum: { $cond: [{ $eq: ['$status', 'rejected'] }, 1, 0] }
+        }
+      }
+    }
+  ]);
+
+  return {
+    requests: {
+      total: result?.[0]?.total || 0,
+      pending: result?.[0]?.pending || 0,
+      accepted: result?.[0]?.accepted || 0,
+      rejected: result?.[0]?.rejected || 0
+    }
+  };
+};
 
 module.exports = {
   getManufacturerPORetailerCounts,
@@ -358,4 +395,5 @@ module.exports = {
   getReturnDashboardCounts,
   getCreditNoteDashboardCounts,
   getReferredUsersDashboardCounts,
+  getRequestDashboardCounts,
 };
