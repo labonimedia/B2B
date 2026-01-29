@@ -131,5 +131,11 @@ performaInvoiceSchema.index({ manufacturerEmail: 1, invoiceNumber: 1 }, { unique
 performaInvoiceSchema.plugin(toJSON);
 performaInvoiceSchema.plugin(paginate);
 
+performaInvoiceSchema.index({
+  manufacturerEmail: 1,
+  retailerEmail: 1,
+  statusAll: 1,
+});
+
 const M2RPerformaInvoice = mongoose.model('M2RPerformaInvoice', performaInvoiceSchema);
 module.exports = M2RPerformaInvoice;

@@ -1,32 +1,4 @@
-const { Brand } = require('../../models');
-const { PORetailerToManufacturer } = require('../../models');
-const { POWholesalerToManufacturer } = require('../../models');
-const { ProductType2 } = require('../../models');
-
-// const getBrandCounts = async (manufacturerEmail) => {
-//   const [result] = await Brand.aggregate([
-//     { $match: { brandOwner: manufacturerEmail } },
-//     {
-//       $group: {
-//         _id: null,
-//         totalBrands: { $sum: 1 },
-//         visibleBrands: {
-//           $sum: { $cond: [{ $eq: ['$visibility', true] }, 1, 0] }
-//         },
-//         hiddenBrands: {
-//           $sum: { $cond: [{ $eq: ['$visibility', false] }, 1, 0] }
-//         }
-//       }
-//     }
-//   ]);
-
-//   return {
-//     totalBrands: result?.totalBrands || 0,
-//     visibleBrands: result?.visibleBrands || 0,
-//     hiddenBrands: result?.hiddenBrands || 0
-//   };
-// };
-
+const { PORetailerToManufacturer , M2RPerformaInvoice, ProductType2,  } = require('../../models');
 
 const getRetailerPoCounts = async ({ email, matchBy }) => {
   const matchQuery = {
@@ -86,53 +58,6 @@ const getRetailerPoCounts = async ({ email, matchBy }) => {
   };
 };
 
-// const getWholesalerPoCounts = async (manufacturerEmail) => {
-//   const [result] = await POWholesalerToManufacturer.aggregate([
-//     { $match: { manufacturerEmail } },
-//     {
-//       $group: {
-//         _id: null,
-//         total: { $sum: 1 },
-//         pending: {
-//           $sum: { $cond: [{ $eq: ['$statusAll', 'pending'] }, 1, 0] }
-//         },
-//         confirmed: {
-//           $sum: {
-//             $cond: [
-//               { $in: ['$statusAll', ['m_order_confirmed', 'w_order_confirmed']] },
-//               1,
-//               0
-//             ]
-//           }
-//         },
-//         cancelled: {
-//           $sum: {
-//             $cond: [
-//               { $in: ['$statusAll', ['m_order_cancelled', 'w_order_cancelled']] },
-//               1,
-//               0
-//             ]
-//           }
-//         },
-//         delivered: {
-//           $sum: { $cond: [{ $eq: ['$statusAll', 'delivered'] }, 1, 0] }
-//         }
-//       }
-//     }
-//   ]);
-
-//   return {
-//     wholesalerPO: {
-//       total: result?.total || 0,
-//       pending: result?.pending || 0,
-//       confirmed: result?.confirmed || 0,
-//       cancelled: result?.cancelled || 0,
-//       delivered: result?.delivered || 0
-//     }
-//   };
-// };
-
-
 const getManufacturerPORetailerCounts = async ({ email, role }) => {
   let retailerPO;
 
@@ -188,7 +113,54 @@ const getProductDashboardCounts = async ({ email, role }) => {
   };
 };
 
+const getPerformaInvoiceDashboardCounts = async ({ email, role }) => {
+  const matchQuery =
+    role === 'manufacture'
+      ? { manufacturerEmail: email }
+      : { retailerEmail: email };
+
+  const [result] = await M2RPerformaInvoice.aggregate([
+    { $match: matchQuery },
+    {
+      $group: {
+        _id: null,
+
+        totalInvoices: { $sum: 1 },
+        delivered: {
+          $sum: { $cond: [{ $eq: ['$statusAll', 'delivered'] }, 1, 0] }
+        },
+        inTransit: {
+          $sum: { $cond: [{ $eq: ['$statusAll', 'in_transit'] }, 1, 0] }
+        },
+        cancelled: {
+          $sum: { $cond: [{ $eq: ['$statusAll', 'cancelled'] }, 1, 0] }
+        },
+        totalAmount: { $sum: '$totalAmount' },
+        finalAmount: { $sum: '$finalAmount' },
+        totalDiscount: { $sum: '$discountApplied' },
+        creditUsed: { $sum: '$totalCreditNoteAmountUsed' },
+        payableAmount: { $sum: '$finalAmountPayable' }
+      }
+    }
+  ]);
+
+  return {
+    invoiceDashboard: {
+      totalInvoices: result?.totalInvoices || 0,
+      delivered: result?.delivered || 0,
+      inTransit: result?.inTransit || 0,
+      cancelled: result?.cancelled || 0,
+      totalAmount: result?.totalAmount || 0,
+      finalAmount: result?.finalAmount || 0,
+      totalDiscount: result?.totalDiscount || 0,
+      creditUsed: result?.creditUsed || 0,
+      payableAmount: result?.payableAmount || 0
+    }
+  };
+};
+
 module.exports = {
   getManufacturerPORetailerCounts,
   getProductDashboardCounts,
+  getPerformaInvoiceDashboardCounts,
 };
