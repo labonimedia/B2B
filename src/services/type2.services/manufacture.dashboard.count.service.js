@@ -1,4 +1,4 @@
-const { PORetailerToManufacturer, M2RPerformaInvoice, ProductType2, ReturnR2M, MtoRCreditNote, User, Wholesaler, Retailer, Request } = require('../../models');
+const { PORetailerToManufacturer, M2RPerformaInvoice, ProductType2, ReturnR2M, MtoRCreditNote, User, Wholesaler, Retailer, Request, Invitation } = require('../../models');
 
 const getRetailerPoCounts = async ({ email, matchBy }) => {
   const matchQuery = {
@@ -388,6 +388,50 @@ const getRequestDashboardCounts = async ({ email, role }) => {
   };
 };
 
+const getInvitationDashboardCounts = async (manufacturerEmail) => {
+  const [result] = await Invitation.aggregate([
+    {
+      $match: {
+        invitedBy: manufacturerEmail
+      }
+    },
+    {
+      $group: {
+        _id: null,
+
+        // 🔹 TOTAL
+        total: { $sum: 1 },
+
+        // 🔹 STATUS BASED
+        pending: {
+          $sum: { $cond: [{ $eq: ['$status', 'pending'] }, 1, 0] }
+        },
+        accepted: {
+          $sum: { $cond: [{ $eq: ['$status', 'accepted'] }, 1, 0] }
+        },
+
+        // 🔹 ROLE BASED
+        retailer: {
+          $sum: { $cond: [{ $eq: ['$role', 'retailer'] }, 1, 0] }
+        },
+        wholesaler: {
+          $sum: { $cond: [{ $eq: ['$role', 'wholesaler'] }, 1, 0] }
+        }
+      }
+    }
+  ]);
+
+  return {
+    invitations: {
+      total: result?.total || 0,
+      pending: result?.pending || 0,
+      accepted: result?.accepted || 0,
+      retailer: result?.retailer || 0,
+      wholesaler: result?.wholesaler || 0
+    }
+  };
+};
+
 module.exports = {
   getManufacturerPORetailerCounts,
   getProductDashboardCounts,
@@ -396,4 +440,5 @@ module.exports = {
   getCreditNoteDashboardCounts,
   getReferredUsersDashboardCounts,
   getRequestDashboardCounts,
+  getInvitationDashboardCounts,
 };

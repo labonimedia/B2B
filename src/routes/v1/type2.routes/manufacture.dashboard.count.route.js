@@ -48,4 +48,10 @@ router.get(
   manufactureDashboardCountsController.getRequestDashboardCounts
 );
 
+router.get(
+  '/invitation-counts',
+  auth('superadmin', 'manufacture'),
+  manufactureDashboardCountsController.getInvitationDashboardCounts
+);
+
 module.exports = router;
