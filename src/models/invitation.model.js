@@ -51,6 +51,8 @@ const invitationSchema = mongoose.Schema(
   }
 );
 
+invitationSchema.index({ invitedBy: 1, status: 1 });
+invitationSchema.index({ invitedBy: 1, role: 1 });
 // add plugin that converts mongoose to json
 invitationSchema.plugin(toJSON);
 invitationSchema.plugin(paginate);
