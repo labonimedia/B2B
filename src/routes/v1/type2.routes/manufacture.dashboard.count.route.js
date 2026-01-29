@@ -24,4 +24,10 @@ router.get(
   manufactureDashboardCountsController.getPerformaInvoiceDashboardCounts
 );
 
+router.get(
+  '/retailer-return-counts',
+  auth('manufacture', 'retailer', 'superadmin'),
+  manufactureDashboardCountsController.getReturnDashboardCounts
+);
+
 module.exports = router;

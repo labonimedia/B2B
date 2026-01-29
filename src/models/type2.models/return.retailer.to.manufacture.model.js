@@ -173,6 +173,11 @@ const returnRequestSchema = new mongoose.Schema(
 
 // ✅ Add the compound index here
 returnRequestSchema.index({ manufacturerEmail: 1, returnRequestNumber: 1 }, { unique: true });
+returnRequestSchema.index({
+  manufacturerEmail: 1,
+  retailerEmail: 1,
+  statusAll: 1
+});
 
 returnRequestSchema.plugin(toJSON);
 returnRequestSchema.plugin(paginate);
