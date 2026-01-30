@@ -3,6 +3,7 @@ const pick = require('../utils/pick');
 const ApiError = require('../utils/ApiError');
 const catchAsync = require('../utils/catchAsync');
 const { retailerService } = require('../services');
+const User = require('../models/user.model');
 
 const fileupload = catchAsync(async (req, res) => {
   const user = await retailerService.fileupload(req, req.params.id);
@@ -64,6 +65,27 @@ const getManufactureByRetailerId = catchAsync(async (req, res) => {
   const wholesalers = await retailerService.getManufacturerByEmails(refByEmail, options, userCategory);
   res.status(httpStatus.OK).send(wholesalers);
 });
+
+const getRetailerPartnerCounts = catchAsync(async (req, res) => {
+  const { retailerId } = req.query;
+
+  // find retailer
+  const retailer = await User.findById(retailerId);
+  if (!retailer) {
+    return res.status(httpStatus.NOT_FOUND).send({
+      success: false,
+      message: 'Retailer not found',
+    });
+  }
+  // retailer connected emails
+  const connectedEmails = retailer.refByEmail || [];
+  const data = await retailerService.getRetailerPartnerDashboardCounts(connectedEmails);
+  res.status(httpStatus.OK).send({
+    success: true,
+    data,
+  });
+});
+
 module.exports = {
   createRetailer,
   queryRetailer,
@@ -73,4 +95,5 @@ module.exports = {
   deleteRetailerById,
   getWholesalersByRetailerId,
   getManufactureByRetailerId,
+  getRetailerPartnerCounts,
 };
