@@ -66,4 +66,10 @@ router.get(
   manufactureDashboardCountsController.getCategoryDashboardCounts
 );
 
+router.get(
+  '/inventory-low-stock-counts',
+  auth('manufacture', 'superadmin'),
+  manufactureDashboardCountsController.getInventoryLowStockDashboardCounts
+);
+
 module.exports = router;

@@ -12,6 +12,8 @@ const {
   Invitation,
   RetailerCategory,
   WholesalerCategory,
+  ManufactureInventory,
+  ManufactureRawMaterialInventory,
 } = require('../../models');
 
 const getRetailerPoCounts = async ({ email, matchBy }) => {
@@ -508,6 +510,26 @@ const getDashboardOverview = async ({ email, role }) => {
   return dashboardData;
 };
 
+const getInventoryLowStockCounts = async (email) => {
+  // Finished goods low stock
+  const finishedGoodsLowStock = await ManufactureInventory.countDocuments({
+    userEmail: email,
+    $expr: { $lte: ['$quantity', '$minimumQuantityAlert'] },
+  });
+
+  // Raw material low stock
+  const rawMaterialLowStock = await ManufactureRawMaterialInventory.countDocuments({
+    email,
+    $expr: { $lte: ['$currentStock', '$minimumStockLevel'] },
+  });
+
+  return {
+    finishedGoodsLowStock,
+    rawMaterialLowStock,
+    totalLowStockItems: finishedGoodsLowStock + rawMaterialLowStock,
+  };
+};
+
 module.exports = {
   getManufacturerPORetailerCounts,
   getProductDashboardCounts,
@@ -519,4 +541,5 @@ module.exports = {
   getInvitationDashboardCounts,
   getCategoryDashboardCounts,
   getDashboardOverview,
+  getInventoryLowStockCounts,
 };
