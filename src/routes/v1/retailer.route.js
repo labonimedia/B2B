@@ -30,4 +30,6 @@ router
 router
   .route('/manufacturelist/:id')
   .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), retailerController.getManufactureByRetailerId);
+
+router.route('/partner-counts').get(auth('retailer'), retailerController.getRetailerPartnerCounts);
 module.exports = router;

@@ -216,6 +216,67 @@ const getManufacturerByEmails = async (emails, options, userCategory) => {
     totalPages: Math.ceil(totalDocs / limit),
   };
 };
+
+const getRetailerPartnerDashboardCounts = async (emails) => {
+  const [manufacturers, wholesalers] = await Promise.all([
+    User.aggregate([
+      {
+        $match: {
+          email: { $in: emails },
+          role: 'manufacture',
+        },
+      },
+      {
+        $group: {
+          _id: null,
+          total: { $sum: 1 },
+          orderwise: {
+            $sum: {
+              $cond: [{ $eq: ['$userCategory', 'orderwise'] }, 1, 0],
+            },
+          },
+        },
+      },
+    ]),
+
+    User.aggregate([
+      {
+        $match: {
+          email: { $in: emails },
+          role: 'wholesaler',
+        },
+      },
+      {
+        $group: {
+          _id: null,
+          total: { $sum: 1 },
+          orderwise: {
+            $sum: {
+              $cond: [{ $eq: ['$userCategory', 'orderwise'] }, 1, 0],
+            },
+          },
+        },
+      },
+    ]),
+  ]);
+
+  const manufacturerData = manufacturers[0] || { total: 0, orderwise: 0 };
+  const wholesalerData = wholesalers[0] || { total: 0, orderwise: 0 };
+
+  return {
+    manufacturers: {
+      total: manufacturerData.total,
+      orderwise: manufacturerData.orderwise,
+      normal: manufacturerData.total - manufacturerData.orderwise,
+    },
+    wholesalers: {
+      total: wholesalerData.total,
+      orderwise: wholesalerData.orderwise,
+      normal: wholesalerData.total - wholesalerData.orderwise,
+    },
+  };
+};
+
 module.exports = {
   createRetailer,
   queryRetailer,
@@ -227,4 +288,5 @@ module.exports = {
   getUserById,
   getWholesalersByEmails,
   getManufacturerByEmails,
+  getRetailerPartnerDashboardCounts,
 };
