@@ -85,7 +85,6 @@ const getManufactureByRetailerId = catchAsync(async (req, res) => {
 //     data,
 //   });
 // });
-
 const getRetailerPartnerCounts = catchAsync(async (req, res) => {
   const { email } = req.query;
 
@@ -96,8 +95,8 @@ const getRetailerPartnerCounts = catchAsync(async (req, res) => {
     });
   }
 
-  // 🔹 Find retailer by email
-  const retailer = await User.findOne({ email, role: 'retailer' }).lean();
+  // ✅ FIX: remove role filter
+  const retailer = await User.findOne({ email }).lean();
 
   if (!retailer) {
     return res.status(httpStatus.NOT_FOUND).send({
@@ -106,7 +105,14 @@ const getRetailerPartnerCounts = catchAsync(async (req, res) => {
     });
   }
 
-  // 🔹 Connected partner emails
+  // Optional safety check
+  if (retailer.role !== 'retailer') {
+    return res.status(httpStatus.FORBIDDEN).send({
+      success: false,
+      message: 'User is not a retailer',
+    });
+  }
+
   const connectedEmails = retailer.refByEmail || [];
 
   const data = await retailerService.getRetailerPartnerDashboardCounts(connectedEmails);
