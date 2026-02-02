@@ -1,9 +1,10 @@
 const httpStatus = require('http-status');
+const User = require('../models/user.model');
 const pick = require('../utils/pick');
 const ApiError = require('../utils/ApiError');
 const catchAsync = require('../utils/catchAsync');
 const { retailerService } = require('../services');
-const User = require('../models/user.model');
+
 
 const fileupload = catchAsync(async (req, res) => {
   const user = await retailerService.fileupload(req, req.params.id);
@@ -86,30 +87,15 @@ const getManufactureByRetailerId = catchAsync(async (req, res) => {
 //   });
 // });
 const getRetailerPartnerCounts = catchAsync(async (req, res) => {
-  const { email } = req.query;
+  // ✅ comes from JWT via auth middleware
+  const retailerId = req.user.id;
 
-  if (!email) {
-    return res.status(httpStatus.BAD_REQUEST).send({
-      success: false,
-      message: 'Retailer email is required',
-    });
-  }
-
-  // ✅ FIX: remove role filter
-  const retailer = await User.findOne({ email }).lean();
+  const retailer = await User.findById(retailerId).lean();
 
   if (!retailer) {
     return res.status(httpStatus.NOT_FOUND).send({
       success: false,
       message: 'Retailer not found',
-    });
-  }
-
-  // Optional safety check
-  if (retailer.role !== 'retailer') {
-    return res.status(httpStatus.FORBIDDEN).send({
-      success: false,
-      message: 'User is not a retailer',
     });
   }
 
@@ -122,6 +108,7 @@ const getRetailerPartnerCounts = catchAsync(async (req, res) => {
     data,
   });
 });
+
 
 module.exports = {
   createRetailer,
