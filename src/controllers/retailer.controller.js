@@ -66,20 +66,51 @@ const getManufactureByRetailerId = catchAsync(async (req, res) => {
   res.status(httpStatus.OK).send(wholesalers);
 });
 
-const getRetailerPartnerCounts = catchAsync(async (req, res) => {
-  const { retailerId } = req.query;
+// const getRetailerPartnerCounts = catchAsync(async (req, res) => {
+//   const { retailerId } = req.query;
 
-  // find retailer
-  const retailer = await User.findById(retailerId);
+//   // find retailer
+//   const retailer = await User.findById(retailerId);
+//   if (!retailer) {
+//     return res.status(httpStatus.NOT_FOUND).send({
+//       success: false,
+//       message: 'Retailer not found',
+//     });
+//   }
+//   // retailer connected emails
+//   const connectedEmails = retailer.refByEmail || [];
+//   const data = await retailerService.getRetailerPartnerDashboardCounts(connectedEmails);
+//   res.status(httpStatus.OK).send({
+//     success: true,
+//     data,
+//   });
+// });
+
+const getRetailerPartnerCounts = catchAsync(async (req, res) => {
+  const { email } = req.query;
+
+  if (!email) {
+    return res.status(httpStatus.BAD_REQUEST).send({
+      success: false,
+      message: 'Retailer email is required',
+    });
+  }
+
+  // 🔹 Find retailer by email
+  const retailer = await User.findOne({ email, role: 'retailer' }).lean();
+
   if (!retailer) {
     return res.status(httpStatus.NOT_FOUND).send({
       success: false,
       message: 'Retailer not found',
     });
   }
-  // retailer connected emails
+
+  // 🔹 Connected partner emails
   const connectedEmails = retailer.refByEmail || [];
+
   const data = await retailerService.getRetailerPartnerDashboardCounts(connectedEmails);
+
   res.status(httpStatus.OK).send({
     success: true,
     data,
