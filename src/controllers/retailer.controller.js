@@ -86,6 +86,7 @@ const getManufactureByRetailerId = catchAsync(async (req, res) => {
 //     data,
 //   });
 // });
+
 const getRetailerPartnerCounts = catchAsync(async (req, res) => {
   // ✅ comes from JWT via auth middleware
   const retailerId = req.user.id;
