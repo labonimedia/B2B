@@ -212,6 +212,7 @@ const PORetailerToWholesalerSchema = new mongoose.Schema(
         'shipped',
         'delivered',
         'invoice_generated',
+        'w_make_to_order',
       ],
       default: 'pending',
     },
