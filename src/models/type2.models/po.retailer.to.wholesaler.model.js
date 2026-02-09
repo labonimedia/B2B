@@ -188,7 +188,6 @@ const PORetailerToWholesalerSchema = new mongoose.Schema(
         gender: String,
         clothing: String,
         subCategory: String,
-
         brandName: String,
 
         hsnCode: String,
