@@ -142,3 +142,5 @@ module.exports.manufactureDashboardCountsController = require('./type2.controlle
 module.exports.wholesalerInventoryLogsController = require('./type2.controller/wholesaler.inventory.logs.controller');
 // wholesaler to retailer performa invoice
 module.exports.w2rPerformaInvoiceController = require('./type2.controller/pi.wholesaler.to.retailer.controller');
+// return retailer to wholesaler
+module.exports.rtoWReturnRequestController = require('./type2.controller/return.retailer.to.wholesaler.controller');
