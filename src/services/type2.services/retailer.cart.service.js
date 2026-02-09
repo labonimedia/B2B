@@ -5,9 +5,7 @@ const {
   Wholesaler,
   Retailer,
   Manufacture,
-  POCountertype2,
   WishListType2,
-  PurchaseOrderRetailerType2,
   PORetailerToWholesaler,
 } = require('../../models');
 const ApiError = require('../../utils/ApiError');
