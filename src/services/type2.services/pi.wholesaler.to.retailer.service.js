@@ -1,7 +1,7 @@
 const httpStatus = require('http-status');
 const { W2RPerformaInvoice } = require('../../models');
 const ApiError = require('../../utils/ApiError');
-//const { getNextW2RInvoiceNumber } = require('./w2r.invoicegenerator.service');
+const { getNextW2RInvoiceNumber } = require('./w2r.invoicegenerator.service');
 
 const getPerformaInvoiceByPoId = async (poId) => {
   const invoice = await W2RPerformaInvoice.findOne({ poId });
