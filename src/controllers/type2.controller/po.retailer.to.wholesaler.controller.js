@@ -10,7 +10,20 @@ const createRetailerPurchaseOrderType2 = catchAsync(async (req, res) => {
 });
 
 const getAllPoRetailerToWholesaler = catchAsync(async (req, res) => {
-  const filter = pick(req.query, ['productBy', 'wholesalerEmail', 'email']);
+  const filter = pick(req.query, [
+    'productBy',
+    'wholesalerEmail',
+    'email',
+    'pending',
+    'w_confirmed',
+    'w_cancelled',
+    'w_partial',
+    'r_confirmed',
+    'r_cancelled',
+    'processing',
+    'shipped',
+    'delivered',
+  ]);
   const options = pick(req.query, ['sortBy', 'limit', 'page']);
   const RetailerPurchaseOrderType2Items = await poRetailerToWholesalerService.getAllPoRetailerToWholesaler(filter, options);
   res.status(httpStatus.OK).send(RetailerPurchaseOrderType2Items);
