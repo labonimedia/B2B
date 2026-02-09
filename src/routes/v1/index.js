@@ -134,6 +134,8 @@ const manufactureBOMRoute = require('./type2.routes/manufacture.bom.route');
 const ManufactureRawMaterialInventoryLogsRoute = require('./type2.routes/manufacture.raw.material.inventory.logs.route');
 // manufacture dashboard counts
 const manufactureDashboardCountsRoute = require('./type2.routes/manufacture.dashboard.count.route');
+// wholesaler inventory logs
+const WholesalerInventoryLogsRoute = require('./type2.routes/wholesaler.inventory.logs.route');
 
 const router = express.Router();
 
@@ -588,6 +590,10 @@ const defaultRoutes = [
   {
     path: '/manufacture-inventory-logs',
     route: ManufactureInventoryLogsRoute,
+  },
+  {
+    path: '/wholesaler-inventory-logs',
+    route: WholesalerInventoryLogsRoute,
   },
   {
     path: '/hsn-gst',
