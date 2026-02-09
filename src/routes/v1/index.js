@@ -136,6 +136,8 @@ const ManufactureRawMaterialInventoryLogsRoute = require('./type2.routes/manufac
 const manufactureDashboardCountsRoute = require('./type2.routes/manufacture.dashboard.count.route');
 // wholesaler inventory logs
 const WholesalerInventoryLogsRoute = require('./type2.routes/wholesaler.inventory.logs.route');
+// wholesaler to retailer performa invoice
+const W2RPerformaInvoiceRoute = require('./type2.routes/pi.whosaler.to.retailer.route');
 
 const router = express.Router();
 
@@ -573,6 +575,10 @@ const defaultRoutes = [
   {
     path: '/pi-manufacture-to-wholesaler',
     route: M2WPerformaInvoiceRoute,
+  },
+  {
+    path: '/pi-wholesaler-to-retailer',
+    route: W2RPerformaInvoiceRoute,
   },
   // inventory
   {

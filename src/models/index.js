@@ -154,3 +154,5 @@ module.exports.ManufactureBOM = require('./type2.models/manufacture.bom.model');
 module.exports.ManufactureRawMaterialInventory = require('./type2.models/manufacture.raw.material.inventory.logs.model');
 // wholesaler inventory logs
 module.exports.WholesalerInventoryLogs = require('./type2.models/wholesaler.inventory.logs.model');
+// wholesaler to retailer Performa Invoice
+module.exports.W2RPerformaInvoice = require('./type2.models/pi.wholesaler.to.retailer.model');
