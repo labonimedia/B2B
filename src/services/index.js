@@ -148,3 +148,5 @@ module.exports.manufactureDashboardCountsService = require('./type2.services/man
 module.exports.wholesalerInventoryLogsService = require('./type2.services/wholesaler.inventory.logs.service');
 // wholesaler to retailer performa invoice
 module.exports.w2rPerformaInvoiceService = require('./type2.services/pi.wholesaler.to.retailer.service');
+// return request retailer to wholesaler
+module.exports.rtoWReturnRequestService = require('./type2.services/return.retailer.to.wholesaler.service');

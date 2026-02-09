@@ -138,6 +138,8 @@ const manufactureDashboardCountsRoute = require('./type2.routes/manufacture.dash
 const WholesalerInventoryLogsRoute = require('./type2.routes/wholesaler.inventory.logs.route');
 // wholesaler to retailer performa invoice
 const W2RPerformaInvoiceRoute = require('./type2.routes/pi.whosaler.to.retailer.route');
+// return request retailer to wholesaler
+const rToWReturnRoute = require('./type2.routes/return.retailer.to.wholesaler.route');
 
 const router = express.Router();
 
@@ -618,6 +620,10 @@ const defaultRoutes = [
   {
     path: '/return-r2m',
     route: rToMReturnRoute,
+  },
+  {
+    path: '/return-r2w',
+    route: rToWReturnRoute,
   },
   // wallet manufacture to retailer
   {
