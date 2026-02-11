@@ -1,8 +1,6 @@
 const mongoose = require('mongoose');
 const { paginate, toJSON } = require('../plugins');
 
-/* ---------- sub schemas ---------- */
-
 const transportDetailsSchema = new mongoose.Schema({
   transportType: String,
   transporterCompanyName: String,
