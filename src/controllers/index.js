@@ -118,10 +118,13 @@ module.exports.gstHsnController = require('./type2.controller/hsn.gst.data.contr
 module.exports.returnReasonController = require('./type2.controller/return.reason.master.controller');
 // credit Note
 module.exports.mtoRCreditNoteController = require('./type2.controller/credit.note.manufacture.to.retailer.controller');
+module.exports.wtoRCreditNoteController = require('./type2.controller/credit.note.wholesaler.to.retailer.controller');
 // return request
 module.exports.rtoMReturnRequestController = require('./type2.controller/return.retailer.to.manufacture.controller');
 // wallet manufacture to retailer
 module.exports.mToRWalletController = require('./type2.controller/wallet.m.to.r.controller');
+//  wallet wholesaler to retailer
+module.exports.wToRWalletController = require('./type2.controller/wallet.w.to.r.controller');
 // manufacture vendors
 module.exports.manufacturerVendorController = require('./type2.controller/manufacture.vendors.controller');
 // manufacture warehouse

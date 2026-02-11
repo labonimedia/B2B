@@ -120,10 +120,12 @@ const HsnGstRoute = require('./type2.routes/hsn.gst.data.route');
 const ReturnReasonRoute = require('./type2.routes/return.reason.master.route');
 // credit note
 const mToRCreditNoteRoute = require('./type2.routes/credit.note.manufacture.to.retailer.route');
+const w2rCreditNoteRoute = require('./type2.routes/credit.note.wholesaler.to.retailer.route');
 // return request
 const rToMReturnRoute = require('./type2.routes/return.retailer.to.manufacture.model');
 // wallet manufacture to retailer
 const mToRWalletRoute = require('./type2.routes/wallet.m.to.r.route');
+const wToRWalletRoute = require('./type2.routes/wallet.w.to.r.route');
 // manufacture Masters
 const manufacturerVendorRoute = require('./type2.routes/manufacture.vendors.route');
 const manufactureWarehouseRoute = require('./type2.routes/manufacture.warehouse.route');
@@ -616,6 +618,10 @@ const defaultRoutes = [
     path: '/m-r-credit-note',
     route: mToRCreditNoteRoute,
   },
+  {
+    path: '/w-r-credit-note',
+    route: w2rCreditNoteRoute,
+  },
   // return request
   {
     path: '/return-r2m',
@@ -629,6 +635,10 @@ const defaultRoutes = [
   {
     path: '/m-to-r-wallet',
     route: mToRWalletRoute,
+  },
+  {
+    path: '/w-to-r-wallet',
+    route: wToRWalletRoute,
   },
   //
   {
