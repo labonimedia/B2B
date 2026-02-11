@@ -133,13 +133,16 @@ module.exports.RetailerInventory = require('./type2.models/inventory.retailer.mo
 module.exports.ManufactureInventoryLogs = require('./type2.models/manufacture.inventory.logs.model');
 // credit Note model
 module.exports.MtoRCreditNote = require('./type2.models/credit.note.manufacture.to.retailer.model');
+module.exports.WtoRCreditNote = require('./type2.models/credit.note.wholesaler.to.retailer.model');
 // hsn
 module.exports.HsnGst = require('./type2.models/hsn.gst.data.model');
 // return reason
 module.exports.ReturnReason = require('./type2.models/return.reason.master.model');
 // return request
 module.exports.ReturnR2M = require('./type2.models/return.retailer.to.manufacture.model');
+// wallet
 module.exports.MtoRWallet = require('./type2.models/wallet.m.to.r.model');
+module.exports.W2RWallet = require('./type2.models/wallet.w.to.r.model');
 // manufacture vendors
 module.exports.ManufacturerVendor = require('./type2.models/manufacture.vendors.model');
 // manufacture warehouse
