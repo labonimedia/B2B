@@ -134,6 +134,7 @@ module.exports.ManufactureInventoryLogs = require('./type2.models/manufacture.in
 // credit Note model
 module.exports.MtoRCreditNote = require('./type2.models/credit.note.manufacture.to.retailer.model');
 module.exports.WtoRCreditNote = require('./type2.models/credit.note.wholesaler.to.retailer.model');
+module.exports.MtoWCreditNote = require('./type2.models/credit.note.manufacture.to.wholesaler.model');
 // hsn
 module.exports.HsnGst = require('./type2.models/hsn.gst.data.model');
 // return reason
@@ -143,6 +144,7 @@ module.exports.ReturnR2M = require('./type2.models/return.retailer.to.manufactur
 // wallet
 module.exports.MtoRWallet = require('./type2.models/wallet.m.to.r.model');
 module.exports.W2RWallet = require('./type2.models/wallet.w.to.r.model');
+module.exports.MtoWWallet = require('./type2.models/wallet.m.to.w.model');
 // manufacture vendors
 module.exports.ManufacturerVendor = require('./type2.models/manufacture.vendors.model');
 // manufacture warehouse
@@ -163,3 +165,5 @@ module.exports.WholesalerInventoryLogs = require('./type2.models/wholesaler.inve
 module.exports.W2RPerformaInvoice = require('./type2.models/pi.wholesaler.to.retailer.model');
 // return request retailer to wholesaler
 module.exports.ReturnR2W = require('./type2.models/return.retailer.to.wholesaler.model');
+// return request wholesaler to manufacture
+module.exports.ReturnW2M = require('./type2.models/return.wholesaler.to.manufacture.model');
