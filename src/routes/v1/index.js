@@ -121,11 +121,15 @@ const ReturnReasonRoute = require('./type2.routes/return.reason.master.route');
 // credit note
 const mToRCreditNoteRoute = require('./type2.routes/credit.note.manufacture.to.retailer.route');
 const w2rCreditNoteRoute = require('./type2.routes/credit.note.wholesaler.to.retailer.route');
+const m2wCreditNoteRoute = require('./type2.routes/credit.note.manufacture.to.wholesaler.route');
 // return request
 const rToMReturnRoute = require('./type2.routes/return.retailer.to.manufacture.model');
+const rToWReturnRoute = require('./type2.routes/return.retailer.to.wholesaler.route');
+const wToMReturnRoute = require('./type2.routes/return.wholesaler.to.manufacture.route');
 // wallet manufacture to retailer
 const mToRWalletRoute = require('./type2.routes/wallet.m.to.r.route');
 const wToRWalletRoute = require('./type2.routes/wallet.w.to.r.route');
+const mToWWalletRoute = require('./type2.routes/wallet.m.to.w.route');
 // manufacture Masters
 const manufacturerVendorRoute = require('./type2.routes/manufacture.vendors.route');
 const manufactureWarehouseRoute = require('./type2.routes/manufacture.warehouse.route');
@@ -140,8 +144,6 @@ const manufactureDashboardCountsRoute = require('./type2.routes/manufacture.dash
 const WholesalerInventoryLogsRoute = require('./type2.routes/wholesaler.inventory.logs.route');
 // wholesaler to retailer performa invoice
 const W2RPerformaInvoiceRoute = require('./type2.routes/pi.whosaler.to.retailer.route');
-// return request retailer to wholesaler
-const rToWReturnRoute = require('./type2.routes/return.retailer.to.wholesaler.route');
 
 const router = express.Router();
 
@@ -622,6 +624,10 @@ const defaultRoutes = [
     path: '/w-r-credit-note',
     route: w2rCreditNoteRoute,
   },
+  {
+    path: '/m-w-credit-note',
+    route: m2wCreditNoteRoute,
+  },
   // return request
   {
     path: '/return-r2m',
@@ -631,6 +637,10 @@ const defaultRoutes = [
     path: '/return-r2w',
     route: rToWReturnRoute,
   },
+  {
+    path: '/return-w2m',
+    route: wToMReturnRoute,
+  },
   // wallet manufacture to retailer
   {
     path: '/m-to-r-wallet',
@@ -639,6 +649,10 @@ const defaultRoutes = [
   {
     path: '/w-to-r-wallet',
     route: wToRWalletRoute,
+  },
+  {
+    path: '/m-to-w-wallet',
+    route: mToWWalletRoute,
   },
   //
   {

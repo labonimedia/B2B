@@ -125,12 +125,15 @@ module.exports.returnReasonService = require('./type2.services/return.reason.mas
 // credit Note
 module.exports.mtoRCreditNoteService = require('./type2.services/credit.note.manufacture.to.retailer.service');
 module.exports.w2rCreditNoteService = require('./type2.services/credit.note.wholesaler.to.retailer.service');
+module.exports.m2wCreditNoteService = require('./type2.services/credit.note.manufacture.to.wholesaler.service');
 // return request
 module.exports.rtoMReturnRequestService = require('./type2.services/return.retailer.to.manufacture.service');
 // wallet manufacture to retailer
 module.exports.mtoRWalletService = require('./type2.services/wallet.m.to.r.service');
 // wallet wholesaler to retailer
 module.exports.w2rWalletService = require('./type2.services/wallet.w.to.r.service');
+// wallet manufacture to wholesaler
+module.exports.m2wWalletService = require('./type2.services/wallet.m.to.w.service');
 // manufacture vendors
 module.exports.manufacturerVendorService = require('./type2.services/manufacture.vendors.service');
 // manufacture warehouse
@@ -153,3 +156,5 @@ module.exports.wholesalerInventoryLogsService = require('./type2.services/wholes
 module.exports.w2rPerformaInvoiceService = require('./type2.services/pi.wholesaler.to.retailer.service');
 // return request retailer to wholesaler
 module.exports.rtoWReturnRequestService = require('./type2.services/return.retailer.to.wholesaler.service');
+// return request wholesaler to manufacture
+module.exports.wToMReturnRequestService = require('./type2.services/return.wholesaler.to.manufacture.service');

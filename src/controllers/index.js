@@ -119,12 +119,15 @@ module.exports.returnReasonController = require('./type2.controller/return.reaso
 // credit Note
 module.exports.mtoRCreditNoteController = require('./type2.controller/credit.note.manufacture.to.retailer.controller');
 module.exports.wtoRCreditNoteController = require('./type2.controller/credit.note.wholesaler.to.retailer.controller');
+module.exports.mtoWCreditNoteController = require('./type2.controller/credit.note.manufacture.to.wholesaler.controller');
 // return request
 module.exports.rtoMReturnRequestController = require('./type2.controller/return.retailer.to.manufacture.controller');
 // wallet manufacture to retailer
 module.exports.mToRWalletController = require('./type2.controller/wallet.m.to.r.controller');
 //  wallet wholesaler to retailer
 module.exports.wToRWalletController = require('./type2.controller/wallet.w.to.r.controller');
+// wallet manufacture to wholesaler
+module.exports.mToWWalletController = require('./type2.controller/wallet.m.to.w.controller');
 // manufacture vendors
 module.exports.manufacturerVendorController = require('./type2.controller/manufacture.vendors.controller');
 // manufacture warehouse
@@ -147,3 +150,5 @@ module.exports.wholesalerInventoryLogsController = require('./type2.controller/w
 module.exports.w2rPerformaInvoiceController = require('./type2.controller/pi.wholesaler.to.retailer.controller');
 // return retailer to wholesaler
 module.exports.rtoWReturnRequestController = require('./type2.controller/return.retailer.to.wholesaler.controller');
+// return wholesaler to manufacture
+module.exports.wToMReturnRequestController = require('./type2.controller/return.wholesaler.to.manufacture.controller');
