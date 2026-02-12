@@ -14,30 +14,29 @@ const pick = require('../../utils/pick');
 //   res.status(httpStatus.OK).json({ success: true, data: result });
 // });
 const getInventoriesByDesignNumbers = catchAsync(async (req, res) => {
-  let { designNumbers, wholesalerEmail, brandName } = req.body;
+  const payload = req.body;
 
-  // 🔥 Normalize designNumbers
-  if (typeof designNumbers === 'string') {
-    designNumbers = [designNumbers];
-  }
-
-  if (!Array.isArray(designNumbers) || designNumbers.length === 0) {
+  // ✅ Expect array
+  if (!Array.isArray(payload) || payload.length === 0) {
     return res.status(httpStatus.BAD_REQUEST).json({
-      message: 'designNumbers must be a string or non-empty array',
+      message: 'Request body must be a non-empty array',
     });
   }
 
-  if (!wholesalerEmail) {
-    return res.status(httpStatus.BAD_REQUEST).json({
-      message: 'wholesalerEmail is required',
-    });
-  }
+  // ✅ Validate & normalize
+  const filters = payload.map((item) => {
+    if (!item.designNumbers || !item.wholesalerEmail || !item.brandName) {
+      throw new Error('designNumbers, wholesalerEmail and brandName are required');
+    }
 
-  const result = await WholesalerInventoryService.findByDesignNumbers({
-    designNumbers,
-    wholesalerEmail,
-    brandName,
+    return {
+      designNumber: item.designNumbers,
+      wholesalerEmail: item.wholesalerEmail,
+      brandName: item.brandName,
+    };
   });
+
+  const result = await WholesalerInventoryService.findByMultipleDesignFilters(filters);
 
   res.status(httpStatus.OK).json({
     success: true,

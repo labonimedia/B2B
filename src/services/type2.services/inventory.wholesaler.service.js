@@ -2,6 +2,29 @@ const httpStatus = require('http-status');
 const { WholesalerInventory } = require('../../models');
 const ApiError = require('../../utils/ApiError');
 
+
+const findByMultipleDesignFilters = async (filters) => {
+  /**
+   * filters = [
+   *   { designNumber, wholesalerEmail, brandName },
+   *   { designNumber, wholesalerEmail, brandName }
+   * ]
+   */
+
+  return WholesalerInventory.find({
+    $or: filters.map((f) => ({
+      designNumber: f.designNumber,
+      userEmail: f.wholesalerEmail,
+      brandName: f.brandName,
+    })),
+  }).sort({
+    designNumber: 1,
+    colour: 1,
+    brandSize: 1,
+  });
+};
+
+
 // const findByDesignNumbers = async (designNumbers) => {
 
 //   return WholesalerInventory.find({
@@ -9,22 +32,22 @@ const ApiError = require('../../utils/ApiError');
 //   }).sort({ designNumber: 1, colour: 1 });
 // };
 
-const findByDesignNumbers = async ({ designNumbers, wholesalerEmail, brandName }) => {
-  const filter = {
-    userEmail: wholesalerEmail,
-    designNumber: { $in: designNumbers },
-  };
+// const findByDesignNumbers = async ({ designNumbers, wholesalerEmail, brandName }) => {
+//   const filter = {
+//     userEmail: wholesalerEmail,
+//     designNumber: { $in: designNumbers },
+//   };
 
-  if (brandName) {
-    filter.brandName = brandName;
-  }
+//   if (brandName) {
+//     filter.brandName = brandName;
+//   }
 
-  return WholesalerInventory.find(filter).sort({
-    designNumber: 1,
-    colour: 1,
-    brandSize: 1,
-  });
-};
+//   return WholesalerInventory.find(filter).sort({
+//     designNumber: 1,
+//     colour: 1,
+//     brandSize: 1,
+//   });
+// };
 // const bulkInsertInventory = async (inventoryArray) => {
 //   if (!Array.isArray(inventoryArray) || inventoryArray.length === 0) {
 //     throw new ApiError(
@@ -237,5 +260,6 @@ module.exports = {
   getInventoryById,
   updateInventoryById,
   deleteInventoryById,
-  findByDesignNumbers,
+  //findByDesignNumbers,
+  findByMultipleDesignFilters,
 };
