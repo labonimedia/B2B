@@ -2,12 +2,29 @@ const httpStatus = require('http-status');
 const { WholesalerInventory } = require('../../models');
 const ApiError = require('../../utils/ApiError');
 
-const findByDesignNumbers = async (designNumbers) => {
-  return WholesalerInventory.find({
-    designNumber: { $in: designNumbers },
-  }).sort({ designNumber: 1, colour: 1 });
-};
+// const findByDesignNumbers = async (designNumbers) => {
 
+//   return WholesalerInventory.find({
+//     designNumber: { $in: designNumbers },
+//   }).sort({ designNumber: 1, colour: 1 });
+// };
+
+const findByDesignNumbers = async ({ designNumbers, wholesalerEmail, brandName }) => {
+  const filter = {
+    userEmail: wholesalerEmail,
+    designNumber: { $in: designNumbers },
+  };
+
+  if (brandName) {
+    filter.brandName = brandName;
+  }
+
+  return WholesalerInventory.find(filter).sort({
+    designNumber: 1,
+    colour: 1,
+    brandSize: 1,
+  });
+};
 // const bulkInsertInventory = async (inventoryArray) => {
 //   if (!Array.isArray(inventoryArray) || inventoryArray.length === 0) {
 //     throw new ApiError(

@@ -3,15 +3,46 @@ const catchAsync = require('../../utils/catchAsync');
 const { WholesalerInventoryService } = require('../../services');
 const pick = require('../../utils/pick');
 
-const getInventoriesByDesignNumbers = catchAsync(async (req, res) => {
-  const { designNumbers } = req.body;
+// const getInventoriesByDesignNumbers = catchAsync(async (req, res) => {
+//   const { designNumbers } = req.body;
 
-  if (!Array.isArray(designNumbers) || designNumbers.length === 0) {
-    return res.status(httpStatus.BAD_REQUEST).json({ message: 'designNumbers must be a non-empty array' });
+//   if (!Array.isArray(designNumbers) || designNumbers.length === 0) {
+//     return res.status(httpStatus.BAD_REQUEST).json({ message: 'designNumbers must be a non-empty array' });
+//   }
+
+//   const result = await WholesalerInventoryService.findByDesignNumbers(designNumbers);
+//   res.status(httpStatus.OK).json({ success: true, data: result });
+// });
+const getInventoriesByDesignNumbers = catchAsync(async (req, res) => {
+  let { designNumbers, wholesalerEmail, brandName } = req.body;
+
+  // 🔥 Normalize designNumbers
+  if (typeof designNumbers === 'string') {
+    designNumbers = [designNumbers];
   }
 
-  const result = await WholesalerInventoryService.findByDesignNumbers(designNumbers);
-  res.status(httpStatus.OK).json({ success: true, data: result });
+  if (!Array.isArray(designNumbers) || designNumbers.length === 0) {
+    return res.status(httpStatus.BAD_REQUEST).json({
+      message: 'designNumbers must be a string or non-empty array',
+    });
+  }
+
+  if (!wholesalerEmail) {
+    return res.status(httpStatus.BAD_REQUEST).json({
+      message: 'wholesalerEmail is required',
+    });
+  }
+
+  const result = await WholesalerInventoryService.findByDesignNumbers({
+    designNumbers,
+    wholesalerEmail,
+    brandName,
+  });
+
+  res.status(httpStatus.OK).json({
+    success: true,
+    data: result,
+  });
 });
 
 const bulkCreateInventories = catchAsync(async (req, res) => {
