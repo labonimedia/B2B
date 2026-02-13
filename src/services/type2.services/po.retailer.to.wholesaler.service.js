@@ -137,32 +137,50 @@ const updatePoData = async (poId, updateBody) => {
   await po.save();
   return po;
 };
-
 const generatePoNumber = async (email) => {
-  const lastPO = await PORetailerToWholesaler.findOne({ retailerEmail: email }).sort({ createdAt: -1 }).lean();
+  const lastPO = await PORetailerToWholesaler
+    .findOne({ email })
+    .sort({ poNumber: -1 })
+    .select('poNumber')
+    .lean();
 
   return lastPO ? lastPO.poNumber + 1 : 1001;
 };
 
-/* ---------- Make To Order PO ---------- */
 const makeToOrderPO = async (reqBody) => {
-  if (!reqBody.retailerEmail) {
-    throw new ApiError(httpStatus.BAD_REQUEST, 'Retailer email is required to generate PO Number');
+
+  if (!reqBody.email) {
+    throw new ApiError(
+      httpStatus.BAD_REQUEST,
+      'Retailer email is required to generate PO Number'
+    );
   }
 
-  const nextPoNumber = await generatePoNumber(reqBody.retailerEmail);
+  // Generate PO Number
+  const nextPoNumber = await generatePoNumber(reqBody.email);
 
   reqBody.poNumber = nextPoNumber;
   reqBody.statusAll = 'w_make_to_order';
 
-  const purchaseOrder = await PORetailerToWholesaler.create(reqBody);
+  // Force all set items to processing
+  if (Array.isArray(reqBody.set)) {
+    reqBody.set = reqBody.set.map(item => ({
+      ...item,
+      status: 'processing'
+    }));
+  }
 
+  const purchaseOrder =
+    await PORetailerToWholesaler.create(reqBody);
+
+  // Delete cart if exists
   if (reqBody.cartId) {
     await RetailerCartType2.findByIdAndDelete(reqBody.cartId);
   }
 
   return purchaseOrder;
 };
+
 
 module.exports = {
   createPurchaseOrderRetailerType2,
