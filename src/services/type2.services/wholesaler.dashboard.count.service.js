@@ -2,7 +2,6 @@ const { PORetailerToWholesaler, POWholesalerToManufacturer } = require('../../mo
 
 const wholesalerDashboardCountsService = async (role, email) => {
   const response = {};
-
   if (role === 'retailer') {
     const total = await PORetailerToWholesaler.countDocuments({
       email,
@@ -13,32 +12,32 @@ const wholesalerDashboardCountsService = async (role, email) => {
       statusAll: 'pending',
     });
 
-    const processing = await PORetailerToWholesaler.countDocuments({
+    const wholesalerPartial = await PORetailerToWholesaler.countDocuments({
       email,
-      statusAll: 'processing',
+      statusAll: 'w_partial',
     });
 
-    const delivered = await PORetailerToWholesaler.countDocuments({
+    const makeToOrder = await PORetailerToWholesaler.countDocuments({
       email,
-      statusAll: 'delivered',
+      statusAll: 'w_make_to_order',
     });
 
-    const cancelled = await PORetailerToWholesaler.countDocuments({
+    const wholesalerConfirmed = await PORetailerToWholesaler.countDocuments({
       email,
-      statusAll: 'retailer_cancelled',
+      statusAll: 'w_confirmed',
     });
 
     response.retailerToWholesaler = {
       total,
       pending,
-      processing,
-      delivered,
-      cancelled,
+      w_partial: wholesalerPartial,
+      w_make_to_order: makeToOrder,
+      w_confirmed: wholesalerConfirmed,
     };
   }
-
   if (role === 'wholesaler') {
-    /* ---- Retailer → Wholesaler ---- */
+    /* -------- Retailer → Wholesaler -------- */
+
     const rTotal = await PORetailerToWholesaler.countDocuments({
       wholesalerEmail: email,
     });
@@ -48,17 +47,21 @@ const wholesalerDashboardCountsService = async (role, email) => {
       statusAll: 'pending',
     });
 
-    const rProcessing = await PORetailerToWholesaler.countDocuments({
+    const rPartial = await PORetailerToWholesaler.countDocuments({
       wholesalerEmail: email,
-      statusAll: 'processing',
+      statusAll: 'w_partial',
     });
 
-    const rDelivered = await PORetailerToWholesaler.countDocuments({
+    const rMakeToOrder = await PORetailerToWholesaler.countDocuments({
       wholesalerEmail: email,
-      statusAll: 'delivered',
+      statusAll: 'w_make_to_order',
     });
 
-    /* ---- Wholesaler → Manufacturer ---- */
+    const rConfirmed = await PORetailerToWholesaler.countDocuments({
+      wholesalerEmail: email,
+      statusAll: 'w_confirmed',
+    });
+
     const wTotal = await POWholesalerToManufacturer.countDocuments({
       wholesalerEmail: email,
     });
@@ -73,23 +76,30 @@ const wholesalerDashboardCountsService = async (role, email) => {
       statusAll: 'm_order_confirmed',
     });
 
-    const wDelivered = await POWholesalerToManufacturer.countDocuments({
+    const wPartial = await POWholesalerToManufacturer.countDocuments({
       wholesalerEmail: email,
-      statusAll: 'delivered',
+      statusAll: 'm_partial_delivery',
+    });
+
+    const wCancelled = await POWholesalerToManufacturer.countDocuments({
+      wholesalerEmail: email,
+      statusAll: 'm_order_cancelled',
     });
 
     response.retailerToWholesaler = {
       total: rTotal,
       pending: rPending,
-      processing: rProcessing,
-      delivered: rDelivered,
+      w_partial: rPartial,
+      w_make_to_order: rMakeToOrder,
+      w_confirmed: rConfirmed,
     };
 
     response.wholesalerToManufacturer = {
       total: wTotal,
       pending: wPending,
       confirmed: wConfirmed,
-      delivered: wDelivered,
+      partial: wPartial,
+      cancelled: wCancelled,
     };
   }
 
@@ -113,9 +123,9 @@ const wholesalerDashboardCountsService = async (role, email) => {
       statusAll: 'm_partial_delivery',
     });
 
-    const delivered = await POWholesalerToManufacturer.countDocuments({
+    const cancelled = await POWholesalerToManufacturer.countDocuments({
       manufacturerEmail: email,
-      statusAll: 'delivered',
+      statusAll: 'm_order_cancelled',
     });
 
     response.wholesalerToManufacturer = {
@@ -123,7 +133,7 @@ const wholesalerDashboardCountsService = async (role, email) => {
       pending,
       confirmed,
       partial,
-      delivered,
+      cancelled,
     };
   }
 
