@@ -150,6 +150,8 @@ module.exports.manufactureBOMService = require('./type2.services/manufacture.bom
 module.exports.manufactureRawMaterialInventoryLogsService = require('./type2.services/manufacture.raw.material.inventory.logs.service');
 // manufacture dashboards counts
 module.exports.manufactureDashboardCountsService = require('./type2.services/manufacture.dashboard.count.service');
+// wholesaler dashboard counts service
+module.exports.wholesalerDashboardService = require('./type2.services/wholesaler.dashboard.count.service');
 // wholesaler inventory logs service
 module.exports.wholesalerInventoryLogsService = require('./type2.services/wholesaler.inventory.logs.service');
 // wholesaler to retailer performa invoice

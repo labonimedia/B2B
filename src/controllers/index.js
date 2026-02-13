@@ -144,6 +144,8 @@ module.exports.manufactureBOMController = require('./type2.controller/manufactur
 module.exports.manufactureRawMaterialInventoryLogsController = require('./type2.controller/manufacture.raw.material.inventory.logs.controller');
 // manufacture dashboard counts
 module.exports.manufactureDashboardCountsController = require('./type2.controller/manufacture.dashboard.count.controller');
+// wholesaler dashboard counts
+module.exports.wholesalerDashboardController = require('./type2.controller/wholesaler.dashboard.count.controller');
 // wholesaler inventory logs
 module.exports.wholesalerInventoryLogsController = require('./type2.controller/wholesaler.inventory.logs.controller');
 // wholesaler to retailer performa invoice
