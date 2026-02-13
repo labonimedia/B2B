@@ -141,44 +141,83 @@ const createInventory = async (data) => {
   return WholesalerInventory.create(data);
 };
 
+// const bulkUpdateInventory = async (updates) => {
+//   const results = [];
+
+//   for (const update of updates) {
+//     const {
+//       _id,
+//       quantity,
+//       status,
+//       lastUpdatedBy,
+//       designNumber,
+//       colourName,
+//       standardSize,
+//       userEmail,
+//     } = update;
+
+//     let inventory = _id
+//       ? await WholesalerInventory.findById(_id)
+//       : await WholesalerInventory.findOne({
+//           designNumber,
+//           colourName,
+//           standardSize,
+//           userEmail,
+//         });
+
+//     if (!inventory) {
+//       throw new Error('Inventory record not found');
+//     }
+
+//     if (status === 'add') inventory.quantity += quantity;
+//     else if (status === 'remove')
+//       inventory.quantity = Math.max(0, inventory.quantity - quantity);
+//     else throw new Error('Invalid inventory update status');
+
+//     inventory.lastUpdatedBy = lastUpdatedBy || 'system';
+//     inventory.lastUpdatedAt = new Date();
+
+//     await inventory.save();
+//     results.push(inventory);
+//   }
+
+//   return results;
+// };
 const bulkUpdateInventory = async (updates) => {
   const results = [];
 
   for (const update of updates) {
-    const {
-      _id,
-      quantity,
-      status,
-      lastUpdatedBy,
-      designNumber,
-      colourName,
-      standardSize,
-      userEmail,
-    } = update;
+    const { _id, quantity, status, lastUpdatedBy } = update;
 
-    let inventory = _id
-      ? await WholesalerInventory.findById(_id)
-      : await WholesalerInventory.findOne({
-          designNumber,
-          colourName,
-          standardSize,
-          userEmail,
-        });
+    const inventory = await WholesalerInventory.findById(_id);
 
     if (!inventory) {
       throw new Error('Inventory record not found');
     }
 
-    if (status === 'add') inventory.quantity += quantity;
-    else if (status === 'remove')
-      inventory.quantity = Math.max(0, inventory.quantity - quantity);
-    else throw new Error('Invalid inventory update status');
+    let newQuantity = inventory.quantity;
 
-    inventory.lastUpdatedBy = lastUpdatedBy || 'system';
-    inventory.lastUpdatedAt = new Date();
+    if (status === 'add') {
+      newQuantity += quantity;
+    } else if (status === 'remove') {
+      newQuantity = Math.max(0, newQuantity - quantity);
+    } else {
+      throw new Error('Invalid inventory update status');
+    }
 
-    await inventory.save();
-    results.push(inventory);
+    const updatedInventory = await WholesalerInventory.findByIdAndUpdate(
+      _id,
+      {
+        $set: {
+          quantity: newQuantity,
+          lastUpdatedBy: lastUpdatedBy || 'system',
+          lastUpdatedAt: new Date(),
+        },
+      },
+      { new: true }
+    );
+
+    results.push(updatedInventory);
   }
 
   return results;
