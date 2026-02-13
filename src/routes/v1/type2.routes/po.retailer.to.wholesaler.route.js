@@ -3,6 +3,7 @@ const auth = require('../../../middlewares/auth');
 const { poRetailerToWholesalerController } = require('../../../controllers');
 
 const router = express.Router();
+router.route('/update-po-data/:poId').patch(auth('wholesaler', 'superadmin'), poRetailerToWholesalerController.updatePoData);
 
 router
   .route('/')

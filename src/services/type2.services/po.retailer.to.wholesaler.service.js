@@ -100,6 +100,44 @@ const getPOsByIds = async (ids) => {
 
   return pos;
 };
+const updatePoData = async (poId, updateBody) => {
+  const po = await PORetailerToWholesaler.findById(poId);
+  if (!po) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'PO not found');
+  }
+
+  /* -------------------------
+     UPDATE TOP LEVEL FIELDS
+  --------------------------*/
+  Object.keys(updateBody).forEach((key) => {
+    if (key !== 'set' && key !== '_id') {
+      po[key] = updateBody[key];
+    }
+  });
+
+  /* -------------------------
+     UPDATE SET ARRAY ITEMS
+  --------------------------*/
+  if (Array.isArray(updateBody.set)) {
+    updateBody.set.forEach((updatedSetItem) => {
+      if (!updatedSetItem._id) return;
+
+      const existingItem = po.set.id(updatedSetItem._id);
+
+      if (existingItem) {
+        Object.keys(updatedSetItem).forEach((field) => {
+          if (field !== '_id') {
+            existingItem[field] = updatedSetItem[field];
+          }
+        });
+      }
+    });
+  }
+
+  await po.save();
+  return po;
+};
+
 module.exports = {
   createPurchaseOrderRetailerType2,
   getRetailerPOByWholesaler,
@@ -109,4 +147,5 @@ module.exports = {
   deleteSinglePoRetailerToWholesaler,
   getSinglePoRetailerToWholesaler,
   getPOsByIds,
+  updatePoData,
 };
