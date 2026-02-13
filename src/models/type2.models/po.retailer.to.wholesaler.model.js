@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 const { paginate, toJSON } = require('../plugins');
 
-/* -------------------- BANK DETAILS -------------------- */
 const bankDetailsSchema = new mongoose.Schema({
   accountHolderName: String,
   accountNumber: String,
@@ -14,7 +13,6 @@ const bankDetailsSchema = new mongoose.Schema({
   bankAddress: String,
 });
 
-/* -------------------- TRANSPORT DETAILS -------------------- */
 const transportDetailsSchema = new mongoose.Schema({
   transportType: String,
   transporterCompanyName: String,
@@ -36,10 +34,8 @@ const transportDetailsSchema = new mongoose.Schema({
   note: String,
 });
 
-/* -------------------- MAIN SCHEMA -------------------- */
 const PORetailerToWholesalerSchema = new mongoose.Schema(
   {
-    /* ---------- PRODUCT SET ---------- */
     set: [
       {
         productBy: String, // Wholesaler email
@@ -48,23 +44,19 @@ const PORetailerToWholesalerSchema = new mongoose.Schema(
         colourImage: String,
         colourName: String,
         size: String,
-
         quantity: Number, // Requested by retailer
         availableQuantity: {
           type: Number,
           default: 0, // Updated by wholesaler
         },
-
         confirmed: {
           type: Boolean,
           default: false, // Retailer confirms wholesaler update
         },
-
         rejected: {
           type: Boolean,
           default: false,
         },
-
         status: {
           type: String,
           enum: [
@@ -80,23 +72,18 @@ const PORetailerToWholesalerSchema = new mongoose.Schema(
           ],
           default: 'pending',
         },
-
         manufacturerPrice: String,
         price: String,
-
         productType: String,
         gender: String,
         clothing: String,
         subCategory: String,
         brandName: String,
-
         hsnCode: String,
         hsnGst: Number,
         hsnDescription: String,
       },
     ],
-
-    /* ---------- ORDER LEVEL STATUS ---------- */
     statusAll: {
       type: String,
       enum: [
@@ -115,35 +102,23 @@ const PORetailerToWholesalerSchema = new mongoose.Schema(
       ],
       default: 'pending',
     },
-
-    /* ---------- TRANSPORT & PAYMENT ---------- */
     transportDetails: transportDetailsSchema,
     bankDetails: bankDetailsSchema,
-
-    /* ---------- DATES & FLAGS ---------- */
     retailerConfirmedAt: Date,
     expDeliveryDate: Date,
     partialDeliveryDate: Date,
-
     invoiceGenerated: {
       type: Boolean,
       default: false,
     },
-
-    /* ---------- META ---------- */
     email: String, // Retailer email
     wholesalerEmail: String,
-
     discount: Number,
-
     retailerPoDate: {
       type: Date,
       default: Date.now,
     },
-
     poNumber: Number,
-
-    /* ---------- WHOLESALER DETAILS ---------- */
     wholesaler: {
       email: String,
       fullName: String,
@@ -155,8 +130,6 @@ const PORetailerToWholesalerSchema = new mongoose.Schema(
       mobNumber: String,
       GSTIN: String,
     },
-
-    /* ---------- RETAILER DETAILS ---------- */
     retailer: {
       email: String,
       fullName: String,
@@ -188,18 +161,15 @@ const PORetailerToWholesalerSchema = new mongoose.Schema(
   }
 );
 
-/* -------------------- PLUGINS -------------------- */
 PORetailerToWholesalerSchema.plugin(toJSON);
 PORetailerToWholesalerSchema.plugin(paginate);
 
-/* -------------------- INDEXES -------------------- */
 PORetailerToWholesalerSchema.index({
   wholesalerEmail: 1,
   email: 1,
   statusAll: 1,
 });
 
-/* -------------------- MODEL -------------------- */
 const PORetailerToWholesaler = mongoose.model('PORetailerToWholesaler', PORetailerToWholesalerSchema);
 
 module.exports = PORetailerToWholesaler;

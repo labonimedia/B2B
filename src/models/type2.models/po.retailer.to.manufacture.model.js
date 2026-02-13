@@ -177,7 +177,6 @@ const PORetailerToManufacturerSchema = new mongoose.Schema(
       ],
       default: 'pending',
     },
-
     expDeliveryDate: {
       type: Date, // Expected or actual delivery date
     },

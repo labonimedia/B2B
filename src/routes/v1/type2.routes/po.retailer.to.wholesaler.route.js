@@ -46,4 +46,7 @@ router
   ); // Delete SinglePoRetailerTOwholesaler by ID
 router.post('/get-by-ids', auth('retailer', 'wholesaler'), poRetailerToWholesalerController.getPOsByMultipleIds);
 
+router
+  .route('/make-to-order')
+  .post(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), poRetailerToWholesalerController.makeToOrderPO);
 module.exports = router;

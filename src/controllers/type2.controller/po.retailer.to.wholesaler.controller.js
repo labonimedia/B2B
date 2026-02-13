@@ -52,6 +52,13 @@ const getPOsByMultipleIds = catchAsync(async (req, res) => {
   res.status(httpStatus.OK).send(result);
 });
 
+const makeToOrderPO = catchAsync(async (req, res) => {
+  const createdPO =
+    await poRetailerToWholesalerService.makeToOrderPO(req.body);
+
+  res.status(httpStatus.CREATED).send(createdPO);
+});
+
 const updatePoData = catchAsync(async (req, res) => {
   const updatedPO = await poRetailerToWholesalerService.updatePoData(req.params.poId, req.body);
 
@@ -71,4 +78,5 @@ module.exports = {
   getSinglePoRetailerToWholesaler,
   getPOsByMultipleIds,
   updatePoData,
+  makeToOrderPO,
 };
