@@ -271,7 +271,14 @@ const PORetailerToWholesalerSchema = new mongoose.Schema(
       productDiscount: String,
       category: String,
     },
-
+    retailerNote: {
+      type: String,
+      trim: true,
+    },
+    wholesalerNote: {
+      type: String,
+      trim: true,
+    },
     previousPoNumber: String,
     previousPoId: String,
     cartId: String,
