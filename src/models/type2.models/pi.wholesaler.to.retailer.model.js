@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 const { paginate, toJSON } = require('../plugins');
 
-
 const transportDetailsSchema = new mongoose.Schema({
   transportType: String,
   transporterCompanyName: String,
@@ -45,8 +44,6 @@ const appliedCreditNoteSchema = new mongoose.Schema({
   appliedOn: Date,
 });
 
-/* ---------- main schema ---------- */
-
 const w2rPerformaInvoiceSchema = new mongoose.Schema(
   {
     poId: {
@@ -55,22 +52,17 @@ const w2rPerformaInvoiceSchema = new mongoose.Schema(
       required: true,
     },
     poNumber: { type: Number, required: true },
-
     invoiceNumber: { type: String },
     invoiceDate: { type: Date, default: Date.now },
     invoiceRecievedDate: Date,
-
     statusAll: {
       type: String,
       enum: ['created', 'dispatched', 'in_transit', 'partially_delivered', 'delivered', 'cancelled'],
       default: 'created',
     },
-
     bankDetails: bankDetailsSchema,
-
     wholesalerEmail: { type: String, required: true },
     retailerEmail: { type: String, required: true },
-
     deliveryItems: [
       {
         designNumber: String,
@@ -96,7 +88,6 @@ const w2rPerformaInvoiceSchema = new mongoose.Schema(
         brandName: String,
       },
     ],
-
     wholesaler: {
       email: String,
       fullName: String,
@@ -108,7 +99,6 @@ const w2rPerformaInvoiceSchema = new mongoose.Schema(
       mobNumber: String,
       GSTIN: String,
     },
-
     retailer: {
       email: String,
       fullName: String,
@@ -123,17 +113,14 @@ const w2rPerformaInvoiceSchema = new mongoose.Schema(
       productDiscount: String,
       category: String,
     },
-
     totalQuantity: Number,
     transportDetails: transportDetailsSchema,
     totalAmount: Number,
     discountApplied: Number,
     finalAmount: Number,
-
     appliedCreditNotes: [appliedCreditNoteSchema],
     totalCreditNoteAmountUsed: { type: Number, default: 0 },
     finalAmountPayable: Number,
-
     returnRequestGenerated: String,
   },
   { timestamps: true }

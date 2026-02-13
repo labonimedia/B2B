@@ -138,6 +138,32 @@ const updatePoData = async (poId, updateBody) => {
   return po;
 };
 
+const generatePoNumber = async (email) => {
+  const lastPO = await PORetailerToWholesaler.findOne({ retailerEmail: email }).sort({ createdAt: -1 }).lean();
+
+  return lastPO ? lastPO.poNumber + 1 : 1001;
+};
+
+/* ---------- Make To Order PO ---------- */
+const makeToOrderPO = async (reqBody) => {
+  if (!reqBody.retailerEmail) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Retailer email is required to generate PO Number');
+  }
+
+  const nextPoNumber = await generatePoNumber(reqBody.retailerEmail);
+
+  reqBody.poNumber = nextPoNumber;
+  reqBody.statusAll = 'w_make_to_order';
+
+  const purchaseOrder = await PORetailerToWholesaler.create(reqBody);
+
+  if (reqBody.cartId) {
+    await RetailerCartType2.findByIdAndDelete(reqBody.cartId);
+  }
+
+  return purchaseOrder;
+};
+
 module.exports = {
   createPurchaseOrderRetailerType2,
   getRetailerPOByWholesaler,
@@ -148,4 +174,5 @@ module.exports = {
   getSinglePoRetailerToWholesaler,
   getPOsByIds,
   updatePoData,
+  makeToOrderPO,
 };
