@@ -138,22 +138,14 @@ const updatePoData = async (poId, updateBody) => {
   return po;
 };
 const generatePoNumber = async (email) => {
-  const lastPO = await PORetailerToWholesaler
-    .findOne({ email })
-    .sort({ poNumber: -1 })
-    .select('poNumber')
-    .lean();
+  const lastPO = await PORetailerToWholesaler.findOne({ email }).sort({ poNumber: -1 }).select('poNumber').lean();
 
   return lastPO ? lastPO.poNumber + 1 : 1001;
 };
 
 const makeToOrderPO = async (reqBody) => {
-
   if (!reqBody.email) {
-    throw new ApiError(
-      httpStatus.BAD_REQUEST,
-      'Retailer email is required to generate PO Number'
-    );
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Retailer email is required to generate PO Number');
   }
 
   // Generate PO Number
@@ -164,14 +156,13 @@ const makeToOrderPO = async (reqBody) => {
 
   // Force all set items to processing
   if (Array.isArray(reqBody.set)) {
-    reqBody.set = reqBody.set.map(item => ({
+    reqBody.set = reqBody.set.map((item) => ({
       ...item,
-      status: 'processing'
+      status: 'processing',
     }));
   }
 
-  const purchaseOrder =
-    await PORetailerToWholesaler.create(reqBody);
+  const purchaseOrder = await PORetailerToWholesaler.create(reqBody);
 
   // Delete cart if exists
   if (reqBody.cartId) {
@@ -180,7 +171,6 @@ const makeToOrderPO = async (reqBody) => {
 
   return purchaseOrder;
 };
-
 
 module.exports = {
   createPurchaseOrderRetailerType2,
