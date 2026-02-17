@@ -63,6 +63,7 @@ const PORetailerToWholesalerSchema = new mongoose.Schema(
             'pending',
             'w_confirmed',
             'w_cancelled',
+            'w_make_to_order',
             'w_partial',
             'r_confirmed',
             'r_cancelled',
