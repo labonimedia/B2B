@@ -291,7 +291,6 @@ const queryInventories = async (filter, options, search) => {
       { brandName: { $regex: search, $options: 'i' } },
     ];
   }
-
   const page = parseInt(options.page, 10) || 1;
   const limit = parseInt(options.limit, 10) || 10;
   const skip = (page - 1) * limit;
