@@ -39,7 +39,6 @@ const updateR2WReturnRequestById = async (id, updateBody) => {
   if (!data) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Return Request not found');
   }
-
   Object.assign(data, updateBody);
   await data.save();
   return data;
@@ -50,7 +49,6 @@ const deleteR2WReturnRequestById = async (id) => {
   if (!data) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Return Request not found');
   }
-
   await data.remove();
   return data;
 };
