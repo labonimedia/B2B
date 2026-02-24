@@ -257,11 +257,9 @@ const getCategoryDashboardCounts = catchAsync(async (req, res) => {
   });
 });
 
-
 const getInventoryLowStockDashboardCounts = catchAsync(async (req, res) => {
   const { email } = req.query;
-  const inventoryAlerts =
-    await manufactureDashboardCountsService.getInventoryLowStockCounts(email);
+  const inventoryAlerts = await manufactureDashboardCountsService.getInventoryLowStockCounts(email);
   res.status(httpStatus.OK).send({
     success: true,
     data: {

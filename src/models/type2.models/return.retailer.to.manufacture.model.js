@@ -176,7 +176,7 @@ returnRequestSchema.index({ manufacturerEmail: 1, returnRequestNumber: 1 }, { un
 returnRequestSchema.index({
   manufacturerEmail: 1,
   retailerEmail: 1,
-  statusAll: 1
+  statusAll: 1,
 });
 
 returnRequestSchema.plugin(toJSON);

@@ -218,7 +218,7 @@ const updateColorCollection = async (req, productId) => {
     // Save the product
     await product.save();
   } catch (err) {
-    //Rollback: Delete uploaded files
+    // Rollback: Delete uploaded files
     try {
       if (uploadedFiles.length > 0) {
         console.log('Rolling back uploaded files:', uploadedFiles);

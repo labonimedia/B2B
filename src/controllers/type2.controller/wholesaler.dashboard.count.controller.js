@@ -1,7 +1,6 @@
-const catchAsync = require('../../utils/catchAsync');
 const httpStatus = require('http-status');
+const catchAsync = require('../../utils/catchAsync');
 const { wholesalerDashboardService } = require('../../services');
-
 
 const wholesalerDashboardCountsController = catchAsync(async (req, res) => {
   const { role, email } = req.params;

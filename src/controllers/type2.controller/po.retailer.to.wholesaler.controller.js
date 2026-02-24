@@ -53,8 +53,7 @@ const getPOsByMultipleIds = catchAsync(async (req, res) => {
 });
 
 const makeToOrderPO = catchAsync(async (req, res) => {
-  const createdPO =
-    await poRetailerToWholesalerService.makeToOrderPO(req.body);
+  const createdPO = await poRetailerToWholesalerService.makeToOrderPO(req.body);
 
   res.status(httpStatus.CREATED).send(createdPO);
 });
