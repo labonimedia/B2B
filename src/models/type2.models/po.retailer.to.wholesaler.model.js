@@ -108,6 +108,10 @@ const PORetailerToWholesalerSchema = new mongoose.Schema(
     retailerConfirmedAt: Date,
     expDeliveryDate: Date,
     partialDeliveryDate: Date,
+    invoiceId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'W2RPerformaInvoice',
+    },
     invoiceGenerated: {
       type: Boolean,
       default: false,

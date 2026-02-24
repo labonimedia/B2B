@@ -148,7 +148,6 @@ const returnRequestSchema = new mongoose.Schema(
     totalAmount: Number,
     discountApplied: Number,
     finalAmount: Number,
-
     wholesalerReturnRemarks: String,
   },
   { timestamps: true }
