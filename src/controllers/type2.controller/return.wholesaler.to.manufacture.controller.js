@@ -1,7 +1,7 @@
 const httpStatus = require('http-status');
-const catchAsync = require('../../utils/catchAsync');
 const pick = require('../../utils/pick');
 const ApiError = require('../../utils/ApiError');
+const catchAsync = require('../../utils/catchAsync');
 const { wToMReturnRequestService } = require('../../services');
 
 const returnRequest = catchAsync(async (req, res) => {
@@ -12,7 +12,6 @@ const returnRequest = catchAsync(async (req, res) => {
 const queryReturnRequest = catchAsync(async (req, res) => {
   const filter = pick(req.query, ['statusAll', 'poId', 'invoiceId', 'manufacturerEmail', 'wholesalerEmail']);
   const options = pick(req.query, ['sortBy', 'limit', 'page']);
-
   const result = await wToMReturnRequestService.queryW2MReturnRequest(filter, options);
   res.send(result);
 });

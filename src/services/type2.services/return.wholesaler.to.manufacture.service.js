@@ -4,20 +4,15 @@ const ApiError = require('../../utils/ApiError');
 
 const createW2MReturnRequest = async (reqBody) => {
   const { manufacturerEmail } = reqBody;
-
   if (!manufacturerEmail) {
     throw new ApiError(httpStatus.BAD_REQUEST, "'manufacturerEmail' is required");
   }
-
   const lastRequest = await ReturnW2M.findOne({ manufacturerEmail }).sort({ returnRequestNumber: -1 }).lean();
-
   let nextNumber = 1;
   if (lastRequest && lastRequest.returnRequestNumber) {
     nextNumber = lastRequest.returnRequestNumber + 1;
   }
-
   reqBody.returnRequestNumber = nextNumber;
-
   return ReturnW2M.create(reqBody);
 };
 
@@ -34,7 +29,6 @@ const updateW2MReturnRequestById = async (id, updateBody) => {
   if (!data) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Return Request not found');
   }
-
   Object.assign(data, updateBody);
   await data.save();
   return data;
@@ -45,7 +39,6 @@ const deleteW2MReturnRequestById = async (id) => {
   if (!data) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Return Request not found');
   }
-
   await data.remove();
   return data;
 };

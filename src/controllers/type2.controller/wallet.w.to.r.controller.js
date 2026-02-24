@@ -18,16 +18,12 @@ const queryWallets = catchAsync(async (req, res) => {
 
 const getWalletById = catchAsync(async (req, res) => {
   const wallet = await w2rWalletService.getWalletById(req.params.id);
-  if (!wallet)
-    throw new ApiError(httpStatus.NOT_FOUND, 'Wallet not found');
+  if (!wallet) throw new ApiError(httpStatus.NOT_FOUND, 'Wallet not found');
   res.send(wallet);
 });
 
 const updateWallet = catchAsync(async (req, res) => {
-  const wallet = await w2rWalletService.updateWallet(
-    req.params.id,
-    req.body
-  );
+  const wallet = await w2rWalletService.updateWallet(req.params.id, req.body);
   res.send(wallet);
 });
 
@@ -37,10 +33,7 @@ const deleteWallet = catchAsync(async (req, res) => {
 });
 
 const debitWalletById = catchAsync(async (req, res) => {
-  const wallet = await w2rWalletService.debitWalletById(
-    req.params.walletId,
-    req.body
-  );
+  const wallet = await w2rWalletService.debitWalletById(req.params.walletId, req.body);
   res.send(wallet);
 });
 

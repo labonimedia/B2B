@@ -9,12 +9,7 @@ const createCreditNote = catchAsync(async (req, res) => {
 });
 
 const queryCreditNotes = catchAsync(async (req, res) => {
-  const filter = pick(req.query, [
-    'manufacturerEmail',
-    'wholesalerEmail',
-    'used',
-    'isDeleted',
-  ]);
+  const filter = pick(req.query, ['manufacturerEmail', 'wholesalerEmail', 'used', 'isDeleted']);
   const options = pick(req.query, ['sortBy', 'limit', 'page']);
   const result = await m2wCreditNoteService.queryM2WCreditNotes(filter, options);
   res.send(result);
