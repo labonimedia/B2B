@@ -23,10 +23,10 @@ const queryW2RCreditNote = catchAsync(async (req, res) => {
   res.send(result);
 });
 
-const groupW2RCreditNote = catchAsync(async (req, res) => {
-  const result = await w2rCreditNoteService.groupW2RCreditNote(req.query);
-  res.send(result);
-});
+// const groupW2RCreditNote = catchAsync(async (req, res) => {
+//   const result = await w2rCreditNoteService.groupW2RCreditNote(req.query);
+//   res.send(result);
+// });
 
 const getW2RCreditNoteById = catchAsync(async (req, res) => {
   const result = await w2rCreditNoteService.getW2RCreditNoteById(req.params.id);
@@ -49,6 +49,15 @@ const bulkUpdateCreditNotes = catchAsync(async (req, res) => {
   res.send(result);
 });
 
+const groupW2RCreditNote = catchAsync(async (req, res) => {
+  const query = pick(req.query, ['retailerEmail', 'wholesalerEmail', 'used', 'page', 'limit']);
+  const result = await w2rCreditNoteService.groupW2RCreditNote(query);
+  res.status(httpStatus.OK).send({
+    success: true,
+    message: 'Grouped credit notes fetched successfully',
+    result,
+  });
+});
 module.exports = {
   arrayUpload,
   createCreditNote,
@@ -58,4 +67,5 @@ module.exports = {
   updateW2RCreditNoteById,
   deleteW2RCreditNoteById,
   bulkUpdateCreditNotes,
+  groupW2RCreditNote,
 };

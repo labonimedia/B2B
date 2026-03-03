@@ -4,6 +4,7 @@ const { wtoRCreditNoteController } = require('../../../controllers');
 const router = express.Router();
 
 router.route('/bulk-update').post(wtoRCreditNoteController.bulkUpdateCreditNotes);
+//router.route('/group').get(wtoRCreditNoteController.groupW2RCreditNote);
 router.route('/group').get(wtoRCreditNoteController.groupW2RCreditNote);
 router.route('/array').post(wtoRCreditNoteController.arrayUpload);
 router.route('/').post(wtoRCreditNoteController.createCreditNote).get(wtoRCreditNoteController.queryW2RCreditNote);
