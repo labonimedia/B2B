@@ -139,10 +139,10 @@ const groupW2RCreditNote = async (query) => {
     { $limit: Number(limit) },
   ];
 
-  const grouped = await W2RCreditNote.aggregate(pipeline);
+  const grouped = await WtoRCreditNote.aggregate(pipeline);
 
   // 🔢 Total Count (for pagination)
-  const totalCountResult = await W2RCreditNote.aggregate([
+  const totalCountResult = await WtoRCreditNote.aggregate([
     { $match: matchStage },
     { $group: { _id: groupByField } },
     { $count: 'count' },
