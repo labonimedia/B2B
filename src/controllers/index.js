@@ -34,6 +34,7 @@ module.exports.retailerCategoryController = require('./retailer.category.control
 module.exports.currencyControlller = require('./currency.controller');
 module.exports.wishlistController = require('./wishlist.controller');
 module.exports.cartController = require('./cart.controller');
+module.exports.wholesalerCartToManufacturerController = require('./type2.controller/wholesaler.cart.controller');
 module.exports.requestController = require('./request.controller');
 module.exports.docController = require('./doc.controller');
 module.exports.productTypeController = require('./product.type.controller');

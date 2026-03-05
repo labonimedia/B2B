@@ -1,8 +1,8 @@
 const express = require('express');
-
-const router = express.Router();
 const m2wPerformaInvoiceController = require('../../../controllers/type2.controller/pi.manufacture.to.wholesaler.controller');
 const auth = require('../../../middlewares/auth');
+
+const router = express.Router();
 
 router
   .route('/')

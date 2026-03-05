@@ -101,6 +101,7 @@ module.exports.Gender = require('./gender.model');
 module.exports.WishListType2 = require('./type2.models/wishlist.model');
 module.exports.WholesalerPriceType2 = require('./type2.models/wholesaler.product.price');
 module.exports.RetailerCartType2 = require('./type2.models/retailer.cart.model');
+module.exports.WholesalerCartType2 = require('./type2.models/wholesaler.cart.model');
 module.exports.PurchaseOrderRetailerType2 = require('./type2.models/purchase.order.retailer.model');
 module.exports.MnfDeliveryChallan = require('./type2.models/mnf.delivery.challan.model');
 module.exports.WholesalerReturn = require('./type2.models/wholesaler.return.model');
@@ -115,6 +116,7 @@ module.exports.RtlToMnfCart = require('./type2.models/rtlTomnf.cart.model');
 module.exports.RtlToMnfPo = require('./type2.models/rtlToMnf.po.model');
 module.exports.RetailerPartialReq = require('./type2.models/retailer.orderP.request.model');
 module.exports.PerformInvoice = require('./type2.models/perform.invoice.model');
+module.exports.WholesalerCartToManufacturer = require('./type2.models/wholesaler.cart.model');
 /// new models PO
 module.exports.PORetailerToWholesaler = require('./type2.models/po.retailer.to.wholesaler.model');
 module.exports.PORetailerToManufacturer = require('./type2.models/po.retailer.to.manufacture.model');
