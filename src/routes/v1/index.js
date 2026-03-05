@@ -146,6 +146,8 @@ const wholesalerDashboardCountsRoute = require('./type2.routes/wholesaler.dashbo
 const WholesalerInventoryLogsRoute = require('./type2.routes/wholesaler.inventory.logs.route');
 // wholesaler to retailer performa invoice
 const W2RPerformaInvoiceRoute = require('./type2.routes/pi.whosaler.to.retailer.route');
+// wholesaler cart to manufacturer
+const wholesalerCartToManufacturerRoute = require('./type2.routes/wholesaler.cart.route');
 
 const router = express.Router();
 
@@ -549,6 +551,10 @@ const defaultRoutes = [
   {
     path: '/rtl-toMnf-cart',
     route: rtlToMnfCartRoute,
+  },
+  {
+    path: '/wholesaler-cart',
+    route: wholesalerCartToManufacturerRoute,
   },
   {
     path: '/rtl-toMnf-po',

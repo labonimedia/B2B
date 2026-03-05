@@ -7,45 +7,46 @@ const router = express.Router();
 router
   .route('/')
   .post(
-    auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
-    poWholesalerToManufacturerController.createRetailerPurchaseOrderType2
+    auth('superadmin', 'manufacture', 'wholesaler'),
+    poWholesalerToManufacturerController.createPurchaseOrderWholesalerToManufacturer
   )
   .get(
-    auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
-    poWholesalerToManufacturerController.getAllPoWholesalerToManufacturer
+    auth('superadmin', 'manufacture', 'wholesaler'),
+    poWholesalerToManufacturerController.getAllPOWholesalerToManufacturer
   );
-
-router.get(
-  '/generate-po-data-to-manufacturer/:wholesalerEmail/:manufacturerEmail',
-  auth('wholesaler'),
-  poWholesalerToManufacturerController.generatePOToManufacturer
-);
 
 router
   .route('/wholesaler/:wholesalerEmail')
   .get(
-    auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
-    poWholesalerToManufacturerController.getRetailerPOByWholesaler
+    auth('superadmin', 'manufacture', 'wholesaler'),
+    poWholesalerToManufacturerController.getPOWholesalerToManufacturerByWholesaler
   );
 
-router.get('/get-combined-po-items', auth('wholesaler'), poWholesalerToManufacturerController.getCombinedRetailerItems);
+router
+  .route('/update-item/:poId')
+  .patch(auth('superadmin', 'manufacture', 'wholesaler'), poWholesalerToManufacturerController.updatePOSetItem);
 
 router
   .route('/:id')
   .get(
-    auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
-    poWholesalerToManufacturerController.getSinglePoWholesalerToManufacturer
-  ) // Get SinglePoWholesalerToManufacturer by ID
+    auth('superadmin', 'manufacture', 'wholesaler'),
+    poWholesalerToManufacturerController.getSinglePOWholesalerToManufacturer
+  )
   .patch(
-    auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
-    poWholesalerToManufacturerController.updateSinglePoWholesalerToManufacturer
-  ) // Update SinglePoWholesalerToManufacturer by ID
+    auth('superadmin', 'manufacture', 'wholesaler'),
+    poWholesalerToManufacturerController.updateSinglePOWholesalerToManufacturer
+  )
   .delete(
-    auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
-    poWholesalerToManufacturerController.deleteSinglePoWholesalerToManufacturer
-  ); // Delete SinglePoWholesalerToManufacturer by ID
-router.get('/get-combined-po-items', auth('wholesaler'), poWholesalerToManufacturerController.getCombinedRetailerItems);
+    auth('superadmin', 'manufacture', 'wholesaler'),
+    poWholesalerToManufacturerController.deleteSinglePOWholesalerToManufacturer
+  );
 
-router.route('/update-po-data/:poId').patch(auth('manufacture'), poWholesalerToManufacturerController.updatePoData);
+router
+  .route('/make-to-order')
+  .post(auth('superadmin', 'manufacture', 'wholesaler'), poWholesalerToManufacturerController.makeToOrderPO);
+
+router
+  .route('/update-po-data/:poId')
+  .patch(auth('manufacture', 'superadmin'), poWholesalerToManufacturerController.updatePoData);
 
 module.exports = router;
