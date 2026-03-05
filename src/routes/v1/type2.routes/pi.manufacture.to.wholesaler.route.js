@@ -22,4 +22,10 @@ router
   .route('/manufacturer/:manufacturerEmail')
   .get(auth('manufacture'), m2wPerformaInvoiceController.getInvoicesByManufacturer);
 
+router.patch(
+  '/mark-return-request/:id',
+  auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
+  m2wPerformaInvoiceController.markReturnRequestGenerated
+);
+
 module.exports = router;
