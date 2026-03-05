@@ -45,6 +45,11 @@ const deleteInvoice = catchAsync(async (req, res) => {
   res.status(httpStatus.NO_CONTENT).send();
 });
 
+const markReturnRequestGenerated = catchAsync(async (req, res) => {
+  const updated = await M2WPerformaInvoiceService.markReturnRequestGenerated(req.params.id);
+  res.send(updated);
+});
+
 module.exports = {
   createInvoice,
   getInvoiceById,
@@ -53,4 +58,5 @@ module.exports = {
   updateInvoice,
   updateDeliveryItems,
   deleteInvoice,
+  markReturnRequestGenerated,
 };
