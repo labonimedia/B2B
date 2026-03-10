@@ -44,6 +44,10 @@ const POWholesalerToManufacturerSchema = new mongoose.Schema(
         colourImage: String,
         size: String,
         totalQuantity: Number,
+        quantity: Number,
+        expectedQty: {
+          type: Number,
+        },
         availableQuantity: {
           type: Number,
           default: 0,
@@ -104,6 +108,7 @@ const POWholesalerToManufacturerSchema = new mongoose.Schema(
     transportDetails: transportDetailsSchema,
     bankDetails: bankDetailsSchema,
     manufacturerEmail: String,
+    discount: String,
     wholesalerEmail: String,
     manufacturer: {
       email: String,
@@ -145,9 +150,18 @@ const POWholesalerToManufacturerSchema = new mongoose.Schema(
       trim: true,
     },
     poNumber: Number,
+    expDeliveryDate: {
+      type: Date, // Expected or actual delivery date
+    },
+    partialDeliveryDate: {
+      type: Date, // partail or actual delivery date
+    },
     wholesalerPODateCreated: {
       type: Date,
       default: Date.now,
+    },
+    wholesalerConfirmedAt: {
+      type: Date, // When wholesaler confirms the PO
     },
     invoiceGenerated: {
       type: Boolean,
