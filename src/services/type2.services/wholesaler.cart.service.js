@@ -271,6 +271,7 @@
 const httpStatus = require('http-status');
 const {
   WholesalerCartToManufacturer,
+  POWholesalerToManufacturer,
   Wholesaler,
   Manufacture,
   User,

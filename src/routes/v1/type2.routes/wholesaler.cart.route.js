@@ -40,9 +40,7 @@ router
   .route('/cart/products')
   .get(auth('superadmin', 'manufacture', 'wholesaler'), wholesalerCartToManufacturerController.getCartByEmail);
 
-router
-  .route('/cart-products/po')
-  .get(wholesalerCartToManufacturerController.getCartByEmailToPlaceOrder);
+router.route('/cart-products/po').get(wholesalerCartToManufacturerController.getCartByEmailToPlaceOrder);
 
 router
   .route('/updatecart/:cartId/set/:setId')
