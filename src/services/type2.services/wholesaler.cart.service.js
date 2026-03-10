@@ -82,106 +82,64 @@ const createWholesalerCart = async (reqBody) => {
 
 
 const queryWholesalerCart = async (filter, options) => {
-  const page = options.page || 1;
-  const limit = options.limit || 10;
-  const skip = (page - 1) * limit;
 
-  const matchStage = {
-    $match: filter,
-  };
+  // paginate cart
+  const cartItems = await WholesalerCartToManufacturer.paginate(filter, options);
 
-  const pipeline = [
-    matchStage,
+  if (cartItems.results.length === 0) {
+    return cartItems;
+  }
 
-    // manufacturer lookup
-    {
-      $lookup: {
-        from: "manufactures",
-        localField: "manufacturerEmail",
-        foreignField: "email",
-        as: "manufacturer",
-      },
-    },
-    {
-      $unwind: {
-        path: "$manufacturer",
-        preserveNullAndEmptyArrays: true,
-      },
-    },
-
-    // wholesaler lookup
-    {
-      $lookup: {
-        from: "wholesalers",
-        localField: "wholesalerEmail",
-        foreignField: "email",
-        as: "wholesaler",
-      },
-    },
-    {
-      $unwind: {
-        path: "$wholesaler",
-        preserveNullAndEmptyArrays: true,
-      },
-    },
-
-    // select fields (same structure as retailer API)
-    {
-      $project: {
-        productBy: 1,
-        wholesalerEmail: 1,
-        manufacturerEmail: 1,
-        designNumber: 1,
-        set: 1,
-        cartAddedDate: 1,
-        createdAt: 1,
-        updatedAt: 1,
-
-        manufacturer: {
-          email: "$manufacturer.email",
-          fullName: "$manufacturer.fullName",
-          companyName: "$manufacturer.companyName",
-          address: "$manufacturer.address",
-          state: "$manufacturer.state",
-          country: "$manufacturer.country",
-          pinCode: "$manufacturer.pinCode",
-          mobNumber: "$manufacturer.mobNumber",
-          profileImg: "$manufacturer.profileImg",
-          GSTIN: "$manufacturer.GSTIN",
-        },
-
-        wholesaler: {
-          email: "$wholesaler.email",
-          fullName: "$wholesaler.fullName",
-          companyName: "$wholesaler.companyName",
-          address: "$wholesaler.address",
-          state: "$wholesaler.state",
-          country: "$wholesaler.country",
-          pinCode: "$wholesaler.pinCode",
-          mobNumber: "$wholesaler.mobNumber",
-          profileImg: "$wholesaler.profileImg",
-          GSTIN: "$wholesaler.GSTIN",
-        },
-      },
-    },
-
-    { $skip: skip },
-    { $limit: limit },
+  // manufacturer emails
+  const manufacturerEmails = [
+    ...new Set(cartItems.results.map((item) => item.manufacturerEmail)),
   ];
 
-  const results = await WholesalerCartToManufacturer.aggregate(pipeline);
+  // get manufacturer details
+  const manufacturers = await Manufacture.find({
+    email: { $in: manufacturerEmails },
+  }).select(
+    'email fullName companyName address state country pinCode mobNumber profileImg GSTIN'
+  );
 
-  const totalResults = await WholesalerCartToManufacturer.countDocuments(filter);
+  // get wholesaler details
+  let wholesaler = null;
 
-  const totalPages = Math.ceil(totalResults / limit);
+  if (filter.wholesalerEmail) {
+    wholesaler = await Wholesaler.findOne({
+      email: filter.wholesalerEmail,
+    }).select(
+      'email fullName companyName address state country pinCode mobNumber profileImg GSTIN'
+    );
+  }
 
-  return {
-    results,
-    page,
-    limit,
-    totalPages,
-    totalResults,
-  };
+  // manufacturer map
+  const manufacturerMap = manufacturers.reduce((acc, m) => {
+    acc[m.email] = {
+      email: m.email,
+      fullName: m.fullName,
+      companyName: m.companyName,
+      address: m.address,
+      state: m.state,
+      country: m.country,
+      pinCode: m.pinCode,
+      mobNumber: m.mobNumber,
+      profileImg: m.profileImg,
+      GSTIN: m.GSTIN,
+    };
+    return acc;
+  }, {});
+
+  // final response
+  cartItems.results = cartItems.results.map((item) => ({
+    ...item.toObject(),
+
+    manufacturer: manufacturerMap[item.manufacturerEmail] || null,
+
+    wholesaler,
+  }));
+
+  return cartItems;
 };
 
 /**
