@@ -80,42 +80,35 @@ const createWholesalerCart = async (reqBody) => {
 //   return cartItems;
 // };
 
-
 const queryWholesalerCart = async (filter, options) => {
-
-  // paginate cart
   const cartItems = await WholesalerCartToManufacturer.paginate(filter, options);
 
-  if (cartItems.results.length === 0) {
+  if (!cartItems.results || cartItems.results.length === 0) {
     return cartItems;
   }
 
   // manufacturer emails
-  const manufacturerEmails = [
-    ...new Set(cartItems.results.map((item) => item.manufacturerEmail)),
-  ];
+  const manufacturerEmails = [...new Set(cartItems.results.map((item) => item.manufacturerEmail))];
 
-  // get manufacturer details
+  // fetch manufacturers
   const manufacturers = await Manufacture.find({
     email: { $in: manufacturerEmails },
-  }).select(
-    'email fullName companyName address state country pinCode mobNumber profileImg GSTIN'
-  );
+  }).lean();
 
-  // get wholesaler details
+  // fetch wholesaler
   let wholesaler = null;
 
   if (filter.wholesalerEmail) {
     wholesaler = await Wholesaler.findOne({
       email: filter.wholesalerEmail,
-    }).select(
-      'email fullName companyName address state country pinCode mobNumber profileImg GSTIN'
-    );
+    }).lean();
   }
 
   // manufacturer map
-  const manufacturerMap = manufacturers.reduce((acc, m) => {
-    acc[m.email] = {
+  const manufacturerMap = {};
+
+  manufacturers.forEach((m) => {
+    manufacturerMap[m.email] = {
       email: m.email,
       fullName: m.fullName,
       companyName: m.companyName,
@@ -127,17 +120,18 @@ const queryWholesalerCart = async (filter, options) => {
       profileImg: m.profileImg,
       GSTIN: m.GSTIN,
     };
-    return acc;
-  }, {});
+  });
 
-  // final response
-  cartItems.results = cartItems.results.map((item) => ({
-    ...item.toObject(),
+  // attach manufacturer + wholesaler
+  cartItems.results = cartItems.results.map((item) => {
+    const cart = item.toObject ? item.toObject() : item;
 
-    manufacturer: manufacturerMap[item.manufacturerEmail] || null,
-
-    wholesaler,
-  }));
+    return {
+      ...cart,
+      manufacturer: manufacturerMap[cart.manufacturerEmail] || null,
+      wholesaler: wholesaler || null,
+    };
+  });
 
   return cartItems;
 };
