@@ -50,6 +50,9 @@ const WholesalerCartSchema = new mongoose.Schema(
   }
 );
 
+WholesalerCartSchema.index({ wholesalerEmail: 1 });
+WholesalerCartSchema.index({ manufacturerEmail: 1 });
+
 WholesalerCartSchema.plugin(toJSON);
 WholesalerCartSchema.plugin(paginate);
 

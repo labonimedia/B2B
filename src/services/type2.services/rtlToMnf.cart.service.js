@@ -50,6 +50,7 @@ const createCartType2 = async (reqBody) => {
 
   return newCart;
 };
+
 /**
  * Query for RtlToMnfCart
  * @param {Object} filter - Mongo filter
