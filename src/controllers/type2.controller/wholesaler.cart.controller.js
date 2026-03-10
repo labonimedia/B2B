@@ -4,7 +4,7 @@ const ApiError = require('../../utils/ApiError');
 const { wholesalerCartToManufacturerService } = require('../../services');
 
 const addToCart = catchAsync(async (req, res) => {
-  const result = await wholesalerCartToManufacturerService.addToCart(req.body);
+  const result = await wholesalerCartToManufacturerService.createWholesalerCart(req.body);
   res.status(httpStatus.CREATED).send(result);
 });
 
