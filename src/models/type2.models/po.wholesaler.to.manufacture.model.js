@@ -41,6 +41,7 @@ const POWholesalerToManufacturerSchema = new mongoose.Schema(
         designNumber: String,
         colour: String,
         colourName: String,
+        colourImage: String,
         size: String,
         totalQuantity: Number,
         availableQuantity: {
