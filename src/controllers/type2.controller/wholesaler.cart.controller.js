@@ -8,13 +8,31 @@ const addToCart = catchAsync(async (req, res) => {
   res.status(httpStatus.CREATED).send(result);
 });
 
-const getCartByWholesaler = catchAsync(async (req, res) => {
-  const { wholesalerEmail } = req.query;
+// const getCartByWholesaler = catchAsync(async (req, res) => {
+//   const { wholesalerEmail } = req.query;
 
-  const result = await wholesalerCartToManufacturerService.getCartByWholesaler(wholesalerEmail);
+//   const result = await wholesalerCartToManufacturerService.getCartByWholesaler(wholesalerEmail);
 
-  res.status(httpStatus.OK).send(result);
-});
+//   res.status(httpStatus.OK).send(result);
+// });
+
+const getCartByWholesaler = async (req, res) => {
+
+  const filter = {};
+
+  if (req.query.wholesalerEmail) {
+    filter.wholesalerEmail = req.query.wholesalerEmail;
+  }
+
+  const options = {
+    page: parseInt(req.query.page) || 1,
+    limit: parseInt(req.query.limit) || 10,
+  };
+
+  const result = await wholesalerCartToManufacturerService.queryWholesalerCart(filter, options);
+
+  res.send(result);
+};
 
 const getSingleCart = catchAsync(async (req, res) => {
   const result = await wholesalerCartToManufacturerService.getCartById(req.params.id);
