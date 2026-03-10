@@ -37,46 +37,151 @@ const createWholesalerCart = async (reqBody) => {
 /**
  * Query cart
  */
+
+// const queryWholesalerCart = async (filter, options) => {
+//   const cartItems = await WholesalerCartToManufacturer.paginate(filter, options);
+
+//   if (cartItems.results.length === 0) {
+//     return cartItems;
+//   }
+
+//   const manufacturerEmails = [...new Set(cartItems.results.map((item) => item.manufacturerEmail))];
+
+//   const manufacturers = await Manufacture.find({
+//     email: { $in: manufacturerEmails },
+//   }).select('email fullName companyName address state country pinCode mobNumber profileImg GSTIN');
+
+//   const wholesaler = await Wholesaler.findOne({
+//     email: filter.wholesalerEmail,
+//   }).select('email fullName companyName address state country pinCode mobNumber profileImg GSTIN');
+
+//   const manufacturerMap = manufacturers.reduce((acc, m) => {
+//     acc[m.email] = {
+//       email: m.email,
+//       fullName: m.fullName,
+//       companyName: m.companyName,
+//       address: m.address,
+//       state: m.state,
+//       country: m.country,
+//       pinCode: m.pinCode,
+//       mobNumber: m.mobNumber,
+//       profileImg: m.profileImg,
+//       GSTIN: m.GSTIN,
+//     };
+//     return acc;
+//   }, {});
+
+//   cartItems.results = cartItems.results.map((item) => ({
+//     ...item.toObject(),
+//     manufacturer: manufacturerMap[item.manufacturerEmail] || null,
+//     wholesaler,
+//   }));
+
+//   return cartItems;
+// };
+
+
 const queryWholesalerCart = async (filter, options) => {
-  const cartItems = await WholesalerCartToManufacturer.paginate(filter, options);
+  const page = options.page || 1;
+  const limit = options.limit || 10;
+  const skip = (page - 1) * limit;
 
-  if (cartItems.results.length === 0) {
-    return cartItems;
-  }
+  const matchStage = {
+    $match: filter,
+  };
 
-  const manufacturerEmails = [...new Set(cartItems.results.map((item) => item.manufacturerEmail))];
+  const pipeline = [
+    matchStage,
 
-  const manufacturers = await Manufacture.find({
-    email: { $in: manufacturerEmails },
-  }).select('email fullName companyName address state country pinCode mobNumber profileImg GSTIN');
+    // manufacturer lookup
+    {
+      $lookup: {
+        from: "manufactures",
+        localField: "manufacturerEmail",
+        foreignField: "email",
+        as: "manufacturer",
+      },
+    },
+    {
+      $unwind: {
+        path: "$manufacturer",
+        preserveNullAndEmptyArrays: true,
+      },
+    },
 
-  const wholesaler = await Wholesaler.findOne({
-    email: filter.wholesalerEmail,
-  }).select('email fullName companyName address state country pinCode mobNumber profileImg GSTIN');
+    // wholesaler lookup
+    {
+      $lookup: {
+        from: "wholesalers",
+        localField: "wholesalerEmail",
+        foreignField: "email",
+        as: "wholesaler",
+      },
+    },
+    {
+      $unwind: {
+        path: "$wholesaler",
+        preserveNullAndEmptyArrays: true,
+      },
+    },
 
-  const manufacturerMap = manufacturers.reduce((acc, m) => {
-    acc[m.email] = {
-      email: m.email,
-      fullName: m.fullName,
-      companyName: m.companyName,
-      address: m.address,
-      state: m.state,
-      country: m.country,
-      pinCode: m.pinCode,
-      mobNumber: m.mobNumber,
-      profileImg: m.profileImg,
-      GSTIN: m.GSTIN,
-    };
-    return acc;
-  }, {});
+    // select fields (same structure as retailer API)
+    {
+      $project: {
+        productBy: 1,
+        wholesalerEmail: 1,
+        manufacturerEmail: 1,
+        designNumber: 1,
+        set: 1,
+        cartAddedDate: 1,
+        createdAt: 1,
+        updatedAt: 1,
 
-  cartItems.results = cartItems.results.map((item) => ({
-    ...item.toObject(),
-    manufacturer: manufacturerMap[item.manufacturerEmail] || null,
-    wholesaler,
-  }));
+        manufacturer: {
+          email: "$manufacturer.email",
+          fullName: "$manufacturer.fullName",
+          companyName: "$manufacturer.companyName",
+          address: "$manufacturer.address",
+          state: "$manufacturer.state",
+          country: "$manufacturer.country",
+          pinCode: "$manufacturer.pinCode",
+          mobNumber: "$manufacturer.mobNumber",
+          profileImg: "$manufacturer.profileImg",
+          GSTIN: "$manufacturer.GSTIN",
+        },
 
-  return cartItems;
+        wholesaler: {
+          email: "$wholesaler.email",
+          fullName: "$wholesaler.fullName",
+          companyName: "$wholesaler.companyName",
+          address: "$wholesaler.address",
+          state: "$wholesaler.state",
+          country: "$wholesaler.country",
+          pinCode: "$wholesaler.pinCode",
+          mobNumber: "$wholesaler.mobNumber",
+          profileImg: "$wholesaler.profileImg",
+          GSTIN: "$wholesaler.GSTIN",
+        },
+      },
+    },
+
+    { $skip: skip },
+    { $limit: limit },
+  ];
+
+  const results = await WholesalerCartToManufacturer.aggregate(pipeline);
+
+  const totalResults = await WholesalerCartToManufacturer.countDocuments(filter);
+
+  const totalPages = Math.ceil(totalResults / limit);
+
+  return {
+    results,
+    page,
+    limit,
+    totalPages,
+    totalResults,
+  };
 };
 
 /**
