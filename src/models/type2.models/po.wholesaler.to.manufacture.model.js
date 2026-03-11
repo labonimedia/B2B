@@ -70,6 +70,7 @@ const POWholesalerToManufacturerSchema = new mongoose.Schema(
             'w_confirmed',
             'w_cancelled',
             'make_to_order',
+            'processing',
           ],
           default: 'pending',
         },
