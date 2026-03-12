@@ -115,6 +115,7 @@ const m2wPerformaInvoiceSchema = new mongoose.Schema(
         returnQuantity: Number,
         productType: String,
         gender: String,
+        price: Number,
         clothing: String,
         subCategory: String,
         hsnCode: {
