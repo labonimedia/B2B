@@ -25,7 +25,7 @@ const bankDetailsSchema = new mongoose.Schema({
   bankName: { type: String, required: true, trim: true },
   branchName: { type: String, trim: true },
   ifscCode: { type: String, required: true, trim: true },
-  swiftCode: { type: String, required: true, trim: true },
+  swiftCode: { type: String, trim: true },
   upiId: { type: String, trim: true },
   bankAddress: { type: String, trim: true },
 });
