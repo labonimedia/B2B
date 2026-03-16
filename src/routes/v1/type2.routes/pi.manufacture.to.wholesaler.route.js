@@ -12,12 +12,13 @@ router
 router
   .route('/:id')
   .get(auth('manufacture', 'wholesaler'), m2wPerformaInvoiceController.getInvoiceById)
-  .put(auth('manufacture'), m2wPerformaInvoiceController.updateInvoice)
-  .patch(auth('manufacture'), m2wPerformaInvoiceController.updateInvoice)
+  .put(auth('manufacture', 'wholesaler'), m2wPerformaInvoiceController.updateInvoice)
+  .patch(auth('manufacture', 'wholesaler'), m2wPerformaInvoiceController.updateInvoice)
   .delete(auth('manufacture'), m2wPerformaInvoiceController.deleteInvoice);
 
-router.route('/:id/delivery-items').patch(auth('manufacture'), m2wPerformaInvoiceController.updateDeliveryItems);
-
+router
+  .route('/:id/delivery-items')
+  .patch(auth('manufacture', 'wholesaler'), m2wPerformaInvoiceController.updateDeliveryItems);
 router
   .route('/manufacturer/:manufacturerEmail')
   .get(auth('manufacture'), m2wPerformaInvoiceController.getInvoicesByManufacturer);
