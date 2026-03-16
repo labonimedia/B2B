@@ -54,7 +54,35 @@ const returnW2MSchema = new mongoose.Schema(
     poNumber: Number,
 
     returnRequestNumber: Number,
-
+    
+    manufacturer: {
+      email: String,
+      fullName: String,
+      companyName: String,
+      address: String,
+      state: String,
+      country: String,
+      pinCode: String,
+      mobNumber: String,
+      GSTIN: String,
+      profileImg: String,
+      logo: String,
+    },
+    wholesaler: {
+      email: String,
+      fullName: String,
+      companyName: String,
+      address: String,
+      state: String,
+      country: String,
+      pinCode: String,
+      mobNumber: String,
+      GSTIN: String,
+      productDiscount: String,
+      category: String,
+      profileImg: String,
+      logo: String,
+    },
     returnRequestGenerateDate: {
       type: Date,
       default: Date.now,
