@@ -217,10 +217,54 @@ const queryM2WCreditNotes = async (filter, options) => {
 
 /* ---------- Group ---------- */
 
+// const groupM2WCreditNotes = async (query) => {
+//   const { wholesalerEmail, manufacturerEmail, used, page = 1, limit = 10 } = query;
+
+//   const usedBool = used === 'true';
+
+//   const matchStage = wholesalerEmail
+//     ? { wholesalerEmail, used: usedBool }
+//     : { manufacturerEmail, used: usedBool };
+
+//   const groupByField = wholesalerEmail ? '$manufacturerEmail' : '$wholesalerEmail';
+
+//   const skip = (page - 1) * limit;
+
+//   const pipeline = [
+//     { $match: matchStage },
+//     {
+//       $group: {
+//         _id: groupByField,
+//         totalCreditNotes: { $sum: 1 },
+//         totalCreditAmount: { $sum: '$totalCreditAmount' },
+//       },
+//     },
+//     { $sort: { _id: 1 } },
+//     { $skip: skip },
+//     { $limit: Number(limit) },
+//   ];
+
+//   const grouped = await MtoWCreditNote.aggregate(pipeline);
+
+//   return {
+//     page: Number(page),
+//     limit: Number(limit),
+//     data: grouped,
+//   };
+// };
 const groupM2WCreditNotes = async (query) => {
   const { wholesalerEmail, manufacturerEmail, used, page = 1, limit = 10 } = query;
 
+  if (!wholesalerEmail && !manufacturerEmail) {
+    throw new Error('Either wholesalerEmail or manufacturerEmail must be provided');
+  }
+
+  if (used !== 'true' && used !== 'false') {
+    throw new Error("Query parameter 'used' must be 'true' or 'false'");
+  }
+
   const usedBool = used === 'true';
+  const skip = (Number(page) - 1) * Number(limit);
 
   const matchStage = wholesalerEmail
     ? { wholesalerEmail, used: usedBool }
@@ -228,10 +272,11 @@ const groupM2WCreditNotes = async (query) => {
 
   const groupByField = wholesalerEmail ? '$manufacturerEmail' : '$wholesalerEmail';
 
-  const skip = (page - 1) * limit;
+  /* ---------------- MAIN PIPELINE ---------------- */
 
   const pipeline = [
     { $match: matchStage },
+
     {
       $group: {
         _id: groupByField,
@@ -239,6 +284,67 @@ const groupM2WCreditNotes = async (query) => {
         totalCreditAmount: { $sum: '$totalCreditAmount' },
       },
     },
+
+    /* 🔥 Lookup Manufacturer */
+    {
+      $lookup: {
+        from: 'manufactures',
+        localField: '_id',
+        foreignField: 'email',
+        as: 'manufacturerData',
+      },
+    },
+
+    /* 🔥 Lookup Wholesaler */
+    {
+      $lookup: {
+        from: 'wholesalers',
+        let: {
+          wholesalerEmailParam: wholesalerEmail || '$_id',
+        },
+        pipeline: [
+          {
+            $match: {
+              $expr: {
+                $eq: [
+                  '$email',
+                  wholesalerEmail ? wholesalerEmail : '$_id',
+                ],
+              },
+            },
+          },
+          {
+            $project: {
+              fullName: 1,
+              email: 1,
+              companyName: 1,
+              _id: 0,
+            },
+          },
+        ],
+        as: 'wholesalerData',
+      },
+    },
+
+    /* Flatten arrays */
+    {
+      $addFields: {
+        manufacturer: {
+          $arrayElemAt: ['$manufacturerData', 0],
+        },
+        wholesaler: {
+          $arrayElemAt: ['$wholesalerData', 0],
+        },
+      },
+    },
+
+    {
+      $project: {
+        manufacturerData: 0,
+        wholesalerData: 0,
+      },
+    },
+
     { $sort: { _id: 1 } },
     { $skip: skip },
     { $limit: Number(limit) },
@@ -246,13 +352,35 @@ const groupM2WCreditNotes = async (query) => {
 
   const grouped = await MtoWCreditNote.aggregate(pipeline);
 
+  /* ---------------- TOTAL COUNT ---------------- */
+
+  const totalCountAgg = await MtoWCreditNote.aggregate([
+    { $match: matchStage },
+    { $group: { _id: groupByField } },
+    { $count: 'count' },
+  ]);
+
+  const totalCount = totalCountAgg[0]?.count || 0;
+
+  /* ---------------- FINAL FORMAT ---------------- */
+
+  const formatted = grouped.map((group) => ({
+    groupKey: group._id,
+    used: usedBool,
+    totalCreditNotes: group.totalCreditNotes,
+    totalCreditAmount: group.totalCreditAmount,
+    manufacturer: group.manufacturer || null,
+    wholesaler: group.wholesaler || null,
+  }));
+
   return {
     page: Number(page),
     limit: Number(limit),
-    data: grouped,
+    totalCount,
+    totalPages: Math.ceil(totalCount / limit),
+    data: formatted,
   };
 };
-
 /* ---------- Get by ID ---------- */
 
 const getM2WCreditNoteById = async (id) => {
