@@ -285,39 +285,48 @@ const groupM2WCreditNotes = async (query) => {
       },
     },
 
-    /* 🔥 Lookup Manufacturer */
+    /* 🔥 Manufacturer Lookup (ONLY REQUIRED FIELDS) */
     {
       $lookup: {
         from: 'manufactures',
-        localField: '_id',
-        foreignField: 'email',
-        as: 'manufacturerData',
-      },
-    },
-
-    /* 🔥 Lookup Wholesaler */
-    {
-      $lookup: {
-        from: 'wholesalers',
-        let: {
-          wholesalerEmailParam: wholesalerEmail || '$_id',
-        },
+        let: { email: '$_id' },
         pipeline: [
           {
             $match: {
-              $expr: {
-                $eq: [
-                  '$email',
-                  wholesalerEmail ? wholesalerEmail : '$_id',
-                ],
-              },
+              $expr: { $eq: ['$email', '$$email'] },
             },
           },
           {
             $project: {
               fullName: 1,
-              email: 1,
               companyName: 1,
+              email: 1,
+              _id: 0,
+            },
+          },
+        ],
+        as: 'manufacturerData',
+      },
+    },
+
+    /* 🔥 Wholesaler Lookup (ONLY REQUIRED FIELDS) */
+    {
+      $lookup: {
+        from: 'wholesalers',
+        let: {
+          email: wholesalerEmail ? wholesalerEmail : '$_id',
+        },
+        pipeline: [
+          {
+            $match: {
+              $expr: { $eq: ['$email', '$$email'] },
+            },
+          },
+          {
+            $project: {
+              fullName: 1,
+              companyName: 1,
+              email: 1,
               _id: 0,
             },
           },
@@ -326,18 +335,15 @@ const groupM2WCreditNotes = async (query) => {
       },
     },
 
-    /* Flatten arrays */
+    /* Flatten lookup arrays */
     {
       $addFields: {
-        manufacturer: {
-          $arrayElemAt: ['$manufacturerData', 0],
-        },
-        wholesaler: {
-          $arrayElemAt: ['$wholesalerData', 0],
-        },
+        manufacturer: { $arrayElemAt: ['$manufacturerData', 0] },
+        wholesaler: { $arrayElemAt: ['$wholesalerData', 0] },
       },
     },
 
+    /* Remove temp fields */
     {
       $project: {
         manufacturerData: 0,
