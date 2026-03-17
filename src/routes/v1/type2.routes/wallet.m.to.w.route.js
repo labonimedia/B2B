@@ -9,7 +9,11 @@ router
   .post(auth('superadmin', 'manufacture', 'wholesaler'), mToWWalletController.createWallet)
   .get(auth('superadmin', 'manufacture', 'wholesaler'), mToWWalletController.queryWallets);
 
-router.route('/:id').get(auth('superadmin', 'manufacture', 'wholesaler'), mToWWalletController.getWalletById);
+router
+  .route('/:id')
+  .get(auth('superadmin', 'manufacture', 'wholesaler'), mToWWalletController.getWalletById)
+  .patch(auth('superadmin', 'manufacture'), mToWWalletController.updateWallet) // ✅ added
+  .delete(auth('superadmin'), mToWWalletController.deleteWallet); // ✅ added
 
 router.route('/debit/:walletId').patch(auth('manufacture'), mToWWalletController.debitWalletById);
 

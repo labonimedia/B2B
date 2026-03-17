@@ -74,7 +74,8 @@ const walletSchema = new Schema(
   { timestamps: true }
 );
 
-// ✅ Unique pair
+/* ---------- Unique Pair ---------- */
+
 walletSchema.index({ manufacturerEmail: 1, wholesalerEmail: 1 }, { unique: true });
 
 walletSchema.plugin(toJSON);
