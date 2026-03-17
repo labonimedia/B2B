@@ -1,43 +1,47 @@
 const httpStatus = require('http-status');
-const { rtoMReturnRequestService } = require('../../services');
 const pick = require('../../utils/pick');
-const catchAsync = require('../../utils/catchAsync');
 const ApiError = require('../../utils/ApiError');
+const catchAsync = require('../../utils/catchAsync');
+const { wToMReturnRequestService } = require('../../services');
 
 const returnRequest = catchAsync(async (req, res) => {
-  const data = await rtoMReturnRequestService.createMtoRReturnRequest(req.body);
+  const data = await wToMReturnRequestService.createW2MReturnRequest(req.body);
   res.status(httpStatus.CREATED).send(data);
 });
 
-const queryMtoRReturnRequest = catchAsync(async (req, res) => {
-  const filter = pick(req.query, ['statusAll', 'poId', 'invoiceId', 'manufacturerEmail', 'retailerEmail']);
+const queryReturnRequest = catchAsync(async (req, res) => {
+  const filter = pick(req.query, ['statusAll', 'poId', 'invoiceId', 'manufacturerEmail', 'wholesalerEmail']);
+
   const options = pick(req.query, ['sortBy', 'limit', 'page']);
-  const result = await rtoMReturnRequestService.queryMtoRReturnRequest(filter, options);
+
+  const result = await wToMReturnRequestService.queryW2MReturnRequest(filter, options);
   res.send(result);
 });
 
-const getMtoRReturnRequestById = catchAsync(async (req, res) => {
-  const result = await rtoMReturnRequestService.getMtoRReturnRequestById(req.params.id);
+const getReturnRequestById = catchAsync(async (req, res) => {
+  const result = await wToMReturnRequestService.getW2MReturnRequestById(req.params.id);
+
   if (!result) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Return Request not found');
   }
+
   res.send(result);
 });
 
-const updateMtoRReturnRequestById = catchAsync(async (req, res) => {
-  const result = await rtoMReturnRequestService.updateMtoRReturnRequestById(req.params.id, req.body);
+const updateReturnRequestById = catchAsync(async (req, res) => {
+  const result = await wToMReturnRequestService.updateW2MReturnRequestById(req.params.id, req.body);
   res.send(result);
 });
 
-const deleteMtoRReturnRequestById = catchAsync(async (req, res) => {
-  await rtoMReturnRequestService.deleteMtoRReturnRequestById(req.params.id);
+const deleteReturnRequestById = catchAsync(async (req, res) => {
+  await wToMReturnRequestService.deleteW2MReturnRequestById(req.params.id);
   res.status(httpStatus.NO_CONTENT).send();
 });
 
 module.exports = {
-  deleteMtoRReturnRequestById,
-  updateMtoRReturnRequestById,
-  getMtoRReturnRequestById,
-  queryMtoRReturnRequest,
   returnRequest,
+  queryReturnRequest,
+  getReturnRequestById,
+  updateReturnRequestById,
+  deleteReturnRequestById,
 };
