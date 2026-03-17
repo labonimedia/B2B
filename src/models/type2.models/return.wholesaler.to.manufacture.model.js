@@ -39,13 +39,17 @@ const returnW2MSchema = new mongoose.Schema(
       ref: 'POWholesalerToManufacturer',
       required: true,
     },
-
+    poDate: {
+      type: Date,
+    },
     invoiceId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'M2WPerformaInvoice',
       required: true,
     },
-
+    invoiceDate: {
+      type: Date,
+    },
     invoiceNumber: {
       type: String,
       required: true,
@@ -54,7 +58,7 @@ const returnW2MSchema = new mongoose.Schema(
     poNumber: Number,
 
     returnRequestNumber: Number,
-    
+
     manufacturer: {
       email: String,
       fullName: String,
@@ -118,17 +122,23 @@ const returnW2MSchema = new mongoose.Schema(
         designNumber: String,
         colour: String,
         colourName: String,
+        colourImage: String,
         size: String,
-
         orderQuantity: Number,
-        deliveredQuantity: Number,
-        returnQuantity: Number,
         acceptedQuantity: Number,
-
+        returnQuantity: Number,
         rate: Number,
+        productType: String,
+        gender: String,
+        clothing: String,
+        subCategory: String,
+        hsnCode: String,
+        hsnGst: Number,
+        hsnDescription: String,
+        brandName: String,
+        // Return-related details
         returnReason: String,
         otherReturnReason: String,
-
         manufacturerComments: String,
         wholesalerComments: String,
 
@@ -143,7 +153,7 @@ const returnW2MSchema = new mongoose.Schema(
     totalQuantity: Number,
     totalAmount: Number,
     finalAmount: Number,
-
+    discountApplied: Number,
     manufacturerReturnRemarks: String,
 
     bankDetails: bankDetailsSchema,
