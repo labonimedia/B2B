@@ -186,7 +186,7 @@ const getR2WCounts = async (email, role) => {
   const po = await buildStatusCounts(PORetailerToWholesaler, matchQuery, 'statusAll', [
     'pending',
     'partial_delivery',
-    'w_make_to_orde',
+    'w_make_to_order',
     'wholesaler_confirmed',
   ]);
 
@@ -211,9 +211,9 @@ const getR2WCounts = async (email, role) => {
     po: {
       total: po.total || 0,
       pending: po.pending || 0,
-      partial: po.w_partial || 0,
+      partial: po.partial_delivery || 0,
       makeToOrder: po.w_make_to_order || 0,
-      confirmed: po.w_confirmed || 0,
+      confirmed: po.wholesaler_confirmed || 0,
     },
     invoice: {
       total: invoice.total || 0,
