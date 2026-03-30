@@ -155,9 +155,6 @@ const {
   MtoWCreditNote,
 } = require('../../models');
 
-// ============================================
-// 🔹 COMMON AGGREGATION BUILDER
-// ============================================
 const buildStatusCounts = async (Model, matchQuery, statusField = 'statusAll', statuses = []) => {
   const groupStage = {
     _id: null,
@@ -177,9 +174,6 @@ const buildStatusCounts = async (Model, matchQuery, statusField = 'statusAll', s
   return result || {};
 };
 
-// ============================================
-// 🔹 RETAILER → WHOLESALER
-// ============================================
 const getR2WCounts = async (email, role) => {
   const matchQuery = role === 'retailer' ? { email } : { wholesalerEmail: email };
 
@@ -237,9 +231,6 @@ const getR2WCounts = async (email, role) => {
   };
 };
 
-// ============================================
-// 🔹 WHOLESALER → MANUFACTURER
-// ============================================
 const getW2MCounts = async (email, role) => {
   const matchQuery = role === 'manufacture' ? { manufacturerEmail: email } : { wholesalerEmail: email };
 
@@ -297,9 +288,6 @@ const getW2MCounts = async (email, role) => {
   };
 };
 
-// ============================================
-// 🔥 MAIN SERVICE
-// ============================================
 const wholesalerDashboardCountsService = async (role, email) => {
   const response = {};
 
