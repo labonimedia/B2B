@@ -84,56 +84,56 @@ const compressImageStream = async (fileBuffer) => {
   return compressedBuffer;
 };
 
-// const uploadFile = async (file) => {
-//   const cdnConfig = await initializeS3Client();
-//   console.log(`Uploading file: ${file.originalname}`);
-
-//   // Construct unique file key
-//   const fileKey = `${Date.now()}-${file.originalname}`;
-//   const params = {
-//     Bucket: cdnConfig.bucketName,
-//     Key: fileKey,
-//     ACL: 'public-read',
-//   };
-
-//   // Compress Video or Image **Before** Uploading
-//   if (file.mimetype.startsWith('video')) {
-//     params.Body = await compressVideo(file.buffer);
-//   } else if (file.mimetype.startsWith('image')) {
-//     params.Body = await compressImageStream(file.buffer);
-//   } else {
-//     params.Body = file.buffer;
-//   }
-
-//   const command = new PutObjectCommand(params);
-//   try {
-//     await s3Client.send(command);
-//     return `https://${cdnConfig.bucketName}.${cdnConfig.region}.digitaloceanspaces.com/${cdnConfig.bucketName}/${fileKey}`;
-//   } catch (err) {
-//     console.error('Error uploading file:', err);
-//     throw err;
-//   }
-// };
 const uploadFile = async (file) => {
   const cdnConfig = await initializeS3Client();
+  console.log(`Uploading file: ${file.originalname}`);
 
-  const folderName = "b2bImages"; // 🔥 CUSTOM FOLDER
-
-  const fileKey = `${folderName}/${Date.now()}-${file.originalname}`;
-
+  // Construct unique file key
+  const fileKey = `${Date.now()}-${file.originalname}`;
   const params = {
     Bucket: cdnConfig.bucketName,
     Key: fileKey,
     ACL: 'public-read',
   };
 
-  params.Body = file.buffer;
+  // Compress Video or Image **Before** Uploading
+  if (file.mimetype.startsWith('video')) {
+    params.Body = await compressVideo(file.buffer);
+  } else if (file.mimetype.startsWith('image')) {
+    params.Body = await compressImageStream(file.buffer);
+  } else {
+    params.Body = file.buffer;
+  }
 
   const command = new PutObjectCommand(params);
-  await s3Client.send(command);
-
-  return `https://${cdnConfig.bucketName}.${cdnConfig.region}.digitaloceanspaces.com/${fileKey}`;
+  try {
+    await s3Client.send(command);
+    return `https://${cdnConfig.bucketName}.${cdnConfig.region}.digitaloceanspaces.com/${cdnConfig.bucketName}/${fileKey}`;
+  } catch (err) {
+    console.error('Error uploading file:', err);
+    throw err;
+  }
 };
+// const uploadFile = async (file) => {
+//   const cdnConfig = await initializeS3Client();
+
+//   const folderName = "b2bImages"; // 🔥 CUSTOM FOLDER
+
+//   const fileKey = `${folderName}/${Date.now()}-${file.originalname}`;
+
+//   const params = {
+//     Bucket: cdnConfig.bucketName,
+//     Key: fileKey,
+//     ACL: 'public-read',
+//   };
+
+//   params.Body = file.buffer;
+
+//   const command = new PutObjectCommand(params);
+//   await s3Client.send(command);
+
+//   return `https://${cdnConfig.bucketName}.${cdnConfig.region}.digitaloceanspaces.com/${fileKey}`;
+// };
 
 const uploadFiles = async (req, res, next) => {
   try {
