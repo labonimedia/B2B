@@ -282,6 +282,20 @@ const getDashboardOverview = catchAsync(async (req, res) => {
   });
 });
 
+const getAllDashboardCounts = catchAsync(async (req, res) => {
+  const { email, role } = req.query;
+
+  const data = await manufactureDashboardCountsService.getAllDashboardCounts({
+    email,
+    role,
+  });
+
+  res.status(200).send({
+    success: true,
+    data,
+  });
+});
+
 module.exports = {
   getManufacturerPORetailerCounts,
   getProductDashboardCounts,
@@ -294,4 +308,5 @@ module.exports = {
   getCategoryDashboardCounts,
   getInventoryLowStockDashboardCounts,
   getDashboardOverview,
+  getAllDashboardCounts,
 };
