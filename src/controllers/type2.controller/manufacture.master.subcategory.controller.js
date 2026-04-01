@@ -4,8 +4,12 @@ const pick = require('../../utils/pick');
 const { manufactureSubCategoryService } = require('../../services');
 
 const createSubcategory = catchAsync(async (req, res) => {
-  const subcategory = await manufactureSubCategoryService.createSubcategory(req.body);
-  res.status(httpStatus.CREATED).send({ success: true, data: subcategory });
+  const result = await manufactureSubCategoryService.createSubcategory(req.body);
+
+  res.status(httpStatus.CREATED).send({
+    code: 201,
+    ...result,
+  });
 });
 
 const getSubcategories = catchAsync(async (req, res) => {

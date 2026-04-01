@@ -3,21 +3,68 @@ const { ManufactureMasterCategory } = require('../../models');
 const ApiError = require('../../utils/ApiError');
 
 const createCategory = async (reqBody) => {
-  // If array → bulk insert
+  // ✅ BULK INSERT
   if (Array.isArray(reqBody)) {
     if (reqBody.length === 0) {
       throw new ApiError(httpStatus.BAD_REQUEST, 'Category array cannot be empty');
     }
 
-    return ManufactureMasterCategory.insertMany(reqBody, { ordered: false });
+    // ✅ Remove duplicates from payload
+    const uniqueData = [];
+    const seen = new Set();
+
+    reqBody.forEach((item) => {
+      const key = `${item.manufacturerEmail}-${item.name?.toLowerCase()}`;
+      if (!seen.has(key)) {
+        seen.add(key);
+        uniqueData.push(item);
+      }
+    });
+
+    try {
+      const created = await ManufactureMasterCategory.insertMany(uniqueData, {
+        ordered: false, // 🔥 skip duplicates
+      });
+
+      return {
+        success: true,
+        message: 'Categories created successfully',
+        count: created.length,
+        data: created,
+      };
+    } catch (error) {
+      if (error.code === 11000) {
+        return {
+          success: true,
+          message: 'Categories inserted (duplicates skipped)',
+        };
+      }
+      throw error;
+    }
   }
 
-  return ManufactureMasterCategory.create(reqBody);
+  // ✅ SINGLE INSERT
+  try {
+    const created = await ManufactureMasterCategory.create(reqBody);
+
+    return {
+      success: true,
+      message: 'Category created successfully',
+      data: created,
+    };
+  } catch (error) {
+    if (error.code === 11000) {
+      throw new ApiError(
+        httpStatus.BAD_REQUEST,
+        'Category already exists for this manufacturer'
+      );
+    }
+    throw error;
+  }
 };
 
 const queryCategories = async (filter, options) => {
-  const categories = await ManufactureMasterCategory.paginate(filter, options);
-  return categories;
+  return ManufactureMasterCategory.paginate(filter, options);
 };
 
 const getCategoryById = async (id) => {
@@ -32,7 +79,19 @@ const updateCategoryById = async (id, updateBody) => {
   }
 
   Object.assign(category, updateBody);
-  await category.save();
+
+  try {
+    await category.save();
+  } catch (error) {
+    if (error.code === 11000) {
+      throw new ApiError(
+        httpStatus.BAD_REQUEST,
+        'Category already exists for this manufacturer'
+      );
+    }
+    throw error;
+  }
+
   return category;
 };
 
@@ -43,7 +102,7 @@ const deleteCategoryById = async (id) => {
     throw new ApiError(httpStatus.NOT_FOUND, 'Category not found');
   }
 
-  await category.remove();
+  await category.deleteOne();
   return category;
 };
 

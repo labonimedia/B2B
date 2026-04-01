@@ -1,42 +1,3 @@
-// const mongoose = require('mongoose');
-// const { toJSON, paginate } = require('../plugins');
-
-// const categorySchema = new mongoose.Schema(
-//   {
-//     manufacturerEmail: {
-//       type: String,
-//       required: true,
-//       trim: true,
-//     },
-//     name: {
-//       type: String,
-//       required: true,
-//       trim: true,
-//     },
-//     code: {
-//       type: String,
-//     },
-//     description: {
-//       type: String,
-//     },
-//     isActive: {
-//       type: Boolean,
-//       default: true,
-//     },
-//     note: String,
-//   },
-//   {
-//     timestamps: true,
-//   }
-// );
-
-// categorySchema.index({ categoryName: 1 }, { unique: true });
-
-// categorySchema.plugin(toJSON);
-// categorySchema.plugin(paginate);
-
-// const ManufactureMasterCategory = mongoose.model('ManufactureCategory', categorySchema);
-// module.exports = ManufactureMasterCategory;
 const mongoose = require('mongoose');
 const { toJSON, paginate } = require('../plugins');
 
@@ -57,37 +18,44 @@ const categorySchema = new mongoose.Schema(
     code: {
       type: String,
       trim: true,
+      unique: true,
+      sparse: true,
     },
 
-    description: {
-      type: String,
-      trim: true,
-    },
+    description: String,
 
     isActive: {
       type: Boolean,
       default: true,
     },
 
-    note: {
-      type: String,
-      trim: true,
-    },
+    note: String,
   },
-  {
-    timestamps: true,
-  }
+  { timestamps: true }
 );
 
-//
-// ✅ FIXED INDEX (IMPORTANT)
-// Unique per manufacturer (BEST PRACTICE)
-//
-categorySchema.index({ name: 1, manufacturerEmail: 1 }, { unique: true });
+// ✅ Case-insensitive unique
+categorySchema.index({ name: 1, manufacturerEmail: 1 }, { unique: true, collation: { locale: 'en', strength: 2 } });
+
+// ✅ Safe-ish auto code (better than count)
+categorySchema.pre('save', async function (next) {
+  if (!this.code) {
+    const last = await mongoose.model('ManufactureCategory').findOne({}, {}, { sort: { createdAt: -1 } });
+
+    let nextNumber = 1;
+
+    if (last?.code) {
+      const num = parseInt(last.code.replace('RM_CAT', ''));
+      if (!isNaN(num)) nextNumber = num + 1;
+    }
+
+    this.code = `RM_CAT${String(nextNumber).padStart(3, '0')}`;
+  }
+
+  next();
+});
 
 categorySchema.plugin(toJSON);
 categorySchema.plugin(paginate);
 
-const ManufactureMasterCategory = mongoose.model('ManufactureCategory', categorySchema);
-
-module.exports = ManufactureMasterCategory;
+module.exports = mongoose.model('ManufactureCategory', categorySchema);

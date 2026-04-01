@@ -1,52 +1,61 @@
 const mongoose = require('mongoose');
 const { toJSON, paginate } = require('../plugins');
 
-const { Schema } = mongoose;
-
-const subcategorySchema = new Schema(
+const subcategorySchema = new mongoose.Schema(
   {
     categoryId: {
-      type: Schema.Types.ObjectId,
-      ref: 'ManufactureCategory', // Parent Category
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'ManufactureCategory',
     },
-    categoryName: {
-      type: String,
-      required: true,
-    },
+
+    categoryName: String,
+
     manufacturerEmail: {
       type: String,
       required: true,
-      trim: true,
     },
+
     subcategoryName: {
       type: String,
       required: true,
       trim: true,
     },
+
     subcategoryCode: {
       type: String,
-      trim: true, // Auto-generated: SUB001, SUB002...
+      unique: true,
+      sparse: true,
     },
-    description: {
-      type: String,
-      trim: true,
-    },
-    isActive: {
-      type: Boolean,
-      default: true,
-    },
+
+    description: String,
+    isActive: { type: Boolean, default: true },
     note: String,
   },
   { timestamps: true }
 );
 
-subcategorySchema.index({ categoryId: 1, subcategoryName: 1 }, { unique: true });
+// ✅ Unique inside category (case-insensitive)
+subcategorySchema.index({ categoryId: 1, subcategoryName: 1 }, { unique: true, collation: { locale: 'en', strength: 2 } });
 
-subcategorySchema.index({ code: 1 }, { unique: true });
+// ✅ Auto code
+subcategorySchema.pre('save', async function (next) {
+  if (!this.subcategoryCode) {
+    const last = await mongoose.model('ManufactureSubcategory').findOne({}, {}, { sort: { createdAt: -1 } });
+
+    let nextNumber = 1;
+
+    if (last?.subcategoryCode) {
+      const num = parseInt(last.subcategoryCode.replace('SUB', ''));
+      if (!isNaN(num)) nextNumber = num + 1;
+    }
+
+    this.subcategoryCode = `SUB${String(nextNumber).padStart(3, '0')}`;
+  }
+
+  next();
+});
 
 subcategorySchema.plugin(toJSON);
 subcategorySchema.plugin(paginate);
 
-const ManufactureMasterSubcategory = mongoose.model('ManufactureSubcategory', subcategorySchema);
-
-module.exports = ManufactureMasterSubcategory;
+module.exports = mongoose.model('ManufactureSubcategory', subcategorySchema);
