@@ -530,6 +530,44 @@ const getInventoryLowStockCounts = async (email) => {
   };
 };
 
+const getAllDashboardCounts = async ({ email, role }) => {
+  const [
+    poCounts,
+    productCounts,
+    invoiceCounts,
+    returnCounts,
+    creditNoteCounts,
+    requestCounts,
+    invitationCounts,
+    categoryCounts,
+    inventoryCounts,
+    referredUsersCounts,
+  ] = await Promise.all([
+    getManufacturerPORetailerCounts({ email, role }),
+    getProductDashboardCounts({ email, role }),
+    getPerformaInvoiceDashboardCounts({ email, role }),
+    getReturnDashboardCounts({ email, role }),
+    getCreditNoteDashboardCounts({ email, role }),
+    getRequestDashboardCounts({ email, role }),
+    getInvitationDashboardCounts(email),
+    getCategoryDashboardCounts(email),
+    getInventoryLowStockCounts(email),
+    getReferredUsersDashboardCounts(email),
+  ]);
+
+  return {
+    poCounts,
+    productCounts,
+    invoiceCounts,
+    returnCounts,
+    creditNoteCounts,
+    requestCounts,
+    invitationCounts,
+    categoryCounts,
+    inventoryCounts,
+    referredUsersCounts,
+  };
+};
 module.exports = {
   getManufacturerPORetailerCounts,
   getProductDashboardCounts,
@@ -542,4 +580,5 @@ module.exports = {
   getCategoryDashboardCounts,
   getDashboardOverview,
   getInventoryLowStockCounts,
+  getAllDashboardCounts,
 };

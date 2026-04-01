@@ -72,4 +72,10 @@ router.get(
   manufactureDashboardCountsController.getInventoryLowStockDashboardCounts
 );
 
+// all counts for manufacture dashboard
+router.get(
+  '/all-counts',
+  auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
+  manufactureDashboardCountsController.getAllDashboardCounts
+);
 module.exports = router;
