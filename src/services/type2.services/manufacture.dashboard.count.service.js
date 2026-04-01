@@ -367,7 +367,7 @@ const getReferredUsersDashboardCounts = async (refByEmail) => {
 };
 
 const getRequestDashboardCounts = async ({ email, role }) => {
-  const matchCondition = role === 'manufacture' ? { email } : { requestByEmail: email };
+  const matchCondition = role === 'manufacture' ? { email } : { email: email };
 
   const [result] = await Request.aggregate([
     { $match: matchCondition },
