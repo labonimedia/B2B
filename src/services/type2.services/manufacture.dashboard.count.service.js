@@ -400,18 +400,31 @@ const getReferredUsersDashboardCounts = async (refByEmail) => {
 //     },
 //   };
 // };
+
 const getRequestDashboardCounts = async ({ email, role }) => {
+  const normalizedEmail = email?.toLowerCase().trim();
   let matchCondition = {};
 
-  // ✅ CORRECT ROLE-BASED MATCHING
   if (role === 'manufacture') {
-    matchCondition = { email };
+    matchCondition = {
+      email: normalizedEmail,
+    };
+  } else if (role === 'wholesaler' || role === 'retailer') {t
+    matchCondition = {
+      requestByEmail: normalizedEmail,
+    };
   } else {
-    matchCondition = { requestByEmail: email };
+    matchCondition = {
+      $or: [
+        { email: normalizedEmail },
+        { requestByEmail: normalizedEmail },
+      ],
+    };
   }
 
   const [result] = await Request.aggregate([
     { $match: matchCondition },
+
     {
       $group: {
         _id: null,
@@ -448,7 +461,6 @@ const getRequestDashboardCounts = async ({ email, role }) => {
     },
   };
 };
-
 const getInvitationDashboardCounts = async (manufacturerEmail) => {
   const [result] = await Invitation.aggregate([
     {
