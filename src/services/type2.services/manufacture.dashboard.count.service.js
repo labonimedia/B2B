@@ -366,26 +366,74 @@ const getReferredUsersDashboardCounts = async (refByEmail) => {
   };
 };
 
+// const getRequestDashboardCounts = async ({ email, role }) => {
+//   const matchCondition = role === 'manufacture' ? { email } : { email: email };
+
+//   const [result] = await Request.aggregate([
+//     { $match: matchCondition },
+//     {
+//       $group: {
+//         _id: null,
+//         total: { $sum: 1 },
+
+//         pending: {
+//           $sum: { $cond: [{ $eq: ['$status', 'pending'] }, 1, 0] },
+//         },
+
+//         accepted: {
+//           $sum: { $cond: [{ $eq: ['$status', 'accepted'] }, 1, 0] },
+//         },
+
+//         rejected: {
+//           $sum: { $cond: [{ $eq: ['$status', 'rejected'] }, 1, 0] },
+//         },
+//       },
+//     },
+//   ]);
+
+//   return {
+//     requests: {
+//       total: result?.[0]?.total || 0,
+//       pending: result?.[0]?.pending || 0,
+//       accepted: result?.[0]?.accepted || 0,
+//       rejected: result?.[0]?.rejected || 0,
+//     },
+//   };
+// };
 const getRequestDashboardCounts = async ({ email, role }) => {
-  const matchCondition = role === 'manufacture' ? { email } : { email: email };
+  let matchCondition = {};
+
+  // ✅ CORRECT ROLE-BASED MATCHING
+  if (role === 'manufacture') {
+    matchCondition = { email };
+  } else {
+    matchCondition = { requestByEmail: email };
+  }
 
   const [result] = await Request.aggregate([
     { $match: matchCondition },
     {
       $group: {
         _id: null,
+
         total: { $sum: 1 },
 
         pending: {
-          $sum: { $cond: [{ $eq: ['$status', 'pending'] }, 1, 0] },
+          $sum: {
+            $cond: [{ $eq: ['$status', 'pending'] }, 1, 0],
+          },
         },
 
         accepted: {
-          $sum: { $cond: [{ $eq: ['$status', 'accepted'] }, 1, 0] },
+          $sum: {
+            $cond: [{ $eq: ['$status', 'accepted'] }, 1, 0],
+          },
         },
 
         rejected: {
-          $sum: { $cond: [{ $eq: ['$status', 'rejected'] }, 1, 0] },
+          $sum: {
+            $cond: [{ $eq: ['$status', 'rejected'] }, 1, 0],
+          },
         },
       },
     },
