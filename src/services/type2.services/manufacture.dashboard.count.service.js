@@ -402,40 +402,19 @@ const getReferredUsersDashboardCounts = async (refByEmail) => {
 // };
 
 const getRequestDashboardCounts = async ({ email, role }) => {
-  // ✅ normalize email
   const normalizedEmail = email?.toLowerCase().trim();
-
-  // ✅ normalize role
-  const normalizedRole = role?.toLowerCase().trim();
 
   let matchCondition = {};
 
-  // 🔥 HANDLE ALL POSSIBLE ROLE VALUES
-  if (normalizedRole === 'manufacture' || normalizedRole === 'manufacturer') {
+  if (role === 'manufacture') {
     matchCondition = {
-      email: normalizedEmail,
-    };
-  } else if (
-    normalizedRole === 'wholesaler' ||
-    normalizedRole === 'retailer'
-  ) {
-    matchCondition = {
-      requestByEmail: normalizedEmail,
+      email: { $regex: `^${normalizedEmail}$`, $options: 'i' },
     };
   } else {
-    // ✅ fallback (VERY IMPORTANT)
     matchCondition = {
-      $or: [
-        { email: normalizedEmail },
-        { requestByEmail: normalizedEmail },
-      ],
+      requestByEmail: { $regex: `^${normalizedEmail}$`, $options: 'i' },
     };
   }
-
-  // 🔥 DEBUG LOG (ADD THIS TEMPORARILY)
-  console.log('EMAIL:', normalizedEmail);
-  console.log('ROLE:', normalizedRole);
-  console.log('MATCH:', JSON.stringify(matchCondition));
 
   const [result] = await Request.aggregate([
     { $match: matchCondition },
@@ -443,15 +422,9 @@ const getRequestDashboardCounts = async ({ email, role }) => {
       $group: {
         _id: null,
         total: { $sum: 1 },
-        pending: {
-          $sum: { $cond: [{ $eq: ['$status', 'pending'] }, 1, 0] },
-        },
-        accepted: {
-          $sum: { $cond: [{ $eq: ['$status', 'accepted'] }, 1, 0] },
-        },
-        rejected: {
-          $sum: { $cond: [{ $eq: ['$status', 'rejected'] }, 1, 0] },
-        },
+        pending: { $sum: { $cond: [{ $eq: ['$status', 'pending'] }, 1, 0] } },
+        accepted: { $sum: { $cond: [{ $eq: ['$status', 'accepted'] }, 1, 0] } },
+        rejected: { $sum: { $cond: [{ $eq: ['$status', 'rejected'] }, 1, 0] } },
       },
     },
   ]);
@@ -464,7 +437,7 @@ const getRequestDashboardCounts = async ({ email, role }) => {
       rejected: result?.[0]?.rejected || 0,
     },
   };
-}; 
+};
 
 const getInvitationDashboardCounts = async (manufacturerEmail) => {
   const [result] = await Invitation.aggregate([
