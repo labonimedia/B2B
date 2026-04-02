@@ -249,6 +249,7 @@ const getR2WCounts = async (email, role) => {
     'partial_delivery',
     'w_make_to_order',
     'wholesaler_confirmed',
+    'invoice_generated',
   ]);
 
   const invoiceMatch = role === 'wholesaler' ? { wholesalerEmail: email } : { retailerEmail: email };
@@ -282,6 +283,7 @@ const getR2WCounts = async (email, role) => {
       partial: po.partial_delivery || 0,
       makeToOrder: po.w_make_to_order || 0,
       confirmed: po.wholesaler_confirmed || 0,
+      invoiceGenerated: po.invoice_generated || 0,
     },
 
     invoice: {
@@ -328,6 +330,7 @@ const getW2MCounts = async (email, role) => {
     'm_order_confirmed',
     'm_partial_delivery',
     'make_to_order',
+    'invoice_generated',
   ]);
 
   const invoiceMatch = role === 'manufacture' ? { manufacturerEmail: email } : { wholesalerEmail: email };
@@ -361,6 +364,7 @@ const getW2MCounts = async (email, role) => {
       confirmed: po.m_order_confirmed || 0,
       partial: po.m_partial_delivery || 0,
       makeToOrder: po.make_to_order || 0,
+      invoiceGenerated: po.invoice_generated || 0,
     },
 
     invoice: {
