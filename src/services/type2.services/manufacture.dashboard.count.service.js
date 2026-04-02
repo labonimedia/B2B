@@ -53,9 +53,9 @@ const getRetailerPoCounts = async ({ email, matchBy }) => {
           },
         },
 
-        delivered: {
+        invoiceGenerated : {
           $sum: {
-            $cond: [{ $eq: ['$statusAll', 'delivered'] }, 1, 0],
+            $cond: [{ $eq: ['$statusAll', 'invoice_generated',] }, 1, 0],
           },
         },
       },
@@ -69,7 +69,7 @@ const getRetailerPoCounts = async ({ email, matchBy }) => {
       confirmed: result?.confirmed || 0,
       partialDelivery: result?.partialDelivery || 0,
       makeToOrder: result?.makeToOrder || 0,
-      delivered: result?.delivered || 0,
+      invoiceGenerated: result?.invoice_generated || 0,
     },
   };
 };
