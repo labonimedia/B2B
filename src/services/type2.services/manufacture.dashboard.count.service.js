@@ -69,7 +69,7 @@ const getRetailerPoCounts = async ({ email, matchBy }) => {
       confirmed: result?.confirmed || 0,
       partialDelivery: result?.partialDelivery || 0,
       makeToOrder: result?.makeToOrder || 0,
-      invoiceGenerated: result?.invoice_generated || 0,
+      invoiceGenerated: result?.invoiceGenerated || 0,
     },
   };
 };
