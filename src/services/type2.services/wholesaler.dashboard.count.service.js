@@ -467,14 +467,14 @@ const wholesalerDashboardCountsService = async (role, email) => {
     const [r2w, w2m, lowStock] = await Promise.all([
       getR2WCounts(email, role),
       getW2MCounts(email, role),
-      getInventoryProductCounts(email),
+      getInventoryDesignCounts(email),
     ]);
 
     response.retailerToWholesaler = r2w;
     response.wholesalerToManufacturer = w2m;
     response.inventory = {
-      lowStockProducts: lowStock.lowStockProducts || 0,
-      totalProducts: lowStock.totalProducts || 0,
+      lowStockDesigns: lowStock.lowStockDesigns || 0,
+      totalDesigns: lowStock.totalDesigns || 0,
     };
   }
 
