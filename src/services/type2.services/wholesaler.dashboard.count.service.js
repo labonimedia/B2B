@@ -176,6 +176,7 @@ const {
   ReturnW2M,
   WtoRCreditNote,
   MtoWCreditNote,
+  WholesalerInventory,
 } = require('../../models');
 
 const buildStatusCounts = async (Model, matchQuery, statusField = 'statusAll', statuses = []) => {
@@ -195,6 +196,26 @@ const buildStatusCounts = async (Model, matchQuery, statusField = 'statusAll', s
   const [result] = await Model.aggregate([{ $match: matchQuery }, { $group: groupStage }]);
 
   return result || {};
+};
+
+const getLowStockCount = async (email) => {
+  const [result] = await WholesalerInventory.aggregate([
+    {
+      $match: {
+        userEmail: email,
+        $expr: { $lt: ['$quantity', '$minimumQuantityAlert'] },
+      },
+    },
+    {
+      $group: {
+        _id: null,
+        lowStockCount: { $sum: 1 },
+        totalQuantity: { $sum: '$quantity' }, // optional
+      },
+    },
+  ]);
+
+  return result || { lowStockCount: 0, totalQuantity: 0 };
 };
 
 // ✅ NEW: Invoice Amount Aggregation
@@ -411,10 +432,18 @@ const wholesalerDashboardCountsService = async (role, email) => {
   }
 
   if (role === 'wholesaler') {
-    const [r2w, w2m] = await Promise.all([getR2WCounts(email, role), getW2MCounts(email, role)]);
+    const [r2w, w2m, lowStock] = await Promise.all([
+      getR2WCounts(email, role),
+      getW2MCounts(email, role),
+      getLowStockCount(email),
+    ]);
 
     response.retailerToWholesaler = r2w;
     response.wholesalerToManufacturer = w2m;
+    response.inventory = {
+      lowStockProducts: lowStock.lowStockCount || 0,
+      totalLowStockQty: lowStock.totalQuantity || 0,
+    };
   }
 
   if (role === 'manufacture') {
