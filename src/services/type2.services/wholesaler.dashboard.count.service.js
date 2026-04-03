@@ -205,7 +205,7 @@ const getInventoryProductCounts = async (email) => {
     },
     {
       $facet: {
-        // ✅ Total Products (unique design + colour)
+        // ✅ Total Products (design + colour)
         totalProducts: [
           {
             $group: {
@@ -220,20 +220,27 @@ const getInventoryProductCounts = async (email) => {
           },
         ],
 
-        // ✅ Low Stock Products (product-wise)
+        // ✅ Low Stock Products (product-wise if ANY size is low)
         lowStockProducts: [
-          {
-            $match: {
-              $expr: { $lt: ['$quantity', '$minimumQuantityAlert'] },
-            },
-          },
           {
             $group: {
               _id: {
                 designNumber: '$designNumber',
                 colour: '$colour',
               },
+              isLowStock: {
+                $max: {
+                  $cond: [
+                    { $lt: ['$quantity', '$minimumQuantityAlert'] },
+                    1,
+                    0,
+                  ],
+                },
+              },
             },
+          },
+          {
+            $match: { isLowStock: 1 },
           },
           {
             $count: 'count',
