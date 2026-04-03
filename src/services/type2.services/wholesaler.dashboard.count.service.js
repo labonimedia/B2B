@@ -198,24 +198,55 @@ const buildStatusCounts = async (Model, matchQuery, statusField = 'statusAll', s
   return result || {};
 };
 
-const getLowStockCount = async (email) => {
-  const [result] = await WholesalerInventory.aggregate([
+const getInventoryProductCounts = async (email) => {
+  const result = await WholesalerInventory.aggregate([
     {
-      $match: {
-        userEmail: email,
-        $expr: { $lt: ['$quantity', '$minimumQuantityAlert'] },
-      },
+      $match: { userEmail: email },
     },
     {
-      $group: {
-        _id: null,
-        lowStockCount: { $sum: 1 },
-        totalQuantity: { $sum: '$quantity' }, // optional
+      $facet: {
+        // ✅ Total Products (unique design + colour)
+        totalProducts: [
+          {
+            $group: {
+              _id: {
+                designNumber: '$designNumber',
+                colour: '$colour',
+              },
+            },
+          },
+          {
+            $count: 'count',
+          },
+        ],
+
+        // ✅ Low Stock Products (product-wise)
+        lowStockProducts: [
+          {
+            $match: {
+              $expr: { $lt: ['$quantity', '$minimumQuantityAlert'] },
+            },
+          },
+          {
+            $group: {
+              _id: {
+                designNumber: '$designNumber',
+                colour: '$colour',
+              },
+            },
+          },
+          {
+            $count: 'count',
+          },
+        ],
       },
     },
   ]);
 
-  return result || { lowStockCount: 0, totalQuantity: 0 };
+  return {
+    totalProducts: result[0]?.totalProducts[0]?.count || 0,
+    lowStockProducts: result[0]?.lowStockProducts[0]?.count || 0,
+  };
 };
 
 // ✅ NEW: Invoice Amount Aggregation
