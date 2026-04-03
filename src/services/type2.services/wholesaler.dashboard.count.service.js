@@ -198,21 +198,18 @@ const buildStatusCounts = async (Model, matchQuery, statusField = 'statusAll', s
   return result || {};
 };
 
-const getInventoryProductCounts = async (email) => {
+const getInventoryDesignCounts = async (email) => {
   const result = await WholesalerInventory.aggregate([
     {
       $match: { userEmail: email },
     },
     {
       $facet: {
-        // ✅ Total Products (design + colour)
-        totalProducts: [
+        // ✅ Total Designs (only designNumber)
+        totalDesigns: [
           {
             $group: {
-              _id: {
-                designNumber: '$designNumber',
-                colour: '$colour',
-              },
+              _id: '$designNumber',
             },
           },
           {
@@ -220,14 +217,11 @@ const getInventoryProductCounts = async (email) => {
           },
         ],
 
-        // ✅ Low Stock Products (product-wise if ANY size is low)
-        lowStockProducts: [
+        // ✅ Low Stock Designs (ANY color/size under that design is low)
+        lowStockDesigns: [
           {
             $group: {
-              _id: {
-                designNumber: '$designNumber',
-                colour: '$colour',
-              },
+              _id: '$designNumber',
               isLowStock: {
                 $max: {
                   $cond: [
@@ -251,8 +245,8 @@ const getInventoryProductCounts = async (email) => {
   ]);
 
   return {
-    totalProducts: result[0]?.totalProducts[0]?.count || 0,
-    lowStockProducts: result[0]?.lowStockProducts[0]?.count || 0,
+    totalDesigns: result[0]?.totalDesigns[0]?.count || 0,
+    lowStockDesigns: result[0]?.lowStockDesigns[0]?.count || 0,
   };
 };
 
