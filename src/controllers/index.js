@@ -159,3 +159,5 @@ module.exports.w2rPerformaInvoiceController = require('./type2.controller/pi.who
 module.exports.rtoWReturnRequestController = require('./type2.controller/return.retailer.to.wholesaler.controller');
 // return wholesaler to manufacture
 module.exports.wToMReturnRequestController = require('./type2.controller/return.wholesaler.to.manufacture.controller');
+// channel partner controller
+module.exports.channelPartnerCostumerController = require('./channel.partner.customer.controller');

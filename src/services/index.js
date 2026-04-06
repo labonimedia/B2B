@@ -163,3 +163,5 @@ module.exports.w2rPerformaInvoiceService = require('./type2.services/pi.wholesal
 module.exports.rtoWReturnRequestService = require('./type2.services/return.retailer.to.wholesaler.service');
 // return request wholesaler to manufacture
 module.exports.wToMReturnRequestService = require('./type2.services/return.wholesaler.to.manufacture.service');
+// channel partner customers
+module.exports.channelPartnerCustomerService = require('./channel.partner.customer.service');
