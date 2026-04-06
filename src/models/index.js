@@ -172,3 +172,5 @@ module.exports.W2RPerformaInvoice = require('./type2.models/pi.wholesaler.to.ret
 module.exports.ReturnR2W = require('./type2.models/return.retailer.to.wholesaler.model');
 // return request wholesaler to manufacture
 module.exports.ReturnW2M = require('./type2.models/return.wholesaler.to.manufacture.model');
+// channel partner customers
+module.exports.ChannelPartnerCustomer = require('./channel.partner.customer.model');
