@@ -9,20 +9,26 @@ router.route('/bulk').post(auth('channelPartner'), channelPartnerCostumerControl
 router
   .route('/')
   .post(
-    auth('channelPartner'), // only CP can add
+    auth('channelPartner', 'manufacture', 'wholesaler', 'superadmin', 'retailer'), // only CP can add
     channelPartnerCostumerController.addRetailer
   )
-  .get(auth('channelPartner', 'manufacture', 'wholesaler', 'superadmin'), channelPartnerCostumerController.queryRetailers);
+  .get(
+    auth('channelPartner', 'manufacture', 'wholesaler', 'superadmin', 'retailer'),
+    channelPartnerCostumerController.queryRetailers
+  );
 
 router
   .route('/:id')
-  .get(auth('channelPartner', 'manufacture', 'wholesaler', 'superadmin'), channelPartnerCostumerController.getRetailerById)
+  .get(
+    auth('channelPartner', 'manufacture', 'wholesaler', 'superadmin', 'retailer'),
+    channelPartnerCostumerController.getRetailerById
+  )
   .patch(
-    auth('channelPartner'), // only CP can update
+    auth('channelPartner', 'manufacture', 'wholesaler', 'superadmin', 'retailer'), // only CP can update
     channelPartnerCostumerController.updateRetailerById
   )
   .delete(
-    auth('channelPartner'), // only CP can delete
+    auth('channelPartner', 'manufacture', 'wholesaler', 'superadmin', 'retailer'), // only CP can delete
     channelPartnerCostumerController.deleteRetailerById
   );
 
