@@ -1,34 +1,47 @@
 const express = require('express');
+const auth = require('../../../middlewares/auth');
+const { channelPartnerController } = require('../../../controllers');
 
 const router = express.Router();
-const { WholesalerInventoryController } = require('../../../controllers');
-const auth = require('../../../middlewares/auth');
 
-router
-  .route('/bulk')
-  .post(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), WholesalerInventoryController.bulkCreateInventories);
+router.post('/register', channelPartnerController.registerChannelPartner);
 
-router
-  .route('/')
-  .post(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), WholesalerInventoryController.createInventory)
-  .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), WholesalerInventoryController.getInventories);
+router.get('/', auth('superadmin', 'manufacture'), channelPartnerController.getAllChannelPartners);
 
-router
-  .route('/:id')
-  .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), WholesalerInventoryController.getInventoryById)
-  .put(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), WholesalerInventoryController.updateInventory)
-  .delete(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), WholesalerInventoryController.deleteInventory);
+router.get(
+  '/:email',
+  auth('superadmin', 'manufacture', 'channelPartner', 'retailer', 'wholesaler'),
+  channelPartnerController.getChannelPartnerByEmail
+);
 
-router.post(
-  '/by-designs',
-  auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
-  WholesalerInventoryController.getInventoriesByDesignNumbers
+router.patch(
+  '/:email',
+  auth('superadmin', 'manufacture', 'channelPartner', 'retailer', 'wholesaler'),
+  channelPartnerController.updateChannelPartner
+);
+
+router.delete(
+  '/:email',
+  auth('superadmin', 'manufacture', 'channelPartner', 'retailer', 'wholesaler'),
+  channelPartnerController.deleteChannelPartner
 );
 
 router.post(
-  '/update-bulk',
-  auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
-  WholesalerInventoryController.bulkUpdateInventory
+  '/add-retailer',
+  auth('superadmin', 'manufacture', 'channelPartner', 'retailer', 'wholesaler'),
+  channelPartnerController.addRetailer
+);
+
+router.get(
+  '/retailers/list',
+  auth('superadmin', 'manufacture', 'channelPartner', 'retailer', 'wholesaler'),
+  channelPartnerController.getRetailers
+);
+
+router.post(
+  '/link-manufacturer',
+  auth('superadmin', 'manufacture', 'channelPartner', 'retailer', 'wholesaler'),
+  channelPartnerController.linkManufacturer
 );
 
 module.exports = router;

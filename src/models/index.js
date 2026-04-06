@@ -30,6 +30,7 @@ module.exports.Product = require('./product.model');
 module.exports.Brand = require('./brand.model');
 module.exports.SubCategory = require('./sub.category.model');
 module.exports.Retailer = require('./retailer.model');
+module.exports.ChannelPartner = require('./channel.partner.model');
 module.exports.WholesalerCategory = require('./wholesaler.category.model');
 module.exports.RetailerCategory = require('./retailer.category.model');
 module.exports.Currency = require('./currency.model');
@@ -159,6 +160,8 @@ module.exports.ManufactureMasterItem = require('./type2.models/manufacture.maste
 module.exports.ManufactureMasterSubCategory = require('./type2.models/manufacture.master.subcategory.model');
 // manufacture BOM
 module.exports.ManufactureBOM = require('./type2.models/manufacture.bom.model');
+// manufacture Commission
+module.exports.ManufactureCommission = require('./type2.models/manufacture.commission.model');
 // manufacture raw material
 module.exports.ManufactureRawMaterialInventory = require('./type2.models/manufacture.raw.material.inventory.logs.model');
 // wholesaler inventory logs

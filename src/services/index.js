@@ -3,6 +3,7 @@ module.exports.emailService = require('./email.service');
 module.exports.tokenService = require('./token.service');
 module.exports.userService = require('./user.service');
 module.exports.manufactureService = require('./manufacture.service');
+module.exports.channelPartnerService = require('./channel.partner.service');
 module.exports.otpService = require('./otp.service');
 module.exports.invitationService = require('./invitation.service');
 module.exports.wholesalerService = require('./wholesaler.service');
@@ -147,6 +148,7 @@ module.exports.manufactureSubCategoryService = require('./type2.services/manufac
 module.exports.manufactureItemService = require('./type2.services/manufacture.master.item.service');
 // manufacture bom service
 module.exports.manufactureBOMService = require('./type2.services/manufacture.bom.service');
+module.exports.manufactureCommissionService = require('./type2.services/manufacture.commission.service');
 // manufacture raw material inventory logs service
 module.exports.manufactureRawMaterialInventoryLogsService = require('./type2.services/manufacture.raw.material.inventory.logs.service');
 // manufacture dashboards counts

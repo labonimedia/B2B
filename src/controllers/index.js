@@ -1,6 +1,8 @@
 module.exports.authController = require('./auth.controller');
 module.exports.userController = require('./user.controller');
 module.exports.manufactureController = require('./manufacture.controller');
+module.exports.manufactureCommisionController = require('./manufacture.commision.controller');
+module.exports.channelPartnerController = require('./channel.partner.controller');
 module.exports.invitationController = require('./invitation.controller');
 module.exports.wholesalerController = require('./wholesaler.controller');
 module.exports.clothingMensController = require('./clothing.mens.controller');
@@ -141,6 +143,8 @@ module.exports.manufactureSubCategoryController = require('./type2.controller/ma
 module.exports.manufactureItemController = require('./type2.controller/manufacture.master.item.controller');
 // manufacture bom
 module.exports.manufactureBOMController = require('./type2.controller/manufacture.bom.controller');
+// manufacture commission
+module.exports.manufactureCommissionController = require('./type2.controller/manufacture.commission.controller');
 // manufacture raw material inventory logs
 module.exports.manufactureRawMaterialInventoryLogsController = require('./type2.controller/manufacture.raw.material.inventory.logs.controller');
 // manufacture dashboard counts

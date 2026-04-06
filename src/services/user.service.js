@@ -1,11 +1,12 @@
 const httpStatus = require('http-status');
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
-const { User, Wholesaler, Manufacture, Retailer, Counter, Invitation } = require('../models');
+const { User, Wholesaler, Manufacture, Retailer, Counter, Invitation, ChannelPartner } = require('../models');
 const ApiError = require('../utils/ApiError');
 const { createManufacture } = require('./manufacture.service');
 const { createWholesaler } = require('./wholesaler.service');
 const { createRetailer } = require('./retailer.service');
+const { createChannelPartner } = require('./channel.partner.service');
 
 /**
  * Create a user
@@ -26,6 +27,8 @@ const createUser = async (userBody) => {
     prefix = 'WHO';
   } else if (userBody.role === 'retailer') {
     prefix = 'RET';
+  } else if (userBody.role === 'channelPartner') {
+    prefix = 'CP';
   } else {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Invalid user role');
   }
@@ -73,8 +76,9 @@ const createUser = async (userBody) => {
       await createWholesaler([data], isReplicaSet ? { session } : {});
     } else if (userBody.role === 'retailer') {
       await createRetailer([data], isReplicaSet ? { session } : {});
+    } else if (userBody.role === 'channelPartner') {
+      await createChannelPartner([data], isReplicaSet ? { session } : {});
     }
-
     // Update invitation status
     await Invitation.findOneAndUpdate(
       { email: createdUser[0].email },
@@ -82,8 +86,6 @@ const createUser = async (userBody) => {
       { new: true, session: isReplicaSet ? session : undefined }
     );
 
-    // await Invitation.findOneAndUpdate({ email: createdUser.email }, { $set: { status: 'accepted' } }, { new: true });
-    // Commit transaction only if using a replica set
     if (isReplicaSet) {
       await session.commitTransaction();
     }
@@ -141,6 +143,12 @@ const getUserById = async (id) => {
       profile = retailer ? retailer.profileImg : null;
       break;
     }
+    case 'channelPartner': {
+      const cp = await ChannelPartner.findOne({ email: user.email });
+      profile = cp ? cp.profileImg : null;
+      break;
+    }
+
     default: {
       profile = null;
       break;
@@ -200,6 +208,11 @@ const updateUserById = async (userId, updateBody) => {
       profile = retailer ? retailer.profileImg : null;
       break;
     }
+    case 'channelPartner': {
+      const cp = await ChannelPartner.findOne({ email: user.email });
+      profile = cp ? cp.profileImg : null;
+      break;
+    }
     default: {
       profile = null;
       break;
@@ -255,6 +268,9 @@ const deleteUserByEmail = async (email) => {
       break;
     case 'retailer':
       await Retailer.deleteOne({ email });
+      break;
+    case 'channelPartner':
+      await ChannelPartner.deleteOne({ email });
       break;
     default:
       break;

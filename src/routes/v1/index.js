@@ -148,6 +148,10 @@ const WholesalerInventoryLogsRoute = require('./type2.routes/wholesaler.inventor
 const W2RPerformaInvoiceRoute = require('./type2.routes/pi.whosaler.to.retailer.route');
 // wholesaler cart to manufacturer
 const wholesalerCartToManufacturerRoute = require('./type2.routes/wholesaler.cart.route');
+// channel partner route
+const channelPartnerRoute = require('./channel.partner.route');
+// manufacture commission route
+const manufactureCommissionRoute = require('./type2.routes/manufacture.commision.master.route');
 
 const router = express.Router();
 
@@ -701,6 +705,20 @@ const defaultRoutes = [
     path: '/wholesaler-dashboard',
     route: wholesalerDashboardCountsRoute,
   },
+  // channel partner routes
+  {
+    path: '/channel-partner',
+    route: channelPartnerRoute,
+  },
+  // manufacture commision routes
+  {
+    path: '/manufacture-commission',
+    route: manufactureCommissionRoute,
+  },
+  // channel Partner Connected Retailer
+  // {
+
+  // },
 ];
 
 const devRoutes = [

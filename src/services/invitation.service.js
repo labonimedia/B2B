@@ -100,20 +100,6 @@ const sendReInvitationBulk = async (emails, fullNames) => {
   return results;
 };
 
-// const sendReInvitation = async (email, fullName) => {
-//   const result = await emailService.sendInvitationToDistributer(email, fullName);
-//   return result;
-// };
-
-// const sendReInvitationBulk = async (emails,fullNames) => {
-//   const results = [];
-//   for (const email of emails) {
-//     const result = await emailService.sendInvitationToDistributer(email, fullName);
-//     results.push(result);
-//   }
-//   return results;
-// };
-
 /**
  * Query for Invitation
  * @param {Object} filter - Mongo filter
