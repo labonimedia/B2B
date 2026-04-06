@@ -45,9 +45,6 @@ const updateWholesalerCategoryById = async (id, updateBody) => {
   if (!category) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Wholesaler Category not found');
   }
-  // Object.assign(user, updateBody);
-  // await user.save();
-  // return user;
 
   if (!category) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Retailer Category not found');
@@ -79,14 +76,7 @@ const updateWholesalerCategoryById = async (id, updateBody) => {
  * @param {ObjectId} userId
  * @returns {Promise<WholesalerCategory>}
  */
-// const deleteWholesalerCategoryById = async (id) => {
-//   const user = await getWholesalerCategoryById(id);
-//   if (!user) {
-//     throw new ApiError(httpStatus.NOT_FOUND, 'Wholesaler Category not found');
-//   }
-//   await user.remove();
-//   return user;
-// };
+
 const deleteWholesalerCategoryById = async (id) => {
   const user = await getWholesalerCategoryById(id);
   if (!user) {

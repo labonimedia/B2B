@@ -38,13 +38,6 @@ const sendEmail = async (to, subject, text) => {
 
   await transport.sendMail(msg);
 };
-// sendEmail('bhusnarsd@gmail.com', 'Test Subject', 'Test Email Body')
-//   .then((data) => {
-//     console.log('Email sent successfully:', data);
-//   })
-//   .catch((err) => {
-//     console.error('Error sending email:', err);
-//   });
 
 /**
  * Send reset password email
