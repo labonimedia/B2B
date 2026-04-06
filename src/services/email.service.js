@@ -131,7 +131,7 @@ We look forward to seeing you on Fashion Traders Hub!
 
 Best regards,
 ${manufacturerName}
-Registered Manufacturer at Fashion Traders Hub
+Registered User at Fashion Traders Hub
 fashiontradershub.com`;
   await sendEmail(to, subject, text);
 };
