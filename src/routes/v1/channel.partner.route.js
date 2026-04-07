@@ -45,8 +45,16 @@ router.get(
   channelPartnerController.getRetailers
 );
 
-
 // Link manufacturer to CP
-router.post('/link-manufacturer', auth('superadmin', 'manufacture'), channelPartnerController.linkManufacturer);
+router.post('/link-manufacturer',auth('superadmin', 'manufacture', 'wholesaler', 'retailer', 'channelPartner'), channelPartnerController.linkManufacturer);
+
+router.post('/assign-commission', auth('superadmin', 'manufacture', 'wholesaler', 'retailer', 'channelPartner'), channelPartnerController.assignCommission);
+
+// 🔥 Get Commission
+router.get(
+  '/get-commission/:channelPartnerId/:commissionGivenBy',
+auth('superadmin', 'manufacture', 'wholesaler', 'retailer', 'channelPartner'),
+  channelPartnerController.getCommissionByGivenBy
+);
 
 module.exports = router;

@@ -72,30 +72,7 @@ const getUserByEmail = async (email) => {
   return Wholesaler.findOne({ email });
 };
 
-// // Utility function to escape special characters in the search keywords
-// const escapeRegExp = (string) => {
-//   return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // Escapes special characters
-// };
 
-// const getSearchWholesaler = async (searchKeywords = '', options = {}) => {
-//   const sanitizedKeywords = escapeRegExp(searchKeywords); // Sanitize input
-//   // eslint-disable-next-line security/detect-non-literal-regexp
-//   const searchRegex = new RegExp(sanitizedKeywords, 'i');
-
-//   const wholesalerFilter = {
-//     $or: [
-//       { address: { $regex: searchRegex } },
-//       { fullName: { $regex: searchRegex } },
-//       { companyName: { $regex: searchRegex } },
-//       { country: { $regex: searchRegex } },
-//       { city: { $regex: searchRegex } },
-//     ],
-//   };
-
-//   const wholesalers = await Wholesaler.paginate(wholesalerFilter, options);
-//   return wholesalers;
-// };
-// Utility function to escape special characters in the search keywords
 const escapeRegExp = (string) => {
   return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // Escapes special characters
 };
@@ -127,15 +104,7 @@ const getSearchWholesaler = async (searchKeywords = '', options = {}) => {
  * @param {Object} updateBody
  * @returns {Promise<Wholesaler>}
  */
-// const updateWholesalerById = async (email, updateBody) => {
-//   const user = await getUserByEmail(email);
-//   if (!user) {
-//     throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
-//   }
-//   Object.assign(user, updateBody);
-//   await user.save();
-//   return user;
-// };
+
 const updateWholesalerById = async (email, updateBody) => {
   // Get the wholesaler document by email
   const wholesaler = await Wholesaler.findOne({ email });
@@ -210,31 +179,7 @@ const getUser = async (email) => {
   return User.findOne({ email });
 };
 
-// /**
-//  * Get users by emails with pagination
-//  * @param {Array<string>} emails
-//  * @param {Object} options - Query options
-//  * @param {number} [options.limit] - Maximum number of results per page
-//  * @param {number} [options.page] - Current page
-//  * @returns {Promise<QueryResult>}
-//  */
-// const getUsersByEmails = async (emails, options) => {
-//   const limit = options.limit ? parseInt(options.limit, 10) : 10;
-//   const page = options.page ? parseInt(options.page, 10) : 1;
-//   const skip = (page - 1) * limit;
-//   const query = { email: { $in: emails } };
 
-//   const totalDocs = await User.countDocuments(query);
-//   const docs = await User.find(query).skip(skip).limit(limit);
-
-//   return {
-//     docs,
-//     totalDocs,
-//     limit,
-//     page,
-//     totalPages: Math.ceil(totalDocs / limit),
-//   };
-// };
 /**
  * Get users by emails with pagination and optional userCategory filter
  * @param {Array<string>} emails

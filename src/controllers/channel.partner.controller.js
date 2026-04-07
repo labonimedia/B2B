@@ -60,6 +60,36 @@ const linkManufacturer = catchAsync(async (req, res) => {
   res.send(result);
 });
 
+const assignCommission = catchAsync(async (req, res) => {
+  const { email, id, commissionGivenBy, category, productCommission, shippingCommission } = req.body;
+
+  const result = await channelPartnerService.assignOrUpdateCommission(
+    email,
+    id,
+    commissionGivenBy,
+    category,
+    productCommission,
+    shippingCommission
+  );
+
+  res.status(httpStatus.OK).send({
+    success: true,
+    message: 'Commission assigned successfully',
+    data: result,
+  });
+});
+
+const getCommissionByGivenBy = catchAsync(async (req, res) => {
+  const { channelPartnerId, commissionGivenBy } = req.params;
+
+  const result = await channelPartnerService.getCommissionByGivenBy(channelPartnerId, commissionGivenBy);
+
+  res.status(httpStatus.OK).send({
+    success: true,
+    data: result,
+  });
+});
+
 module.exports = {
   registerChannelPartner,
   getAllChannelPartners,
@@ -69,4 +99,6 @@ module.exports = {
   addRetailer,
   getRetailers,
   linkManufacturer,
+  getCommissionByGivenBy,
+  assignCommission,
 };
