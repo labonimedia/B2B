@@ -2,6 +2,7 @@ const httpStatus = require('http-status');
 const { ChannelPartner, Invitation } = require('../models');
 const ApiError = require('../utils/ApiError');
 
+// eslint-disable-next-line prettier/prettier
 /**
  * Create a Channel Partner
  * @param {Object} reqBody
@@ -114,6 +115,52 @@ const linkManufacturer = async (body, user) => {
   return cp;
 };
 
+const assignOrUpdateCommission = async (email, id, commissionGivenBy, category, productCommission, shippingCommission) => {
+  const cp = await ChannelPartner.findOne({ email });
+
+  if (!cp) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Channel Partner not found');
+  }
+
+  const existingIndex = cp.commissionGiven.findIndex((item) => item.commissionGivenBy === commissionGivenBy);
+
+  if (existingIndex !== -1) {
+    // ✅ UPDATE EXISTING
+    cp.commissionGiven[existingIndex].category = category;
+    cp.commissionGiven[existingIndex].id = id;
+    cp.commissionGiven[existingIndex].productCommission = productCommission;
+    cp.commissionGiven[existingIndex].shippingCommission = shippingCommission;
+  } else {
+    // ✅ ADD NEW
+    cp.commissionGiven.push({
+      commissionGivenBy,
+      id,
+      category,
+      productCommission,
+      shippingCommission,
+    });
+  }
+
+  await cp.save();
+  return cp;
+};
+
+const getCommissionByGivenBy = async (channelPartnerId, commissionGivenBy) => {
+  const cp = await ChannelPartner.findById(channelPartnerId);
+
+  if (!cp) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Channel Partner not found');
+  }
+
+  const commission = cp.commissionGiven.find((item) => item.commissionGivenBy === commissionGivenBy);
+
+  if (!commission) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Commission not found');
+  }
+
+  return commission;
+};
+
 module.exports = {
   registerChannelPartner,
   queryChannelPartners,
@@ -124,4 +171,6 @@ module.exports = {
   getRetailers,
   linkManufacturer,
   createChannelPartner,
+  assignOrUpdateCommission,
+  getCommissionByGivenBy,
 };
