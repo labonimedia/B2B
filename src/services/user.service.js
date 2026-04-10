@@ -68,6 +68,7 @@ const createUser = async (userBody) => {
       category: userBody.category,
       userCode: userBody.code,
       contryCode: userBody.contryCode,
+      referralCode: userBody.referralCode,
     };
 
     if (userBody.role === 'manufacture') {

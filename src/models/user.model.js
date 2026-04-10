@@ -88,6 +88,9 @@ const userSchema = mongoose.Schema(
       },
     ],
     blackListed: [{ type: String }],
+    referralCode: {
+      type: String,
+    },
   },
   {
     timestamps: true,
