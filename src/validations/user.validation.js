@@ -7,6 +7,7 @@ const createUser = {
     password: Joi.string().required().custom(password),
     name: Joi.string().required(),
     userCategory: Joi.string(),
+    referralCode: Joi.string(),
     role: Joi.string().required().valid('superadmin', 'manufacture', 'wholesaler', 'retailer', 'channelPartner'),
   }),
 };

@@ -89,6 +89,9 @@ const manufactureSchema = mongoose.Schema(
     altCode: {
       type: String,
     },
+    referralCode: {
+      type: String,
+    },
     establishDate: {
       type: Date,
     },
@@ -158,6 +161,7 @@ const manufactureSchema = mongoose.Schema(
       introduction: { type: Boolean, default: true },
       city: { type: Boolean, default: true },
       country: { type: Boolean, default: true },
+      referralCode: { type: Boolean, default: true },
       pinCode: { type: Boolean, default: true },
       mobNumber: { type: Boolean, default: true },
       mobNumber2: { type: Boolean, default: true },

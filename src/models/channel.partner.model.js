@@ -33,7 +33,9 @@ const channelPartnerSchema = mongoose.Schema(
     profileImg: String,
 
     altCode: String,
-
+    referralCode: {
+      type: String,
+    },
     fullName: {
       type: String,
       required: true,

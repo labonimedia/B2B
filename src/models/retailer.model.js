@@ -26,6 +26,9 @@ const retailerSchema = mongoose.Schema(
     logo: {
       type: String,
     },
+    referralCode: {
+      type: String,
+    },
     file: {
       type: String,
     },

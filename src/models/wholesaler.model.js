@@ -163,6 +163,9 @@ const wholesalerSchema = mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    referralCode: {
+      type: String,
+    },
   },
   {
     timestamps: true,
