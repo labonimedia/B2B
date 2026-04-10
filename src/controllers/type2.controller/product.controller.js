@@ -196,6 +196,28 @@ const getWholesalerProducts = catchAsync(async (req, res) => {
   res.send(result);
 });
 
+const getProductsByManufacturerForWholesaler = catchAsync(async (req, res) => {
+  const wholesalerEmail = req.user.email;
+  const { manufacturerEmail } = req.query;
+
+  if (!manufacturerEmail) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'manufacturerEmail is required');
+  }
+
+  const options = {
+    limit: parseInt(req.query.limit, 10) || 10,
+    page: parseInt(req.query.page, 10) || 1,
+  };
+
+  const result = await productType2Service.getProductsByManufacturerForWholesaler(
+    wholesalerEmail,
+    manufacturerEmail,
+    options
+  );
+
+  res.send(result);
+});
+
 module.exports = {
   fileupload,
   createProduct,
@@ -216,4 +238,5 @@ module.exports = {
   checkProductExistence,
   assignProductsToWholesaler,
   getWholesalerProducts,
+  getProductsByManufacturerForWholesaler,
 };
