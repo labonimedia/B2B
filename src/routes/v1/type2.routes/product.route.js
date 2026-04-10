@@ -96,7 +96,7 @@ router.get(
 // );
 router.post(
   '/wholesaler-products-by-manufacturer',
-  auth('wholesaler'),
+  auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
   productType2Controller.getProductsByManufacturerForWholesaler
 );
 module.exports = router;
