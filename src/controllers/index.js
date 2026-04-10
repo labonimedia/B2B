@@ -161,3 +161,4 @@ module.exports.rtoWReturnRequestController = require('./type2.controller/return.
 module.exports.wToMReturnRequestController = require('./type2.controller/return.wholesaler.to.manufacture.controller');
 // channel partner controller
 module.exports.channelPartnerCostumerController = require('./channel.partner.customer.controller');
+module.exports.wholesalerProductAssignmentController = require('./type2.controller/wholesaler.product.assignment.controller');

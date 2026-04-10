@@ -73,6 +73,15 @@ const getCapacity = catchAsync(async (req, res) => {
   });
 });
 
+const bulkUpdateStock = catchAsync(async (req, res) => {
+  const result = await manufactureRawMaterialInventoryLogsService.bulkUpdateStock(req.body);
+
+  res.status(httpStatus.OK).send({
+    success: true,
+    data: result,
+  });
+});
+
 module.exports = {
   createInventory,
   updateStock,
@@ -81,4 +90,5 @@ module.exports = {
   getLowStockMaterials,
   deleteInventoryById,
   getCapacity,
+  bulkUpdateStock,
 };

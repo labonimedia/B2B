@@ -4,12 +4,6 @@ const ApiError = require('../../utils/ApiError');
 
 
 const findByMultipleDesignFilters = async (filters) => {
-  /**
-   * filters = [
-   *   { designNumber, wholesalerEmail, brandName },
-   *   { designNumber, wholesalerEmail, brandName }
-   * ]
-   */
 
   return WholesalerInventory.find({
     $or: filters.map((f) => ({
@@ -25,68 +19,7 @@ const findByMultipleDesignFilters = async (filters) => {
 };
 
 
-// const findByDesignNumbers = async (designNumbers) => {
 
-//   return WholesalerInventory.find({
-//     designNumber: { $in: designNumbers },
-//   }).sort({ designNumber: 1, colour: 1 });
-// };
-
-// const findByDesignNumbers = async ({ designNumbers, wholesalerEmail, brandName }) => {
-//   const filter = {
-//     userEmail: wholesalerEmail,
-//     designNumber: { $in: designNumbers },
-//   };
-
-//   if (brandName) {
-//     filter.brandName = brandName;
-//   }
-
-//   return WholesalerInventory.find(filter).sort({
-//     designNumber: 1,
-//     colour: 1,
-//     brandSize: 1,
-//   });
-// };
-// const bulkInsertInventory = async (inventoryArray) => {
-//   if (!Array.isArray(inventoryArray) || inventoryArray.length === 0) {
-//     throw new ApiError(
-//       httpStatus.BAD_REQUEST,
-//       'Request body must be a non-empty array'
-//     );
-//   }
-
-//   const bulkOps = inventoryArray.map((item) => ({
-//     updateOne: {
-//       filter: {
-//         userEmail: item.userEmail,
-//         designNumber: item.designNumber,
-//         brandName: item.brandName,
-//         colour: item.colour,
-//         brandSize: item.brandSize,
-//         standardSize: item.standardSize,
-//       },
-//       update: {
-//         $set: {
-//           quantity: item.quantity,
-//           minimumQuantityAlert: item.minimumQuantityAlert,
-//           colourName: item.colourName,
-//           lastUpdatedBy: item.lastUpdatedBy || '',
-//           lastUpdatedAt: new Date(),
-//         },
-//       },
-//       upsert: true,
-//     },
-//   }));
-
-//   const result = await WholesalerInventory.bulkWrite(bulkOps);
-
-//   const updatedDocs = await WholesalerInventory.find({
-//     designNumber: { $in: inventoryArray.map((i) => i.designNumber) },
-//   });
-
-//   return { status: result, updatedData: updatedDocs };
-// };
 const bulkInsertInventory = async (inventoryArray) => {
   if (!Array.isArray(inventoryArray) || inventoryArray.length === 0) {
     throw new ApiError(
@@ -141,87 +74,7 @@ const createInventory = async (data) => {
   return WholesalerInventory.create(data);
 };
 
-// const bulkUpdateInventory = async (updates) => {
-//   const results = [];
 
-//   for (const update of updates) {
-//     const {
-//       _id,
-//       quantity,
-//       status,
-//       lastUpdatedBy,
-//       designNumber,
-//       colourName,
-//       standardSize,
-//       userEmail,
-//     } = update;
-
-//     let inventory = _id
-//       ? await WholesalerInventory.findById(_id)
-//       : await WholesalerInventory.findOne({
-//           designNumber,
-//           colourName,
-//           standardSize,
-//           userEmail,
-//         });
-
-//     if (!inventory) {
-//       throw new Error('Inventory record not found');
-//     }
-
-//     if (status === 'add') inventory.quantity += quantity;
-//     else if (status === 'remove')
-//       inventory.quantity = Math.max(0, inventory.quantity - quantity);
-//     else throw new Error('Invalid inventory update status');
-
-//     inventory.lastUpdatedBy = lastUpdatedBy || 'system';
-//     inventory.lastUpdatedAt = new Date();
-
-//     await inventory.save();
-//     results.push(inventory);
-//   }
-
-//   return results;
-// };
-// const bulkUpdateInventory = async (updates) => {
-//   const results = [];
-
-//   for (const update of updates) {
-//     const { _id, quantity, status, lastUpdatedBy } = update;
-
-//     const inventory = await WholesalerInventory.findById(_id);
-
-//     if (!inventory) {
-//       throw new Error('Inventory record not found');
-//     }
-
-//     let newQuantity = inventory.quantity;
-
-//     if (status === 'add') {
-//       newQuantity += quantity;
-//     } else if (status === 'remove') {
-//       newQuantity = Math.max(0, newQuantity - quantity);
-//     } else {
-//       throw new Error('Invalid inventory update status');
-//     }
-
-//     const updatedInventory = await WholesalerInventory.findByIdAndUpdate(
-//       _id,
-//       {
-//         $set: {
-//           quantity: newQuantity,
-//           lastUpdatedBy: lastUpdatedBy || 'system',
-//           lastUpdatedAt: new Date(),
-//         },
-//       },
-//       { new: true }
-//     );
-
-//     results.push(updatedInventory);
-//   }
-
-//   return results;
-// };
 const bulkUpdateInventory = async (updates) => {
   const results = [];
 
@@ -357,6 +210,5 @@ module.exports = {
   getInventoryById,
   updateInventoryById,
   deleteInventoryById,
-  //findByDesignNumbers,
   findByMultipleDesignFilters,
 };

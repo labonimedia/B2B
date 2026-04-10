@@ -5,6 +5,12 @@ const router = express.Router();
 const { manufactureRawMaterialInventoryLogsController } = require('../../../controllers');
 
 router.post(
+  '/bulk-update-stock',
+  auth('superadmin', 'manufacture', 'wholesaler'),
+  manufactureRawMaterialInventoryLogsController.bulkUpdateStock
+);
+
+router.post(
   '/filter',
   auth('superadmin', 'manufacture', 'wholesaler'),
   manufactureRawMaterialInventoryLogsController.getInventories

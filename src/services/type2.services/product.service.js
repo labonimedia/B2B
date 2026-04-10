@@ -1,5 +1,13 @@
 const httpStatus = require('http-status');
-const { ProductType2, Manufacture, User, WholesalerPriceType2, Brand, Request } = require('../../models');
+const {
+  ProductType2,
+  Manufacture,
+  User,
+  WholesalerPriceType2,
+  Brand,
+  Request,
+  WholesalerProductAssignment,
+} = require('../../models');
 const ApiError = require('../../utils/ApiError');
 const { deleteFile } = require('../../utils/upload');
 
@@ -95,35 +103,75 @@ const searchProducts = async (filter, options) => {
   return products;
 };
 
-const searchForWSProducts = async (filter, options, WholesalerEmail) => {
-  // If there's a search term, add a text search condition
+// const searchForWSProducts = async (filter, options, WholesalerEmail) => {
+//   // If there's a search term, add a text search condition
+//   if (filter.search) {
+//     filter.$text = { $search: filter.search };
+//     delete filter.search;
+//   }
+
+//   // Fetch products with pagination
+//   const products = await ProductType2.paginate(filter, options);
+
+//   // Fetch wholesaler prices by WholesalerEmail
+//   const wholesalerPrices = await WholesalerPriceType2.find({ WholesalerEmail }).select('productId');
+
+//   // Extract productIds from wholesalerPrices
+//   const productIdsWithPrice = new Set(wholesalerPrices.map((price) => price.productId.toString()));
+
+//   // Add status to each product in the results
+//   const resultsWithStatus = products.results.map((product) => ({
+//     ...product.toJSON(),
+//     status: productIdsWithPrice.has(product._id.toString()) ? 'Done' : 'Pending',
+//   }));
+
+//   // Return the modified results along with other pagination details
+//   return {
+//     ...products,
+//     results: resultsWithStatus,
+//   };
+// };
+
+const searchForWSProducts = async (filter, options, wholesalerEmail) => {
+  // 🔥 Step 1: get assigned products
+  const assignedProducts = await WholesalerProductAssignment.find({
+    wholesalerEmail,
+    
+    isActive: true,
+  }).select('productId');
+
+  const assignedProductIds = assignedProducts.map((p) => p.productId);
+
+  // 🔥 Step 2: apply filter only on assigned products
+  filter._id = { $in: assignedProductIds };
+
+  // 🔥 Step 3: search support
   if (filter.search) {
     filter.$text = { $search: filter.search };
     delete filter.search;
   }
 
-  // Fetch products with pagination
+  // 🔥 Step 4: fetch products
   const products = await ProductType2.paginate(filter, options);
 
-  // Fetch wholesaler prices by WholesalerEmail
-  const wholesalerPrices = await WholesalerPriceType2.find({ WholesalerEmail }).select('productId');
+  // 🔥 Step 5: price status
+  const wholesalerPrices = await WholesalerPriceType2.find({
+    WholesalerEmail: wholesalerEmail,
+  }).select('productId');
 
-  // Extract productIds from wholesalerPrices
-  const productIdsWithPrice = new Set(wholesalerPrices.map((price) => price.productId.toString()));
+  const productIdsWithPrice = new Set(wholesalerPrices.map((p) => p.productId.toString()));
 
-  // Add status to each product in the results
-  const resultsWithStatus = products.results.map((product) => ({
+  // 🔥 Step 6: attach status
+  const results = products.results.map((product) => ({
     ...product.toJSON(),
     status: productIdsWithPrice.has(product._id.toString()) ? 'Done' : 'Pending',
   }));
 
-  // Return the modified results along with other pagination details
   return {
     ...products,
-    results: resultsWithStatus,
+    results,
   };
 };
-
 /**
  * Get ProductType2 by id
  * @param {ObjectId} id
@@ -445,6 +493,121 @@ const checkProductExistence = async (designNumber, brand) => {
   const product = await ProductType2.findOne({ designNumber, brand });
   return product;
 };
+
+const assignProductsToWholesaler = async (
+  manufacturerEmail,
+  wholesalerEmail,
+  productIds
+) => {
+
+  // 🔥 STEP 1: Validate products belong to manufacturer
+  const products = await ProductType2.find({
+    _id: { $in: productIds },
+    productBy: manufacturerEmail,
+  });
+
+  if (products.length !== productIds.length) {
+    throw new ApiError(
+      httpStatus.BAD_REQUEST,
+      'Some products do not belong to this manufacturer'
+    );
+  }
+
+  // 🔥 STEP 2: Prepare bulk operations
+  const bulkOps = productIds.map((productId) => ({
+    updateOne: {
+      filter: {
+        productId,
+        wholesalerEmail,
+      },
+      update: {
+        productId,
+        wholesalerEmail,
+        manufacturerEmail,
+        assignedBy: manufacturerEmail,
+        isActive: true,
+        assignedDate: new Date(),
+      },
+      upsert: true, // ✅ create if not exists
+    },
+  }));
+
+  // 🔥 STEP 3: Execute bulk
+  await WholesalerProductAssignment.bulkWrite(bulkOps);
+
+  return {
+    message: 'Products assigned successfully',
+    totalAssigned: productIds.length,
+  };
+};
+
+const getWholesalerProducts = async (
+  wholesalerEmail,
+  filter,
+  options
+) => {
+  // 🔥 Step 1: get assigned products
+  const assignmentFilter = {
+    wholesalerEmail,
+    isActive: true,
+  };
+
+  if (filter.manufacturerEmail) {
+    assignmentFilter.manufacturerEmail = filter.manufacturerEmail;
+  }
+
+  const assignments = await WholesalerProductAssignment.find(
+    assignmentFilter
+  ).select('productId manufacturerEmail');
+
+  const productIds = assignments.map((a) => a.productId);
+
+  if (!productIds.length) {
+    return {
+      results: [],
+      page: 1,
+      limit: options.limit || 10,
+      totalPages: 0,
+      totalResults: 0,
+    };
+  }
+
+  // 🔥 Step 2: fetch products
+  const products = await ProductType2.paginate(
+    { _id: { $in: productIds } },
+    options
+  );
+
+  // 🔥 Step 3: price status
+  const prices = await WholesalerPriceType2.find({
+    WholesalerEmail: wholesalerEmail,
+  }).select('productId');
+
+  const priceSet = new Set(
+    prices.map((p) => p.productId.toString())
+  );
+
+  // 🔥 Step 4: attach manufacturer + status
+  const results = products.results.map((product) => {
+    const assignment = assignments.find(
+      (a) => a.productId.toString() === product._id.toString()
+    );
+
+    return {
+      ...product.toJSON(),
+      manufacturerEmail: assignment?.manufacturerEmail,
+      status: priceSet.has(product._id.toString())
+        ? 'Done'
+        : 'Pending',
+    };
+  });
+
+  return {
+    ...products,
+    results,
+  };
+};
+
 module.exports = {
   fileupload,
   createProduct,
@@ -461,7 +624,8 @@ module.exports = {
   deleteColorCollection,
   deleteProductVideo,
   deleteProductImages,
-
+  assignProductsToWholesaler,
   filterProductsAndFetchManufactureDetails,
   checkProductExistence,
+  getWholesalerProducts,
 };

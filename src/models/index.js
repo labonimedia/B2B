@@ -101,6 +101,7 @@ module.exports.POCountertype2 = require('./type2.models/po.counter.model');
 module.exports.Gender = require('./gender.model');
 module.exports.WishListType2 = require('./type2.models/wishlist.model');
 module.exports.WholesalerPriceType2 = require('./type2.models/wholesaler.product.price');
+module.exports.WholesalerProductAssignment = require('./type2.models/wholesaler.product.assignment.model');
 module.exports.RetailerCartType2 = require('./type2.models/retailer.cart.model');
 module.exports.WholesalerCartType2 = require('./type2.models/wholesaler.cart.model');
 module.exports.PurchaseOrderRetailerType2 = require('./type2.models/purchase.order.retailer.model');
