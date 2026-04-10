@@ -43,31 +43,67 @@ const searchProducts = catchAsync(async (req, res) => {
   res.status(httpStatus.OK).send(products);
 });
 
+// const searchForWSProducts = catchAsync(async (req, res) => {
+//   const filter = {};
+//   const options = {};
+
+//   Object.keys(req.body).forEach((key) => {
+//     if (req.body[key] && !['sortBy', 'populate', 'limit', 'page'].includes(key)) {
+//       filter[key] = req.body[key];
+//     }
+//   });
+//   if (req.query.sortBy) {
+//     options.sortBy = req.query.sortBy;
+//   }
+//   if (req.query.populate) {
+//     options.populate = req.query.populate;
+//   }
+//   if (req.query.limit) {
+//     options.limit = parseInt(req.query.limit, 10);
+//   }
+//   if (req.query.page) {
+//     options.page = parseInt(req.query.page, 10);
+//   }
+//   const products = await productType2Service.searchForWSProducts(filter, options, req.query.wholesalerEmail);
+//   res.status(httpStatus.OK).send(products);
+// });
 const searchForWSProducts = catchAsync(async (req, res) => {
-  const filter = {};
-  const options = {};
+  const {
+    wholesalerEmail,
+    manufacturerEmail,
+    search,
+    limit = 10,
+    page = 1,
+    sortBy = 'createdAt:desc',
+    ...restFilters
+  } = req.body;
 
-  Object.keys(req.body).forEach((key) => {
-    if (req.body[key] && !['sortBy', 'populate', 'limit', 'page'].includes(key)) {
-      filter[key] = req.body[key];
-    }
-  });
-  if (req.query.sortBy) {
-    options.sortBy = req.query.sortBy;
+  // ✅ Validation
+  if (!wholesalerEmail || !manufacturerEmail) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'wholesalerEmail and manufacturerEmail are required');
   }
-  if (req.query.populate) {
-    options.populate = req.query.populate;
+
+  // ✅ Build filter object
+  const filter = {
+    ...restFilters,
+    productBy: manufacturerEmail, // 🔥 always restrict to manufacturer
+  };
+
+  // 🔍 Search
+  if (search) {
+    filter.search = search;
   }
-  if (req.query.limit) {
-    options.limit = parseInt(req.query.limit, 10);
-  }
-  if (req.query.page) {
-    options.page = parseInt(req.query.page, 10);
-  }
-  const products = await productType2Service.searchForWSProducts(filter, options, req.query.wholesalerEmail);
-  res.status(httpStatus.OK).send(products);
+
+  const options = {
+    limit: parseInt(limit, 10),
+    page: parseInt(page, 10),
+    sortBy,
+  };
+
+  const result = await productType2Service.searchForWSProducts(filter, options, wholesalerEmail, manufacturerEmail);
+
+  res.status(httpStatus.OK).send(result);
 });
-
 const queryProduct = catchAsync(async (req, res) => {
   const filter = pick(req.query, ['name', 'status', 'productBy', 'bomFilled']);
   const options = pick(req.query, ['sortBy', 'limit', 'page']);
