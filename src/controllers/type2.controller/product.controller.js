@@ -196,28 +196,89 @@ const getWholesalerProducts = catchAsync(async (req, res) => {
   res.send(result);
 });
 
+// const getProductsByManufacturerForWholesaler = catchAsync(async (req, res) => {
+//   const wholesalerEmail = req.user.email;
+//   const { manufacturerEmail } = req.query;
+
+//   if (!manufacturerEmail) {
+//     throw new ApiError(httpStatus.BAD_REQUEST, 'manufacturerEmail is required');
+//   }
+
+//   const filter = {};
+
+//   // 🔍 Search
+//   if (req.query.search) {
+//     filter.search = req.query.search;
+//   }
+
+//   // 🎯 Filters
+//   const allowedFilters = ['productType', 'gender', 'clothing', 'subCategory', 'brand'];
+
+//   allowedFilters.forEach((key) => {
+//     if (req.query[key]) {
+//       filter[key] = req.query[key];
+//     }
+//   });
+
+//   const options = {
+//     limit: parseInt(req.query.limit, 10) || 10,
+//     page: parseInt(req.query.page, 10) || 1,
+//     sortBy: req.query.sortBy || 'createdAt:desc',
+//   };
+
+//   const result = await productType2Service.getProductsByManufacturerForWholesaler(
+//     wholesalerEmail,
+//     manufacturerEmail,
+//     filter,
+//     options
+//   );
+
+//   res.send(result);
+// });
 const getProductsByManufacturerForWholesaler = catchAsync(async (req, res) => {
   const wholesalerEmail = req.user.email;
-  const { manufacturerEmail } = req.query;
+
+  const {
+    manufacturerEmail,
+    search,
+    productType,
+    gender,
+    clothing,
+    subCategory,
+    brand,
+    limit = 10,
+    page = 1,
+    sortBy = 'createdAt:desc',
+  } = req.body;
 
   if (!manufacturerEmail) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'manufacturerEmail is required');
   }
 
+  const filter = {
+    productType,
+    gender,
+    clothing,
+    subCategory,
+    brand,
+    search,
+  };
+
   const options = {
-    limit: parseInt(req.query.limit, 10) || 10,
-    page: parseInt(req.query.page, 10) || 1,
+    limit: parseInt(limit, 10),
+    page: parseInt(page, 10),
+    sortBy,
   };
 
   const result = await productType2Service.getProductsByManufacturerForWholesaler(
     wholesalerEmail,
     manufacturerEmail,
+    filter,
     options
   );
 
   res.send(result);
 });
-
 module.exports = {
   fileupload,
   createProduct,

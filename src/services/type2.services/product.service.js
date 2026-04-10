@@ -608,12 +608,80 @@ const getWholesalerProducts = async (
   };
 };
 
+
+// const getProductsByManufacturerForWholesaler = async (
+//   wholesalerEmail,
+//   manufacturerEmail,
+//   filter,
+//   options
+// ) => {
+//   // 🔥 STEP 1: get assigned products
+//   const assignments = await WholesalerProductAssignment.find({
+//     wholesalerEmail,
+//     manufacturerEmail,
+//     isActive: true,
+//   }).select('productId');
+
+//   const productIds = assignments.map((a) => a.productId);
+
+//   if (!productIds.length) {
+//     return {
+//       results: [],
+//       page: 1,
+//       limit: options.limit,
+//       totalPages: 0,
+//       totalResults: 0,
+//     };
+//   }
+
+//   // 🔥 STEP 2: apply filters
+//   const productFilter = {
+//     _id: { $in: productIds },
+//     ...filter,
+//   };
+
+//   // 🔍 Search support
+//   if (filter.search) {
+//     productFilter.$text = { $search: filter.search };
+//     delete productFilter.search;
+//   }
+
+//   // 🔥 STEP 3: fetch products
+//   const products = await ProductType2.paginate(productFilter, options);
+
+//   // 🔥 STEP 4: get pricing status
+//   const prices = await WholesalerPriceType2.find({
+//     WholesalerEmail: wholesalerEmail,
+//   }).select('productId');
+
+//   const priceSet = new Set(prices.map((p) => p.productId.toString()));
+
+//   // 🔥 STEP 5: manufacturer details
+//   const manufacturer = await Manufacture.findOne({
+//     email: manufacturerEmail,
+//   }).select('fullName companyName profileImg');
+
+//   // 🔥 STEP 6: attach status
+//   const results = products.results.map((product) => ({
+//     ...product.toJSON(),
+//     status: priceSet.has(product._id.toString())
+//       ? 'Done'
+//       : 'Pending',
+//   }));
+
+//   return {
+//     manufacturer,
+//     ...products,
+//     results,
+//   };
+// };
 const getProductsByManufacturerForWholesaler = async (
   wholesalerEmail,
   manufacturerEmail,
+  filter,
   options
 ) => {
-  // 🔥 Step 1: get assigned products for that manufacturer
+  // 🔥 STEP 1: assigned products
   const assignments = await WholesalerProductAssignment.find({
     wholesalerEmail,
     manufacturerEmail,
@@ -632,13 +700,27 @@ const getProductsByManufacturerForWholesaler = async (
     };
   }
 
-  // 🔥 Step 2: fetch products
-  const products = await ProductType2.paginate(
-    { _id: { $in: productIds } },
-    options
-  );
+  // 🔥 STEP 2: filters
+  const productFilter = {
+    _id: { $in: productIds },
+  };
 
-  // 🔥 Step 3: check pricing status
+  // Apply normal filters
+  Object.keys(filter).forEach((key) => {
+    if (filter[key] && key !== 'search') {
+      productFilter[key] = filter[key];
+    }
+  });
+
+  // 🔍 Search
+  if (filter.search) {
+    productFilter.$text = { $search: filter.search };
+  }
+
+  // 🔥 STEP 3: fetch products
+  const products = await ProductType2.paginate(productFilter, options);
+
+  // 🔥 STEP 4: price status
   const prices = await WholesalerPriceType2.find({
     WholesalerEmail: wholesalerEmail,
   }).select('productId');
@@ -647,7 +729,12 @@ const getProductsByManufacturerForWholesaler = async (
     prices.map((p) => p.productId.toString())
   );
 
-  // 🔥 Step 4: attach status
+  // 🔥 STEP 5: manufacturer details
+  const manufacturer = await Manufacture.findOne({
+    email: manufacturerEmail,
+  }).select('fullName companyName profileImg');
+
+  // 🔥 STEP 6: attach status
   const results = products.results.map((product) => ({
     ...product.toJSON(),
     status: priceSet.has(product._id.toString())
@@ -656,6 +743,7 @@ const getProductsByManufacturerForWholesaler = async (
   }));
 
   return {
+    manufacturer,
     ...products,
     results,
   };
