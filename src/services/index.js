@@ -165,3 +165,4 @@ module.exports.rtoWReturnRequestService = require('./type2.services/return.retai
 module.exports.wToMReturnRequestService = require('./type2.services/return.wholesaler.to.manufacture.service');
 // channel partner customers
 module.exports.channelPartnerCustomerService = require('./channel.partner.customer.service');
+module.exports.wholesalerProductAssignmentService = require('./type2.services/wholesaler.product.assignment.service');

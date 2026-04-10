@@ -219,6 +219,82 @@ const getProductionCapacity = async ({
   };
 };
 
+const bulkUpdateStock = async (payload) => {
+  const { updates } = payload;
+
+  if (!Array.isArray(updates) || updates.length === 0) {
+    throw new Error('Updates array is required');
+  }
+
+  const masterItemIds = updates.map((u) => u.masterItemId);
+
+  // 🔥 fetch all inventories in one go
+  const inventories = await ManufactureRawMaterialInventory.find({
+    masterItemId: { $in: masterItemIds },
+  });
+
+  const inventoryMap = new Map();
+  inventories.forEach((inv) => {
+    inventoryMap.set(inv.masterItemId.toString(), inv);
+  });
+
+  const bulkOps = [];
+
+  for (const update of updates) {
+    const { masterItemId, quantity, changeType, reason, updatedBy } = update;
+
+    const inventory = inventoryMap.get(masterItemId);
+
+    if (!inventory) {
+      throw new Error(`Inventory not found for masterItemId: ${masterItemId}`);
+    }
+
+    const previousStock = inventory.currentStock;
+    let updatedStock = previousStock;
+
+    if (changeType === 'stock_added') {
+      updatedStock += quantity;
+    } else if (changeType === 'stock_removed') {
+      if (previousStock < quantity) {
+        throw new Error(`Insufficient stock for ${masterItemId}`);
+      }
+      updatedStock -= quantity;
+    } else if (changeType === 'adjustment') {
+      updatedStock = quantity;
+    } else {
+      throw new Error(`Invalid changeType for ${masterItemId}`);
+    }
+
+    // 🔥 push bulk operation
+    bulkOps.push({
+      updateOne: {
+        filter: { masterItemId },
+        update: {
+          $set: { currentStock: updatedStock },
+          $push: {
+            inventoryLogs: {
+              previousStock,
+              updatedStock,
+              changeType,
+              reason,
+              updatedBy,
+              updatedAt: new Date(),
+            },
+          },
+        },
+      },
+    });
+  }
+
+  // 🔥 execute bulk
+  await ManufactureRawMaterialInventory.bulkWrite(bulkOps);
+
+  return {
+    message: 'Bulk stock updated successfully',
+    totalUpdated: bulkOps.length,
+  };
+};
+
 module.exports = {
   createInventory,
   updateStock,
@@ -227,4 +303,5 @@ module.exports = {
   getLowStockMaterials,
   deleteInventoryById,
   getProductionCapacity,
+  bulkUpdateStock,
 };

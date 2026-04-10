@@ -3,16 +3,6 @@ const catchAsync = require('../../utils/catchAsync');
 const { WholesalerInventoryService } = require('../../services');
 const pick = require('../../utils/pick');
 
-// const getInventoriesByDesignNumbers = catchAsync(async (req, res) => {
-//   const { designNumbers } = req.body;
-
-//   if (!Array.isArray(designNumbers) || designNumbers.length === 0) {
-//     return res.status(httpStatus.BAD_REQUEST).json({ message: 'designNumbers must be a non-empty array' });
-//   }
-
-//   const result = await WholesalerInventoryService.findByDesignNumbers(designNumbers);
-//   res.status(httpStatus.OK).json({ success: true, data: result });
-// });
 const getInventoriesByDesignNumbers = catchAsync(async (req, res) => {
   const payload = req.body;
 

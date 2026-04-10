@@ -156,6 +156,46 @@ const checkProductExistence = catchAsync(async (req, res) => {
   }
 });
 
+// const assignProductsToWholesaler = catchAsync(async (req, res) => {
+//   const manufacturerEmail = req.user.email;
+//   const { wholesalerEmail, productIds } = req.body;
+
+//   const result = await productType2Service.assignProductsToWholesaler(manufacturerEmail, wholesalerEmail, productIds);
+
+//   res.status(200).send(result);
+// });
+
+const assignProductsToWholesaler = catchAsync(async (req, res) => {
+  const manufacturerEmail = req.user.email;
+  const { wholesalerEmail, productIds } = req.body;
+
+  if (!productIds || !productIds.length) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'productIds are required');
+  }
+
+  const result = await productType2Service.assignProductsToWholesaler(manufacturerEmail, wholesalerEmail, productIds);
+
+  res.status(httpStatus.OK).send(result);
+});
+
+const getWholesalerProducts = catchAsync(async (req, res) => {
+  const wholesalerEmail = req.user.email;
+
+  const filter = {};
+  const options = {};
+
+  if (req.query.manufacturerEmail) {
+    filter.manufacturerEmail = req.query.manufacturerEmail;
+  }
+
+  if (req.query.limit) options.limit = parseInt(req.query.limit, 10);
+  if (req.query.page) options.page = parseInt(req.query.page, 10);
+
+  const result = await productType2Service.getWholesalerProducts(wholesalerEmail, filter, options);
+
+  res.send(result);
+});
+
 module.exports = {
   fileupload,
   createProduct,
@@ -174,4 +214,6 @@ module.exports = {
   getFilteredProducts,
   deleteProductImages,
   checkProductExistence,
+  assignProductsToWholesaler,
+  getWholesalerProducts,
 };
