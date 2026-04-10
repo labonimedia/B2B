@@ -608,6 +608,59 @@ const getWholesalerProducts = async (
   };
 };
 
+const getProductsByManufacturerForWholesaler = async (
+  wholesalerEmail,
+  manufacturerEmail,
+  options
+) => {
+  // 🔥 Step 1: get assigned products for that manufacturer
+  const assignments = await WholesalerProductAssignment.find({
+    wholesalerEmail,
+    manufacturerEmail,
+    isActive: true,
+  }).select('productId');
+
+  const productIds = assignments.map((a) => a.productId);
+
+  if (!productIds.length) {
+    return {
+      results: [],
+      page: 1,
+      limit: options.limit,
+      totalPages: 0,
+      totalResults: 0,
+    };
+  }
+
+  // 🔥 Step 2: fetch products
+  const products = await ProductType2.paginate(
+    { _id: { $in: productIds } },
+    options
+  );
+
+  // 🔥 Step 3: check pricing status
+  const prices = await WholesalerPriceType2.find({
+    WholesalerEmail: wholesalerEmail,
+  }).select('productId');
+
+  const priceSet = new Set(
+    prices.map((p) => p.productId.toString())
+  );
+
+  // 🔥 Step 4: attach status
+  const results = products.results.map((product) => ({
+    ...product.toJSON(),
+    status: priceSet.has(product._id.toString())
+      ? 'Done'
+      : 'Pending',
+  }));
+
+  return {
+    ...products,
+    results,
+  };
+};
+
 module.exports = {
   fileupload,
   createProduct,
@@ -628,4 +681,5 @@ module.exports = {
   filterProductsAndFetchManufactureDetails,
   checkProductExistence,
   getWholesalerProducts,
+  getProductsByManufacturerForWholesaler,
 };
