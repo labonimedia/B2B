@@ -14,35 +14,74 @@ const createProduct = catchAsync(async (req, res) => {
   res.status(httpStatus.CREATED).send(user);
 });
 
+// const searchProducts = catchAsync(async (req, res) => {
+//   const filter = {};
+//   const options = {};
+//   if (!req.body.productBy) {
+//     return res.status(httpStatus.BAD_REQUEST).send({ message: "'productBy' is required." });
+//   }
+//   filter.productBy = req.body.productBy;
+
+//   ['brand', 'clothing', 'gender', 'productType', 'subCategory', 'bomFilled'].forEach((key) => {
+//     if (req.body[key] && req.body[key].trim() !== '') {
+//       filter[key] = req.body[key].trim();
+//     }
+//   });
+//   if (req.body.sortBy) {
+//     options.sortBy = req.body.sortBy;
+//   }
+//   if (req.body.populate) {
+//     options.populate = req.body.populate;
+//   }
+//   if (req.body.limit) {
+//     options.limit = parseInt(req.body.limit, 10);
+//   }
+//   if (req.body.page) {
+//     options.page = parseInt(req.body.page, 10);
+//   }
+//   const products = await productType2Service.searchProducts(filter, options);
+//   res.status(httpStatus.OK).send(products);
+// });
 const searchProducts = catchAsync(async (req, res) => {
   const filter = {};
   const options = {};
-  if (!req.body.productBy) {
-    return res.status(httpStatus.BAD_REQUEST).send({ message: "'productBy' is required." });
-  }
-  filter.productBy = req.body.productBy;
 
+  const { productBy, wholesalerEmail } = req.body;
+
+  // ✅ Validation
+  if (!productBy) {
+    return res.status(httpStatus.BAD_REQUEST).send({ message: "'productBy' (manufacturerEmail) is required." });
+  }
+
+  if (!wholesalerEmail) {
+    return res.status(httpStatus.BAD_REQUEST).send({ message: "'wholesalerEmail' is required." });
+  }
+
+  // 🔥 Always restrict to manufacturer
+  filter.productBy = productBy;
+
+  // 🔥 Filters
   ['brand', 'clothing', 'gender', 'productType', 'subCategory', 'bomFilled'].forEach((key) => {
-    if (req.body[key] && req.body[key].trim() !== '') {
-      filter[key] = req.body[key].trim();
+    if (req.body[key] && req.body[key].toString().trim() !== '') {
+      filter[key] = req.body[key];
     }
   });
-  if (req.body.sortBy) {
-    options.sortBy = req.body.sortBy;
+
+  // 🔍 Search
+  if (req.body.search) {
+    filter.search = req.body.search;
   }
-  if (req.body.populate) {
-    options.populate = req.body.populate;
-  }
-  if (req.body.limit) {
-    options.limit = parseInt(req.body.limit, 10);
-  }
-  if (req.body.page) {
-    options.page = parseInt(req.body.page, 10);
-  }
-  const products = await productType2Service.searchProducts(filter, options);
+
+  // 🔥 Options
+  if (req.body.sortBy) options.sortBy = req.body.sortBy;
+  if (req.body.populate) options.populate = req.body.populate;
+  if (req.body.limit) options.limit = parseInt(req.body.limit, 10);
+  if (req.body.page) options.page = parseInt(req.body.page, 10);
+
+  const products = await productType2Service.searchProducts(filter, options, wholesalerEmail, productBy);
+
   res.status(httpStatus.OK).send(products);
 });
-
 // const searchForWSProducts = catchAsync(async (req, res) => {
 //   const filter = {};
 //   const options = {};
