@@ -93,7 +93,7 @@ const queryProduct = async (filter, options) => {
  * @param {Object} options - Query options (e.g., pagination)
  * @returns {Promise<QueryResult>}
  */
-const searchProducts = async (
+const searchProductsWholesalerWise = async (
   filter,
   options,
   wholesalerEmail,
@@ -149,15 +149,15 @@ const searchProducts = async (
 };
 
 
-// const searchProducts = async (filter, options) => {
-//   if (filter.search) {
-//     filter.$text = { $search: filter.search }; // Add text search condition if search term is present
-//     delete filter.search;
-//   }
+const searchProducts = async (filter, options) => {
+  if (filter.search) {
+    filter.$text = { $search: filter.search }; // Add text search condition if search term is present
+    delete filter.search;
+  }
 
-//   const products = await ProductType2.paginate(filter, options); // Paginate with the filtered criteria
-//   return products;
-// };
+  const products = await ProductType2.paginate(filter, options); // Paginate with the filtered criteria
+  return products;
+};
 
 
 
@@ -924,6 +924,7 @@ module.exports = {
   createProduct,
   queryProduct,
   searchProducts,
+  searchProductsWholesalerWise,
   searchForWSProducts,
   getProductById,
   getProductBydesigneNo,

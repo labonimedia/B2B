@@ -22,6 +22,11 @@ router
 router
   .route('/filter-products')
   .post(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), productType2Controller.searchProducts);
+
+router
+  .route('/products/manufacturewise')
+  .post(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), productType2Controller.searchProductsWholesalerWise);
+
 router
   .route('/:id')
   .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), productType2Controller.getProductById)
