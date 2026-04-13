@@ -14,35 +14,36 @@ const createProduct = catchAsync(async (req, res) => {
   res.status(httpStatus.CREATED).send(user);
 });
 
-// const searchProducts = catchAsync(async (req, res) => {
-//   const filter = {};
-//   const options = {};
-//   if (!req.body.productBy) {
-//     return res.status(httpStatus.BAD_REQUEST).send({ message: "'productBy' is required." });
-//   }
-//   filter.productBy = req.body.productBy;
-
-//   ['brand', 'clothing', 'gender', 'productType', 'subCategory', 'bomFilled'].forEach((key) => {
-//     if (req.body[key] && req.body[key].trim() !== '') {
-//       filter[key] = req.body[key].trim();
-//     }
-//   });
-//   if (req.body.sortBy) {
-//     options.sortBy = req.body.sortBy;
-//   }
-//   if (req.body.populate) {
-//     options.populate = req.body.populate;
-//   }
-//   if (req.body.limit) {
-//     options.limit = parseInt(req.body.limit, 10);
-//   }
-//   if (req.body.page) {
-//     options.page = parseInt(req.body.page, 10);
-//   }
-//   const products = await productType2Service.searchProducts(filter, options);
-//   res.status(httpStatus.OK).send(products);
-// });
 const searchProducts = catchAsync(async (req, res) => {
+  const filter = {};
+  const options = {};
+  if (!req.body.productBy) {
+    return res.status(httpStatus.BAD_REQUEST).send({ message: "'productBy' is required." });
+  }
+  filter.productBy = req.body.productBy;
+
+  ['brand', 'clothing', 'gender', 'productType', 'subCategory', 'bomFilled'].forEach((key) => {
+    if (req.body[key] && req.body[key].trim() !== '') {
+      filter[key] = req.body[key].trim();
+    }
+  });
+  if (req.body.sortBy) {
+    options.sortBy = req.body.sortBy;
+  }
+  if (req.body.populate) {
+    options.populate = req.body.populate;
+  }
+  if (req.body.limit) {
+    options.limit = parseInt(req.body.limit, 10);
+  }
+  if (req.body.page) {
+    options.page = parseInt(req.body.page, 10);
+  }
+  const products = await productType2Service.searchProducts(filter, options);
+  res.status(httpStatus.OK).send(products);
+});
+
+const searchProductsWholesalerWise = catchAsync(async (req, res) => {
   const filter = {};
   const options = {};
 
@@ -78,7 +79,7 @@ const searchProducts = catchAsync(async (req, res) => {
   if (req.body.limit) options.limit = parseInt(req.body.limit, 10);
   if (req.body.page) options.page = parseInt(req.body.page, 10);
 
-  const products = await productType2Service.searchProducts(filter, options, wholesalerEmail, productBy);
+  const products = await productType2Service.searchProductsWholesalerWise(filter, options, wholesalerEmail, productBy);
 
   res.status(httpStatus.OK).send(products);
 });
@@ -359,6 +360,7 @@ module.exports = {
   createProduct,
   queryProduct,
   searchProducts,
+  searchProductsWholesalerWise,
   searchForWSProducts,
   getProductById,
   getProductBydesigneNo,
