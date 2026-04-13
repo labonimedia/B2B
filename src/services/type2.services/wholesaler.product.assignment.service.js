@@ -3,6 +3,49 @@ const { WholesalerProductAssignment, ProductType2 } = require('../../models');
 const ApiError = require('../../utils/ApiError');
 
 /**
+ * ASSIGN PRODUCTS TO MULTIPLE WHOLESALERS
+ */
+const assignProductsToMultipleWholesalers = async (manufacturerEmail, wholesalerEmails, productIds) => {
+  // ✅ Validate products belong to manufacturer
+  const products = await ProductType2.find({
+    _id: { $in: productIds },
+    productBy: manufacturerEmail,
+  });
+
+  if (products.length !== productIds.length) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Invalid products');
+  }
+
+  // ✅ Create bulk operations
+  const bulkOps = [];
+
+  wholesalerEmails.forEach((wholesalerEmail) => {
+    productIds.forEach((productId) => {
+      bulkOps.push({
+        updateOne: {
+          filter: { productId, wholesalerEmail },
+          update: {
+            productId,
+            wholesalerEmail,
+            manufacturerEmail,
+            assignedBy: manufacturerEmail,
+            isActive: true,
+          },
+          upsert: true,
+        },
+      });
+    });
+  });
+
+  await WholesalerProductAssignment.bulkWrite(bulkOps);
+
+  return {
+    message: 'Products assigned to multiple wholesalers successfully',
+    totalAssignments: bulkOps.length,
+  };
+};
+
+/**
  * ASSIGN PRODUCTS (BULK)
  */
 const assignProducts = async (manufacturerEmail, wholesalerEmail, productIds) => {
@@ -90,4 +133,5 @@ module.exports = {
   getAssignmentById,
   removeAssignment,
   toggleAssignmentStatus,
+  assignProductsToMultipleWholesalers,
 };

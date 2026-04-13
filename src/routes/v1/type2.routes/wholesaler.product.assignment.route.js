@@ -4,6 +4,12 @@ const { wholesalerProductAssignmentController } = require('../../../controllers'
 
 const router = express.Router();
 
+router.post(
+  '/assign-multiple',
+  auth('superadmin', 'manufacture', 'wholesaler'),
+  wholesalerProductAssignmentController.assignProductsToMultipleWholesalers
+);
+
 router.post('/assign', auth('manufacture'), wholesalerProductAssignmentController.assignProductsToWholesaler);
 
 router.get('/', auth('superadmin', 'manufacture', 'wholesaler'), wholesalerProductAssignmentController.getAssignments);
