@@ -16,7 +16,7 @@ router.get('/', auth('superadmin', 'manufacture', 'wholesaler'), wholesalerProdu
 
 router.get('/:id', auth('superadmin', 'manufacture', 'wholesaler'), wholesalerProductAssignmentController.getAssignment);
 
-router.delete('/remove', auth('manufacture'), wholesalerProductAssignmentController.removeAssignment);
+router.post('/remove', auth('manufacture'), wholesalerProductAssignmentController.removeAssignment);
 
 router.patch('/:id/status', auth('manufacture'), wholesalerProductAssignmentController.toggleAssignmentStatus);
 
