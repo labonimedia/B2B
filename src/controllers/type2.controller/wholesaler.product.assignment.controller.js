@@ -1,6 +1,7 @@
 const httpStatus = require('http-status');
 const catchAsync = require('../../utils/catchAsync');
 const pick = require('../../utils/pick');
+const ApiError = require('../../utils/ApiError');
 const { wholesalerProductAssignmentService } = require('../../services');
 
 const assignProductsToMultipleWholesalers = catchAsync(async (req, res) => {
@@ -58,14 +59,29 @@ const getAssignment = catchAsync(async (req, res) => {
 /**
  * REMOVE PRODUCT
  */
+// const removeAssignment = catchAsync(async (req, res) => {
+//   const { productId, wholesalerEmail } = req.body;
+
+//   const result = await wholesalerProductAssignmentService.removeAssignment(productId, wholesalerEmail);
+
+//   res.send(result);
+// });
 const removeAssignment = catchAsync(async (req, res) => {
-  const { productId, wholesalerEmail } = req.body;
+  const { productId, productIds, wholesalerEmail } = req.body;
 
-  const result = await wholesalerProductAssignmentService.removeAssignment(productId, wholesalerEmail);
+  if (!wholesalerEmail) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'wholesalerEmail is required');
+  }
 
-  res.send(result);
+  // 🔥 Validate input (at least one required)
+  if (!productId && (!productIds || productIds.length === 0)) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'productId or productIds is required');
+  }
+
+  const result = await wholesalerProductAssignmentService.removeAssignment(productId, productIds, wholesalerEmail);
+
+  res.status(httpStatus.OK).send(result);
 });
-
 /**
  * TOGGLE ACTIVE
  */

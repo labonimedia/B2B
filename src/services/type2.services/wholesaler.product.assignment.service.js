@@ -1,6 +1,8 @@
 const httpStatus = require('http-status');
+const mongoose = require('mongoose');
 const { WholesalerProductAssignment, ProductType2 } = require('../../models');
 const ApiError = require('../../utils/ApiError');
+
 
 /**
  * ASSIGN PRODUCTS TO MULTIPLE WHOLESALERS
@@ -98,17 +100,49 @@ const getAssignmentById = async (id) => {
 /**
  * REMOVE SINGLE PRODUCT
  */
-const removeAssignment = async (productId, wholesalerEmail) => {
-  const doc = await WholesalerProductAssignment.findOneAndDelete({
-    productId,
-    wholesalerEmail,
-  });
+// const removeAssignment = async (productId, wholesalerEmail) => {
+//   const doc = await WholesalerProductAssignment.findOneAndDelete({
+//     productId,
+//     wholesalerEmail,
+//   });
 
-  if (!doc) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Assignment not found');
+//   if (!doc) {
+//     throw new ApiError(httpStatus.NOT_FOUND, 'Assignment not found');
+//   }
+
+//   return { message: 'Product unassigned successfully' };
+// };
+
+const removeAssignment = async (productId, productIds, wholesalerEmail) => {
+  let idsToRemove = [];
+
+  // 🔥 Handle single
+  if (productId) {
+    idsToRemove.push(productId);
   }
 
-  return { message: 'Product unassigned successfully' };
+  // 🔥 Handle multiple
+  if (productIds && Array.isArray(productIds)) {
+    idsToRemove = [...idsToRemove, ...productIds];
+  }
+
+  // ✅ Convert to ObjectId (important)
+  idsToRemove = idsToRemove.map((id) => mongoose.Types.ObjectId(id));
+
+  // 🔥 Delete many
+  const result = await WholesalerProductAssignment.deleteMany({
+    wholesalerEmail,
+    productId: { $in: idsToRemove },
+  });
+
+  if (result.deletedCount === 0) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'No assignments found');
+  }
+
+  return {
+    message: 'Product(s) unassigned successfully',
+    deletedCount: result.deletedCount,
+  };
 };
 
 /**
