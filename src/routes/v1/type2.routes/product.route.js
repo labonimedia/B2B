@@ -111,4 +111,5 @@ router.post(
   auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
   productType2Controller.getProductsByWholesalerForManufacturer
 );
+
 module.exports = router;
