@@ -3,6 +3,25 @@ const catchAsync = require('../../utils/catchAsync');
 const pick = require('../../utils/pick');
 const { wholesalerProductAssignmentService } = require('../../services');
 
+const assignProductsToMultipleWholesalers = catchAsync(async (req, res) => {
+  const manufacturerEmail = req.user.email;
+  const { wholesalerEmails, productIds } = req.body;
+
+  if (!wholesalerEmails || !wholesalerEmails.length) {
+    return res.status(httpStatus.BAD_REQUEST).send({
+      message: 'wholesalerEmails is required',
+    });
+  }
+
+  const result = await wholesalerProductAssignmentService.assignProductsToMultipleWholesalers(
+    manufacturerEmail,
+    wholesalerEmails,
+    productIds
+  );
+
+  res.status(httpStatus.OK).send(result);
+});
+
 /**
  * ASSIGN PRODUCTS
  */
@@ -62,4 +81,5 @@ module.exports = {
   getAssignment,
   removeAssignment,
   toggleAssignmentStatus,
+  assignProductsToMultipleWholesalers,
 };
