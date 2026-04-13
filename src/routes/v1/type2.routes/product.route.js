@@ -100,15 +100,15 @@ router.get(
 //   auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
 //   productType2Controller.getProductsByManufacturerForWholesaler
 // );
-router.post(
-  '/wholesaler-products-by-manufacturer',
-  auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
-  productType2Controller.getProductsByManufacturerForWholesaler
-);
+// router.post(
+//   '/wholesaler-products-by-manufacturer',
+//   auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
+//   productType2Controller.getProductsByManufacturerForWholesaler
+// );
 
 router.post(
-  '/manufacturer/assigned-products',
-  auth('manufacture', 'superadmin'),
-  productType2Controller.getAssignedProductsWholesalerWise
+  '/manufacturer/wholesaler-products',
+  auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
+  productType2Controller.getProductsByWholesalerForManufacturer
 );
 module.exports = router;
