@@ -107,6 +107,7 @@ const searchProductsWholesalerWise = catchAsync(async (req, res) => {
 //   const products = await productType2Service.searchForWSProducts(filter, options, req.query.wholesalerEmail);
 //   res.status(httpStatus.OK).send(products);
 // });
+
 const searchForWSProducts = catchAsync(async (req, res) => {
   const {
     wholesalerEmail,

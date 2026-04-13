@@ -287,38 +287,102 @@ const searchProducts = async (filter, options) => {
 //     results,
 //   };
 // };
+
+// const searchForWSProducts = async (
+//   filter,
+//   options,
+//   wholesalerEmail,
+//   manufacturerEmail
+// ) => {
+//   // 🔥 STEP 1: check assignment (specific manufacturer + wholesaler)
+//   const assignedProducts = await WholesalerProductAssignment.find({
+//     wholesalerEmail,
+//     manufacturerEmail,
+//     isActive: true,
+//   }).select('productId');
+
+//   const assignedProductIds = assignedProducts.map((p) => p.productId);
+
+//   // 🔥 STEP 2: apply logic
+//   if (assignedProductIds.length > 0) {
+//     // ✅ Show only assigned
+//     filter._id = { $in: assignedProductIds };
+//   }
+//   // ❗ else → show all manufacturer products
+
+//   // 🔍 STEP 3: search support
+//   if (filter.search) {
+//     filter.$text = { $search: filter.search };
+//     delete filter.search;
+//   }
+
+//   // 🔥 STEP 4: fetch products
+//   const products = await ProductType2.paginate(filter, options);
+
+//   // 🔥 STEP 5: price status
+//   const wholesalerPrices = await WholesalerPriceType2.find({
+//     WholesalerEmail: wholesalerEmail,
+//   }).select('productId');
+
+//   const priceSet = new Set(
+//     wholesalerPrices.map((p) => p.productId.toString())
+//   );
+
+//   // 🔥 STEP 6: attach status
+//   const results = products.results.map((product) => ({
+//     ...product.toJSON(),
+//     status: priceSet.has(product._id.toString())
+//       ? 'Done'
+//       : 'Pending',
+//   }));
+
+//   return {
+//     ...products,
+//     isAssignedFilterApplied: assignedProductIds.length > 0,
+//     results,
+//   };
+// };
 const searchForWSProducts = async (
   filter,
   options,
   wholesalerEmail,
   manufacturerEmail
 ) => {
-  // 🔥 STEP 1: check assignment (specific manufacturer + wholesaler)
+  // 🔥 STEP 1: Get assigned products
   const assignedProducts = await WholesalerProductAssignment.find({
     wholesalerEmail,
     manufacturerEmail,
     isActive: true,
   }).select('productId');
 
-  const assignedProductIds = assignedProducts.map((p) => p.productId);
+  // ✅ Convert safely to ObjectId (fix for string/ObjectId mismatch)
+  const assignedProductIds = assignedProducts.map((p) =>
+    mongoose.Types.ObjectId(p.productId)
+  );
 
-  // 🔥 STEP 2: apply logic
-  if (assignedProductIds.length > 0) {
-    // ✅ Show only assigned
+  // 🔥 STEP 2: Count total manufacturer products
+  const totalProducts = await ProductType2.countDocuments({
+    productBy: manufacturerEmail,
+  });
+
+  // 🔥 STEP 3: Apply filter ONLY if partial assignment
+  if (
+    assignedProductIds.length > 0 &&
+    assignedProductIds.length !== totalProducts
+  ) {
     filter._id = { $in: assignedProductIds };
   }
-  // ❗ else → show all manufacturer products
 
-  // 🔍 STEP 3: search support
+  // 🔍 STEP 4: Search support
   if (filter.search) {
     filter.$text = { $search: filter.search };
     delete filter.search;
   }
 
-  // 🔥 STEP 4: fetch products
+  // 🔥 STEP 5: Fetch products
   const products = await ProductType2.paginate(filter, options);
 
-  // 🔥 STEP 5: price status
+  // 🔥 STEP 6: Get wholesaler pricing status
   const wholesalerPrices = await WholesalerPriceType2.find({
     WholesalerEmail: wholesalerEmail,
   }).select('productId');
@@ -327,7 +391,7 @@ const searchForWSProducts = async (
     wholesalerPrices.map((p) => p.productId.toString())
   );
 
-  // 🔥 STEP 6: attach status
+  // 🔥 STEP 7: Attach status
   const results = products.results.map((product) => ({
     ...product.toJSON(),
     status: priceSet.has(product._id.toString())
@@ -337,7 +401,9 @@ const searchForWSProducts = async (
 
   return {
     ...products,
-    isAssignedFilterApplied: assignedProductIds.length > 0,
+    isAssignedFilterApplied:
+      assignedProductIds.length > 0 &&
+      assignedProductIds.length !== totalProducts,
     results,
   };
 };
