@@ -93,15 +93,74 @@ const queryProduct = async (filter, options) => {
  * @param {Object} options - Query options (e.g., pagination)
  * @returns {Promise<QueryResult>}
  */
-const searchProducts = async (filter, options) => {
+const searchProducts = async (
+  filter,
+  options,
+  wholesalerEmail,
+  manufacturerEmail
+) => {
+  // 🔥 STEP 1: check assignment for THIS manufacturer + wholesaler
+  const assignedProducts = await WholesalerProductAssignment.find({
+    wholesalerEmail,
+    manufacturerEmail,
+    isActive: true,
+  }).select('productId');
+
+  const assignedProductIds = assignedProducts.map((p) => p.productId);
+
+  // 🔥 STEP 2: apply assignment logic
+  if (assignedProductIds.length > 0) {
+    // ✅ show only assigned products
+    filter._id = { $in: assignedProductIds };
+  }
+  // ❗ else → show all manufacturer products (no filter needed)
+
+  // 🔍 STEP 3: search support
   if (filter.search) {
-    filter.$text = { $search: filter.search }; // Add text search condition if search term is present
+    filter.$text = { $search: filter.search };
     delete filter.search;
   }
 
-  const products = await ProductType2.paginate(filter, options); // Paginate with the filtered criteria
-  return products;
+  // 🔥 STEP 4: fetch products
+  const products = await ProductType2.paginate(filter, options);
+
+  // 🔥 STEP 5: price status
+  const wholesalerPrices = await WholesalerPriceType2.find({
+    WholesalerEmail: wholesalerEmail,
+  }).select('productId');
+
+  const priceSet = new Set(
+    wholesalerPrices.map((p) => p.productId.toString())
+  );
+
+  // 🔥 STEP 6: attach status
+  const results = products.results.map((product) => ({
+    ...product.toJSON(),
+    status: priceSet.has(product._id.toString())
+      ? 'Done'
+      : 'Pending',
+  }));
+
+  return {
+    ...products,
+    isAssignedFilterApplied: assignedProductIds.length > 0, // 🔥 helpful flag
+    results,
+  };
 };
+
+
+// const searchProducts = async (filter, options) => {
+//   if (filter.search) {
+//     filter.$text = { $search: filter.search }; // Add text search condition if search term is present
+//     delete filter.search;
+//   }
+
+//   const products = await ProductType2.paginate(filter, options); // Paginate with the filtered criteria
+//   return products;
+// };
+
+
+
 
 // const searchForWSProducts = async (filter, options, WholesalerEmail) => {
 //   // If there's a search term, add a text search condition
