@@ -105,4 +105,10 @@ router.post(
   auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
   productType2Controller.getProductsByManufacturerForWholesaler
 );
+
+router.post(
+  '/manufacturer/assigned-products',
+  auth('manufacture', 'superadmin'),
+  productType2Controller.getAssignedProductsWholesalerWise
+);
 module.exports = router;

@@ -355,6 +355,36 @@ const getProductsByManufacturerForWholesaler = catchAsync(async (req, res) => {
 
   res.send(result);
 });
+
+const getAssignedProductsWholesalerWise = catchAsync(async (req, res) => {
+  const manufacturerEmail = req.user.email;
+
+  const { wholesalerEmail, search, productType, gender, clothing, subCategory, brand, limit = 10, page = 1 } = req.body;
+
+  const filter = {
+    search,
+    productType,
+    gender,
+    clothing,
+    subCategory,
+    brand,
+  };
+
+  const options = {
+    limit: parseInt(limit, 10),
+    page: parseInt(page, 10),
+  };
+
+  const result = await productType2Service.getAssignedProductsWholesalerWise(
+    manufacturerEmail,
+    wholesalerEmail,
+    filter,
+    options
+  );
+
+  res.send(result);
+});
+
 module.exports = {
   fileupload,
   createProduct,
@@ -377,4 +407,5 @@ module.exports = {
   assignProductsToWholesaler,
   getWholesalerProducts,
   getProductsByManufacturerForWholesaler,
+  getAssignedProductsWholesalerWise,
 };

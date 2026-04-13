@@ -919,6 +919,87 @@ const getProductsByManufacturerForWholesaler = async (
   };
 };
 
+const getAssignedProductsWholesalerWise = async (
+  manufacturerEmail,
+  wholesalerEmail,
+  filter,
+  options
+) => {
+  // 🔥 STEP 1: Get assignments
+  const assignmentFilter = {
+    manufacturerEmail,
+    isActive: true,
+  };
+
+  if (wholesalerEmail) {
+    assignmentFilter.wholesalerEmail = wholesalerEmail;
+  }
+
+  const assignments = await WholesalerProductAssignment.find(
+    assignmentFilter
+  ).select('productId wholesalerEmail');
+
+  if (!assignments.length) {
+    return [];
+  }
+
+  // 🔥 STEP 2: Group productIds by wholesaler
+  const wholesalerMap = {};
+
+  assignments.forEach((a) => {
+    if (!wholesalerMap[a.wholesalerEmail]) {
+      wholesalerMap[a.wholesalerEmail] = [];
+    }
+    wholesalerMap[a.wholesalerEmail].push(a.productId);
+  });
+
+  const wholesalerEmails = Object.keys(wholesalerMap);
+
+  // 🔥 STEP 3: Get wholesaler details
+  const wholesalers = await User.find({
+    email: { $in: wholesalerEmails },
+  }).select('email fullName companyName');
+
+  const wholesalerDetailsMap = {};
+  wholesalers.forEach((w) => {
+    wholesalerDetailsMap[w.email] = w;
+  });
+
+  // 🔥 STEP 4: Fetch products per wholesaler
+  const finalData = [];
+
+  for (const email of wholesalerEmails) {
+    let productFilter = {
+      _id: { $in: wholesalerMap[email] },
+    };
+
+    // Apply filters
+    Object.keys(filter).forEach((key) => {
+      if (filter[key] && key !== 'search') {
+        productFilter[key] = filter[key];
+      }
+    });
+
+    if (filter.search) {
+      productFilter.$text = { $search: filter.search };
+    }
+
+    const products = await ProductType2.paginate(
+      productFilter,
+      options
+    );
+
+    finalData.push({
+      wholesalerEmail: email,
+      wholesaler:
+        wholesalerDetailsMap[email] || null,
+      ...products,
+    });
+  }
+
+  return finalData;
+};
+
 module.exports = {
   fileupload,
   createProduct,
@@ -941,4 +1022,5 @@ module.exports = {
   checkProductExistence,
   getWholesalerProducts,
   getProductsByManufacturerForWholesaler,
+  getAssignedProductsWholesalerWise,
 };
