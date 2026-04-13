@@ -311,11 +311,11 @@ const getWholesalerProducts = catchAsync(async (req, res) => {
 
 //   res.send(result);
 // });
-const getProductsByManufacturerForWholesaler = catchAsync(async (req, res) => {
-  const wholesalerEmail = req.user.email;
+const getProductsByWholesalerForManufacturer = catchAsync(async (req, res) => {
+  const manufacturerEmail = req.user.email;
 
   const {
-    manufacturerEmail,
+    wholesalerEmail,
     search,
     productType,
     gender,
@@ -327,17 +327,17 @@ const getProductsByManufacturerForWholesaler = catchAsync(async (req, res) => {
     sortBy = 'createdAt:desc',
   } = req.body;
 
-  if (!manufacturerEmail) {
-    throw new ApiError(httpStatus.BAD_REQUEST, 'manufacturerEmail is required');
+  if (!wholesalerEmail) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'wholesalerEmail is required');
   }
 
   const filter = {
+    search,
     productType,
     gender,
     clothing,
     subCategory,
     brand,
-    search,
   };
 
   const options = {
@@ -346,9 +346,9 @@ const getProductsByManufacturerForWholesaler = catchAsync(async (req, res) => {
     sortBy,
   };
 
-  const result = await productType2Service.getProductsByManufacturerForWholesaler(
-    wholesalerEmail,
+  const result = await productType2Service.getProductsByWholesalerForManufacturer(
     manufacturerEmail,
+    wholesalerEmail,
     filter,
     options
   );
@@ -406,6 +406,6 @@ module.exports = {
   checkProductExistence,
   assignProductsToWholesaler,
   getWholesalerProducts,
-  getProductsByManufacturerForWholesaler,
+  getProductsByWholesalerForManufacturer,
   getAssignedProductsWholesalerWise,
 };

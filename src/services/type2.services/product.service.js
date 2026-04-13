@@ -1000,6 +1000,61 @@ const getAssignedProductsWholesalerWise = async (
   return finalData;
 };
 
+const getProductsByWholesalerForManufacturer = async (
+  manufacturerEmail,
+  wholesalerEmail,
+  filter,
+  options
+) => {
+  // 🔥 STEP 1: Get assigned products
+  const assignments = await WholesalerProductAssignment.find({
+    manufacturerEmail,
+    wholesalerEmail,
+    isActive: true,
+  }).select('productId');
+
+  const productIds = assignments.map((a) => a.productId);
+
+  if (!productIds.length) {
+    return {
+      wholesaler: null,
+      results: [],
+      page: 1,
+      limit: options.limit,
+      totalPages: 0,
+      totalResults: 0,
+    };
+  }
+
+  // 🔥 STEP 2: Build product filter
+  const productFilter = {
+    _id: { $in: productIds },
+  };
+
+  Object.keys(filter).forEach((key) => {
+    if (filter[key] && key !== 'search') {
+      productFilter[key] = filter[key];
+    }
+  });
+
+  if (filter.search) {
+    productFilter.$text = { $search: filter.search };
+  }
+
+  // 🔥 STEP 3: Get products
+  const products = await ProductType2.paginate(productFilter, options);
+
+  // 🔥 STEP 4: Get wholesaler details
+  const wholesaler = await User.findOne({
+    email: wholesalerEmail,
+  }).select('email fullName companyName');
+
+  return {
+    wholesaler,
+    ...products,
+  };
+};
+
 module.exports = {
   fileupload,
   createProduct,
@@ -1023,4 +1078,5 @@ module.exports = {
   getWholesalerProducts,
   getProductsByManufacturerForWholesaler,
   getAssignedProductsWholesalerWise,
+  getProductsByWholesalerForManufacturer,
 };
