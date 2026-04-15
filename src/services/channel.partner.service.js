@@ -73,9 +73,9 @@ const createByManufacturer = async (body, manufacturer) => {
  * @returns {Promise<ChannelPartner>}
  */
 const createChannelPartner = async (reqBody) => {
-  if (reqBody.GSTIN) {
-    if (await ChannelPartner.findOne({ GSTIN: req.body.GSTIN })) {
-      throw new ApiError(httpStatus.BAD_REQUEST, 'GSTIN already exists');
+  if (reqBody.email) {
+    if (await ChannelPartner.findOne({ email: reqBody.email })) {
+      throw new ApiError(httpStatus.BAD_REQUEST, 'Email already exists');
     }
   }
 
