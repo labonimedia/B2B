@@ -4,10 +4,7 @@ const catchAsync = require('../utils/catchAsync');
 const { channelPartnerCustomerService } = require('../services');
 
 const fileupload = catchAsync(async (req, res) => {
-  const data = await channelPartnerCustomerService.fileupload(
-    req,
-    req.params.id
-  );
+  const data = await channelPartnerCustomerService.fileupload(req, req.params.id);
 
   res.status(httpStatus.CREATED).send(data);
 });

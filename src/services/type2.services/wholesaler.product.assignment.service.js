@@ -3,7 +3,6 @@ const mongoose = require('mongoose');
 const { WholesalerProductAssignment, ProductType2 } = require('../../models');
 const ApiError = require('../../utils/ApiError');
 
-
 /**
  * ASSIGN PRODUCTS TO MULTIPLE WHOLESALERS
  */

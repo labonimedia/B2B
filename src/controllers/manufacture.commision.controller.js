@@ -34,15 +34,50 @@ const getCommissionCategoryById = catchAsync(async (req, res) => {
 const updateCommissionCategoryById = catchAsync(async (req, res) => {
   const data = await manufactureCommissionService.updateCommissionCategoryById(
     req.params.id,
-    req.body
+    req.body,
+    req.user.email // 🔥 pass manufacturer
   );
 
   res.send(data);
 });
 
 const deleteCommissionCategoryById = catchAsync(async (req, res) => {
-  await manufactureCommissionService.deleteCommissionCategoryById(req.params.id);
+  await manufactureCommissionService.deleteCommissionCategoryById(
+    req.params.id,
+    req.user.email // 🔥 pass manufacturer
+  );
+
   res.status(httpStatus.NO_CONTENT).send();
+});
+
+// ✅ Assign
+const assignCommission = catchAsync(async (req, res) => {
+  const data = await manufactureCommissionService.assignCommission({
+    ...req.body,
+    manufacturerEmail: req.user.email,
+  });
+
+  res.status(httpStatus.CREATED).send(data);
+});
+
+// ✅ Update
+const updateAssignedCommission = catchAsync(async (req, res) => {
+  const data = await manufactureCommissionService.updateAssignedCommission({
+    ...req.body,
+    manufacturerEmail: req.user.email,
+  });
+
+  res.send(data);
+});
+
+// ✅ Delete
+const deleteAssignedCommission = catchAsync(async (req, res) => {
+  const data = await manufactureCommissionService.deleteAssignedCommission({
+    ...req.body,
+    manufacturerEmail: req.user.email,
+  });
+
+  res.send(data);
 });
 
 module.exports = {
@@ -51,4 +86,7 @@ module.exports = {
   getCommissionCategoryById,
   updateCommissionCategoryById,
   deleteCommissionCategoryById,
+  assignCommission,
+  updateAssignedCommission,
+  deleteAssignedCommission,
 };

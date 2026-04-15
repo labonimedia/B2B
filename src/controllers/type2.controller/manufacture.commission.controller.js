@@ -13,7 +13,7 @@ const createCommissionCategory = catchAsync(async (req, res) => {
 });
 
 const queryCommissionCategory = catchAsync(async (req, res) => {
-  const filter = pick(req.query, ['category', 'categoryBy',]);
+  const filter = pick(req.query, ['category', 'categoryBy']);
   const options = pick(req.query, ['sortBy', 'limit', 'page']);
 
   const result = await manufacturerCommissionCategoryService.queryCommissionCategory(filter, options);

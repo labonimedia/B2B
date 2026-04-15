@@ -71,7 +71,6 @@
 //   updateCartSetItem,
 // };
 
-
 const httpStatus = require('http-status');
 const pick = require('../../utils/pick');
 const catchAsync = require('../../utils/catchAsync');
@@ -113,10 +112,7 @@ const getCartByEmail = catchAsync(async (req, res) => {
 const getCartByEmailToPlaceOrder = catchAsync(async (req, res) => {
   const { wholesalerEmail, manufacturerEmail } = req.query;
 
-  const result = await wholesalerCartToManufacturerService.getCartByEmailToPlaceOrder(
-    wholesalerEmail,
-    manufacturerEmail
-  );
+  const result = await wholesalerCartToManufacturerService.getCartByEmailToPlaceOrder(wholesalerEmail, manufacturerEmail);
 
   res.send(result);
 });

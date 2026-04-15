@@ -72,7 +72,6 @@ const getUserByEmail = async (email) => {
   return Wholesaler.findOne({ email });
 };
 
-
 const escapeRegExp = (string) => {
   return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // Escapes special characters
 };
@@ -178,7 +177,6 @@ const deleteWholesalerById = async (email) => {
 const getUser = async (email) => {
   return User.findOne({ email });
 };
-
 
 /**
  * Get users by emails with pagination and optional userCategory filter
