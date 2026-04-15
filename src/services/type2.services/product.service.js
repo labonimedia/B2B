@@ -161,111 +161,47 @@ const searchProducts = async (filter, options) => {
 };
 
 
-
-
-// const searchForWSProducts = async (filter, options, WholesalerEmail) => {
-//   // If there's a search term, add a text search condition
-//   if (filter.search) {
-//     filter.$text = { $search: filter.search };
-//     delete filter.search;
-//   }
-
-//   // Fetch products with pagination
-//   const products = await ProductType2.paginate(filter, options);
-
-//   // Fetch wholesaler prices by WholesalerEmail
-//   const wholesalerPrices = await WholesalerPriceType2.find({ WholesalerEmail }).select('productId');
-
-//   // Extract productIds from wholesalerPrices
-//   const productIdsWithPrice = new Set(wholesalerPrices.map((price) => price.productId.toString()));
-
-//   // Add status to each product in the results
-//   const resultsWithStatus = products.results.map((product) => ({
-//     ...product.toJSON(),
-//     status: productIdsWithPrice.has(product._id.toString()) ? 'Done' : 'Pending',
-//   }));
-
-//   // Return the modified results along with other pagination details
-//   return {
-//     ...products,
-//     results: resultsWithStatus,
-//   };
-// };
-
-// const searchForWSProducts = async (filter, options, wholesalerEmail) => {
-//   // 🔥 Step 1: get assigned products
-//   const assignedProducts = await WholesalerProductAssignment.find({
-//     wholesalerEmail,
-    
-//     isActive: true,
-//   }).select('productId');
-
-//   const assignedProductIds = assignedProducts.map((p) => p.productId);
-
-//   // 🔥 Step 2: apply filter only on assigned products
-//   filter._id = { $in: assignedProductIds };
-
-//   // 🔥 Step 3: search support
-//   if (filter.search) {
-//     filter.$text = { $search: filter.search };
-//     delete filter.search;
-//   }
-
-//   // 🔥 Step 4: fetch products
-//   const products = await ProductType2.paginate(filter, options);
-
-//   // 🔥 Step 5: price status
-//   const wholesalerPrices = await WholesalerPriceType2.find({
-//     WholesalerEmail: wholesalerEmail,
-//   }).select('productId');
-
-//   const productIdsWithPrice = new Set(wholesalerPrices.map((p) => p.productId.toString()));
-
-//   // 🔥 Step 6: attach status
-//   const results = products.results.map((product) => ({
-//     ...product.toJSON(),
-//     status: productIdsWithPrice.has(product._id.toString()) ? 'Done' : 'Pending',
-//   }));
-
-//   return {
-//     ...products,
-//     results,
-//   };
-// };
-
 // const searchForWSProducts = async (
 //   filter,
 //   options,
 //   wholesalerEmail,
 //   manufacturerEmail
 // ) => {
-
-//   // 🔥 Step 1: find assignments for THIS manufacturer + wholesaler
+//   // 🔥 STEP 1: Get assigned products
 //   const assignedProducts = await WholesalerProductAssignment.find({
 //     wholesalerEmail,
 //     manufacturerEmail,
 //     isActive: true,
 //   }).select('productId');
 
-//   const assignedProductIds = assignedProducts.map((p) => p.productId);
+//   // ✅ Convert safely to ObjectId (fix for string/ObjectId mismatch)
+//   const assignedProductIds = assignedProducts.map((p) =>
+//     mongoose.Types.ObjectId(p.productId)
+//   );
 
-//   // 🔥 Step 2: apply logic
-//   if (assignedProductIds.length > 0) {
-//     // ✅ Assigned → show only assigned
+//   // 🔥 STEP 2: Count total manufacturer products
+//   const totalProducts = await ProductType2.countDocuments({
+//     productBy: manufacturerEmail,
+//   });
+
+//   // 🔥 STEP 3: Apply filter ONLY if partial assignment
+//   if (
+//     assignedProductIds.length > 0 &&
+//     assignedProductIds.length !== totalProducts
+//   ) {
 //     filter._id = { $in: assignedProductIds };
 //   }
-//   // ❗ else → DO NOTHING → show all manufacturer products
 
-//   // 🔍 Step 3: search
+//   // 🔍 STEP 4: Search support
 //   if (filter.search) {
 //     filter.$text = { $search: filter.search };
 //     delete filter.search;
 //   }
 
-//   // 🔥 Step 4: fetch products
+//   // 🔥 STEP 5: Fetch products
 //   const products = await ProductType2.paginate(filter, options);
 
-//   // 🔥 Step 5: price status
+//   // 🔥 STEP 6: Get wholesaler pricing status
 //   const wholesalerPrices = await WholesalerPriceType2.find({
 //     WholesalerEmail: wholesalerEmail,
 //   }).select('productId');
@@ -274,7 +210,7 @@ const searchProducts = async (filter, options) => {
 //     wholesalerPrices.map((p) => p.productId.toString())
 //   );
 
-//   // 🔥 Step 6: attach status
+//   // 🔥 STEP 7: Attach status
 //   const results = products.results.map((product) => ({
 //     ...product.toJSON(),
 //     status: priceSet.has(product._id.toString())
@@ -284,62 +220,9 @@ const searchProducts = async (filter, options) => {
 
 //   return {
 //     ...products,
-//     isAssignedFilterApplied: assignedProductIds.length > 0, // 🔥 bonus flag
-//     results,
-//   };
-// };
-
-// const searchForWSProducts = async (
-//   filter,
-//   options,
-//   wholesalerEmail,
-//   manufacturerEmail
-// ) => {
-//   // 🔥 STEP 1: check assignment (specific manufacturer + wholesaler)
-//   const assignedProducts = await WholesalerProductAssignment.find({
-//     wholesalerEmail,
-//     manufacturerEmail,
-//     isActive: true,
-//   }).select('productId');
-
-//   const assignedProductIds = assignedProducts.map((p) => p.productId);
-
-//   // 🔥 STEP 2: apply logic
-//   if (assignedProductIds.length > 0) {
-//     // ✅ Show only assigned
-//     filter._id = { $in: assignedProductIds };
-//   }
-//   // ❗ else → show all manufacturer products
-
-//   // 🔍 STEP 3: search support
-//   if (filter.search) {
-//     filter.$text = { $search: filter.search };
-//     delete filter.search;
-//   }
-
-//   // 🔥 STEP 4: fetch products
-//   const products = await ProductType2.paginate(filter, options);
-
-//   // 🔥 STEP 5: price status
-//   const wholesalerPrices = await WholesalerPriceType2.find({
-//     WholesalerEmail: wholesalerEmail,
-//   }).select('productId');
-
-//   const priceSet = new Set(
-//     wholesalerPrices.map((p) => p.productId.toString())
-//   );
-
-//   // 🔥 STEP 6: attach status
-//   const results = products.results.map((product) => ({
-//     ...product.toJSON(),
-//     status: priceSet.has(product._id.toString())
-//       ? 'Done'
-//       : 'Pending',
-//   }));
-
-//   return {
-//     ...products,
-//     isAssignedFilterApplied: assignedProductIds.length > 0,
+//     isAssignedFilterApplied:
+//       assignedProductIds.length > 0 &&
+//       assignedProductIds.length !== totalProducts,
 //     results,
 //   };
 // };
@@ -356,7 +239,6 @@ const searchForWSProducts = async (
     isActive: true,
   }).select('productId');
 
-  // ✅ Convert safely to ObjectId (fix for string/ObjectId mismatch)
   const assignedProductIds = assignedProducts.map((p) =>
     mongoose.Types.ObjectId(p.productId)
   );
@@ -366,7 +248,7 @@ const searchForWSProducts = async (
     productBy: manufacturerEmail,
   });
 
-  // 🔥 STEP 3: Apply filter ONLY if partial assignment
+  // 🔥 STEP 3: Apply assignment filter ONLY if partial assignment
   if (
     assignedProductIds.length > 0 &&
     assignedProductIds.length !== totalProducts
@@ -374,16 +256,24 @@ const searchForWSProducts = async (
     filter._id = { $in: assignedProductIds };
   }
 
-  // 🔍 STEP 4: Search support
+  // 🔍 STEP 4: Search (text index)
   if (filter.search) {
     filter.$text = { $search: filter.search };
     delete filter.search;
   }
 
-  // 🔥 STEP 5: Fetch products
+  // 🔥 STEP 5: Optional LIKE search (for productTitle etc.)
+  if (filter.productTitle) {
+    filter.productTitle = {
+      $regex: filter.productTitle,
+      $options: 'i',
+    };
+  }
+
+  // 🔥 STEP 6: Fetch products
   const products = await ProductType2.paginate(filter, options);
 
-  // 🔥 STEP 6: Get wholesaler pricing status
+  // 🔥 STEP 7: Get wholesaler pricing
   const wholesalerPrices = await WholesalerPriceType2.find({
     WholesalerEmail: wholesalerEmail,
   }).select('productId');
@@ -392,7 +282,7 @@ const searchForWSProducts = async (
     wholesalerPrices.map((p) => p.productId.toString())
   );
 
-  // 🔥 STEP 7: Attach status
+  // 🔥 STEP 8: Attach status
   const results = products.results.map((product) => ({
     ...product.toJSON(),
     status: priceSet.has(product._id.toString())
@@ -408,7 +298,6 @@ const searchForWSProducts = async (
     results,
   };
 };
-
 /**
  * Get ProductType2 by id
  * @param {ObjectId} id
