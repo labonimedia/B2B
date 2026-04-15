@@ -156,7 +156,7 @@ const POWholesalerToManufacturerSchema = new mongoose.Schema(
       type: Date,
       default: Date.now,
     },
- 
+
     invoiceGenerated: {
       type: Boolean,
       default: false, // partail or actual delivery date
