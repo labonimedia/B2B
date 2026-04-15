@@ -1,90 +1,57 @@
 const httpStatus = require('http-status');
 const pick = require('../utils/pick');
-const ApiError = require('../utils/ApiError');
 const catchAsync = require('../utils/catchAsync');
 const { channelPartnerCustomerService } = require('../services');
 
-/**
- * 🔥 Bulk Upload
- */
-const bulkUpload = catchAsync(async (req, res) => {
-  const data = req.body;
-  const cpEmail = req.user.email; // from auth
+const fileupload = catchAsync(async (req, res) => {
+  const data = await channelPartnerCustomerService.fileupload(
+    req,
+    req.params.id
+  );
 
-  if (!Array.isArray(data) || data.length === 0) {
-    throw new ApiError(httpStatus.BAD_REQUEST, 'Body must be non-empty array');
-  }
-
-  const result = await channelPartnerCustomerService.bulkUploadRetailers(data, cpEmail);
-
-  res.status(httpStatus.CREATED).send({
-    message: 'Retailers uploaded successfully',
-    result,
-  });
+  res.status(httpStatus.CREATED).send(data);
 });
+const createShopKeeper = catchAsync(async (req, res) => {
+  const cpEmail = req.user.email;
 
-/**
- * ➕ Add Single
- */
-const addRetailer = catchAsync(async (req, res) => {
-  const cpEmail = req.body.email;
-
-  const result = await channelPartnerCustomerService.addRetailer(cpEmail, req.body);
+  const result = await channelPartnerCustomerService.createShopKeeper(cpEmail, req.body);
 
   res.status(httpStatus.CREATED).send(result);
 });
 
-/**
- * 📄 Query
- */
-const queryRetailers = catchAsync(async (req, res) => {
-  const filter = pick(req.query, ['channelPartnerEmail', 'retailerEmail', 'city', 'state']);
+const queryShopKeepers = catchAsync(async (req, res) => {
+  const filter = pick(req.query, ['channelPartnerEmail', 'email', 'city', 'state', 'status']);
+
   const options = pick(req.query, ['sortBy', 'limit', 'page']);
 
-  const result = await channelPartnerCustomerService.queryRetailers(filter, options);
+  const result = await channelPartnerCustomerService.queryShopKeepers(filter, options);
 
   res.send(result);
 });
 
-/**
- * 🔍 Get by ID
- */
-const getRetailerById = catchAsync(async (req, res) => {
-  const data = await channelPartnerCustomerService.getRetailerById(req.params.id);
-
-  if (!data) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Retailer not found');
-  }
+const getShopKeeperById = catchAsync(async (req, res) => {
+  const data = await channelPartnerCustomerService.getShopKeeperById(req.params.id);
 
   res.send(data);
 });
 
-/**
- * ✏️ Update
- */
-const updateRetailerById = catchAsync(async (req, res) => {
-  const data = await channelPartnerCustomerService.updateRetailerById(
-    req.params.id,
-    req.body
-  );
+const updateShopKeeper = catchAsync(async (req, res) => {
+  const data = await channelPartnerCustomerService.updateShopKeeper(req.params.id, req.body);
 
   res.send(data);
 });
 
-/**
- * ❌ Delete
- */
-const deleteRetailerById = catchAsync(async (req, res) => {
-  await channelPartnerCustomerService.deleteRetailerById(req.params.id);
+const deleteShopKeeper = catchAsync(async (req, res) => {
+  const result = await channelPartnerCustomerService.deleteShopKeeper(req.params.id);
 
-  res.status(httpStatus.NO_CONTENT).send();
+  res.send(result);
 });
 
 module.exports = {
-  bulkUpload,
-  addRetailer,
-  queryRetailers,
-  getRetailerById,
-  updateRetailerById,
-  deleteRetailerById,
+  createShopKeeper,
+  queryShopKeepers,
+  getShopKeeperById,
+  updateShopKeeper,
+  deleteShopKeeper,
+  fileupload,
 };
