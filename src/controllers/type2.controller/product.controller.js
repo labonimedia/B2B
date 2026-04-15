@@ -108,6 +108,43 @@ const searchProductsWholesalerWise = catchAsync(async (req, res) => {
 //   res.status(httpStatus.OK).send(products);
 // });
 
+// const searchForWSProducts = catchAsync(async (req, res) => {
+//   const {
+//     wholesalerEmail,
+//     manufacturerEmail,
+//     search,
+//     limit = 10,
+//     page = 1,
+//     sortBy = 'createdAt:desc',
+//     ...restFilters
+//   } = req.body;
+
+//   // ✅ Validation
+//   if (!wholesalerEmail || !manufacturerEmail) {
+//     throw new ApiError(httpStatus.BAD_REQUEST, 'wholesalerEmail and manufacturerEmail are required');
+//   }
+
+//   // ✅ Build filter object
+//   const filter = {
+//     ...restFilters,
+//     productBy: manufacturerEmail, // 🔥 always restrict to manufacturer
+//   };
+
+//   // 🔍 Search
+//   if (search) {
+//     filter.search = search;
+//   }
+
+//   const options = {
+//     limit: parseInt(limit, 10),
+//     page: parseInt(page, 10),
+//     sortBy,
+//   };
+
+//   const result = await productType2Service.searchForWSProducts(filter, options, wholesalerEmail, manufacturerEmail);
+
+//   res.status(httpStatus.OK).send(result);
+// });
 const searchForWSProducts = catchAsync(async (req, res) => {
   const {
     wholesalerEmail,
@@ -124,13 +161,25 @@ const searchForWSProducts = catchAsync(async (req, res) => {
     throw new ApiError(httpStatus.BAD_REQUEST, 'wholesalerEmail and manufacturerEmail are required');
   }
 
-  // ✅ Build filter object
+  // 🔥 REMOVE EMPTY FILTERS (MAIN FIX)
+  const cleanedFilters = Object.fromEntries(
+    Object.entries(restFilters).filter(
+      ([_, value]) =>
+        value !== '' &&
+        value !== null &&
+        value !== undefined &&
+        value !== 'all' &&
+        !(Array.isArray(value) && value.length === 0)
+    )
+  );
+
+  // ✅ Build filter
   const filter = {
-    ...restFilters,
-    productBy: manufacturerEmail, // 🔥 always restrict to manufacturer
+    ...cleanedFilters,
+    productBy: manufacturerEmail, // always restrict
   };
 
-  // 🔍 Search
+  // 🔍 Search support
   if (search) {
     filter.search = search;
   }
