@@ -5,8 +5,21 @@ const catchAsync = require('../utils/catchAsync');
 const { channelPartnerService } = require('../services');
 
 const registerChannelPartner = catchAsync(async (req, res) => {
-  const cp = await channelPartnerService.registerChannelPartner(req.body);
-  res.status(httpStatus.CREATED).send(cp);
+  const result = await channelPartnerService.registerChannelPartner(req.body);
+
+  res.status(httpStatus.CREATED).send(result);
+});
+
+const createByManufacturer = catchAsync(async (req, res) => {
+  const manufacturer = req.user;
+
+  const result = await channelPartnerService.createByManufacturer(req.body, manufacturer);
+
+  res.status(httpStatus.CREATED).send({
+    success: true,
+    message: 'Channel Partner created successfully',
+    data: result,
+  });
 });
 
 const getAllChannelPartners = catchAsync(async (req, res) => {
@@ -22,6 +35,9 @@ const getAllChannelPartners = catchAsync(async (req, res) => {
     'role',
     'retailer',
     'invitedBy',
+    'userCode',
+    'leagalStatusOfFirm',
+    'referralCode',
   ]);
   const options = pick(req.query, ['sortBy', 'limit', 'page']);
 
@@ -101,4 +117,5 @@ module.exports = {
   linkManufacturer,
   getCommissionByGivenBy,
   assignCommission,
+  createByManufacturer,
 };

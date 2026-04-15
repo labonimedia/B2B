@@ -1,6 +1,70 @@
 const httpStatus = require('http-status');
-const { ChannelPartner, Invitation } = require('../models');
+const { ChannelPartner, Invitation, User, Manufacture } = require('../models');
 const ApiError = require('../utils/ApiError');
+const { deleteFile } = require('../utils/upload');
+
+const createByManufacturer = async (body, manufacturer) => {
+  const { email, password, fullName, companyName } = body;
+
+  // ✅ Step 1: Check CP already exists
+  let cp = await ChannelPartner.findOne({ email });
+
+  if (!cp) {
+    // 🔥 CREATE CP
+    cp = await ChannelPartner.create({
+      ...body,
+      linkedManufacturers: [
+        {
+          manufacturerEmail: manufacturer.email,
+          manufacturerName: manufacturer.companyName,
+          isApproved: true,
+        },
+      ],
+      registrationType: 'invited',
+    });
+  } else {
+    // 🔥 If exists → just link manufacturer
+    const alreadyLinked = cp.linkedManufacturers.find((m) => m.manufacturerEmail === manufacturer.email);
+
+    if (!alreadyLinked) {
+      cp.linkedManufacturers.push({
+        manufacturerEmail: manufacturer.email,
+        manufacturerName: manufacturer.companyName,
+        isApproved: true,
+      });
+
+      await cp.save();
+    }
+  }
+
+  // ✅ Step 2: Create USER LOGIN (IMPORTANT)
+  const existingUser = await User.findOne({ email });
+
+  if (!existingUser) {
+    await User.create({
+      fullName,
+      email,
+      password,
+      role: 'channelPartner',
+      mobileNumber: body.mobNumber || '9999999999', // fallback
+    });
+  }
+
+  // ✅ Step 3 (OPTIONAL): Update Manufacturer
+  await Manufacture.findOneAndUpdate(
+    { email: manufacturer.email },
+    {
+      $addToSet: {
+        linkedChannelPartners: {
+          cpEmail: email,
+          cpName: fullName,
+        },
+      },
+    }
+  );
+
+  return cp;
+};
 
 // eslint-disable-next-line prettier/prettier
 /**
@@ -22,6 +86,15 @@ const registerChannelPartner = async (body) => {
   const existing = await ChannelPartner.findOne({ email: body.email });
   if (existing) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Channel Partner already exists');
+  }
+
+  // ✅ HANDLE FILES
+  if (body.file) {
+    body.file = body.file[0];
+  }
+
+  if (body.profileImg) {
+    body.profileImg = body.profileImg[0];
   }
 
   const invitation = await Invitation.findOne({ email: body.email });
@@ -58,12 +131,50 @@ const getByEmail = async (email) => {
 
 const updateByEmail = async (email, updateBody) => {
   const cp = await getByEmail(email);
+
   if (!cp) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Channel Partner not found');
   }
 
+  // 🔥 HANDLE FILE UPLOADS
+
+  // 📄 Document file
+  if (updateBody.file) {
+    // delete old file (optional best practice)
+    if (cp.file) {
+      try {
+        await deleteFile(cp.file);
+      } catch (err) {
+        console.error('Old file delete failed:', err.message);
+      }
+    }
+
+    updateBody.file = updateBody.file[0];
+  }
+
+  // 🖼️ Profile Image
+  if (updateBody.profileImg) {
+    if (cp.profileImg) {
+      try {
+        await deleteFile(cp.profileImg);
+      } catch (err) {
+        console.error('Old profile image delete failed:', err.message);
+      }
+    }
+
+    updateBody.profileImg = updateBody.profileImg[0];
+  }
+
+  // 🏷️ File Name (optional)
+  if (updateBody.fileName) {
+    cp.fileName = updateBody.fileName;
+  }
+
+  // 🔥 UPDATE DATA
   Object.assign(cp, updateBody);
+
   await cp.save();
+
   return cp;
 };
 
@@ -173,4 +284,5 @@ module.exports = {
   createChannelPartner,
   assignOrUpdateCommission,
   getCommissionByGivenBy,
+  createByManufacturer,
 };

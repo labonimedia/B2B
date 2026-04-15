@@ -170,7 +170,7 @@ const channelPartnerSchema = mongoose.Schema(
 
     registrationType: {
       type: String,
-      enum: ['self', 'invited'],
+      enum: ['self', 'invited', 'byManufacturer'],
       default: 'self',
     },
   },

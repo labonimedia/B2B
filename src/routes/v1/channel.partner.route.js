@@ -1,59 +1,93 @@
 const express = require('express');
 const auth = require('../../middlewares/auth');
 const { channelPartnerController } = require('../../controllers');
+const { commonUploadMiddleware } = require('../../utils/upload');
 
 const router = express.Router();
 
-// Register (self + invited)
-router.post('/register', channelPartnerController.registerChannelPartner);
+router.post(
+  '/',
+  auth('superadmin', 'manufacture', 'wholesaler', 'channelPartner', 'retailer'),
+  commonUploadMiddleware([
+    { name: 'file', maxCount: 1 },
+    { name: 'profileImg', maxCount: 1 },
+  ]),
+  channelPartnerController.createByManufacturer
+);
 
-// Get all Channel Partners
-router.get('/', auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), channelPartnerController.getAllChannelPartners);
+router.post(
+  '/register',
+  commonUploadMiddleware([
+    { name: 'file', maxCount: 1 },
+    { name: 'profileImg', maxCount: 1 },
+  ]),
+  channelPartnerController.registerChannelPartner
+);
 
-// Get single Channel Partner
+// Get All Channel Partners
+router.get(
+  '/',
+  auth('superadmin', 'manufacture', 'wholesaler', 'channelPartner', 'retailer'),
+  channelPartnerController.getAllChannelPartners
+);
+
+// Get Single Channel Partner
 router.get(
   '/:email',
-  auth('superadmin', 'manufacture', 'wholesaler', 'retailer', 'channelPartner'),
+  auth('superadmin', 'manufacture', 'wholesaler', 'channelPartner', 'retailer'),
   channelPartnerController.getChannelPartnerByEmail
 );
 
 // Update Channel Partner
 router.patch(
   '/:email',
-  auth('superadmin', 'manufacture', 'wholesaler', 'retailer', 'channelPartner'),
+  auth('superadmin', 'manufacture', 'wholesaler', 'channelPartner'),
+  commonUploadMiddleware([
+    { name: 'file', maxCount: 1 },
+    { name: 'profileImg', maxCount: 1 },
+  ]),
   channelPartnerController.updateChannelPartner
 );
 
 // Delete Channel Partner
 router.delete(
   '/:email',
-  auth('superadmin', 'manufacture', 'wholesaler', 'retailer', 'channelPartner'),
+  auth('superadmin', 'manufacture', 'wholesaler', 'channelPartner', 'retailer'),
   channelPartnerController.deleteChannelPartner
 );
 
-// Add retailer (ONLY CP)
+// Add Retailer under Channel Partner
 router.post(
-  '/retailers',
-  auth('superadmin', 'manufacture', 'wholesaler', 'retailer', 'channelPartner'),
+  '/:channelPartnerId/retailers',
+  auth('superadmin', 'manufacture', 'wholesaler', 'channelPartner', 'retailer'),
   channelPartnerController.addRetailer
 );
 
-// Get own retailers
+// Get Retailers of Channel Partner
 router.get(
-  '/retailers',
-  auth('superadmin', 'manufacture', 'wholesaler', 'retailer', 'channelPartner'),
+  '/:channelPartnerId/retailers',
+  auth('superadmin', 'manufacture', 'wholesaler', 'channelPartner', 'retailer'),
   channelPartnerController.getRetailers
 );
 
-// Link manufacturer to CP
-router.post('/link-manufacturer',auth('superadmin', 'manufacture', 'wholesaler', 'retailer', 'channelPartner'), channelPartnerController.linkManufacturer);
+// Link Manufacturer to Channel Partner
+router.post(
+  '/:channelPartnerId/link-manufacturer',
+  auth('superadmin', 'manufacture', 'wholesaler', 'channelPartner', 'retailer'),
+  channelPartnerController.linkManufacturer
+);
 
-router.post('/assign-commission', auth('superadmin', 'manufacture', 'wholesaler', 'retailer', 'channelPartner'), channelPartnerController.assignCommission);
+// Assign Commission
+router.post(
+  '/:channelPartnerId/commission',
+  auth('superadmin', 'manufacture', 'wholesaler', 'channelPartner', 'retailer'),
+  channelPartnerController.assignCommission
+);
 
-// 🔥 Get Commission
+// Get Commission (by who gave)
 router.get(
-  '/get-commission/:channelPartnerId/:commissionGivenBy',
-auth('superadmin', 'manufacture', 'wholesaler', 'retailer', 'channelPartner'),
+  '/:channelPartnerId/commission/:commissionGivenBy',
+  auth('superadmin', 'manufacture', 'wholesaler', 'channelPartner', 'retailer'),
   channelPartnerController.getCommissionByGivenBy
 );
 
