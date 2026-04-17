@@ -336,6 +336,88 @@ const getCPByManufacturer = async (filter, options, manufacturerEmail) => {
   };
 };
 
+const linkChannelPartner = async (cpEmail, manufacturer) => {
+  if (!cpEmail) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'cpEmail is required');
+  }
+
+  const cp = await ChannelPartner.findOne({ email: cpEmail });
+
+  if (!cp) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Channel Partner not found');
+  }
+
+  // 🔍 Check already linked
+  const alreadyLinked = cp.linkedManufacturers.find(
+    (m) => m.manufacturerEmail === manufacturer.email
+  );
+
+  if (alreadyLinked) {
+    return {
+      message: 'Already linked with this manufacturer',
+    };
+  }
+
+  cp.linkedManufacturers.push({
+    manufacturerEmail: manufacturer.email,
+    manufacturerName: manufacturer.companyName,
+    isApproved: true,
+  });
+
+  await cp.save();
+
+  await Manufacture.findOneAndUpdate(
+    { email: manufacturer.email },
+    {
+      $addToSet: {
+        linkedChannelPartners: {
+          cpEmail: cp.email,
+          cpName: cp.fullName,
+        },
+      },
+    }
+  );
+
+  return {
+    message: 'Channel Partner linked successfully',
+    cp,
+  };
+};
+
+
+const unlinkChannelPartner = async (cpEmail, manufacturer) => {
+  if (!cpEmail) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'cpEmail is required');
+  }
+
+  const cp = await ChannelPartner.findOne({ email: cpEmail });
+
+  if (!cp) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Channel Partner not found');
+  }
+
+
+  cp.linkedManufacturers = cp.linkedManufacturers.filter(
+    (m) => m.manufacturerEmail !== manufacturer.email
+  );
+
+  await cp.save();
+
+  await Manufacture.findOneAndUpdate(
+    { email: manufacturer.email },
+    {
+      $pull: {
+        linkedChannelPartners: {
+          cpEmail: cp.email,
+        },
+      },
+    }
+  );
+
+  return {
+    message: 'Channel Partner unlinked successfully',
+  };
+};
 
 module.exports = {
   registerChannelPartner,
@@ -351,4 +433,6 @@ module.exports = {
   getCommissionByGivenBy,
   createByManufacturer,
   getCPByManufacturer,
+  linkChannelPartner,
+  unlinkChannelPartner,
 };
