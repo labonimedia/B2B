@@ -91,7 +91,7 @@ router.get(
   channelPartnerController.getCommissionByGivenBy
 );
 
-router.get(
+router.post(
   '/by-manufacturer',
   auth('superadmin', 'manufacture', 'wholesaler', 'channelPartner', 'retailer'),
   channelPartnerController.getCPByManufacturer
