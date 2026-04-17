@@ -115,26 +115,33 @@ const getCommissionByGivenBy = catchAsync(async (req, res) => {
 });
 
 const getCPByManufacturer = catchAsync(async (req, res) => {
-  const manufacturerEmail = req.query.manufacturerEmail || req.user.email;
-
   const {
+    manufacturerEmail,
     limit = 10,
     page = 1,
     search,
     status,
-  } = req.query;
+    isApproved,
+  } = req.body;
 
-  const filter = {};
+  // ✅ fallback (logged-in manufacturer)
+  const finalManufacturerEmail =
+    manufacturerEmail || req.user.email;
 
-  // ✅ Filter by manufacturer
-  filter['linkedManufacturers.manufacturerEmail'] = manufacturerEmail;
+  const filter = {
+    'linkedManufacturers.manufacturerEmail': finalManufacturerEmail,
+  };
 
   // ✅ Optional filters
   if (status) {
     filter.status = status;
   }
 
-  // 🔍 Search (name/company/email)
+  if (typeof isApproved === 'boolean') {
+    filter['linkedManufacturers.isApproved'] = isApproved;
+  }
+
+  // 🔍 Search
   if (search) {
     filter.$or = [
       { fullName: { $regex: search, $options: 'i' } },
@@ -152,7 +159,7 @@ const getCPByManufacturer = catchAsync(async (req, res) => {
   const result = await channelPartnerService.getCPByManufacturer(
     filter,
     options,
-    manufacturerEmail
+    finalManufacturerEmail
   );
 
   res.status(httpStatus.OK).send(result);

@@ -317,10 +317,8 @@ const getCommissionByGivenBy = async (channelPartnerId, commissionGivenBy) => {
 };
 
 const getCPByManufacturer = async (filter, options, manufacturerEmail) => {
-  // 🔥 Fetch CPs
   const cps = await ChannelPartner.paginate(filter, options);
 
-  // 🔥 Attach manufacturer-specific approval status
   const results = cps.results.map((cp) => {
     const manufacturerLink = cp.linkedManufacturers.find(
       (m) => m.manufacturerEmail === manufacturerEmail
@@ -337,6 +335,7 @@ const getCPByManufacturer = async (filter, options, manufacturerEmail) => {
     results,
   };
 };
+
 
 module.exports = {
   registerChannelPartner,
