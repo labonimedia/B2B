@@ -66,88 +66,190 @@ const { deleteFile } = require('../utils/upload');
 //   return cp;
 // };
 
+// const createByManufacturer = async (body, manufacturer) => {
+//   const { email, password, fullName, companyName } = body;
+
+//   // ✅ HANDLE FILES (IMPORTANT FIX 🔥)
+//   if (body.file && Array.isArray(body.file)) {
+//     body.file = body.file[0]; // single file
+//   }
+
+//   if (body.profileImg && Array.isArray(body.profileImg)) {
+//     body.profileImg = body.profileImg[0]; // single image
+//   }
+
+//   // ✅ Step 1: Check CP already exists
+//   let cp = await ChannelPartner.findOne({ email });
+
+//   if (!cp) {
+//     // 🔥 CREATE CP
+//     cp = await ChannelPartner.create({
+//       ...body,
+//       linkedManufacturers: [
+//         {
+//           manufacturerEmail: manufacturer.email,
+//           manufacturerName: manufacturer.companyName,
+//           isApproved: true,
+//         },
+//       ],
+//       registrationType: 'invited',
+//     });
+//   } else {
+//     // 🔥 If exists → just link manufacturer
+//     const alreadyLinked = cp.linkedManufacturers.find(
+//       (m) => m.manufacturerEmail === manufacturer.email
+//     );
+
+//     if (!alreadyLinked) {
+//       cp.linkedManufacturers.push({
+//         manufacturerEmail: manufacturer.email,
+//         manufacturerName: manufacturer.companyName,
+//         isApproved: true,
+//       });
+
+//       // ✅ OPTIONAL: Update file/profile if provided
+//       if (body.file) {
+//         cp.file = body.file;
+//       }
+
+//       if (body.profileImg) {
+//         cp.profileImg = body.profileImg;
+//       }
+
+//       await cp.save();
+//     }
+//   }
+
+//   // ✅ Step 2: Create USER LOGIN
+//   const existingUser = await User.findOne({ email });
+
+//   if (!existingUser) {
+//     await User.create({
+//       fullName,
+//       email,
+//       password,
+//       role: 'channelPartner',
+//       mobileNumber: body.mobNumber || '9999999999',
+//     });
+//   }
+
+//   // ✅ Step 3: Update Manufacturer
+//   await Manufacture.findOneAndUpdate(
+//     { email: manufacturer.email },
+//     {
+//       $addToSet: {
+//         linkedChannelPartners: {
+//           cpEmail: email,
+//           cpName: fullName,
+//         },
+//       },
+//     }
+//   );
+
+//   return cp;
+// };
 const createByManufacturer = async (body, manufacturer) => {
-  const { email, password, fullName, companyName } = body;
+  try {
+    const { email, password, fullName } = body;
 
-  // ✅ HANDLE FILES (IMPORTANT FIX 🔥)
-  if (body.file && Array.isArray(body.file)) {
-    body.file = body.file[0]; // single file
-  }
+    // ✅ Parse JSON fields
+    const safeParse = (data) => {
+      try {
+        return typeof data === 'string' ? JSON.parse(data) : data;
+      } catch {
+        return {};
+      }
+    };
 
-  if (body.profileImg && Array.isArray(body.profileImg)) {
-    body.profileImg = body.profileImg[0]; // single image
-  }
+    body.socialMedia = safeParse(body.socialMedia);
+    body.BankDetails = safeParse(body.BankDetails);
 
-  // ✅ Step 1: Check CP already exists
-  let cp = await ChannelPartner.findOne({ email });
+    // ✅ Handle files
+    if (body.file && Array.isArray(body.file)) {
+      body.file = body.file[0].path;
+    }
 
-  if (!cp) {
-    // 🔥 CREATE CP
-    cp = await ChannelPartner.create({
-      ...body,
-      linkedManufacturers: [
-        {
+    if (body.profileImg && Array.isArray(body.profileImg)) {
+      body.profileImg = body.profileImg[0].path;
+    }
+
+    // ✅ Remove empty fields
+    const cleanedBody = Object.fromEntries(
+      Object.entries(body).filter(
+        ([_, value]) =>
+          value !== '' &&
+          value !== null &&
+          value !== undefined
+      )
+    );
+
+    // ✅ Step 1: Check CP
+    let cp = await ChannelPartner.findOne({ email });
+
+    if (!cp) {
+      cp = await ChannelPartner.create({
+        ...cleanedBody,
+        linkedManufacturers: [
+          {
+            manufacturerEmail: manufacturer.email,
+            manufacturerName: manufacturer.companyName,
+            isApproved: true,
+          },
+        ],
+        registrationType: 'invited',
+      });
+    } else {
+      const alreadyLinked = cp.linkedManufacturers.find(
+        (m) => m.manufacturerEmail === manufacturer.email
+      );
+
+      if (!alreadyLinked) {
+        cp.linkedManufacturers.push({
           manufacturerEmail: manufacturer.email,
           manufacturerName: manufacturer.companyName,
           isApproved: true,
+        });
+
+        if (cleanedBody.file) cp.file = cleanedBody.file;
+        if (cleanedBody.profileImg) cp.profileImg = cleanedBody.profileImg;
+
+        await cp.save();
+      }
+    }
+
+    // ✅ Step 2: Create user
+    const existingUser = await User.findOne({ email });
+
+    if (!existingUser) {
+      await User.create({
+        fullName,
+        email,
+        password,
+        role: 'channelPartner',
+        mobileNumber: body.mobNumber || '9999999999',
+      });
+    }
+
+    // ✅ Step 3: Update manufacturer
+    await Manufacture.findOneAndUpdate(
+      { email: manufacturer.email },
+      {
+        $addToSet: {
+          linkedChannelPartners: {
+            cpEmail: email,
+            cpName: fullName,
+          },
         },
-      ],
-      registrationType: 'invited',
-    });
-  } else {
-    // 🔥 If exists → just link manufacturer
-    const alreadyLinked = cp.linkedManufacturers.find(
-      (m) => m.manufacturerEmail === manufacturer.email
+      }
     );
 
-    if (!alreadyLinked) {
-      cp.linkedManufacturers.push({
-        manufacturerEmail: manufacturer.email,
-        manufacturerName: manufacturer.companyName,
-        isApproved: true,
-      });
-
-      // ✅ OPTIONAL: Update file/profile if provided
-      if (body.file) {
-        cp.file = body.file;
-      }
-
-      if (body.profileImg) {
-        cp.profileImg = body.profileImg;
-      }
-
-      await cp.save();
-    }
+    return cp;
+  } catch (error) {
+    console.error('🔥 CREATE CP ERROR:', error);
+    throw error;
   }
-
-  // ✅ Step 2: Create USER LOGIN
-  const existingUser = await User.findOne({ email });
-
-  if (!existingUser) {
-    await User.create({
-      fullName,
-      email,
-      password,
-      role: 'channelPartner',
-      mobileNumber: body.mobNumber || '9999999999',
-    });
-  }
-
-  // ✅ Step 3: Update Manufacturer
-  await Manufacture.findOneAndUpdate(
-    { email: manufacturer.email },
-    {
-      $addToSet: {
-        linkedChannelPartners: {
-          cpEmail: email,
-          cpName: fullName,
-        },
-      },
-    }
-  );
-
-  return cp;
 };
+
 // eslint-disable-next-line prettier/prettier
 /**
  * Create a Channel Partner
