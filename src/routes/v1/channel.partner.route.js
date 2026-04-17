@@ -91,4 +91,10 @@ router.get(
   channelPartnerController.getCommissionByGivenBy
 );
 
+router.get(
+  '/by-manufacturer',
+  auth('superadmin', 'manufacture', 'wholesaler', 'channelPartner', 'retailer'),
+  channelPartnerController.getCPByManufacturer
+);
+
 module.exports = router;

@@ -106,7 +106,7 @@ const channelPartnerSchema = mongoose.Schema(
 
     // 🔹 Bank
     BankDetails: {
-      accountNumber: Number,
+      accountNumber: String,
       accountType: String,
       bankName: String,
       IFSCcode: String,
