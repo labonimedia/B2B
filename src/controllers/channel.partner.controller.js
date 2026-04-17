@@ -15,19 +15,6 @@ const registerChannelPartner = catchAsync(async (req, res) => {
   res.status(httpStatus.CREATED).send(result);
 });
 
-// const createByManufacturer = catchAsync(async (req, res) => {
-//   const manufacturer = req.user;
-
-//   const result = await channelPartnerService.createByManufacturer(req.body, manufacturer);
-
-//   res.status(httpStatus.CREATED).send({
-//     success: true,
-//     message: 'Channel Partner created successfully',
-//     data: result,
-//   });
-// });
-
-
 const createByManufacturer = catchAsync(async (req, res) => {
   const manufacturer = req.user;
   const body = {
@@ -127,6 +114,50 @@ const getCommissionByGivenBy = catchAsync(async (req, res) => {
   });
 });
 
+const getCPByManufacturer = catchAsync(async (req, res) => {
+  const manufacturerEmail = req.query.manufacturerEmail || req.user.email;
+
+  const {
+    limit = 10,
+    page = 1,
+    search,
+    status,
+  } = req.query;
+
+  const filter = {};
+
+  // ✅ Filter by manufacturer
+  filter['linkedManufacturers.manufacturerEmail'] = manufacturerEmail;
+
+  // ✅ Optional filters
+  if (status) {
+    filter.status = status;
+  }
+
+  // 🔍 Search (name/company/email)
+  if (search) {
+    filter.$or = [
+      { fullName: { $regex: search, $options: 'i' } },
+      { companyName: { $regex: search, $options: 'i' } },
+      { email: { $regex: search, $options: 'i' } },
+    ];
+  }
+
+  const options = {
+    limit: parseInt(limit, 10),
+    page: parseInt(page, 10),
+    sortBy: 'createdAt:desc',
+  };
+
+  const result = await channelPartnerService.getCPByManufacturer(
+    filter,
+    options,
+    manufacturerEmail
+  );
+
+  res.status(httpStatus.OK).send(result);
+});
+
 module.exports = {
   registerChannelPartner,
   getAllChannelPartners,
@@ -139,4 +170,5 @@ module.exports = {
   getCommissionByGivenBy,
   assignCommission,
   createByManufacturer,
+  getCPByManufacturer,
 };
