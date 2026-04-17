@@ -6,6 +6,23 @@ const { commonUploadMiddleware } = require('../../utils/upload');
 const router = express.Router();
 
 router.post(
+  '/link',
+  auth('superadmin', 'manufacture', 'wholesaler', 'channelPartner', 'retailer'),
+  channelPartnerController.linkChannelPartner
+);
+
+router.post(
+  '/unlink',
+  auth('superadmin', 'manufacture', 'wholesaler', 'channelPartner', 'retailer'),
+  channelPartnerController.unlinkChannelPartner
+);
+
+router.post(
+  '/by-manufacturer',
+  auth('superadmin', 'manufacture', 'wholesaler', 'channelPartner', 'retailer'),
+  channelPartnerController.getCPByManufacturer
+);
+router.post(
   '/',
   auth('superadmin', 'manufacture', 'wholesaler', 'channelPartner', 'retailer'),
   commonUploadMiddleware([
@@ -29,31 +46,6 @@ router.get(
   '/',
   auth('superadmin', 'manufacture', 'wholesaler', 'channelPartner', 'retailer'),
   channelPartnerController.getAllChannelPartners
-);
-
-// Get Single Channel Partner
-router.get(
-  '/:email',
-  auth('superadmin', 'manufacture', 'wholesaler', 'channelPartner', 'retailer'),
-  channelPartnerController.getChannelPartnerByEmail
-);
-
-// Update Channel Partner
-router.patch(
-  '/:email',
-  auth('superadmin', 'manufacture', 'wholesaler', 'channelPartner'),
-  commonUploadMiddleware([
-    { name: 'file', maxCount: 1 },
-    { name: 'profileImg', maxCount: 1 },
-  ]),
-  channelPartnerController.updateChannelPartner
-);
-
-// Delete Channel Partner
-router.delete(
-  '/:email',
-  auth('superadmin', 'manufacture', 'wholesaler', 'channelPartner', 'retailer'),
-  channelPartnerController.deleteChannelPartner
 );
 
 // Add Retailer under Channel Partner
@@ -91,10 +83,29 @@ router.get(
   channelPartnerController.getCommissionByGivenBy
 );
 
-router.post(
-  '/by-manufacturer',
+// Get Single Channel Partner
+router.get(
+  '/email/:email',
   auth('superadmin', 'manufacture', 'wholesaler', 'channelPartner', 'retailer'),
-  channelPartnerController.getCPByManufacturer
+  channelPartnerController.getChannelPartnerByEmail
+);
+
+// Update Channel Partner
+router.patch(
+  '/email/:email',
+  auth('superadmin', 'manufacture', 'wholesaler', 'channelPartner'),
+  commonUploadMiddleware([
+    { name: 'file', maxCount: 1 },
+    { name: 'profileImg', maxCount: 1 },
+  ]),
+  channelPartnerController.updateChannelPartner
+);
+
+// Delete Channel Partner
+router.delete(
+  '/email/:email',
+  auth('superadmin', 'manufacture', 'wholesaler', 'channelPartner', 'retailer'),
+  channelPartnerController.deleteChannelPartner
 );
 
 module.exports = router;

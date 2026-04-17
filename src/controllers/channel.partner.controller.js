@@ -165,6 +165,31 @@ const getCPByManufacturer = catchAsync(async (req, res) => {
   res.status(httpStatus.OK).send(result);
 });
 
+const linkChannelPartner = catchAsync(async (req, res) => {
+  const manufacturer = req.user;
+  const { cpEmail } = req.body;
+
+  const result = await channelPartnerService.linkChannelPartner(
+    cpEmail,
+    manufacturer
+  );
+
+  res.status(httpStatus.OK).send(result);
+});
+
+// ✅ UNLINK CP
+const unlinkChannelPartner = catchAsync(async (req, res) => {
+  const manufacturer = req.user;
+  const { cpEmail } = req.body;
+
+  const result = await channelPartnerService.unlinkChannelPartner(
+    cpEmail,
+    manufacturer
+  );
+
+  res.status(httpStatus.OK).send(result);
+});
+
 module.exports = {
   registerChannelPartner,
   getAllChannelPartners,
@@ -178,4 +203,6 @@ module.exports = {
   assignCommission,
   createByManufacturer,
   getCPByManufacturer,
+  linkChannelPartner,
+  unlinkChannelPartner,
 };
