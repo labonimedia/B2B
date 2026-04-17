@@ -5,23 +5,44 @@ const catchAsync = require('../utils/catchAsync');
 const { channelPartnerService } = require('../services');
 
 const registerChannelPartner = catchAsync(async (req, res) => {
-  const result = await channelPartnerService.registerChannelPartner(req.body);
+    const body = {
+    ...req.body,
+    file: req.files?.file,
+    profileImg: req.files?.profileImg,
+  };
+  const result = await channelPartnerService.registerChannelPartner(body);
 
   res.status(httpStatus.CREATED).send(result);
 });
 
+// const createByManufacturer = catchAsync(async (req, res) => {
+//   const manufacturer = req.user;
+
+//   const result = await channelPartnerService.createByManufacturer(req.body, manufacturer);
+
+//   res.status(httpStatus.CREATED).send({
+//     success: true,
+//     message: 'Channel Partner created successfully',
+//     data: result,
+//   });
+// });
+
+
 const createByManufacturer = catchAsync(async (req, res) => {
   const manufacturer = req.user;
+  const body = {
+    ...req.body,
+    file: req.files?.file,
+    profileImg: req.files?.profileImg,
+  };
 
-  const result = await channelPartnerService.createByManufacturer(req.body, manufacturer);
-
-  res.status(httpStatus.CREATED).send({
-    success: true,
-    message: 'Channel Partner created successfully',
-    data: result,
-  });
+  const result = await channelPartnerService.createByManufacturer(
+    body,
+   manufacturer
+  );
+  res.status(201).send(result);
 });
-
+ 
 const getAllChannelPartners = catchAsync(async (req, res) => {
   const filter = pick(req.query, [
     'status',
