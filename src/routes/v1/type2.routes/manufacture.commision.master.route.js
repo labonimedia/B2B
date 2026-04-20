@@ -4,6 +4,8 @@ const { manufactureCommisionController } = require('../../../controllers');
 
 const router = express.Router();
 
+router.post('/check', auth('manufacture', 'superadmin', 'channelPartner'), manufactureCommisionController.checkCommission);
+
 router.post(
   '/assign',
   auth('manufacture', 'superadmin', 'channelPartner', 'retailer', 'wholesaler'),

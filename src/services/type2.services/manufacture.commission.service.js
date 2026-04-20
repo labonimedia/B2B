@@ -194,6 +194,38 @@ const deleteAssignedCommission = async ({ manufacturerEmail, channelPartnerEmail
 
   return cp;
 };
+
+const checkCommission = async ({ manufacturerEmail, channelPartnerEmail }) => {
+  if (!channelPartnerEmail) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'channelPartnerEmail is required');
+  }
+  if (!manufacturerEmail) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'manufacturerEmail is required');
+  }
+  // 1️⃣ Find CP
+  const cp = await ChannelPartner.findOne({ email: channelPartnerEmail });
+
+  if (!cp) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Channel Partner not found');
+  }
+
+  // 2️⃣ Find commission for this manufacturer
+  const commission = cp.commissionGiven.find((c) => c.commissionGivenBy === manufacturerEmail);
+
+  // 3️⃣ Return result
+  if (commission) {
+    return {
+      exists: true,
+      commission,
+    };
+  }
+
+  return {
+    exists: false,
+    commission: null,
+  };
+};
+
 module.exports = {
   createCommissionCategory,
   queryCommissionCategory,
@@ -203,4 +235,5 @@ module.exports = {
   assignCommission,
   updateAssignedCommission,
   deleteAssignedCommission,
+  checkCommission,
 };
