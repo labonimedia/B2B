@@ -12,7 +12,7 @@ const manufacturerCommissionCategorySchema = mongoose.Schema(
     },
 
     productCommission: {
-      type: String, // % or fixed
+      type: String, // % is sell commision
     },
 
     shippingCommission: {

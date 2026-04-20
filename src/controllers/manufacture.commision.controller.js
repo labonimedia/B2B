@@ -4,6 +4,15 @@ const ApiError = require('../utils/ApiError');
 const catchAsync = require('../utils/catchAsync');
 const { manufactureCommissionService } = require('../services');
 
+const checkCommission = catchAsync(async (req, res) => {
+  const result = await manufactureCommissionService.checkCommission({
+    manufacturerEmail: req.body.manufacturerEmail,
+    channelPartnerEmail: req.body.channelPartnerEmail,
+  });
+
+  res.status(httpStatus.OK).send(result);
+});
+
 const createCommissionCategory = catchAsync(async (req, res) => {
   const data = await manufactureCommissionService.createCommissionCategory({
     ...req.body,
@@ -89,4 +98,5 @@ module.exports = {
   assignCommission,
   updateAssignedCommission,
   deleteAssignedCommission,
+  checkCommission,
 };
