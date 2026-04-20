@@ -7,7 +7,7 @@ const createByManufacturer = async (body, manufacturer) => {
   try {
     const { email, password, fullName } = body;
 
-    // ❌ FIX PASSWORD VALIDATION
+    // ✅ PASSWORD VALIDATION
     if (!password || password.length < 8) {
       throw new Error('Password must be at least 8 characters');
     }
@@ -24,14 +24,12 @@ const createByManufacturer = async (body, manufacturer) => {
     body.socialMedia = safeParse(body.socialMedia);
     body.BankDetails = safeParse(body.BankDetails);
 
-    // ✅ HANDLE FILES
-    if (body.file && Array.isArray(body.file)) {
-      body.file = body.file[0].path;
-    }
-
-    if (body.profileImg && Array.isArray(body.profileImg)) {
-      body.profileImg = body.profileImg[0].path;
-    }
+    // 🔥🔥🔥 MAIN FIX HERE 🔥🔥🔥
+    // Because middleware gives array of URLs
+    body.file = Array.isArray(body.file) ? body.file[0] : body.file;
+    body.profileImg = Array.isArray(body.profileImg)
+      ? body.profileImg[0]
+      : body.profileImg;
 
     // ✅ CLEAN EMPTY FIELDS
     const cleanedBody = Object.fromEntries(
@@ -70,6 +68,7 @@ const createByManufacturer = async (body, manufacturer) => {
           isApproved: true,
         });
 
+        // ✅ UPDATE FILES
         if (cleanedBody.file) cp.file = cleanedBody.file;
         if (cleanedBody.profileImg) cp.profileImg = cleanedBody.profileImg;
 
@@ -180,11 +179,8 @@ const updateByEmail = async (email, updateBody) => {
     throw new ApiError(httpStatus.NOT_FOUND, 'Channel Partner not found');
   }
 
-  // 🔥 HANDLE FILE UPLOADS
-
-  // 📄 Document file
-  if (updateBody.file) {
-    // delete old file (optional best practice)
+  if (Array.isArray(updateBody.file) && updateBody.file.length > 0) {
+    // delete old file
     if (cp.file) {
       try {
         await deleteFile(cp.file);
@@ -193,11 +189,13 @@ const updateByEmail = async (email, updateBody) => {
       }
     }
 
-    updateBody.file = updateBody.file[0];
+    updateBody.file = updateBody.file[0]; // ✅ URL
+  } else {
+    delete updateBody.file; // ❌ prevent overwrite
   }
 
-  // 🖼️ Profile Image
-  if (updateBody.profileImg) {
+  // 🖼️ PROFILE IMAGE
+  if (Array.isArray(updateBody.profileImg) && updateBody.profileImg.length > 0) {
     if (cp.profileImg) {
       try {
         await deleteFile(cp.profileImg);
@@ -206,15 +204,28 @@ const updateByEmail = async (email, updateBody) => {
       }
     }
 
-    updateBody.profileImg = updateBody.profileImg[0];
+    updateBody.profileImg = updateBody.profileImg[0]; // ✅ URL
+  } else {
+    delete updateBody.profileImg; // ❌ prevent overwrite
   }
 
-  // 🏷️ File Name (optional)
+  // 🏷️ OPTIONAL FILE NAME
   if (updateBody.fileName) {
     cp.fileName = updateBody.fileName;
   }
 
-  // 🔥 UPDATE DATA
+  // ✅ CLEAN EMPTY VALUES (VERY IMPORTANT)
+  Object.keys(updateBody).forEach((key) => {
+    if (
+      updateBody[key] === '' ||
+      updateBody[key] === null ||
+      updateBody[key] === undefined
+    ) {
+      delete updateBody[key];
+    }
+  });
+
+  // ✅ UPDATE DATA
   Object.assign(cp, updateBody);
 
   await cp.save();

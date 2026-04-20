@@ -175,3 +175,7 @@ module.exports.ReturnR2W = require('./type2.models/return.retailer.to.wholesaler
 module.exports.ReturnW2M = require('./type2.models/return.wholesaler.to.manufacture.model');
 // channel partner customers
 module.exports.ChannelPartnerCustomer = require('./channel.partner.customer.model');
+// channel partner customer wishlist
+module.exports.CpWishlist = require('./type2.models/cp.wishlist.model');
+// channel partner customer cart
+module.exports.CpCart = require('./type2.models/cp.cart.model');
