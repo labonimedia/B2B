@@ -97,25 +97,38 @@ const deleteCommissionCategoryById = async (id, manufacturerEmail) => {
 
   return category;
 };
-
 const assignCommission = async ({ manufacturerEmail, channelPartnerEmail, categoryId }) => {
+  // 1️⃣ Get category
   const category = await ManufactureCommission.findById(categoryId);
   if (!category) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Category not found');
   }
 
+  // 2️⃣ Get Channel Partner
   const cp = await ChannelPartner.findOne({ email: channelPartnerEmail });
   if (!cp) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Channel Partner not found');
   }
 
-  // 🔥 Prevent duplicate (same manufacturer + category)
-  const alreadyExists = cp.commissionGiven.find((c) => c.id === categoryId && c.commissionGivenBy === manufacturerEmail);
+  // 3️⃣ Check if manufacturer already assigned ANY category
+  const existingIndex = cp.commissionGiven.findIndex((c) => c.commissionGivenBy === manufacturerEmail);
 
-  if (alreadyExists) {
-    throw new ApiError(httpStatus.BAD_REQUEST, 'Commission already assigned');
+  if (existingIndex !== -1) {
+    // 🔁 UPDATE EXISTING (REPLACE CATEGORY)
+    cp.commissionGiven[existingIndex].id = category._id;
+    cp.commissionGiven[existingIndex].category = category.category;
+    cp.commissionGiven[existingIndex].productCommission = category.productCommission;
+    cp.commissionGiven[existingIndex].shippingCommission = category.shippingCommission;
+
+    await cp.save();
+
+    return {
+      message: 'Commission updated (category replaced)',
+      data: cp,
+    };
   }
 
+  // ➕ CREATE NEW (FIRST TIME)
   cp.commissionGiven.push({
     commissionGivenBy: manufacturerEmail,
     id: category._id,
@@ -126,7 +139,10 @@ const assignCommission = async ({ manufacturerEmail, channelPartnerEmail, catego
 
   await cp.save();
 
-  return cp;
+  return {
+    message: 'Commission assigned successfully',
+    data: cp,
+  };
 };
 
 /**
