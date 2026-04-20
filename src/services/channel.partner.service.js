@@ -473,6 +473,96 @@ const globalSearchCP = async (filter, options, manufacturer, excludeLinked) => {
   };
 };
 
+const getMyManufacturers = async ({
+  cpEmail,
+  search,
+  page,
+  limit,
+  isApproved,
+  sortBy,
+}) => {
+  // 1️⃣ Get Channel Partner
+  const cp = await ChannelPartner.findOne({ email: cpEmail });
+
+  if (!cp) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Channel Partner not found');
+  }
+
+  // 2️⃣ Filter linked manufacturers
+  let linked = cp.linkedManufacturers;
+
+  if (typeof isApproved === 'boolean') {
+    linked = linked.filter((m) => m.isApproved === isApproved);
+  }
+
+  const manufacturerEmails = linked.map((m) => m.manufacturerEmail);
+
+  // 🚫 No data case
+  if (!manufacturerEmails.length) {
+    return {
+      results: [],
+      page,
+      limit,
+      totalPages: 0,
+      totalResults: 0,
+    };
+  }
+
+  // 3️⃣ Build filter
+  const filter = {
+    email: { $in: manufacturerEmails },
+  };
+
+  if (search) {
+    filter.$or = [
+      { fullName: { $regex: search, $options: 'i' } },
+      { companyName: { $regex: search, $options: 'i' } },
+      { email: { $regex: search, $options: 'i' } },
+      { city: { $regex: search, $options: 'i' } },
+      { state: { $regex: search, $options: 'i' } },
+    ];
+  }
+
+  // 4️⃣ Sorting
+  const sort = {};
+  if (sortBy) {
+    const parts = sortBy.split(':');
+    sort[parts[0]] = parts[1] === 'desc' ? -1 : 1;
+  }
+
+  // 5️⃣ Pagination
+  const skip = (page - 1) * limit;
+
+  const [manufacturers, totalResults] = await Promise.all([
+    Manufacture.find(filter)
+      .sort(sort)
+      .skip(skip)
+      .limit(limit),
+
+    Manufacture.countDocuments(filter),
+  ]);
+
+  // 6️⃣ Attach isApproved + visibility
+  const results = manufacturers.map((m) => {
+    const link = cp.linkedManufacturers.find(
+      (lm) => lm.manufacturerEmail === m.email
+    );
+
+    return {
+      ...m.getVisibleProfile(), // 🔥 production safe
+      isApproved: link?.isApproved || false,
+    };
+  });
+
+  return {
+    results,
+    page: Number(page),
+    limit: Number(limit),
+    totalPages: Math.ceil(totalResults / limit),
+    totalResults,
+  };
+};
+
 module.exports = {
   registerChannelPartner,
   queryChannelPartners,
@@ -490,4 +580,5 @@ module.exports = {
   linkChannelPartner,
   unlinkChannelPartner,
   globalSearchCP,
+  getMyManufacturers,
 };

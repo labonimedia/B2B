@@ -201,6 +201,26 @@ const globalSearchCP = catchAsync(async (req, res) => {
   res.status(200).send(result);
 });
 
+const getMyManufacturers = catchAsync(async (req, res) => {
+  const cpEmail = req.user.email;
+
+  const { search, page = 1, limit = 10, isApproved, sortBy = 'createdAt:desc' } = req.body;
+
+  const result = await channelPartnerService.getMyManufacturers({
+    cpEmail,
+    search,
+    page,
+    limit,
+    isApproved,
+    sortBy,
+  });
+
+  res.status(200).send({
+    success: true,
+    ...result,
+  });
+});
+
 module.exports = {
   registerChannelPartner,
   getAllChannelPartners,
@@ -217,4 +237,5 @@ module.exports = {
   linkChannelPartner,
   unlinkChannelPartner,
   globalSearchCP,
+  getMyManufacturers,
 };
