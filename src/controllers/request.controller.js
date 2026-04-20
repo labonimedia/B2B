@@ -54,7 +54,6 @@ const getRequestById = catchAsync(async (req, res) => {
 });
 
 const queryRequests = catchAsync(async (req, res) => {
-  //   const filter = pick(req.query, ['status', 'requestByCompanyName', 'email','requestByFullName','requestByEmail','']);
   const filter = pick(req.query, [
     'fullName',
     'companyName',
