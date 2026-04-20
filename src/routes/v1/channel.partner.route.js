@@ -17,6 +17,8 @@ router.post(
   channelPartnerController.unlinkChannelPartner
 );
 
+router.post('/my-manufacturers', auth('channelPartner'), channelPartnerController.getMyManufacturers);
+
 router.post(
   '/by-manufacturer',
   auth('superadmin', 'manufacture', 'wholesaler', 'channelPartner', 'retailer'),
