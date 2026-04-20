@@ -22,6 +22,13 @@ router.post(
   auth('superadmin', 'manufacture', 'wholesaler', 'channelPartner', 'retailer'),
   channelPartnerController.getCPByManufacturer
 );
+
+router.post(
+  '/global-search',
+  auth('superadmin', 'manufacture', 'wholesaler', 'channelPartner'),
+  channelPartnerController.globalSearchCP
+);
+
 router.post(
   '/',
   auth('superadmin', 'manufacture', 'wholesaler', 'channelPartner', 'retailer'),

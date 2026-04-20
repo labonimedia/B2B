@@ -190,6 +190,46 @@ const unlinkChannelPartner = catchAsync(async (req, res) => {
   res.status(httpStatus.OK).send(result);
 });
 
+const globalSearchCP = catchAsync(async (req, res) => {
+  const {
+    search,
+    limit = 10,
+    page = 1,
+    excludeLinked = true, // optional
+  } = req.body;
+
+  const manufacturer = req.user;
+
+  const filter = {};
+
+  // 🔍 Search logic
+  if (search) {
+    filter.$or = [
+      { fullName: { $regex: search, $options: 'i' } },
+      { companyName: { $regex: search, $options: 'i' } },
+      { email: { $regex: search, $options: 'i' } },
+      { mobNumber: { $regex: search, $options: 'i' } },
+      { city: { $regex: search, $options: 'i' } },
+      { state: { $regex: search, $options: 'i' } },
+    ];
+  }
+
+  const options = {
+    limit: parseInt(limit, 10),
+    page: parseInt(page, 10),
+    sortBy: 'createdAt:desc',
+  };
+
+  const result = await channelPartnerService.globalSearchCP(
+    filter,
+    options,
+    manufacturer,
+    excludeLinked
+  );
+
+  res.status(200).send(result);
+});
+
 module.exports = {
   registerChannelPartner,
   getAllChannelPartners,
@@ -205,4 +245,5 @@ module.exports = {
   getCPByManufacturer,
   linkChannelPartner,
   unlinkChannelPartner,
+  globalSearchCP,
 };
