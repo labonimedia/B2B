@@ -30,7 +30,6 @@ const cpCartSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-// 🔥 index for fast queries
 cpCartSchema.index({ cpEmail: 1, shopkeeperEmail: 1, productBy: 1 });
 
 cpCartSchema.plugin(toJSON);

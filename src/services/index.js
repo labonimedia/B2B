@@ -166,3 +166,5 @@ module.exports.wToMReturnRequestService = require('./type2.services/return.whole
 // channel partner customers
 module.exports.channelPartnerCustomerService = require('./channel.partner.customer.service');
 module.exports.wholesalerProductAssignmentService = require('./type2.services/wholesaler.product.assignment.service');
+module.exports.cpCartService = require('./type2.services/cp.cart.service');
+module.exports.cpWishlistService = require('./type2.services/cp.wishlist.service');

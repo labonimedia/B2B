@@ -155,6 +155,8 @@ const manufactureCommissionRoute = require('./type2.routes/manufacture.commision
 // channel Partner Connected Retailer
 const channelPartnerCustomerRoute = require('./type2.routes/channel.partner.customer.route');
 const wholesalerProductAssignmentRoute = require('./type2.routes/wholesaler.product.assignment.route');
+const cpCartRoute = require('./type2.routes/cp.cart.route');
+const cpWishlistRoute = require('./type2.routes/cp.wishlist.route');
 
 const router = express.Router();
 
@@ -726,6 +728,14 @@ const defaultRoutes = [
   {
     path: '/wholesaler-product-assignment',
     route: wholesalerProductAssignmentRoute,
+  },
+  {
+    path: '/cp-cart',
+    route: cpCartRoute,
+  },
+  {
+    path: '/cp-wishlist',
+    route: cpWishlistRoute,
   },
 ];
 

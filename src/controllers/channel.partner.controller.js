@@ -17,16 +17,19 @@ const registerChannelPartner = catchAsync(async (req, res) => {
 
 const createByManufacturer = catchAsync(async (req, res) => {
   const manufacturer = req.user;
+
+  // ✅ DO NOT TOUCH req.files
   const body = {
     ...req.body,
-    file: req.files?.file,
-    profileImg: req.files?.profileImg,
   };
+
+  console.log("BODY AFTER UPLOAD:", body); // 🔥 DEBUG
 
   const result = await channelPartnerService.createByManufacturer(
     body,
-   manufacturer
+    manufacturer
   );
+
   res.status(201).send(result);
 });
  

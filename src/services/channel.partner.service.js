@@ -7,7 +7,7 @@ const createByManufacturer = async (body, manufacturer) => {
   try {
     const { email, password, fullName } = body;
 
-    // ❌ FIX PASSWORD VALIDATION
+    // ✅ PASSWORD VALIDATION
     if (!password || password.length < 8) {
       throw new Error('Password must be at least 8 characters');
     }
@@ -24,14 +24,12 @@ const createByManufacturer = async (body, manufacturer) => {
     body.socialMedia = safeParse(body.socialMedia);
     body.BankDetails = safeParse(body.BankDetails);
 
-    // ✅ HANDLE FILES
-    if (body.file && Array.isArray(body.file)) {
-      body.file = body.file[0].path;
-    }
-
-    if (body.profileImg && Array.isArray(body.profileImg)) {
-      body.profileImg = body.profileImg[0].path;
-    }
+    // 🔥🔥🔥 MAIN FIX HERE 🔥🔥🔥
+    // Because middleware gives array of URLs
+    body.file = Array.isArray(body.file) ? body.file[0] : body.file;
+    body.profileImg = Array.isArray(body.profileImg)
+      ? body.profileImg[0]
+      : body.profileImg;
 
     // ✅ CLEAN EMPTY FIELDS
     const cleanedBody = Object.fromEntries(
@@ -70,6 +68,7 @@ const createByManufacturer = async (body, manufacturer) => {
           isApproved: true,
         });
 
+        // ✅ UPDATE FILES
         if (cleanedBody.file) cp.file = cleanedBody.file;
         if (cleanedBody.profileImg) cp.profileImg = cleanedBody.profileImg;
 
