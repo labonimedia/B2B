@@ -127,18 +127,27 @@ const createChannelPartner = async (reqBody) => {
 
 const registerChannelPartner = async (body) => {
   const existing = await ChannelPartner.findOne({ email: body.email });
+
   if (existing) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Channel Partner already exists');
   }
 
-  // ✅ HANDLE FILES
-  if (body.file) {
-    body.file = body.file[0];
-  }
+  // ✅ SAFE FILE HANDLING (IMPORTANT)
+  body.file = Array.isArray(body.file) ? body.file[0] : body.file;
+  body.profileImg = Array.isArray(body.profileImg)
+    ? body.profileImg[0]
+    : body.profileImg;
 
-  if (body.profileImg) {
-    body.profileImg = body.profileImg[0];
-  }
+  // ✅ CLEAN EMPTY VALUES
+  Object.keys(body).forEach((key) => {
+    if (
+      body[key] === '' ||
+      body[key] === null ||
+      body[key] === undefined
+    ) {
+      delete body[key];
+    }
+  });
 
   const invitation = await Invitation.findOne({ email: body.email });
 

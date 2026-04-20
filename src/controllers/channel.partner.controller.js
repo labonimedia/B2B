@@ -5,13 +5,10 @@ const catchAsync = require('../utils/catchAsync');
 const { channelPartnerService } = require('../services');
 
 const registerChannelPartner = catchAsync(async (req, res) => {
-    const body = {
+  const body = {
     ...req.body,
-    file: req.files?.file,
-    profileImg: req.files?.profileImg,
   };
   const result = await channelPartnerService.registerChannelPartner(body);
-
   res.status(httpStatus.CREATED).send(result);
 });
 
@@ -22,17 +19,11 @@ const createByManufacturer = catchAsync(async (req, res) => {
   const body = {
     ...req.body,
   };
-
-  console.log("BODY AFTER UPLOAD:", body); // 🔥 DEBUG
-
-  const result = await channelPartnerService.createByManufacturer(
-    body,
-    manufacturer
-  );
+  const result = await channelPartnerService.createByManufacturer(body, manufacturer);
 
   res.status(201).send(result);
 });
- 
+
 const getAllChannelPartners = catchAsync(async (req, res) => {
   const filter = pick(req.query, [
     'status',
@@ -118,18 +109,10 @@ const getCommissionByGivenBy = catchAsync(async (req, res) => {
 });
 
 const getCPByManufacturer = catchAsync(async (req, res) => {
-  const {
-    manufacturerEmail,
-    limit = 10,
-    page = 1,
-    search,
-    status,
-    isApproved,
-  } = req.body;
+  const { manufacturerEmail, limit = 10, page = 1, search, status, isApproved } = req.body;
 
   // ✅ fallback (logged-in manufacturer)
-  const finalManufacturerEmail =
-    manufacturerEmail || req.user.email;
+  const finalManufacturerEmail = manufacturerEmail || req.user.email;
 
   const filter = {
     'linkedManufacturers.manufacturerEmail': finalManufacturerEmail,
@@ -159,11 +142,7 @@ const getCPByManufacturer = catchAsync(async (req, res) => {
     sortBy: 'createdAt:desc',
   };
 
-  const result = await channelPartnerService.getCPByManufacturer(
-    filter,
-    options,
-    finalManufacturerEmail
-  );
+  const result = await channelPartnerService.getCPByManufacturer(filter, options, finalManufacturerEmail);
 
   res.status(httpStatus.OK).send(result);
 });
@@ -172,10 +151,7 @@ const linkChannelPartner = catchAsync(async (req, res) => {
   const manufacturer = req.user;
   const { cpEmail } = req.body;
 
-  const result = await channelPartnerService.linkChannelPartner(
-    cpEmail,
-    manufacturer
-  );
+  const result = await channelPartnerService.linkChannelPartner(cpEmail, manufacturer);
 
   res.status(httpStatus.OK).send(result);
 });
@@ -185,10 +161,7 @@ const unlinkChannelPartner = catchAsync(async (req, res) => {
   const manufacturer = req.user;
   const { cpEmail } = req.body;
 
-  const result = await channelPartnerService.unlinkChannelPartner(
-    cpEmail,
-    manufacturer
-  );
+  const result = await channelPartnerService.unlinkChannelPartner(cpEmail, manufacturer);
 
   res.status(httpStatus.OK).send(result);
 });
@@ -223,12 +196,7 @@ const globalSearchCP = catchAsync(async (req, res) => {
     sortBy: 'createdAt:desc',
   };
 
-  const result = await channelPartnerService.globalSearchCP(
-    filter,
-    options,
-    manufacturer,
-    excludeLinked
-  );
+  const result = await channelPartnerService.globalSearchCP(filter, options, manufacturer, excludeLinked);
 
   res.status(200).send(result);
 });
