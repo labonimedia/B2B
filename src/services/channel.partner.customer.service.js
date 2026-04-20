@@ -3,6 +3,18 @@ const httpStatus = require('http-status');
 const { ChannelPartnerCustomer, User } = require('../models');
 const ApiError = require('../utils/ApiError');
 
+const handleFileFields = (body, files) => {
+  if (files?.file?.length > 0) {
+    body.file = files.file[0]; // URL from middleware
+  }
+
+  if (files?.profileImg?.length > 0) {
+    body.profileImg = files.profileImg[0];
+  }
+
+  return body;
+};
+
 const fileupload = async (req, id) => {
   // 🔍 Find ShopKeeper
   const shopKeeper = await ChannelPartnerCustomer.findById(id);
@@ -34,20 +46,20 @@ const fileupload = async (req, id) => {
 /**
  * 🔥 CREATE SHOPKEEPER (User + Profile)
  */
-const createShopKeeper = async (cpEmail, body) => {
+const createShopKeeper = async (cpEmail, body, files) => {
   const session = await mongoose.startSession();
   session.startTransaction();
 
   try {
     const { email, fullName, mobileNumber, shopName, password, city, state, country } = body;
 
-    // 🔒 Check User exists
+    handleFileFields(body, files);
+
     const existingUser = await User.findOne({ email }).session(session);
     if (existingUser) {
       throw new ApiError(httpStatus.BAD_REQUEST, 'User already exists');
     }
 
-    // 🔒 Check ShopKeeper exists under CP
     const existingShopKeeper = await ChannelPartnerCustomer.findOne({
       channelPartnerEmail: cpEmail,
       email,
@@ -57,7 +69,6 @@ const createShopKeeper = async (cpEmail, body) => {
       throw new ApiError(httpStatus.BAD_REQUEST, 'ShopKeeper already exists');
     }
 
-    // ✅ Create User (Login)
     const user = await User.create(
       [
         {
@@ -71,18 +82,12 @@ const createShopKeeper = async (cpEmail, body) => {
       { session }
     );
 
-    // ✅ Create ShopKeeper Profile
+    // ✅ Create ShopKeeper
     const shopKeeper = await ChannelPartnerCustomer.create(
       [
         {
+          ...body,
           channelPartnerEmail: cpEmail,
-          email,
-          fullName,
-          mobileNumber,
-          shopName,
-          city,
-          state,
-          country,
           addedBy: cpEmail,
         },
       ],
@@ -127,13 +132,39 @@ const getShopKeeperById = async (id) => {
 /**
  * ✏️ UPDATE
  */
-const updateShopKeeper = async (id, body) => {
-  const data = await getShopKeeperById(id);
+const updateShopKeeper = async (id, body, files) => {
+  const shopKeeper = await ChannelPartnerCustomer.findById(id);
 
-  Object.assign(data, body);
-  await data.save();
+  if (!shopKeeper) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'ShopKeeper not found');
+  }
 
-  return data;
+  // ✅ FILE HANDLE
+  if (files?.file?.length > 0) {
+    // OPTIONAL: delete old file here
+    // await deleteFile(shopKeeper.file);
+    body.file = files.file[0];
+  }
+
+  if (files?.profileImg?.length > 0) {
+    // OPTIONAL: delete old image
+    // await deleteFile(shopKeeper.profileImg);
+    body.profileImg = files.profileImg[0];
+  }
+
+  // 🧹 CLEAN EMPTY VALUES
+  Object.keys(body).forEach((key) => {
+    if (body[key] === '' || body[key] === null || body[key] === undefined) {
+      delete body[key];
+    }
+  });
+
+  // ✅ UPDATE
+  Object.assign(shopKeeper, body);
+
+  await shopKeeper.save();
+
+  return shopKeeper;
 };
 
 /**

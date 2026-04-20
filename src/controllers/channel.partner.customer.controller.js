@@ -8,16 +8,26 @@ const fileupload = catchAsync(async (req, res) => {
 
   res.status(httpStatus.CREATED).send(data);
 });
+
 const createShopKeeper = catchAsync(async (req, res) => {
   const cpEmail = req.user.email;
 
-  const result = await channelPartnerCustomerService.createShopKeeper(cpEmail, req.body);
+  const result = await channelPartnerCustomerService.createShopKeeper(cpEmail, req.body, req.files);
 
   res.status(httpStatus.CREATED).send(result);
 });
 
 const queryShopKeepers = catchAsync(async (req, res) => {
-  const filter = pick(req.query, ['channelPartnerEmail', 'email', 'city', 'state', 'status']);
+  const filter = pick(req.query, [
+    'channelPartnerEmail',
+    'email',
+    'city',
+    'state',
+    'status',
+    'fullName',
+    'shopName',
+    'companyName',
+  ]);
 
   const options = pick(req.query, ['sortBy', 'limit', 'page']);
 
@@ -33,9 +43,12 @@ const getShopKeeperById = catchAsync(async (req, res) => {
 });
 
 const updateShopKeeper = catchAsync(async (req, res) => {
-  const data = await channelPartnerCustomerService.updateShopKeeper(req.params.id, req.body);
+  const result = await channelPartnerCustomerService.updateShopKeeper(req.params.id, req.body, req.files);
 
-  res.send(data);
+  res.send({
+    success: true,
+    data: result,
+  });
 });
 
 const deleteShopKeeper = catchAsync(async (req, res) => {
