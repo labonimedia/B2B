@@ -419,6 +419,40 @@ const unlinkChannelPartner = async (cpEmail, manufacturer) => {
   };
 };
 
+const globalSearchCP = async (filter, options, manufacturer, excludeLinked) => {
+  const cps = await ChannelPartner.paginate(filter, options);
+
+  const results = cps.results.map((cp) => {
+    const isLinked = cp.linkedManufacturers.some(
+      (m) => m.manufacturerEmail === manufacturer.email
+    );
+    if (excludeLinked && isLinked) {
+      return null;
+    }
+    return {
+      _id: cp._id,
+      fullName: cp.fullName,
+      companyName: cp.companyName,
+      email: cp.email,
+      mobNumber: cp.mobNumber,
+      city: cp.city,
+      state: cp.state,
+      profileImg: cp.profileImg,
+      isLinked, // 🔥 important for frontend
+      status: cp.status,
+      kycVerified: cp.kycVerified,
+    };
+  });
+
+  // remove nulls
+  const filteredResults = results.filter(Boolean);
+
+  return {
+    ...cps,
+    results: filteredResults,
+  };
+};
+
 module.exports = {
   registerChannelPartner,
   queryChannelPartners,
@@ -435,4 +469,5 @@ module.exports = {
   getCPByManufacturer,
   linkChannelPartner,
   unlinkChannelPartner,
+  globalSearchCP,
 };
