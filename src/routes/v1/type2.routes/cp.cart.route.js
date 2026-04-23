@@ -4,9 +4,11 @@ const { cpCartController } = require('../../../controllers');
 
 const router = express.Router();
 
-router.post('/', auth('channelPartner'), cpCartController.addToCart);
+router.post('/add', auth('channelPartner'), cpCartController.addToCart);
 router.get('/', auth('channelPartner'), cpCartController.getCart);
-router.patch('/:cartId/set/:setId', auth('channelPartner'), cpCartController.updateSetItem);
-router.delete('/:cartId/set/:setId', auth('channelPartner'), cpCartController.deleteItem);
+router.patch('/item', auth('channelPartner'), cpCartController.updateItem);
+router.delete('/item', auth('channelPartner'), cpCartController.deleteItem);
+router.post('/discount', auth('channelPartner'), cpCartController.applyDiscount);
+router.post('/confirm/:cartId', auth('channelPartner'), cpCartController.confirmCart);
 
 module.exports = router;
