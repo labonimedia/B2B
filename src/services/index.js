@@ -168,3 +168,4 @@ module.exports.channelPartnerCustomerService = require('./channel.partner.custom
 module.exports.wholesalerProductAssignmentService = require('./type2.services/wholesaler.product.assignment.service');
 module.exports.cpCartService = require('./type2.services/cp.cart.service');
 module.exports.cpWishlistService = require('./type2.services/cp.wishlist.service');
+module.exports.cpToManufacturerPOService = require('./type2.services/po.channelPartner.to.manufacture.service');

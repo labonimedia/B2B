@@ -179,3 +179,6 @@ module.exports.ChannelPartnerCustomer = require('./channel.partner.customer.mode
 module.exports.CpWishlist = require('./type2.models/cp.wishlist.model');
 // channel partner customer cart
 module.exports.CpCart = require('./type2.models/cp.cart.model');
+// channel partner customer order
+module.exports.PoCpToManufacturer = require('./type2.models/po.channelPartner.to.manufacture.model');
+module.exports.PoCounterCpToMfg = require('./type2.models/po.cp.to.man.counter.model');

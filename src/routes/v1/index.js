@@ -157,6 +157,7 @@ const channelPartnerCustomerRoute = require('./type2.routes/channel.partner.cust
 const wholesalerProductAssignmentRoute = require('./type2.routes/wholesaler.product.assignment.route');
 const cpCartRoute = require('./type2.routes/cp.cart.route');
 const cpWishlistRoute = require('./type2.routes/cp.wishlist.route');
+const POChannelPartnerToManufactureRoute = require('./type2.routes/po.channelPartner.to.manufacture.route');
 
 const router = express.Router();
 
@@ -589,6 +590,10 @@ const defaultRoutes = [
   {
     path: '/po-wholesaler-to-manufacture',
     route: POWholesalerToManufactureRoute,
+  },
+  {
+    path: '/po-cp-to-manufacture',
+    route: POChannelPartnerToManufactureRoute,
   },
   // performa invoice
   {

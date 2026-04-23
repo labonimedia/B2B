@@ -164,3 +164,4 @@ module.exports.channelPartnerCostumerController = require('./channel.partner.cus
 module.exports.wholesalerProductAssignmentController = require('./type2.controller/wholesaler.product.assignment.controller');
 module.exports.cpCartController = require('./type2.controller/cp.cart.controller');
 module.exports.cpWishlistController = require('./type2.controller/cp.wishlist.controller');
+module.exports.cpToManufacturerPOController = require('./type2.controller/po.channelPartner.to.manufacture.controller');

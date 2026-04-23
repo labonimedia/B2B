@@ -20,7 +20,7 @@ const addToCart = async (body) => {
   }
 
   // 👉 find manufacturer
-  let manufacturer = cart.manufacturers.find((m) => m.manufacturerEmail === manufacturerEmail);
+  const manufacturer = cart.manufacturers.find((m) => m.manufacturerEmail === manufacturerEmail);
 
   if (manufacturer) {
     // 👉 check existing item
