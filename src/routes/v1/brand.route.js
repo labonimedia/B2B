@@ -12,35 +12,38 @@ router
     commonUploadMiddleware([{ name: 'brandLogo', maxCount: 1 }]),
     brandController.createBrand
   )
-  .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), brandController.queryBrand);
+  .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer', 'channelPartner'), brandController.queryBrand);
 
 router
   .route('/:id')
-  .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), brandController.getBrandById)
+  .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer', 'channelPartner'), brandController.getBrandById)
   .patch(
-    auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
+    auth('superadmin', 'manufacture', 'wholesaler', 'retailer', 'channelPartner'),
     commonUploadMiddleware([{ name: 'brandLogo', maxCount: 1 }]),
     brandController.updateBrandById
   )
-  .delete(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), brandController.deleteBrandById);
+  .delete(auth('superadmin', 'manufacture', 'wholesaler', 'retailer', 'channelPartner'), brandController.deleteBrandById);
 router.post(
   '/searchmanufacturelist',
-  auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
+  auth('superadmin', 'manufacture', 'wholesaler', 'retailer', 'channelPartner'),
   brandController.searchBrandAndOwnerDetails
 );
 
 router.post(
   '/search/brands-connected-to-wholesalers',
-  auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
+  auth('superadmin', 'manufacture', 'wholesaler', 'retailer', 'channelPartner'),
   brandController.getBrandsAndWholesalers
 );
 router
   .route('/brandlist/:email')
-  .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), brandController.getBrandByEmail);
+  .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer', 'channelPartner'), brandController.getBrandByEmail);
 router
   .route('/visible/brandlist/:email/:visibility')
-  .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), brandController.getBrandByEmailAndVisibility);
+  .get(
+    auth('superadmin', 'manufacture', 'wholesaler', 'retailer', 'channelPartner'),
+    brandController.getBrandByEmailAndVisibility
+  );
 router
   .route('/updatevisibility/:id')
-  .patch(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), brandController.updatevisibility);
+  .patch(auth('superadmin', 'manufacture', 'wholesaler', 'retailer', 'channelPartner'), brandController.updatevisibility);
 module.exports = router;

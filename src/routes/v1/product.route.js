@@ -21,15 +21,18 @@ router
 
 router
   .route('/filter-products')
-  .post(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), productController.searchProducts);
+  .post(auth('superadmin', 'manufacture', 'wholesaler', 'retailer', 'channelPartner'), productController.searchProducts);
 router
   .route('/:id')
-  .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), productController.getProductById)
-  .patch(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), productController.updateProductById)
-  .delete(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), productController.deleteProductById);
+  .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer', 'channelPartner'), productController.getProductById)
+  .patch(auth('superadmin', 'manufacture', 'wholesaler', 'retailer', 'channelPartner'), productController.updateProductById)
+  .delete(
+    auth('superadmin', 'manufacture', 'wholesaler', 'retailer', 'channelPartner'),
+    productController.deleteProductById
+  );
 
 router.route('/update/colour-collection').patch(
-  auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
+  auth('superadmin', 'manufacture', 'wholesaler', 'retailer', 'channelPartner'),
   commonUploadMiddleware([
     { name: 'colourImage', maxCount: 1 },
     { name: 'productImages', maxCount: 10 },
@@ -40,14 +43,23 @@ router.route('/update/colour-collection').patch(
 
 router
   .route('/get-product/by-desingnumber')
-  .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), productController.getProductBydesigneNo);
+  .get(
+    auth('superadmin', 'manufacture', 'wholesaler', 'retailer', 'channelPartner'),
+    productController.getProductBydesigneNo
+  );
 
 // Delete route
 router
   .route('/delete/colour-collection')
-  .delete(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), productController.deleteColorCollection);
+  .delete(
+    auth('superadmin', 'manufacture', 'wholesaler', 'retailer', 'channelPartner'),
+    productController.deleteColorCollection
+  );
 
 router
   .route('/manufracturelist/byproduct')
-  .post(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), productController.getFilteredProducts);
+  .post(
+    auth('superadmin', 'manufacture', 'wholesaler', 'retailer', 'channelPartner'),
+    productController.getFilteredProducts
+  );
 module.exports = router;
