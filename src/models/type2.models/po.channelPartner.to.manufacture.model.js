@@ -1,112 +1,137 @@
 const mongoose = require('mongoose');
-const { paginate, toJSON } = require('../plugins');
+const { toJSON, paginate } = require('../plugins');
 
-const bankDetailsSchema = new mongoose.Schema({
-  accountHolderName: String,
-  accountNumber: String,
-  accountType: String,
-  bankName: String,
-  branchName: String,
-  ifscCode: String,
-  swiftCode: String,
-  upiId: String,
-  bankAddress: String,
-});
-
-const transportDetailsSchema = new mongoose.Schema({
-  transportType: String,
-  transporterCompanyName: String,
-  vehicleNumber: String,
-  contactNumber: Number,
-  altContactNumber: Number,
-  trackingId: String,
-  modeOfTransport: {
-    type: String,
-    enum: ['road', 'railway', 'air', 'sea', 'self', 'other'],
-  },
-  dispatchDate: Date,
-  expectedDeliveryDate: Date,
-  deliveryDate: Date,
-  deliveryAddress: String,
-  remarks: String,
-  gstNumber: String,
-  contactPersonName: String,
-  note: String,
-});
-
-const POChannelPartnerToManufacturerSchema = new mongoose.Schema(
+/**
+ * 🔹 BANK DETAILS
+ */
+const bankDetailsSchema = new mongoose.Schema(
   {
-    set: [
-      {
-        designNumber: String,
-        colour: String,
-        colourName: String,
-        colourImage: String,
-        size: String,
-        totalQuantity: Number,
-        quantity: Number,
-        expectedQty: Number,
-        availableQuantity: {
-          type: Number,
-          default: 0,
-        },
-        confirmed: {
-          type: Boolean,
-          default: false,
-        },
-        rejected: {
-          type: Boolean,
-          default: false,
-        },
-        status: {
-          type: String,
-          enum: [
-            'pending',
-            'm_cancelled',
-            'm_confirmed',
-            'm_partial_delivery',
-            'cp_confirmed',
-            'cp_cancelled',
-            'make_to_order',
-            'processing',
-          ],
-          default: 'pending',
-        },
-        clothing: String,
-        gender: String,
-        subCategory: String,
-        productType: String,
-        manufacturerPrice: String,
-        price: String,
-        hsnCode: String,
-        hsnGst: String,
-        hsnDescription: String,
-        brandName: String,
-      },
-    ],
-    statusAll: {
+    accountHolderName: { type: String, trim: true },
+    accountNumber: { type: String, trim: true },
+    accountType: { type: String, trim: true },
+    bankName: { type: String, trim: true },
+    branchName: { type: String, trim: true },
+    ifscCode: { type: String, trim: true, uppercase: true },
+    swiftCode: { type: String, trim: true },
+    upiId: { type: String, trim: true },
+    bankAddress: { type: String, trim: true },
+  },
+  { _id: false }
+);
+
+/**
+ * 🔹 TRANSPORT DETAILS
+ */
+const transportDetailsSchema = new mongoose.Schema(
+  {
+    transportType: { type: String, trim: true },
+    transporterCompanyName: { type: String, trim: true },
+    vehicleNumber: { type: String, trim: true },
+    contactNumber: { type: Number },
+    trackingId: { type: String, trim: true },
+    modeOfTransport: {
       type: String,
-      enum: [
-        'pending',
-        'm_order_confirmed',
-        'm_order_updated',
-        'm_order_cancelled',
-        'm_partial_delivery',
-        'cp_order_confirmed',
-        'cp_order_cancelled',
-        'processing',
-        'shipped',
-        'delivered',
-        'make_to_order',
-        'invoice_generated',
-      ],
+      enum: ['road', 'railway', 'air', 'sea', 'other', 'self'],
+    },
+    dispatchDate: Date,
+    expectedDeliveryDate: Date,
+    deliveryDate: Date,
+    deliveryAddress: String,
+    remarks: String,
+  },
+  { _id: false }
+);
+
+/**
+ * 🔹 ITEMS
+ */
+const itemSchema = new mongoose.Schema(
+  {
+    designNumber: { type: String, required: true },
+    colour: String,
+    colourName: String,
+    colourImage: String,
+    size: String,
+
+    quantity: {
+      type: Number,
+      required: true,
+      min: 1,
+    },
+
+    price: {
+      type: Number,
+      required: true,
+      min: 0,
+    },
+
+    total: {
+      type: Number,
+      min: 0,
+    },
+
+    productType: String,
+    gender: String,
+    clothing: String,
+    subCategory: String,
+    hsnCode: String,
+    hsnGst: Number,
+    brandName: String,
+
+    confirmed: { type: Boolean, default: false },
+    rejected: { type: Boolean, default: false },
+    deliveredQty: { type: Number, default: 0 },
+
+    status: {
+      type: String,
+      enum: ['pending', 'accepted', 'rejected', 'processing', 'partial', 'shipped', 'delivered'],
       default: 'pending',
     },
-    transportDetails: transportDetailsSchema,
-    bankDetails: bankDetailsSchema,
-    manufacturerEmail: String,
-    channelPartnerEmail: String,
-    retailerEmail: String,
+  },
+  { timestamps: true }
+);
+
+/**
+ * 🔥 MAIN PO SCHEMA
+ */
+const cpToManufacturerPOSchema = new mongoose.Schema(
+  {
+    poNumber: {
+      type: Number,
+      required: true,
+      unique: true,
+      index: true,
+    },
+
+    cartId: { type: String },
+
+    // 🔹 CP
+    cp: {
+      email: String,
+      fullName: String,
+      companyName: String,
+      address: String,
+      state: String,
+      country: String,
+      pinCode: String,
+      mobNumber: String,
+      GSTIN: String,
+    },
+
+    // 🔹 SHOPKEEPER
+    shopkeeper: {
+      email: String,
+      fullName: String,
+      shopName: String,
+      address: String,
+      city: String,
+      state: String,
+      pinCode: String,
+      mobNumber: String,
+      GSTIN: String,
+    },
+
+    // 🔹 MANUFACTURER
     manufacturer: {
       email: String,
       fullName: String,
@@ -117,80 +142,118 @@ const POChannelPartnerToManufacturerSchema = new mongoose.Schema(
       pinCode: String,
       mobNumber: String,
       GSTIN: String,
-      profileImg: String,
-      logo: String,
     },
-    channelPartner: {
-      email: String,
-      fullName: String,
-      companyName: String,
-      address: String,
-      state: String,
-      country: String,
-      pinCode: String,
-      mobNumber: String,
-      GSTIN: String,
-      profileImg: String,
-      logo: String,
+
+    manufacturerEmail: {
+      type: String,
+      required: true,
+      index: true,
     },
-    retailer: {
-      email: String,
-      fullName: String,
-      shopName: String,
-      city: String,
-      state: String,
-      mobileNumber: String,
-      address: String,
-      GSTIN: String,
-      logo: String,
+
+    cpEmail: {
+      type: String,
+      required: true,
+      index: true,
     },
-    subTotal: Number,
-    shippingCharge: {
-      type: Number,
-      default: 0,
+
+    shopKeeperEmail: {
+      type: String,
+      required: true,
+      index: true,
     },
-    discountByCP: {
-      type: Number,
-      default: 0,
+
+    // 🔥 ITEMS
+    items: {
+      type: [itemSchema],
+      default: [],
     },
-    commissionFromManufacturer: {
-      type: Number,
-      default: 0,
+
+    // 🔹 CALCULATION
+    totalQty: { type: Number, default: 0 },
+    totalAmount: { type: Number, default: 0 },
+    discount: { type: Number, default: 0 },
+    finalAmount: { type: Number, default: 0 },
+
+    // 🔹 PAYMENT
+    bankDetails: bankDetailsSchema,
+
+    // 🔹 TRANSPORT
+    transportDetails: transportDetailsSchema,
+
+    // 🔹 STATUS
+    statusAll: {
+      type: String,
+      enum: ['pending', 'accepted', 'rejected', 'processing', 'partial', 'shipped', 'delivered', 'cancelled'],
+      default: 'pending',
+      index: true,
     },
-    finalAmount: Number,
-    cpEarning: Number,
+
+    // 🔹 TRACKING
+    poDate: {
+      type: Date,
+      default: Date.now,
+    },
+    acceptedAt: Date,
+    shippedAt: Date,
+    deliveredAt: Date,
+
+    // 🔹 NOTES
     manufacturerNote: String,
     cpNote: String,
-    expDeliveryDate: Date,
-    partialDeliveryDate: Date,
-    cpConfirmedAt: Date,
-    invoiceGenerated: {
+    shopkeeperNote: String,
+
+    // 🔹 FLAGS
+    isInvoiceGenerated: {
       type: Boolean,
       default: false,
     },
-    invoiceId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'M2CPPerformaInvoice',
+
+    isDeleted: {
+      type: Boolean,
+      default: false,
     },
-    poNumber: Number,
-    previousPoNumber: String,
-    previousPoId: String,
-    cartId: String,
   },
   {
     timestamps: true,
   }
 );
 
-// 🔹 Plugins
-POChannelPartnerToManufacturerSchema.plugin(toJSON);
-POChannelPartnerToManufacturerSchema.plugin(paginate);
+/**
+ * 🔥 PRE SAVE (AUTO CALCULATION)
+ */
+cpToManufacturerPOSchema.pre('save', function (next) {
+  let totalQty = 0;
+  let totalAmount = 0;
 
-// 🔹 Index
-POChannelPartnerToManufacturerSchema.index({
-  channelPartnerEmail: 1,
-  manufacturerEmail: 1,
-  statusAll: 1,
+  this.items.forEach((item) => {
+    item.total = item.quantity * item.price;
+    totalQty += item.quantity;
+    totalAmount += item.total;
+  });
+
+  this.totalQty = totalQty;
+  this.totalAmount = totalAmount;
+  this.finalAmount = totalAmount - (this.discount || 0);
+
+  next();
 });
 
-module.exports = mongoose.model('POChannelPartnerToManufacturer', POChannelPartnerToManufacturerSchema);
+/**
+ * 🔥 INDEXES
+ */
+cpToManufacturerPOSchema.index({ cpEmail: 1, statusAll: 1 });
+cpToManufacturerPOSchema.index({ manufacturerEmail: 1, statusAll: 1 });
+cpToManufacturerPOSchema.index({ shopKeeperEmail: 1 });
+cpToManufacturerPOSchema.index({ createdAt: -1 });
+
+// 🔥 UNIQUE PO PER CP + MANUFACTURER
+cpToManufacturerPOSchema.index({ poNumber: 1, manufacturerEmail: 1, cpEmail: 1 }, { unique: true });
+
+/**
+ * 🔹 PLUGINS
+ */
+cpToManufacturerPOSchema.plugin(toJSON);
+cpToManufacturerPOSchema.plugin(paginate);
+
+const PoCpToManufacturer = mongoose.model('PoCpToManufacturer', cpToManufacturerPOSchema);
+module.exports = PoCpToManufacturer;
