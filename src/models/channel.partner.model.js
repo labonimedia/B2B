@@ -116,7 +116,6 @@ const channelPartnerSchema = mongoose.Schema(
       swiftCode: String,
     },
 
-    // 🔥 Manufacturer Linking (VERY IMPORTANT)
     linkedManufacturers: [
       {
         manufacturerEmail: String,
@@ -125,18 +124,6 @@ const channelPartnerSchema = mongoose.Schema(
           type: Boolean,
           default: false,
         },
-      },
-    ],
-
-    // 🔥 Retailers managed by CP
-    retailers: [
-      {
-        retailerName: String,
-        retailerEmail: String,
-        mobileNumber: String,
-        shopName: String,
-        city: String,
-        state: String,
       },
     ],
 
