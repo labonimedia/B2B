@@ -1,6 +1,6 @@
 const httpStatus = require('http-status');
 const ApiError = require('../../utils/ApiError');
-const { CpCart } = require('../../models');
+const { CpCart, Manufacture, ChannelPartner, ChannelPartnerCustomer } = require('../../models');
 
 /**
  * ADD TO CART
@@ -156,6 +156,225 @@ const confirmCart = async (cartId) => {
   return cart;
 };
 
+const previewPO = async (cartId) => {
+  const cart = await CpCart.findById(cartId);
+
+  if (!cart) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Cart not found');
+  }
+
+  if (!cart.manufacturers || cart.manufacturers.length === 0) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Cart is empty');
+  }
+
+  // 🔹 USERS
+  const cp = await ChannelPartner.findOne({ email: cart.cpEmail });
+  if (!cp) throw new ApiError(404, 'Channel Partner not found');
+
+  const shopkeeper = await ChannelPartnerCustomer.findOne({
+    email: cart.shopkeeperEmail,
+  });
+  if (!shopkeeper) throw new ApiError(404, 'Shopkeeper not found');
+
+  const previewList = [];
+
+  for (const m of cart.manufacturers) {
+    const manufacturer = await Manufacture.findOne({
+      email: m.manufacturerEmail,
+    });
+
+    if (!manufacturer) {
+      throw new ApiError(404, `Manufacturer not found: ${m.manufacturerEmail}`);
+    }
+
+    let totalQty = 0;
+    let totalAmount = 0;
+
+    /**
+     * 🔥 ITEMS TRANSFORM
+     */
+    const items = m.items.map((item) => {
+      const total = Number(item.quantity) * Number(item.price);
+
+      totalQty += Number(item.quantity);
+      totalAmount += total;
+
+      return {
+        _id: item._id,
+
+        designNumber: item.designNumber,
+        colour: item.colour,
+        colourName: item.colourName,
+        colourImage: item.colourImage,
+        size: item.size,
+
+        quantity: item.quantity,
+        price: item.price,
+        total,
+
+        productType: item.productType,
+        gender: item.gender,
+        clothing: item.clothing,
+        subCategory: item.subCategory,
+        hsnCode: item.hsnCode,
+        hsnGst: item.hsnGst,
+        brandName: item.brandName,
+
+        // lifecycle default
+        confirmed: false,
+        rejected: false,
+        deliveredQty: 0,
+        status: 'pending',
+      };
+    });
+
+    /**
+     * 🔥 DISCOUNT LOGIC
+     */
+    let finalAmount = totalAmount;
+
+    if (m.discount) {
+      if (m.discountType === 'percentage') {
+        finalAmount = totalAmount - (totalAmount * m.discount) / 100;
+      } else {
+        finalAmount = totalAmount - m.discount;
+      }
+    }
+
+    if (finalAmount < 0) finalAmount = 0;
+
+    /**
+     * 🔥 FULL PO STRUCTURE
+     */
+    previewList.push({
+      poNumber: `PREVIEW-${Date.now()}`,
+
+      cartId: cart._id,
+
+      cpEmail: cp.email,
+      shopKeeperEmail: shopkeeper.email,
+      manufacturerEmail: manufacturer.email,
+
+      /**
+       * 🔹 CP DETAILS
+       */
+      cp: {
+        email: cp.email,
+        fullName: cp.fullName,
+        companyName: cp.companyName,
+        address: cp.address,
+        state: cp.state,
+        country: cp.country,
+        pinCode: cp.pinCode,
+        mobNumber: cp.mobNumber,
+        GSTIN: cp.GSTIN,
+      },
+
+      /**
+       * 🔹 SHOPKEEPER
+       */
+      shopkeeper: {
+        email: shopkeeper.email,
+        fullName: shopkeeper.fullName,
+        shopName: shopkeeper.shopName,
+        address: shopkeeper.address,
+        city: shopkeeper.city,
+        state: shopkeeper.state,
+        pinCode: shopkeeper.pinCode,
+        mobNumber: shopkeeper.mobileNumber,
+        GSTIN: shopkeeper.GSTIN,
+      },
+
+      /**
+       * 🔹 MANUFACTURER
+       */
+      manufacturer: {
+        email: manufacturer.email,
+        fullName: manufacturer.fullName,
+        companyName: manufacturer.companyName,
+        address: manufacturer.address,
+        state: manufacturer.state,
+        country: manufacturer.country,
+        pinCode: manufacturer.pinCode,
+        mobNumber: manufacturer.mobNumber,
+        GSTIN: manufacturer.GSTIN,
+      },
+
+      /**
+       * 🔥 ITEMS
+       */
+      items,
+
+      /**
+       * 🔹 CALCULATION
+       */
+      totalQty,
+      totalAmount,
+      discount: m.discount || 0,
+      finalAmount,
+
+      /**
+       * 🔹 BANK DETAILS (DEFAULT FROM MANUFACTURER)
+       */
+      bankDetails: {
+        accountHolderName: manufacturer.BankDetails?.accountHolderName || '',
+        accountNumber: manufacturer.BankDetails?.accountNumber || '',
+        accountType: manufacturer.BankDetails?.accountType || '',
+        bankName: manufacturer.BankDetails?.bankName || '',
+        branchName: manufacturer.BankDetails?.branch || '',
+        ifscCode: manufacturer.BankDetails?.IFSCcode || '',
+        swiftCode: manufacturer.BankDetails?.swiftCode || '',
+        upiId: manufacturer.BankDetails?.upiId || '',
+        bankAddress: manufacturer.BankDetails?.city || '',
+      },
+
+      /**
+       * 🔹 TRANSPORT (EMPTY DEFAULT)
+       */
+      transportDetails: {
+        transportType: '',
+        transporterCompanyName: '',
+        vehicleNumber: '',
+        contactNumber: '',
+        trackingId: '',
+        modeOfTransport: 'road',
+        dispatchDate: null,
+        expectedDeliveryDate: null,
+        deliveryDate: null,
+        deliveryAddress: shopkeeper.address,
+        remarks: '',
+      },
+
+      /**
+       * 🔹 STATUS
+       */
+      statusAll: 'preview',
+
+      /**
+       * 🔹 TRACKING
+       */
+      poDate: new Date(),
+      acceptedAt: null,
+      shippedAt: null,
+      deliveredAt: null,
+
+      /**
+       * 🔹 NOTES
+       */
+      manufacturerNote: '',
+      cpNote: '',
+      shopkeeperNote: '',
+
+      /**
+       * 🔹 FLAGS
+       */
+      isInvoiceGenerated: false,
+    });
+  }
+
+  return previewList;
+};
+
 module.exports = {
   addToCart,
   getCart,
@@ -164,4 +383,5 @@ module.exports = {
   applyDiscount,
   applyCartDiscount,
   confirmCart,
+  previewPO,
 };

@@ -33,6 +33,18 @@ const confirmCart = catchAsync(async (req, res) => {
   res.send(data);
 });
 
+const previewPO = catchAsync(async (req, res) => {
+  const { cartId } = req.params;
+
+  const data = await cpCartService.previewPO(cartId);
+
+  res.status(httpStatus.OK).send({
+    status: 'success',
+    message: 'PO preview generated successfully',
+    data,
+  });
+});
+
 module.exports = {
   addToCart,
   getCart,
@@ -40,4 +52,5 @@ module.exports = {
   deleteItem,
   applyDiscount,
   confirmCart,
+  previewPO,
 };

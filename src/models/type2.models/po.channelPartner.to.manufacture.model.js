@@ -183,7 +183,7 @@ const cpToManufacturerPOSchema = new mongoose.Schema(
     // 🔹 STATUS
     statusAll: {
       type: String,
-      enum: ['pending', 'accepted', 'rejected', 'processing', 'partial', 'shipped', 'delivered', 'cancelled'],
+      enum: ['pending', 'accepted', 'rejected', 'processing', 'partial', 'shipped', 'delivered', 'cancelled', 'preview'],
       default: 'pending',
       index: true,
     },
