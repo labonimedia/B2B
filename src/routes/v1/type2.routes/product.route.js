@@ -16,12 +16,15 @@ router.route('/upload/colour-collection/:id').post(
 );
 router
   .route('/')
-  .post(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), productType2Controller.createProduct)
+  .post(auth('superadmin', 'manufacture', 'wholesaler', 'retailer', 'channelPartner'), productType2Controller.createProduct)
   .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), productType2Controller.queryProduct);
 
 router
   .route('/filter-products')
-  .post(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), productType2Controller.searchProducts);
+  .post(
+    auth('superadmin', 'manufacture', 'wholesaler', 'retailer', 'channelPartner'),
+    productType2Controller.searchProducts
+  );
 
 router
   .route('/products/manufacturewise')
@@ -29,12 +32,18 @@ router
 
 router
   .route('/:id')
-  .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), productType2Controller.getProductById)
-  .patch(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), productType2Controller.updateProductById)
-  .delete(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), productType2Controller.deleteProductById);
+  .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer', 'channelPartner'), productType2Controller.getProductById)
+  .patch(
+    auth('superadmin', 'manufacture', 'wholesaler', 'retailer', 'channelPartner'),
+    productType2Controller.updateProductById
+  )
+  .delete(
+    auth('superadmin', 'manufacture', 'wholesaler', 'retailer', 'channelPartner'),
+    productType2Controller.deleteProductById
+  );
 
 router.route('/update/colour-collection').patch(
-  auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
+  auth('superadmin', 'manufacture', 'wholesaler', 'retailer', 'channelPartner'),
   commonUploadMiddleware([
     { name: 'colourImage', maxCount: 1 },
     { name: 'productImages', maxCount: 10 },
@@ -46,7 +55,7 @@ router.route('/update/colour-collection').patch(
 router
   .route('/add-product/video/colour-collection')
   .patch(
-    auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
+    auth('superadmin', 'manufacture', 'wholesaler', 'retailer', 'channelPartner'),
     commonUploadMiddleware([{ name: 'productVideo', maxCount: 1 }]),
     productType2Controller.updateProductVideo
   );
@@ -54,45 +63,63 @@ router
 router
   .route('/add-product/images/colour-collection')
   .patch(
-    auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
+    auth('superadmin', 'manufacture', 'wholesaler', 'retailer', 'channelPartner'),
     commonUploadMiddleware([{ name: 'productImages', maxCount: 10 }]),
     productType2Controller.updateProductImages
   );
 
 router
   .route('/get-product/by-desingnumber')
-  .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), productType2Controller.getProductBydesigneNo);
+  .get(
+    auth('superadmin', 'manufacture', 'wholesaler', 'retailer', 'channelPartner'),
+    productType2Controller.getProductBydesigneNo
+  );
 
 // Delete route
 router
   .route('/delete/colour-collection')
-  .delete(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), productType2Controller.deleteColorCollection);
+  .delete(
+    auth('superadmin', 'manufacture', 'wholesaler', 'retailer', 'channelPartner'),
+    productType2Controller.deleteColorCollection
+  );
 
 router
   .route('/delete/colour-collection/product-video')
-  .delete(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), productType2Controller.deleteProductVideo);
+  .delete(
+    auth('superadmin', 'manufacture', 'wholesaler', 'retailer', 'channelPartner'),
+    productType2Controller.deleteProductVideo
+  );
 
 router
   .route('/delete/colour-collection/product-images')
-  .delete(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), productType2Controller.deleteProductVideo);
+  .delete(
+    auth('superadmin', 'manufacture', 'wholesaler', 'retailer', 'channelPartner'),
+    productType2Controller.deleteProductVideo
+  );
 
 router
   .route('/manufracturelist/byproduct')
-  .post(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), productType2Controller.getFilteredProducts);
+  .post(
+    auth('superadmin', 'manufacture', 'wholesaler', 'retailer', 'channelPartner'),
+    productType2Controller.getFilteredProducts
+  );
 
 router
   .route('/filter-products/for-wholesaler')
-  .post(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), productType2Controller.searchForWSProducts);
+  .post(
+    auth('superadmin', 'manufacture', 'wholesaler', 'retailer', 'channelPartner'),
+    productType2Controller.searchForWSProducts
+  );
 
 router.post('/check-product-existence', productType2Controller.checkProductExistence);
 router.post(
   '/assign-to-wholesaler',
-  auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
+  auth('superadmin', 'manufacture', 'wholesaler', 'retailer', 'channelPartner'),
   productType2Controller.assignProductsToWholesaler
 );
 router.get(
   '/wholesaler-products',
-  auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
+  auth('superadmin', 'manufacture', 'wholesaler', 'retailer', 'channelPartner'),
   productType2Controller.getWholesalerProducts
 );
 // router.get(
@@ -108,7 +135,7 @@ router.get(
 
 router.post(
   '/manufacturer/wholesaler-products',
-  auth('superadmin', 'manufacture', 'wholesaler', 'retailer'),
+  auth('superadmin', 'manufacture', 'wholesaler', 'retailer', 'channelPartner'),
   productType2Controller.getProductsByWholesalerForManufacturer
 );
 
