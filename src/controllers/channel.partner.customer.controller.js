@@ -12,7 +12,7 @@ const fileupload = catchAsync(async (req, res) => {
 const createShopKeeper = catchAsync(async (req, res) => {
   const cpEmail = req.user.email;
 
-  const result = await channelPartnerCustomerService.createShopKeeper(cpEmail, req.body, req.files);
+  const result = await channelPartnerCustomerService.createShopKeeper(cpEmail, req.body)
 
   res.status(httpStatus.CREATED).send(result);
 });
