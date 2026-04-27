@@ -20,25 +20,46 @@ router
     // auth('superadmin', 'manufacture'),
     manufactureController.createManufacture
   )
-  .get(auth('superadmin', 'manufacture'), manufactureController.queryManufacture);
+  .get(
+    auth('superadmin', 'manufacture', 'wholesaler', 'retailer', 'channelPartner', 'masteradmin', 'sales'),
+    manufactureController.queryManufacture
+  );
 
 router
   .route('/:email')
-  .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), manufactureController.getManufactureById)
-  .patch(auth('superadmin', 'manufacture'), manufactureController.updateManufactureById)
-  .delete(auth('superadmin', 'manufacture'), manufactureController.deleteManufactureById);
+  .get(
+    auth('superadmin', 'manufacture', 'wholesaler', 'retailer', 'channelPartner', 'masteradmin', 'sales'),
+    manufactureController.getManufactureById
+  )
+  .patch(
+    auth('superadmin', 'manufacture', 'wholesaler', 'retailer', 'channelPartner', 'masteradmin', 'sales'),
+    manufactureController.updateManufactureById
+  )
+  .delete(
+    auth('superadmin', 'manufacture', 'wholesaler', 'retailer', 'channelPartner', 'masteradmin', 'sales'),
+    manufactureController.deleteManufactureById
+  );
 
 router
   .route('/get-referred/manufactures')
-  .get(auth('superadmin', 'manufacture'), manufactureController.getManufactureByEmail);
+  .get(
+    auth('superadmin', 'manufacture', 'wholesaler', 'retailer', 'channelPartner', 'masteradmin', 'sales'),
+    manufactureController.getManufactureByEmail
+  );
 
 router
   .route('/get-referred/retailers')
-  .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), manufactureController.getRetailersByEmail);
+  .get(
+    auth('superadmin', 'manufacture', 'wholesaler', 'retailer', 'channelPartner', 'masteradmin', 'sales'),
+    manufactureController.getRetailersByEmail
+  );
 
 router
   .route('/visibility/:manufactureId')
-  .patch(auth('superadmin', 'manufacture'), manufactureController.updateVisibilitySettings);
+  .patch(
+    auth('superadmin', 'manufacture', 'wholesaler', 'retailer', 'channelPartner', 'masteradmin', 'sales'),
+    manufactureController.updateVisibilitySettings
+  );
 
 router.route('/visible-profile/:manufactureId').get(
   // auth('superadmin', 'manufacture'),
