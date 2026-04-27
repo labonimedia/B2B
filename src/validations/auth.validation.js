@@ -18,7 +18,17 @@ const register = {
     companyName: Joi.string().optional(), // Company name is optional
 
     role: Joi.string()
-      .valid('superadmin', 'manufacture', 'wholesaler', 'retailer', 'user') // Role validation to match the Mongoose enum
+      .valid(
+        'superadmin',
+        'manufacture',
+        'wholesaler',
+        'retailer',
+        'user',
+        'channelPartner',
+        'masteradmin',
+        'sales',
+        'shopKeeper'
+      ) // Role validation to match the Mongoose enum
       .default('user') // Default role is 'user'
       .required(),
 

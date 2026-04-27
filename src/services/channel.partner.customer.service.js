@@ -2,40 +2,38 @@ const mongoose = require('mongoose');
 const httpStatus = require('http-status');
 const { ChannelPartnerCustomer, User } = require('../models');
 const ApiError = require('../utils/ApiError');
+const { deleteFile } = require('../utils/upload');
 
-const handleFileFields = (body, files) => {
-  if (files?.file?.length > 0) {
-    body.file = files.file[0]; // URL from middleware
+const handleFileFields = (body) => {
+  if (Array.isArray(body.file) && body.file.length > 0) {
+    body.file = body.file[0]; // ✅ URL
   }
 
-  if (files?.profileImg?.length > 0) {
-    body.profileImg = files.profileImg[0];
+  if (Array.isArray(body.profileImg) && body.profileImg.length > 0) {
+    body.profileImg = body.profileImg[0];
   }
 
   return body;
 };
 
 const fileupload = async (req, id) => {
-  // 🔍 Find ShopKeeper
   const shopKeeper = await ChannelPartnerCustomer.findById(id);
 
   if (!shopKeeper) {
     throw new ApiError(httpStatus.NOT_FOUND, 'ShopKeeper not found');
   }
 
-  // 📄 Document file
-  if (req.body.file) {
-    shopKeeper.file = req.body.file ? req.body.file[0] : null;
+  // ✅ HANDLE FILES FROM req.body
+  if (Array.isArray(req.body.file) && req.body.file.length > 0) {
+    shopKeeper.file = req.body.file[0];
   }
 
-  // 🖼️ Profile Image
-  if (req.body.profileImg) {
-    shopKeeper.profileImg = req.body.profileImg ? req.body.profileImg[0] : null;
+  if (Array.isArray(req.body.profileImg) && req.body.profileImg.length > 0) {
+    shopKeeper.profileImg = req.body.profileImg[0];
   }
 
-  // 🏷️ Optional filename
   if (req.body.fileName) {
-    shopKeeper.fileName = req.body.fileName || '';
+    shopKeeper.fileName = req.body.fileName;
   }
 
   await shopKeeper.save();
@@ -46,14 +44,27 @@ const fileupload = async (req, id) => {
 /**
  * 🔥 CREATE SHOPKEEPER (User + Profile)
  */
-const createShopKeeper = async (cpEmail, body, files) => {
+const createShopKeeper = async (cpEmail, body) => {
   const session = await mongoose.startSession();
   session.startTransaction();
 
   try {
-    const { email, fullName, mobileNumber, shopName, password, city, state, country } = body;
+    const { email, fullName, mobileNumber, password } = body;
 
-    handleFileFields(body, files);
+    // ✅ PASSWORD VALIDATION
+    if (!password || password.length < 8) {
+      throw new ApiError(httpStatus.BAD_REQUEST, 'Password must be at least 8 characters');
+    }
+
+    // ✅ FILE HANDLE (from req.body)
+    handleFileFields(body);
+
+    // ✅ CLEAN EMPTY VALUES
+    Object.keys(body).forEach((key) => {
+      if (body[key] === '' || body[key] === null || body[key] === undefined) {
+        delete body[key];
+      }
+    });
 
     const existingUser = await User.findOne({ email }).session(session);
     if (existingUser) {
@@ -82,7 +93,6 @@ const createShopKeeper = async (cpEmail, body, files) => {
       { session }
     );
 
-    // ✅ Create ShopKeeper
     const shopKeeper = await ChannelPartnerCustomer.create(
       [
         {
@@ -132,7 +142,7 @@ const getShopKeeperById = async (id) => {
 /**
  * ✏️ UPDATE
  */
-const updateShopKeeper = async (id, body, files) => {
+const updateShopKeeper = async (id, body) => {
   const shopKeeper = await ChannelPartnerCustomer.findById(id);
 
   if (!shopKeeper) {
@@ -140,28 +150,40 @@ const updateShopKeeper = async (id, body, files) => {
   }
 
   // ✅ FILE HANDLE
-  if (files?.file?.length > 0) {
-    // OPTIONAL: delete old file here
-    // await deleteFile(shopKeeper.file);
-    body.file = files.file[0];
+  if (Array.isArray(body.file) && body.file.length > 0) {
+    if (shopKeeper.file) {
+      try {
+        await deleteFile(shopKeeper.file);
+      } catch (err) {
+        console.error('File delete failed:', err.message);
+      }
+    }
+    body.file = body.file[0];
+  } else {
+    delete body.file;
   }
 
-  if (files?.profileImg?.length > 0) {
-    // OPTIONAL: delete old image
-    // await deleteFile(shopKeeper.profileImg);
-    body.profileImg = files.profileImg[0];
+  if (Array.isArray(body.profileImg) && body.profileImg.length > 0) {
+    if (shopKeeper.profileImg) {
+      try {
+        await deleteFile(shopKeeper.profileImg);
+      } catch (err) {
+        console.error('Profile image delete failed:', err.message);
+      }
+    }
+    body.profileImg = body.profileImg[0];
+  } else {
+    delete body.profileImg;
   }
 
-  // 🧹 CLEAN EMPTY VALUES
+  // ✅ CLEAN EMPTY
   Object.keys(body).forEach((key) => {
     if (body[key] === '' || body[key] === null || body[key] === undefined) {
       delete body[key];
     }
   });
 
-  // ✅ UPDATE
   Object.assign(shopKeeper, body);
-
   await shopKeeper.save();
 
   return shopKeeper;
