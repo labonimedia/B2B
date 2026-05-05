@@ -49,8 +49,8 @@ const createShopKeeper = async (cpEmail, body, files) => {
     const { email, fullName, mobileNumber, password } = body;
 
     // 🔥 VALIDATION
-    if (!password || password.length < 8) {
-      throw new ApiError(httpStatus.BAD_REQUEST, 'Password must be at least 8 characters');
+    if (!password || password.length < 4) {
+      throw new ApiError(httpStatus.BAD_REQUEST, 'Password must be at least 4 characters');
     }
 
     // ✅ HANDLE FILES
