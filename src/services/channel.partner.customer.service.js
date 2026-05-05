@@ -44,24 +44,21 @@ const fileupload = async (req, id) => {
 /**
  * 🔥 CREATE SHOPKEEPER (User + Profile)
  */
-const createShopKeeper = async (cpEmail, body, files) => {
+const createShopKeeper = async (cpEmail, body) => {
   try {
     const { email, fullName, mobileNumber, password } = body;
 
-    // 🔥 VALIDATION
-    if (!password || password.length < 4) {
-      throw new ApiError(httpStatus.BAD_REQUEST, 'Password must be at least 4 characters');
+    if (!password || password.length < 8) {
+      throw new ApiError(httpStatus.BAD_REQUEST, 'Password must be at least 8 characters');
     }
 
-    // ✅ HANDLE FILES
-    if (files) {
-      if (files.file && files.file.length > 0) {
-        body.file = files.file[0];
-      }
+    // ✅ FIXED FILE HANDLING
+    if (Array.isArray(body.file)) {
+      body.file = body.file[0];
+    }
 
-      if (files.profileImg && files.profileImg.length > 0) {
-        body.profileImg = files.profileImg[0];
-      }
+    if (Array.isArray(body.profileImg)) {
+      body.profileImg = body.profileImg[0];
     }
 
     // ✅ CLEAN EMPTY VALUES
@@ -69,13 +66,11 @@ const createShopKeeper = async (cpEmail, body, files) => {
       if (!body[key]) delete body[key];
     });
 
-    // ✅ CHECK USER
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       throw new ApiError(httpStatus.BAD_REQUEST, 'User already exists');
     }
 
-    // ✅ CHECK SHOPKEEPER
     const existingShopKeeper = await ChannelPartnerCustomer.findOne({
       channelPartnerEmail: cpEmail,
       email,
@@ -85,7 +80,6 @@ const createShopKeeper = async (cpEmail, body, files) => {
       throw new ApiError(httpStatus.BAD_REQUEST, 'ShopKeeper already exists');
     }
 
-    // ✅ CREATE USER
     const user = await User.create({
       fullName,
       email,
@@ -94,10 +88,8 @@ const createShopKeeper = async (cpEmail, body, files) => {
       role: 'shopKeeper',
     });
 
-    // ❗ REMOVE PASSWORD
     delete body.password;
 
-    // ✅ CREATE SHOPKEEPER
     const shopKeeper = await ChannelPartnerCustomer.create({
       ...body,
       channelPartnerEmail: cpEmail,
@@ -110,6 +102,7 @@ const createShopKeeper = async (cpEmail, body, files) => {
       shopKeeper,
     };
   } catch (error) {
+    console.error('CREATE SHOPKEEPER ERROR:', error);
     throw error;
   }
 };
