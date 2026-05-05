@@ -44,20 +44,102 @@ const fileupload = async (req, id) => {
 /**
  * 🔥 CREATE SHOPKEEPER (User + Profile)
  */
-const createShopKeeper = async (cpEmail, body) => {
+// const createShopKeeper = async (cpEmail, body) => {
+//   const session = await mongoose.startSession();
+//   session.startTransaction();
+
+//   try {
+//     const { email, fullName, mobileNumber, password } = body;
+
+//     // ✅ PASSWORD VALIDATION
+//     if (!password || password.length < 8) {
+//       throw new ApiError(httpStatus.BAD_REQUEST, 'Password must be at least 8 characters');
+//     }
+
+//     // ✅ FILE HANDLE (from req.body)
+//     handleFileFields(body);
+
+//     // ✅ CLEAN EMPTY VALUES
+//     Object.keys(body).forEach((key) => {
+//       if (body[key] === '' || body[key] === null || body[key] === undefined) {
+//         delete body[key];
+//       }
+//     });
+
+//     const existingUser = await User.findOne({ email }).session(session);
+//     if (existingUser) {
+//       throw new ApiError(httpStatus.BAD_REQUEST, 'User already exists');
+//     }
+
+//     const existingShopKeeper = await ChannelPartnerCustomer.findOne({
+//       channelPartnerEmail: cpEmail,
+//       email,
+//     }).session(session);
+
+//     if (existingShopKeeper) {
+//       throw new ApiError(httpStatus.BAD_REQUEST, 'ShopKeeper already exists');
+//     }
+
+//     const user = await User.create(
+//       [
+//         {
+//           fullName,
+//           email,
+//           password,
+//           mobileNumber,
+//           role: 'shopKeeper',
+//         },
+//       ],
+//       { session }
+//     );
+
+//     const shopKeeper = await ChannelPartnerCustomer.create(
+//       [
+//         {
+//           ...body,
+//           channelPartnerEmail: cpEmail,
+//           addedBy: cpEmail,
+//         },
+//       ],
+//       { session }
+//     );
+
+//     await session.commitTransaction();
+//     session.endSession();
+
+//     return {
+//       message: 'ShopKeeper created successfully',
+//       user: user[0],
+//       shopKeeper: shopKeeper[0],
+//     };
+//   } catch (error) {
+//     await session.abortTransaction();
+//     session.endSession();
+//     throw error;
+//   }
+// };
+const createShopKeeper = async (cpEmail, body, files) => {
   const session = await mongoose.startSession();
   session.startTransaction();
 
   try {
     const { email, fullName, mobileNumber, password } = body;
 
-    // ✅ PASSWORD VALIDATION
+    // 🔥 VALIDATION
     if (!password || password.length < 8) {
       throw new ApiError(httpStatus.BAD_REQUEST, 'Password must be at least 8 characters');
     }
 
-    // ✅ FILE HANDLE (from req.body)
-    handleFileFields(body);
+    // ✅ HANDLE FILES SAFELY
+    if (files) {
+      if (files.file && files.file.length > 0) {
+        body.file = files.file[0].location || files.file[0]; // fallback
+      }
+
+      if (files.profileImg && files.profileImg.length > 0) {
+        body.profileImg = files.profileImg[0].location || files.profileImg[0];
+      }
+    }
 
     // ✅ CLEAN EMPTY VALUES
     Object.keys(body).forEach((key) => {
@@ -66,11 +148,13 @@ const createShopKeeper = async (cpEmail, body) => {
       }
     });
 
+    // ✅ CHECK USER
     const existingUser = await User.findOne({ email }).session(session);
     if (existingUser) {
       throw new ApiError(httpStatus.BAD_REQUEST, 'User already exists');
     }
 
+    // ✅ CHECK SHOPKEEPER
     const existingShopKeeper = await ChannelPartnerCustomer.findOne({
       channelPartnerEmail: cpEmail,
       email,
@@ -80,6 +164,7 @@ const createShopKeeper = async (cpEmail, body) => {
       throw new ApiError(httpStatus.BAD_REQUEST, 'ShopKeeper already exists');
     }
 
+    // ✅ CREATE USER
     const user = await User.create(
       [
         {
@@ -93,6 +178,10 @@ const createShopKeeper = async (cpEmail, body) => {
       { session }
     );
 
+    // ❗ REMOVE PASSWORD BEFORE SAVING SHOPKEEPER
+    delete body.password;
+
+    // ✅ CREATE SHOPKEEPER
     const shopKeeper = await ChannelPartnerCustomer.create(
       [
         {
@@ -112,13 +201,14 @@ const createShopKeeper = async (cpEmail, body) => {
       user: user[0],
       shopKeeper: shopKeeper[0],
     };
+
   } catch (error) {
     await session.abortTransaction();
     session.endSession();
+
     throw error;
   }
 };
-
 /**
  * 📄 GET ALL SHOPKEEPERS
  */
