@@ -61,6 +61,22 @@ const deleteShopKeeper = catchAsync(async (req, res) => {
   res.send(result);
 });
 
+const searchShopKeepers = catchAsync(async (req, res) => {
+  const { filter = {}, options = {}, search } = req.body;
+
+  const data = await channelPartnerCustomerService.searchShopKeepers(
+    filter,
+    options,
+    search
+  );
+
+  res.status(200).send({
+    status: 'success',
+    message: 'Shopkeepers fetched successfully',
+    data,
+  });
+});
+
 module.exports = {
   createShopKeeper,
   queryShopKeepers,
@@ -68,4 +84,5 @@ module.exports = {
   updateShopKeeper,
   deleteShopKeeper,
   fileupload,
+  searchShopKeepers,
 };

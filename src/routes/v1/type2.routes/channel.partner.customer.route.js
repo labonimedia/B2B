@@ -31,6 +31,12 @@ router.get(
   channelPartnerCostumerController.queryShopKeepers
 );
 
+router.post(
+  '/search',
+  auth('superadmin', 'manufacture', 'wholesaler', 'channelPartner', 'retailer'),
+  channelPartnerCostumerController.searchShopKeepers
+);
+
 router
   .route('/:id')
   .get(
