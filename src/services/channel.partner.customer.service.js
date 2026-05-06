@@ -191,6 +191,28 @@ const deleteShopKeeper = async (id) => {
   return { message: 'ShopKeeper deactivated successfully' };
 };
 
+const searchShopKeepers = async (filter, options, search) => {
+  let finalFilter = { ...filter };
+
+  /**
+   * 🔥 GLOBAL SEARCH (KEYWORD)
+   */
+  if (search) {
+    const regex = new RegExp(search, 'i'); // case-insensitive
+
+    finalFilter.$or = [
+      { fullName: regex },
+      { email: regex },
+      { shopName: regex },
+      { companyName: regex },
+      { city: regex },
+      { state: regex },
+    ];
+  }
+
+  return ChannelPartnerCustomer.paginate(finalFilter, options);
+};
+
 module.exports = {
   createShopKeeper,
   queryShopKeepers,
@@ -198,4 +220,5 @@ module.exports = {
   updateShopKeeper,
   deleteShopKeeper,
   fileupload,
+  searchShopKeepers,
 };
