@@ -6,7 +6,17 @@ const { CpCart, Manufacture, ChannelPartner, ChannelPartnerCustomer } = require(
  * ADD TO CART
  */
 const addToCart = async (body) => {
-  const { cpEmail, shopkeeperEmail, manufacturerEmail, manufacturerName, item } = body;
+  const {
+    cpEmail,
+    shopkeeperEmail,
+    manufacturerEmail,
+    manufacturerName,
+    items, // 🔥 array now
+  } = body;
+
+  if (!items || !Array.isArray(items) || items.length === 0) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Items array is required');
+  }
 
   let cart = await CpCart.findOne({ cpEmail, shopkeeperEmail, isDeleted: false });
 
@@ -20,12 +30,28 @@ const addToCart = async (body) => {
   }
 
   // 👉 find manufacturer
-  const manufacturer = cart.manufacturers.find((m) => m.manufacturerEmail === manufacturerEmail);
+  let manufacturer = cart.manufacturers.find(
+    (m) => m.manufacturerEmail === manufacturerEmail
+  );
 
-  if (manufacturer) {
-    // 👉 check existing item
+  if (!manufacturer) {
+    manufacturer = {
+      manufacturerEmail,
+      manufacturerName,
+      items: [],
+    };
+    cart.manufacturers.push(manufacturer);
+  }
+
+  /**
+   * 🔥 LOOP MULTIPLE ITEMS
+   */
+  items.forEach((item) => {
     const existing = manufacturer.items.find(
-      (i) => i.designNumber === item.designNumber && i.colour === item.colour && i.size === item.size
+      (i) =>
+        i.designNumber === item.designNumber &&
+        i.colour === item.colour &&
+        i.size === item.size
     );
 
     if (existing) {
@@ -33,14 +59,7 @@ const addToCart = async (body) => {
     } else {
       manufacturer.items.push(item);
     }
-  } else {
-    // 👉 new manufacturer entry
-    cart.manufacturers.push({
-      manufacturerEmail,
-      manufacturerName,
-      items: [item],
-    });
-  }
+  });
 
   await cart.save();
   return cart;
