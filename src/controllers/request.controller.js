@@ -39,11 +39,23 @@ const filterRequests = catchAsync(async (req, res) => {
   res.send(result);
 });
 
+// const acceptRequest = catchAsync(async (req, res) => {
+//   const { id, requestbyemail, requesttoemail } = req.params;
+//   const { status } = req.body;
+//   const request = await requestService.acceptRequest(id, requestbyemail, requesttoemail, status);
+//   res.status(httpStatus.OK).send(request);
+// });
 const acceptRequest = catchAsync(async (req, res) => {
   const { id, requestbyemail, requesttoemail } = req.params;
   const { status } = req.body;
-  const request = await requestService.acceptRequest(id, requestbyemail, requesttoemail, status);
-  res.status(httpStatus.OK).send(request);
+
+  const result = await requestService.acceptRequest(id, requestbyemail, requesttoemail, status);
+
+  res.status(httpStatus.OK).send({
+    success: true,
+    message: `Request ${status} successfully`,
+    data: result,
+  });
 });
 const getRequestById = catchAsync(async (req, res) => {
   const request = await requestService.getRequestById(req.params.id);

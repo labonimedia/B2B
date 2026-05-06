@@ -1,5 +1,5 @@
 const httpStatus = require('http-status');
-const { Request, User, Manufacture, Wholesaler } = require('../models');
+const { Request, User, Manufacture, Wholesaler, ChannelPartner } = require('../models');
 const ApiError = require('../utils/ApiError');
 
 /**
@@ -48,24 +48,28 @@ const createMultipleRequests = async (requestsBody) => {
 //     return request;
 //   }
 
-//   // Allow acceptance even after rejection
 //   if (status === 'accepted') {
 //     const user = await User.findOne({ email: requestByEmail });
 //     if (!user) {
 //       throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
 //     }
 
+//     // Find either a Manufacture or a Wholesaler by email
 //     const manufacture = await Manufacture.findOne({ email: requestToEmail });
-//     if (!manufacture) {
-//       throw new ApiError(httpStatus.NOT_FOUND, 'Manufacture not found');
+//     const wholesaler = await Wholesaler.findOne({ email: requestToEmail });
+
+//     // Check if Manufacture or Wholesaler exists
+//     if (!manufacture && !wholesaler) {
+//       throw new ApiError(httpStatus.NOT_FOUND, 'Manufacture or Wholesaler not found');
 //     }
 
-//     // Check if the email is already referenced
+//     // Check if the email is already referenced in refByEmail
 //     if (!user.refByEmail.includes(requestToEmail)) {
 //       user.refByEmail.push(requestToEmail);
 //       await user.save();
 //     }
 
+//     // Update the request status to accepted
 //     request.status = 'accepted';
 //     await request.save();
 //   }
@@ -74,45 +78,61 @@ const createMultipleRequests = async (requestsBody) => {
 // };
 const acceptRequest = async (requestId, requestByEmail, requestToEmail, status) => {
   const request = await Request.findById(requestId);
+
   if (!request) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Request not found');
   }
 
+  // ✅ REJECT
   if (status === 'rejected') {
     request.status = 'rejected';
     await request.save();
     return request;
   }
 
+  // ✅ ACCEPT
   if (status === 'accepted') {
-    const user = await User.findOne({ email: requestByEmail });
-    if (!user) {
-      throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+    // 🔹 1. Validate sender
+    const sender = await User.findOne({ email: requestByEmail });
+    if (!sender) {
+      throw new ApiError(httpStatus.NOT_FOUND, 'Sender user not found');
     }
 
-    // Find either a Manufacture or a Wholesaler by email
-    const manufacture = await Manufacture.findOne({ email: requestToEmail });
-    const wholesaler = await Wholesaler.findOne({ email: requestToEmail });
+    // 🔹 2. Validate receiver (🔥 FIX: SUPPORT ALL ROLES)
+    let receiver = null;
 
-    // Check if Manufacture or Wholesaler exists
-    if (!manufacture && !wholesaler) {
-      throw new ApiError(httpStatus.NOT_FOUND, 'Manufacture or Wholesaler not found');
+    // Try all collections
+    receiver =
+      (await User.findOne({ email: requestToEmail })) ||
+      (await require('../models').Manufacture.findOne({ email: requestToEmail })) ||
+      (await require('../models').Wholesaler.findOne({ email: requestToEmail })) ||
+      (await require('../models').ChannelPartner.findOne({ email: requestToEmail }));
+
+    if (!receiver) {
+      throw new ApiError(httpStatus.NOT_FOUND, 'Receiver not found in any module');
     }
 
-    // Check if the email is already referenced in refByEmail
-    if (!user.refByEmail.includes(requestToEmail)) {
-      user.refByEmail.push(requestToEmail);
-      await user.save();
+    // 🔹 3. Add relation (avoid duplicate)
+    if (!sender.refByEmail.includes(requestToEmail)) {
+      sender.refByEmail.push(requestToEmail);
+      await sender.save();
     }
 
-    // Update the request status to accepted
+    // 🔹 4. OPTIONAL: reverse linking
+    if (receiver.refByEmail && Array.isArray(receiver.refByEmail)) {
+      if (!receiver.refByEmail.includes(requestByEmail)) {
+        receiver.refByEmail.push(requestByEmail);
+        await receiver.save();
+      }
+    }
+
+    // 🔹 5. Update request
     request.status = 'accepted';
     await request.save();
   }
 
   return request;
 };
-
 /**
  * Get request by id
  * @param {ObjectId} id
