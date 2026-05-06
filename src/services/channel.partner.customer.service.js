@@ -44,42 +44,51 @@ const fileupload = async (req, id) => {
 /**
  * 🔥 CREATE SHOPKEEPER (User + Profile)
  */
-const createShopKeeper = async (cpEmail, body) => {
+const createShopKeeper = async (cpEmail, body, files) => {
   try {
     const { email, fullName, mobileNumber, password } = body;
+
+    if (!email) {
+      throw new ApiError(httpStatus.BAD_REQUEST, 'Email is required');
+    }
 
     if (!password || password.length < 8) {
       throw new ApiError(httpStatus.BAD_REQUEST, 'Password must be at least 8 characters');
     }
 
-    // ✅ FIXED FILE HANDLING
-    if (Array.isArray(body.file)) {
-      body.file = body.file[0];
+    // ✅ HANDLE FILES
+    if (files?.file?.length) {
+      body.file = files.file[0].path;
     }
 
-    if (Array.isArray(body.profileImg)) {
-      body.profileImg = body.profileImg[0];
+    if (files?.profileImg?.length) {
+      body.profileImg = files.profileImg[0].path;
     }
 
-    // ✅ CLEAN EMPTY VALUES
+    // ✅ CLEAN EMPTY VALUES (FIXED)
     Object.keys(body).forEach((key) => {
-      if (!body[key]) delete body[key];
+      if (body[key] === '' || body[key] === null || body[key] === undefined) {
+        delete body[key];
+      }
     });
 
+    // ✅ CHECK USER
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       throw new ApiError(httpStatus.BAD_REQUEST, 'User already exists');
     }
 
+    // ✅ CHECK SHOPKEEPER
     const existingShopKeeper = await ChannelPartnerCustomer.findOne({
       channelPartnerEmail: cpEmail,
       email,
     });
 
     if (existingShopKeeper) {
-      throw new ApiError(httpStatus.BAD_REQUEST, 'ShopKeeper already exists');
+      throw new ApiError(httpStatus.BAD_REQUEST, 'ShopKeeper already exists under this channel partner');
     }
 
+    // ✅ CREATE USER
     const user = await User.create({
       fullName,
       email,
@@ -90,8 +99,10 @@ const createShopKeeper = async (cpEmail, body) => {
 
     delete body.password;
 
+    // ✅ CREATE SHOPKEEPER
     const shopKeeper = await ChannelPartnerCustomer.create({
       ...body,
+      email, // ensure email always set
       channelPartnerEmail: cpEmail,
       addedBy: cpEmail,
     });
