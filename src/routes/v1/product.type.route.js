@@ -7,95 +7,26 @@ const router = express.Router();
 router
   .route('/')
   .post(
-    auth(
-      'superadmin',
-      'manufacture',
-      'wholesaler',
-      'retailer',
-      'wholesaler',
-      'retailer',
-      'wholesaler',
-      'retailer',
-      'wholesaler',
-      'retailer',
-      'wholesaler',
-      'retailer',
-      'wholesaler',
-      'retailer'
-    ),
+    auth('superadmin', 'manufacture', 'wholesaler', 'retailer', 'channelPartner'),
     productTypeController.createProductType
   )
   .get(
-    auth(
-      'superadmin',
-      'manufacture',
-      'wholesaler',
-      'retailer',
-      'wholesaler',
-      'retailer',
-      'wholesaler',
-      'retailer',
-      'wholesaler',
-      'retailer',
-      'wholesaler',
-      'retailer',
-      'wholesaler',
-      'retailer'
-    ),
+    auth('superadmin', 'manufacture', 'wholesaler', 'retailer', 'channelPartner'),
     productTypeController.queryProductType
   );
 
 router
   .route('/:id')
   .get(
-    auth(
-      'superadmin',
-      'manufacture',
-      'wholesaler',
-      'retailer',
-      'wholesaler',
-      'retailer',
-      'wholesaler',
-      'retailer',
-      'wholesaler',
-      'retailer',
-      'wholesaler',
-      'retailer'
-    ),
+    auth('superadmin', 'manufacture', 'wholesaler', 'retailer', 'channelPartner'),
     productTypeController.getProductTypeById
   )
   .patch(
-    auth(
-      'superadmin',
-      'manufacture',
-      'wholesaler',
-      'retailer',
-      'wholesaler',
-      'retailer',
-      'wholesaler',
-      'retailer',
-      'wholesaler',
-      'retailer',
-      'wholesaler',
-      'retailer'
-    ),
+    auth('superadmin', 'manufacture', 'wholesaler', 'retailer', 'channelPartner'),
     productTypeController.updateProductTypeById
   )
   .delete(
-    auth(
-      'superadmin',
-      'manufacture',
-      'wholesaler',
-      'retailer',
-      'wholesaler',
-      'retailer',
-      'wholesaler',
-      'retailer',
-      'wholesaler',
-      'retailer',
-      'wholesaler',
-      'retailer'
-    ),
+    auth('superadmin', 'manufacture', 'wholesaler', 'retailer', 'channelPartner'),
     productTypeController.deleteProductTypeById
   );
 
