@@ -147,6 +147,16 @@ const updatePOItems = catchAsync(async (req, res) => {
   });
 });
 
+const createSingleManufacturerPO = catchAsync(async (req, res) => {
+  const data = await cpToManufacturerPOService.createSingleManufacturerPO(req.body);
+
+  res.status(httpStatus.CREATED).send({
+    status: 'success',
+    message: 'Single manufacturer PO created successfully',
+    data,
+  });
+});
+
 module.exports = {
   createPO,
   getPOList,
@@ -156,4 +166,5 @@ module.exports = {
   getAllPO,
   getPOByManufacture,
   updatePOItems,
+  createSingleManufacturerPO,
 };

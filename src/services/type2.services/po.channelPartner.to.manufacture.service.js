@@ -122,6 +122,96 @@ const updatePOItems = async (poId, body) => {
   await po.save();
   return po;
 };
+const createSingleManufacturerPO = async (body) => {
+  const {
+    cartId,
+    manufacturerEmail,
+    poNumber,
+    items,
+    ...rest // 🔥 everything else allowed
+  } = body;
+
+  if (!cartId || !manufacturerEmail) {
+    throw new ApiError(400, 'cartId and manufacturerEmail are required');
+  }
+
+  const cart = await CpCart.findById(cartId);
+  if (!cart) throw new ApiError(404, 'Cart not found');
+
+  const m = cart.manufacturers.find(
+    (m) => m.manufacturerEmail === manufacturerEmail
+  );
+
+  if (!m) {
+    throw new ApiError(404, 'Manufacturer not found in cart');
+  }
+
+  // 🔹 USERS
+  const cp = await ChannelPartner.findOne({ email: cart.cpEmail });
+  const shopkeeper = await ChannelPartnerCustomer.findOne({
+    email: cart.shopkeeperEmail,
+  });
+  const manufacturer = await Manufacture.findOne({ email: manufacturerEmail });
+
+  if (!cp) throw new ApiError(404, 'Channel Partner not found');
+  if (!shopkeeper) throw new ApiError(404, 'Shopkeeper not found');
+  if (!manufacturer) throw new ApiError(404, 'Manufacturer not found');
+
+  // 🔥 AUTO PO NUMBER
+  let finalPoNumber = poNumber;
+
+  if (!finalPoNumber) {
+    finalPoNumber = await generatePONumber();
+  }
+
+  // 🔥 USE ITEMS FROM BODY OR FALLBACK TO CART
+  const finalItems = Array.isArray(items) && items.length > 0 ? items : m.items;
+
+  if (!finalItems || finalItems.length === 0) {
+    throw new ApiError(400, 'Items are required');
+  }
+
+  // 🔥 CREATE PO
+  const po = await PoCpToManufacturer.create({
+    poNumber: finalPoNumber,
+    cartId: cart._id,
+
+    cp,
+    shopkeeper,
+    manufacturer,
+
+    manufacturerEmail,
+    cpEmail: cp.email,
+    shopKeeperEmail: shopkeeper.email,
+
+    items: finalItems,
+
+    // 🔥 allow override OR fallback
+    totalQty: rest.totalQty ?? m.totalQty,
+    totalAmount: rest.totalAmount ?? m.totalAmount,
+    discount: rest.discount ?? m.discount,
+    finalAmount: rest.finalAmount ?? m.finalAmount,
+
+    // 🔥 FULL FLEXIBILITY
+    ...rest,
+  });
+
+  /**
+   * 🔥 REMOVE MANUFACTURER FROM CART
+   */
+  cart.manufacturers = cart.manufacturers.filter(
+    (x) => x.manufacturerEmail !== manufacturerEmail
+  );
+
+  if (cart.manufacturers.length === 0) {
+    cart.status = 'confirmed';
+  }
+
+  cart.markModified('manufacturers');
+  await cart.save();
+
+  return po;
+};
 
 module.exports = {
   createPOFromCart,
@@ -134,4 +224,5 @@ module.exports = {
   getAllPO,
   getPOByManufacture,
   updatePOItems,
+  createSingleManufacturerPO,
 };
