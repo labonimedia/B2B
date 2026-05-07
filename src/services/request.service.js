@@ -83,7 +83,7 @@ const acceptRequest = async (requestId, requestByEmail, requestToEmail, status) 
     throw new ApiError(httpStatus.NOT_FOUND, 'Request not found');
   }
 
-  // ✅ REJECT
+  // ❌ REJECT
   if (status === 'rejected') {
     request.status = 'rejected';
     await request.save();
@@ -92,33 +92,29 @@ const acceptRequest = async (requestId, requestByEmail, requestToEmail, status) 
 
   // ✅ ACCEPT
   if (status === 'accepted') {
-    // 🔹 1. Validate sender
+    // 🔹 Sender
     const sender = await User.findOne({ email: requestByEmail });
     if (!sender) {
       throw new ApiError(httpStatus.NOT_FOUND, 'Sender user not found');
     }
 
-    // 🔹 2. Validate receiver (🔥 FIX: SUPPORT ALL ROLES)
-    let receiver = null;
-
-    // Try all collections
-    receiver =
+    // 🔹 Receiver (ALL MODULES)
+    let receiver =
       (await User.findOne({ email: requestToEmail })) ||
-      (await require('../models').Manufacture.findOne({ email: requestToEmail })) ||
-      (await require('../models').Wholesaler.findOne({ email: requestToEmail })) ||
-      (await require('../models').ChannelPartner.findOne({ email: requestToEmail }));
+      (await Manufacture.findOne({ email: requestToEmail })) ||
+      (await Wholesaler.findOne({ email: requestToEmail })) ||
+      (await ChannelPartner.findOne({ email: requestToEmail }));
 
     if (!receiver) {
-      throw new ApiError(httpStatus.NOT_FOUND, 'Receiver not found in any module');
+      throw new ApiError(httpStatus.NOT_FOUND, 'Receiver not found');
     }
 
-    // 🔹 3. Add relation (avoid duplicate)
+    // 🔹 Existing logic (DO NOT TOUCH)
     if (!sender.refByEmail.includes(requestToEmail)) {
       sender.refByEmail.push(requestToEmail);
       await sender.save();
     }
 
-    // 🔹 4. OPTIONAL: reverse linking
     if (receiver.refByEmail && Array.isArray(receiver.refByEmail)) {
       if (!receiver.refByEmail.includes(requestByEmail)) {
         receiver.refByEmail.push(requestByEmail);
@@ -126,13 +122,58 @@ const acceptRequest = async (requestId, requestByEmail, requestToEmail, status) 
       }
     }
 
-    // 🔹 5. Update request
+    // 🔥🔥 NEW LOGIC START (CP ↔ MANUFACTURER LINKING)
+
+    // Case 1: Sender is Channel Partner → Receiver is Manufacturer
+    const senderCP = await ChannelPartner.findOne({ email: requestByEmail });
+    const receiverManufacturer = await Manufacture.findOne({ email: requestToEmail });
+
+    if (senderCP && receiverManufacturer) {
+      const alreadyLinked = senderCP.linkedManufacturers.find(
+        (m) => m.manufacturerEmail === requestToEmail
+      );
+
+      if (!alreadyLinked) {
+        senderCP.linkedManufacturers.push({
+          manufacturerEmail: requestToEmail,
+          manufacturerName: receiverManufacturer.companyName || receiverManufacturer.fullName,
+          isApproved: true,
+        });
+
+        await senderCP.save();
+      }
+    }
+
+    // Case 2: Sender is Manufacturer → Receiver is Channel Partner
+    const receiverCP = await ChannelPartner.findOne({ email: requestToEmail });
+    const senderManufacturer = await Manufacture.findOne({ email: requestByEmail });
+
+    if (receiverCP && senderManufacturer) {
+      const alreadyLinked = receiverCP.linkedManufacturers.find(
+        (m) => m.manufacturerEmail === requestByEmail
+      );
+
+      if (!alreadyLinked) {
+        receiverCP.linkedManufacturers.push({
+          manufacturerEmail: requestByEmail,
+          manufacturerName: senderManufacturer.companyName || senderManufacturer.fullName,
+          isApproved: true,
+        });
+
+        await receiverCP.save();
+      }
+    }
+
+    // 🔥🔥 NEW LOGIC END
+
+    // 🔹 Update request
     request.status = 'accepted';
     await request.save();
   }
 
   return request;
 };
+
 /**
  * Get request by id
  * @param {ObjectId} id
