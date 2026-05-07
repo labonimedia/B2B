@@ -10,13 +10,72 @@ const queryCart = async (filter, options) => {
   return cart;
 };
 
+// const addToCart = async (body) => {
+//   const {
+//     cpEmail,
+//     shopkeeperEmail,
+//     manufacturerEmail,
+//     manufacturerName,
+//     items, // 🔥 array now
+//   } = body;
+
+//   if (!items || !Array.isArray(items) || items.length === 0) {
+//     throw new ApiError(httpStatus.BAD_REQUEST, 'Items array is required');
+//   }
+
+//   let cart = await CpCart.findOne({ cpEmail, shopkeeperEmail, isDeleted: false });
+
+//   // 👉 create cart if not exist
+//   if (!cart) {
+//     cart = await CpCart.create({
+//       cpEmail,
+//       shopkeeperEmail,
+//       manufacturers: [],
+//     });
+//   }
+
+//   // 👉 find manufacturer
+//   let manufacturer = cart.manufacturers.find(
+//     (m) => m.manufacturerEmail === manufacturerEmail
+//   );
+
+//   if (!manufacturer) {
+//     manufacturer = {
+//       manufacturerEmail,
+//       manufacturerName,
+//       items: [],
+//     };
+//     cart.manufacturers.push(manufacturer);
+//   }
+
+//   /**
+//    * 🔥 LOOP MULTIPLE ITEMS
+//    */
+//   items.forEach((item) => {
+//     const existing = manufacturer.items.find(
+//       (i) =>
+//         i.designNumber === item.designNumber &&
+//         i.colour === item.colour &&
+//         i.size === item.size
+//     );
+
+//     if (existing) {
+//       existing.quantity += item.quantity;
+//     } else {
+//       manufacturer.items.push(item);
+//     }
+//   });
+
+//   await cart.save();
+//   return cart;
+// };
 const addToCart = async (body) => {
   const {
     cpEmail,
     shopkeeperEmail,
     manufacturerEmail,
     manufacturerName,
-    items, // 🔥 array now
+    items,
   } = body;
 
   if (!items || !Array.isArray(items) || items.length === 0) {
@@ -25,7 +84,7 @@ const addToCart = async (body) => {
 
   let cart = await CpCart.findOne({ cpEmail, shopkeeperEmail, isDeleted: false });
 
-  // 👉 create cart if not exist
+  // ✅ Create cart if not exists
   if (!cart) {
     cart = await CpCart.create({
       cpEmail,
@@ -34,42 +93,55 @@ const addToCart = async (body) => {
     });
   }
 
-  // 👉 find manufacturer
-  let manufacturer = cart.manufacturers.find(
+  // ✅ Find manufacturer index
+  let manufacturerIndex = cart.manufacturers.findIndex(
     (m) => m.manufacturerEmail === manufacturerEmail
   );
 
-  if (!manufacturer) {
-    manufacturer = {
+  // ✅ If NOT found → PUSH then GET reference
+  if (manufacturerIndex === -1) {
+    cart.manufacturers.push({
       manufacturerEmail,
       manufacturerName,
       items: [],
-    };
-    cart.manufacturers.push(manufacturer);
+    });
+
+    manufacturerIndex = cart.manufacturers.length - 1;
   }
 
+  // ✅ ALWAYS get mongoose tracked reference
+  const manufacturer = cart.manufacturers[manufacturerIndex];
+
   /**
-   * 🔥 LOOP MULTIPLE ITEMS
+   * 🔥 ADD ITEMS SAFELY
    */
   items.forEach((item) => {
-    const existing = manufacturer.items.find(
+    const existingIndex = manufacturer.items.findIndex(
       (i) =>
         i.designNumber === item.designNumber &&
         i.colour === item.colour &&
         i.size === item.size
     );
 
-    if (existing) {
-      existing.quantity += item.quantity;
+    if (existingIndex > -1) {
+      manufacturer.items[existingIndex].quantity += item.quantity;
     } else {
-      manufacturer.items.push(item);
+      manufacturer.items.push({
+        ...item,
+        total: Number(item.quantity) * Number(item.price),
+      });
     }
   });
 
+  /**
+   * 🔥 FORCE MONGOOSE TRACKING (IMPORTANT)
+   */
+  cart.markModified('manufacturers');
+
   await cart.save();
+
   return cart;
 };
-
 /**
  * 🔥 GET CART (Grouped by Manufacturer)
  */
