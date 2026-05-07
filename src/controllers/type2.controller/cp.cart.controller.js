@@ -53,6 +53,28 @@ const queryCart = catchAsync(async (req, res) => {
   res.send(result);
 });
 
+const deleteManufacturerCart = catchAsync(async (req, res) => {
+  const data = await cpCartService.deleteManufacturerCart(req.body);
+
+  res.status(httpStatus.OK).send({
+    status: 'success',
+    message: 'Manufacturer cart deleted successfully',
+    data,
+  });
+});
+
+const previewSingleManufacturerPO = catchAsync(async (req, res) => {
+  const { cartId, manufacturerEmail } = req.params;
+
+  const data = await cpCartService.previewSingleManufacturerPO(cartId, manufacturerEmail);
+
+  res.status(httpStatus.OK).send({
+    status: 'success',
+    message: 'Single manufacturer PO preview generated',
+    data,
+  });
+});
+
 module.exports = {
   addToCart,
   getCart,
@@ -62,4 +84,6 @@ module.exports = {
   confirmCart,
   previewPO,
   queryCart,
+  deleteManufacturerCart,
+  previewSingleManufacturerPO,
 };

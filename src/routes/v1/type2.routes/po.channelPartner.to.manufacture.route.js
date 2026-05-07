@@ -62,4 +62,6 @@ router.patch(
   cpToManufacturerPOController.updatePOItems
 );
 
+router.post('/create-single', auth('channelPartner'), cpToManufacturerPOController.createSingleManufacturerPO);
+
 module.exports = router;

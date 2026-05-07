@@ -10,73 +10,8 @@ const queryCart = async (filter, options) => {
   return cart;
 };
 
-// const addToCart = async (body) => {
-//   const {
-//     cpEmail,
-//     shopkeeperEmail,
-//     manufacturerEmail,
-//     manufacturerName,
-//     items, // 🔥 array now
-//   } = body;
-
-//   if (!items || !Array.isArray(items) || items.length === 0) {
-//     throw new ApiError(httpStatus.BAD_REQUEST, 'Items array is required');
-//   }
-
-//   let cart = await CpCart.findOne({ cpEmail, shopkeeperEmail, isDeleted: false });
-
-//   // 👉 create cart if not exist
-//   if (!cart) {
-//     cart = await CpCart.create({
-//       cpEmail,
-//       shopkeeperEmail,
-//       manufacturers: [],
-//     });
-//   }
-
-//   // 👉 find manufacturer
-//   let manufacturer = cart.manufacturers.find(
-//     (m) => m.manufacturerEmail === manufacturerEmail
-//   );
-
-//   if (!manufacturer) {
-//     manufacturer = {
-//       manufacturerEmail,
-//       manufacturerName,
-//       items: [],
-//     };
-//     cart.manufacturers.push(manufacturer);
-//   }
-
-//   /**
-//    * 🔥 LOOP MULTIPLE ITEMS
-//    */
-//   items.forEach((item) => {
-//     const existing = manufacturer.items.find(
-//       (i) =>
-//         i.designNumber === item.designNumber &&
-//         i.colour === item.colour &&
-//         i.size === item.size
-//     );
-
-//     if (existing) {
-//       existing.quantity += item.quantity;
-//     } else {
-//       manufacturer.items.push(item);
-//     }
-//   });
-
-//   await cart.save();
-//   return cart;
-// };
 const addToCart = async (body) => {
-  const {
-    cpEmail,
-    shopkeeperEmail,
-    manufacturerEmail,
-    manufacturerName,
-    items,
-  } = body;
+  const { cpEmail, shopkeeperEmail, manufacturerEmail, manufacturerName, items } = body;
 
   if (!items || !Array.isArray(items) || items.length === 0) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Items array is required');
@@ -94,9 +29,7 @@ const addToCart = async (body) => {
   }
 
   // ✅ Find manufacturer index
-  let manufacturerIndex = cart.manufacturers.findIndex(
-    (m) => m.manufacturerEmail === manufacturerEmail
-  );
+  let manufacturerIndex = cart.manufacturers.findIndex((m) => m.manufacturerEmail === manufacturerEmail);
 
   // ✅ If NOT found → PUSH then GET reference
   if (manufacturerIndex === -1) {
@@ -117,10 +50,7 @@ const addToCart = async (body) => {
    */
   items.forEach((item) => {
     const existingIndex = manufacturer.items.findIndex(
-      (i) =>
-        i.designNumber === item.designNumber &&
-        i.colour === item.colour &&
-        i.size === item.size
+      (i) => i.designNumber === item.designNumber && i.colour === item.colour && i.size === item.size
     );
 
     if (existingIndex > -1) {
@@ -471,6 +401,117 @@ const previewPO = async (cartId) => {
   return previewList;
 };
 
+const deleteManufacturerCart = async (body) => {
+  const { cartId, manufacturerEmail } = body;
+
+  if (!cartId || !manufacturerEmail) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'cartId and manufacturerEmail required');
+  }
+
+  const cart = await CpCart.findById(cartId);
+
+  if (!cart) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Cart not found');
+  }
+
+  const manufacturerExists = cart.manufacturers.find((m) => m.manufacturerEmail === manufacturerEmail);
+
+  if (!manufacturerExists) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Manufacturer not found in cart');
+  }
+
+  // 🔥 REMOVE COMPLETE MANUFACTURER
+  cart.manufacturers = cart.manufacturers.filter((m) => m.manufacturerEmail !== manufacturerEmail);
+
+  // 🔥 IMPORTANT: mark modified
+  cart.markModified('manufacturers');
+
+  await cart.save();
+
+  return cart;
+};
+
+const previewSingleManufacturerPO = async (cartId, manufacturerEmail) => {
+  const cart = await CpCart.findById(cartId);
+
+  if (!cart) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Cart not found');
+  }
+
+  const m = cart.manufacturers.find((m) => m.manufacturerEmail === manufacturerEmail);
+
+  if (!m) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Manufacturer not found in cart');
+  }
+
+  // 🔹 USERS
+  const cp = await ChannelPartner.findOne({ email: cart.cpEmail });
+  const shopkeeper = await ChannelPartnerCustomer.findOne({
+    email: cart.shopkeeperEmail,
+  });
+  const manufacturer = await Manufacture.findOne({
+    email: manufacturerEmail,
+  });
+
+  if (!cp) throw new ApiError(404, 'Channel Partner not found');
+  if (!shopkeeper) throw new ApiError(404, 'Shopkeeper not found');
+  if (!manufacturer) throw new ApiError(404, 'Manufacturer not found');
+
+  let totalQty = 0;
+  let totalAmount = 0;
+
+  const items = m.items.map((item) => {
+    const total = item.quantity * item.price;
+
+    totalQty += item.quantity;
+    totalAmount += total;
+
+    return {
+      ...item.toObject(),
+      total,
+      confirmed: false,
+      rejected: false,
+      deliveredQty: 0,
+      status: 'pending',
+    };
+  });
+
+  // 🔥 DISCOUNT
+  let finalAmount = totalAmount;
+
+  if (m.discount) {
+    if (m.discountType === 'percentage') {
+      finalAmount = totalAmount - (totalAmount * m.discount) / 100;
+    } else {
+      finalAmount = totalAmount - m.discount;
+    }
+  }
+
+  if (finalAmount < 0) finalAmount = 0;
+
+  return {
+    poNumber: `PREVIEW-${Date.now()}`,
+    cartId: cart._id,
+
+    cpEmail: cp.email,
+    shopKeeperEmail: shopkeeper.email,
+    manufacturerEmail: manufacturer.email,
+
+    cp,
+    shopkeeper,
+    manufacturer,
+
+    items,
+    totalQty,
+    totalAmount,
+    discount: m.discount || 0,
+    finalAmount,
+
+    statusAll: 'preview',
+    poDate: new Date(),
+  };
+};
+
 module.exports = {
   addToCart,
   getCart,
@@ -481,4 +522,6 @@ module.exports = {
   confirmCart,
   previewPO,
   queryCart,
+  deleteManufacturerCart,
+  previewSingleManufacturerPO,
 };

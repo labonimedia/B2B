@@ -16,4 +16,11 @@ router.delete('/item', auth('channelPartner'), cpCartController.deleteItem);
 router.post('/discount', auth('channelPartner'), cpCartController.applyDiscount);
 router.post('/confirm/:cartId', auth('channelPartner'), cpCartController.confirmCart);
 router.post('/preview-po/:cartId', auth('channelPartner'), cpCartController.previewPO);
+router.delete('/single-manufacturer-cart', auth('channelPartner'), cpCartController.deleteManufacturerCart);
+router.post(
+  '/preview-po-single/:cartId/:manufacturerEmail',
+  auth('channelPartner'),
+  cpCartController.previewSingleManufacturerPO
+);
+
 module.exports = router;
