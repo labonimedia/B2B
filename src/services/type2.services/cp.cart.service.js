@@ -3,8 +3,13 @@ const ApiError = require('../../utils/ApiError');
 const { CpCart, Manufacture, ChannelPartner, ChannelPartnerCustomer } = require('../../models');
 
 /**
- * ADD TO CART
+ * QUERY CART
  */
+const queryCart = async (filter, options) => {
+  const cart = await CpCart.paginate(filter, options);
+  return cart;
+};
+
 const addToCart = async (body) => {
   const {
     cpEmail,
@@ -403,4 +408,5 @@ module.exports = {
   applyCartDiscount,
   confirmCart,
   previewPO,
+  queryCart,
 };

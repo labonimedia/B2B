@@ -1,6 +1,7 @@
 const httpStatus = require('http-status');
 const catchAsync = require('../../utils/catchAsync');
 const { cpCartService } = require('../../services');
+const pick = require('../../utils/pick');
 
 const addToCart = catchAsync(async (req, res) => {
   const data = await cpCartService.addToCart(req.body);
@@ -45,6 +46,13 @@ const previewPO = catchAsync(async (req, res) => {
   });
 });
 
+const queryCart = catchAsync(async (req, res) => {
+  const filter = pick(req.query, ['cpEmail', 'shopkeeperEmail', 'status', 'isDeleted']);
+  const options = pick(req.query, ['sortBy', 'limit', 'page']);
+  const result = await cpCartService.queryCart(filter, options);
+  res.send(result);
+});
+
 module.exports = {
   addToCart,
   getCart,
@@ -53,4 +61,5 @@ module.exports = {
   applyDiscount,
   confirmCart,
   previewPO,
+  queryCart,
 };
