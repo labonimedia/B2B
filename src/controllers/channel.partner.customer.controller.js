@@ -64,11 +64,7 @@ const deleteShopKeeper = catchAsync(async (req, res) => {
 const searchShopKeepers = catchAsync(async (req, res) => {
   const { filter = {}, options = {}, search } = req.body;
 
-  const data = await channelPartnerCustomerService.searchShopKeepers(
-    filter,
-    options,
-    search
-  );
+  const data = await channelPartnerCustomerService.searchShopKeepers(filter, options, search);
 
   res.status(200).send({
     status: 'success',
