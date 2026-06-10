@@ -158,6 +158,13 @@ const wholesalerProductAssignmentRoute = require('./type2.routes/wholesaler.prod
 const cpCartRoute = require('./type2.routes/cp.cart.route');
 const cpWishlistRoute = require('./type2.routes/cp.wishlist.route');
 const POChannelPartnerToManufactureRoute = require('./type2.routes/po.channelPartner.to.manufacture.route');
+// new saree master
+const weaveMethodRoute = require('./weave.method.route');
+const embroideryTypesRoute = require('./embroidery.types.route');
+const printDesignRoute = require('./print.design.route');
+const dyeingDesignRoute = require('./dyeing.design.route');
+const surfaceEmbellishmentRoute = require('./surface.embellishment.route');
+const patchworkDesignRoute = require('./patchwork.design.route');
 
 const router = express.Router();
 
@@ -233,6 +240,30 @@ const defaultRoutes = [
   {
     path: '/socks-style',
     route: socksStyleRoute,
+  },
+  {
+    path: '/weavemethod',
+    route: weaveMethodRoute,
+  },
+  {
+    path: '/embroiderytypes',
+    route: embroideryTypesRoute,
+  },
+  {
+    path: '/printdesign',
+    route: printDesignRoute,
+  },
+  {
+    path: '/dyeingdesigns',
+    route: dyeingDesignRoute,
+  },
+  {
+    path: '/surfaceembellishments',
+    route: surfaceEmbellishmentRoute,
+  },
+  {
+    path: '/patchworkdesigns',
+    route: patchworkDesignRoute,
   },
   {
     path: '/products',

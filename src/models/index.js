@@ -182,3 +182,10 @@ module.exports.CpCart = require('./type2.models/cp.cart.model');
 // channel partner customer order
 module.exports.PoCpToManufacturer = require('./type2.models/po.channelPartner.to.manufacture.model');
 module.exports.PoCounterCpToMfg = require('./type2.models/po.cp.to.man.counter.model');
+// saree master
+module.exports.WeaveMethod = require('./weaveMethod.model');
+module.exports.EmbroideryTypes = require('./embroideryTypes.model');
+module.exports.PrintDesign = require('./printDesign.model');
+module.exports.DyeingDesign = require('./dyeingDesign.model');
+module.exports.SurfaceEmbellishment = require('./surfaceEmbellishment.model');
+module.exports.PatchworkDesign = require('./patchworkDesign.model');

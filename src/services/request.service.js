@@ -99,7 +99,7 @@ const acceptRequest = async (requestId, requestByEmail, requestToEmail, status) 
     }
 
     // 🔹 Receiver (ALL MODULES)
-    let receiver =
+    const receiver =
       (await User.findOne({ email: requestToEmail })) ||
       (await Manufacture.findOne({ email: requestToEmail })) ||
       (await Wholesaler.findOne({ email: requestToEmail })) ||
@@ -129,9 +129,7 @@ const acceptRequest = async (requestId, requestByEmail, requestToEmail, status) 
     const receiverManufacturer = await Manufacture.findOne({ email: requestToEmail });
 
     if (senderCP && receiverManufacturer) {
-      const alreadyLinked = senderCP.linkedManufacturers.find(
-        (m) => m.manufacturerEmail === requestToEmail
-      );
+      const alreadyLinked = senderCP.linkedManufacturers.find((m) => m.manufacturerEmail === requestToEmail);
 
       if (!alreadyLinked) {
         senderCP.linkedManufacturers.push({
@@ -149,9 +147,7 @@ const acceptRequest = async (requestId, requestByEmail, requestToEmail, status) 
     const senderManufacturer = await Manufacture.findOne({ email: requestByEmail });
 
     if (receiverCP && senderManufacturer) {
-      const alreadyLinked = receiverCP.linkedManufacturers.find(
-        (m) => m.manufacturerEmail === requestByEmail
-      );
+      const alreadyLinked = receiverCP.linkedManufacturers.find((m) => m.manufacturerEmail === requestByEmail);
 
       if (!alreadyLinked) {
         receiverCP.linkedManufacturers.push({

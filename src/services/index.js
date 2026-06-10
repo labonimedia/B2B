@@ -169,3 +169,10 @@ module.exports.wholesalerProductAssignmentService = require('./type2.services/wh
 module.exports.cpCartService = require('./type2.services/cp.cart.service');
 module.exports.cpWishlistService = require('./type2.services/cp.wishlist.service');
 module.exports.cpToManufacturerPOService = require('./type2.services/po.channelPartner.to.manufacture.service');
+// new saree master
+module.exports.weaveMethodService = require('./weaveMethod.service');
+module.exports.embroideryTypesService = require('./embroideryTypes.service');
+module.exports.printDesignService = require('./printDesign.service');
+module.exports.dyeingDesignService = require('./dyeingDesign.service');
+module.exports.surfaceEmbellishmentService = require('./surfaceEmbellishment.service');
+module.exports.patchworkDesignService = require('./patchworkDesign.service');

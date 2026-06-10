@@ -165,3 +165,10 @@ module.exports.wholesalerProductAssignmentController = require('./type2.controll
 module.exports.cpCartController = require('./type2.controller/cp.cart.controller');
 module.exports.cpWishlistController = require('./type2.controller/cp.wishlist.controller');
 module.exports.cpToManufacturerPOController = require('./type2.controller/po.channelPartner.to.manufacture.controller');
+// new saree master
+module.exports.weaveMethodController = require('./weaveMethod.controller');
+module.exports.embroideryTypesController = require('./embroideryTypes.controller');
+module.exports.printDesignController = require('./printDesign.controller');
+module.exports.dyeingDesignController = require('./dyeingDesign.controller');
+module.exports.surfaceEmbellishmentController = require('./surfaceEmbellishment.controller');
+module.exports.patchworkDesignController = require('./patchworkDesign.controller');
