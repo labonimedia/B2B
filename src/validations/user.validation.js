@@ -8,9 +8,23 @@ const createUser = {
     name: Joi.string().required(),
     userCategory: Joi.string(),
     referralCode: Joi.string(),
-    role: Joi.string()
-      .required()
-      .valid('superadmin', 'manufacture', 'wholesaler', 'retailer', 'channelPartner', 'shopKeeper'),
+    role: Joi.string().required().valid(
+      'superadmin',
+      'manufacture',
+      'wholesaler',
+      'retailer',
+      'channelPartner',
+      'shopKeeper',
+      'masteradmin',
+      'sales',
+
+      // ✅ Staff Roles
+      'rawMaterialManager',
+      'finishedGoodsManager',
+      'productManager',
+      'orderManager'
+    ),
+    createdBy: Joi.string().optional(),
   }),
 };
 
@@ -19,6 +33,7 @@ const getUsers = {
     name: Joi.string(),
     role: Joi.string(),
     refByEmail: Joi.string(),
+    createdBy: Joi.string(),
     sortBy: Joi.string(),
     limit: Joi.number().integer(),
     page: Joi.number().integer(),
