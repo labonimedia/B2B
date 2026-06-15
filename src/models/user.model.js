@@ -1,3 +1,143 @@
+// const mongoose = require('mongoose');
+// const validator = require('validator');
+// const bcrypt = require('bcryptjs');
+// const { toJSON, paginate } = require('./plugins');
+
+// const userSchema = mongoose.Schema(
+//   {
+//     userCategory: {
+//       type: String,
+//       // required: true,
+//       default: 'orderwise',
+//       enum: ['setwise', 'orderwise'],
+//     },
+//     subscriptionId: {
+//       type: mongoose.Schema.Types.ObjectId,
+//       ref: 'Subscription',
+//     },
+//     products: [
+//       {
+//         type: mongoose.Schema.Types.ObjectId,
+//         ref: 'Product',
+//       },
+//     ],
+//     fullName: {
+//       type: String,
+//       required: true,
+//       trim: true,
+//     },
+//     companyName: {
+//       type: String,
+//     },
+//     email: {
+//       type: String,
+//       required: true,
+//       unique: true,
+//       trim: true,
+//       lowercase: true,
+//       validate(value) {
+//         if (!validator.isEmail(value)) {
+//           throw new Error('Invalid email');
+//         }
+//       },
+//     },
+//     password: {
+//       type: String,
+//       trim: true,
+//       minlength: 8,
+//       validate(value) {
+//         if (!value.match(/\d/) || !value.match(/[a-zA-Z]/)) {
+//           throw new Error('Password must contain at least one letter and one number');
+//         }
+//       },
+//       private: true,
+//     },
+//     role: {
+//       type: String,
+//       enum: ['superadmin', 'manufacture', 'wholesaler', 'retailer', 'channelPartner', 'shopKeeper', 'masteradmin', 'sales'],
+//       default: 'user',
+//     },
+//     code: {
+//       type: String,
+//     },
+//     contryCode: {
+//       type: String,
+//     },
+//     mobileNumber: {
+//       type: String,
+//       required: true,
+//       unique: true,
+//       validate(value) {
+//         // Custom regex to accept exactly 10 digits starting from 0 to 9
+//         if (!/^[0-9]{10}$/.test(value)) {
+//           throw new Error('Invalid mobile number');
+//         }
+//       },
+//     },
+//     isEmailVerified: {
+//       type: Boolean,
+//       default: false,
+//     },
+//     refByEmail: [
+//       {
+//         type: String,
+//       },
+//     ],
+//     blackListed: [{ type: String }],
+//     referralCode: {
+//       type: String,
+//     },
+//     createdBy: {
+//       type: String, // storing manufacturer email
+//       trim: true,
+//       index: true,
+//     },
+//   },
+//   {
+//     timestamps: true,
+//   }
+// );
+
+// // add plugin that converts mongoose to json
+// userSchema.plugin(toJSON);
+// userSchema.plugin(paginate);
+
+// /**
+//  * Check if email is taken
+//  * @param {string} email - The user's email
+//  * @param {ObjectId} [excludeUserId] - The id of the user to be excluded
+//  * @returns {Promise<boolean>}
+//  */
+// userSchema.statics.isEmailTaken = async function (email, excludeUserId) {
+//   const user = await this.findOne({ email, _id: { $ne: excludeUserId } });
+//   return !!user;
+// };
+
+// /**
+//  * Check if password matches the user's password
+//  * @param {string} password
+//  * @returns {Promise<boolean>}
+//  */
+// userSchema.methods.isPasswordMatch = async function (password) {
+//   const user = this;
+//   return bcrypt.compare(password, user.password);
+// };
+
+// userSchema.pre('save', async function (next) {
+//   const user = this;
+//   if (user.isModified('password')) {
+//     user.password = await bcrypt.hash(user.password, 8);
+//   }
+//   next();
+// });
+// userSchema.index({ refByEmail: 1 });
+// /**
+//  * @typedef User
+//  */
+// const User = mongoose.model('User', userSchema);
+
+// module.exports = User;
+
 const mongoose = require('mongoose');
 const validator = require('validator');
 const bcrypt = require('bcryptjs');
@@ -7,28 +147,32 @@ const userSchema = mongoose.Schema(
   {
     userCategory: {
       type: String,
-      // required: true,
       default: 'orderwise',
       enum: ['setwise', 'orderwise'],
     },
+
     subscriptionId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Subscription',
     },
+
     products: [
       {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Product',
       },
     ],
+
     fullName: {
       type: String,
       required: true,
       trim: true,
     },
+
     companyName: {
       type: String,
     },
+
     email: {
       type: String,
       required: true,
@@ -41,6 +185,7 @@ const userSchema = mongoose.Schema(
         }
       },
     },
+
     password: {
       type: String,
       trim: true,
@@ -52,38 +197,68 @@ const userSchema = mongoose.Schema(
       },
       private: true,
     },
+
+    // 🔥 UPDATED ROLE ENUM
     role: {
       type: String,
-      enum: ['superadmin', 'manufacture', 'wholesaler', 'retailer', 'channelPartner', 'shopKeeper', 'masteradmin', 'sales'],
-      default: 'user',
+      enum: [
+        'superadmin',
+        'manufacture',
+        'wholesaler',
+        'retailer',
+        'channelPartner',
+        'shopKeeper',
+        'masteradmin',
+        'sales',
+
+        // ✅ Staff Roles
+        'rawMaterialManager',
+        'finishedGoodsManager',
+        'productManager',
+        'orderManager'
+      ],
+      default: 'retailer',
     },
+
+    // ✅ NEW (Optional - Email Based)
+    createdBy: {
+      type: String, // manufacturer email
+      trim: true,
+      index: true,
+    },
+
     code: {
       type: String,
     },
+
     contryCode: {
       type: String,
     },
+
     mobileNumber: {
       type: String,
       required: true,
       unique: true,
       validate(value) {
-        // Custom regex to accept exactly 10 digits starting from 0 to 9
         if (!/^[0-9]{10}$/.test(value)) {
           throw new Error('Invalid mobile number');
         }
       },
     },
+
     isEmailVerified: {
       type: Boolean,
       default: false,
     },
+
     refByEmail: [
       {
         type: String,
       },
     ],
+
     blackListed: [{ type: String }],
+
     referralCode: {
       type: String,
     },
@@ -93,42 +268,32 @@ const userSchema = mongoose.Schema(
   }
 );
 
-// add plugin that converts mongoose to json
+// plugins
 userSchema.plugin(toJSON);
 userSchema.plugin(paginate);
 
-/**
- * Check if email is taken
- * @param {string} email - The user's email
- * @param {ObjectId} [excludeUserId] - The id of the user to be excluded
- * @returns {Promise<boolean>}
- */
+// check email taken
 userSchema.statics.isEmailTaken = async function (email, excludeUserId) {
   const user = await this.findOne({ email, _id: { $ne: excludeUserId } });
   return !!user;
 };
 
-/**
- * Check if password matches the user's password
- * @param {string} password
- * @returns {Promise<boolean>}
- */
+// password match
 userSchema.methods.isPasswordMatch = async function (password) {
-  const user = this;
-  return bcrypt.compare(password, user.password);
+  return bcrypt.compare(password, this.password);
 };
 
+// hash password
 userSchema.pre('save', async function (next) {
-  const user = this;
-  if (user.isModified('password')) {
-    user.password = await bcrypt.hash(user.password, 8);
+  if (this.isModified('password')) {
+    this.password = await bcrypt.hash(this.password, 8);
   }
   next();
 });
+
+// index
 userSchema.index({ refByEmail: 1 });
-/**
- * @typedef User
- */
+
 const User = mongoose.model('User', userSchema);
 
 module.exports = User;
