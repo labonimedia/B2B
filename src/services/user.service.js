@@ -241,6 +241,47 @@ const queryUsers = async (filter, options) => {
   return users;
 };
 
+// /**
+//  * Get user by id
+//  * @param {ObjectId} id
+//  * @returns {Promise<User>}
+//  */
+// const getUserById = async (id) => {
+//   const user = await User.findById(id);
+//   if (!user) {
+//     throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+//   }
+//   let profile;
+//   switch (user.role) {
+//     case 'wholesaler': {
+//       const wholesaler = await Wholesaler.findOne({ email: user.email });
+//       profile = wholesaler ? wholesaler.profileImg : null;
+//       break;
+//     }
+//     case 'manufacture': {
+//       const manufacturer = await Manufacture.findOne({ email: user.email });
+//       profile = manufacturer ? manufacturer.profileImg : null;
+//       break;
+//     }
+//     case 'retailer': {
+//       const retailer = await Retailer.findOne({ email: user.email });
+//       profile = retailer ? retailer.profileImg : null;
+//       break;
+//     }
+//     case 'channelPartner': {
+//       const cp = await ChannelPartner.findOne({ email: user.email });
+//       profile = cp ? cp.profileImg : null;
+//       break;
+//     }
+
+//     default: {
+//       profile = null;
+//       break;
+//     }
+//   }
+
+//   return { ...user.toObject(), profile };
+// };
 /**
  * Get user by id
  * @param {ObjectId} id
@@ -248,26 +289,32 @@ const queryUsers = async (filter, options) => {
  */
 const getUserById = async (id) => {
   const user = await User.findById(id);
+
   if (!user) {
     throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
   }
+
   let profile;
+
   switch (user.role) {
     case 'wholesaler': {
       const wholesaler = await Wholesaler.findOne({ email: user.email });
       profile = wholesaler ? wholesaler.profileImg : null;
       break;
     }
+
     case 'manufacture': {
       const manufacturer = await Manufacture.findOne({ email: user.email });
       profile = manufacturer ? manufacturer.profileImg : null;
       break;
     }
+
     case 'retailer': {
       const retailer = await Retailer.findOne({ email: user.email });
       profile = retailer ? retailer.profileImg : null;
       break;
     }
+
     case 'channelPartner': {
       const cp = await ChannelPartner.findOne({ email: user.email });
       profile = cp ? cp.profileImg : null;
@@ -280,7 +327,29 @@ const getUserById = async (id) => {
     }
   }
 
-  return { ...user.toObject(), profile };
+  const userObj = user.toObject();
+
+  // If user is created by a manufacturer
+  if (userObj.createdBy) {
+    return {
+      ...userObj,
+
+      // Frontend display values
+      role: 'manufacture',
+      email: userObj.createdBy,
+
+      // Actual user values
+      actualRole: userObj.role,
+      actualEmail: userObj.email,
+
+      profile,
+    };
+  }
+
+  return {
+    ...userObj,
+    profile,
+  };
 };
 /**
  * Get user by email
