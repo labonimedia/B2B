@@ -20,6 +20,7 @@ const { tokenTypes } = require('../config/tokens');
 //   return user;
 // };
 // 
+
 const loginUserWithEmailAndPassword = async (email, password) => {
   const user = await userService.getUserByEmail(email);
 
@@ -27,28 +28,7 @@ const loginUserWithEmailAndPassword = async (email, password) => {
     throw new ApiError(httpStatus.UNAUTHORIZED, 'Incorrect email or password');
   }
 
-  const userObj = user.toObject();
-
-  const { _id, __v, ...rest } = userObj;
-
-  if (userObj.createdBy) {
-    return {
-      id: _id,
-
-      ...rest,
-
-      role: 'manufacture',
-      email: userObj.createdBy,
-
-      actualRole: userObj.role,
-      actualEmail: userObj.email,
-    };
-  }
-
-  return {
-    id: _id,
-    ...rest,
-  };
+  return user;
 };
 /**
  * Logout

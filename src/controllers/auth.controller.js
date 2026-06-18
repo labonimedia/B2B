@@ -8,13 +8,49 @@ const register = catchAsync(async (req, res) => {
   res.status(httpStatus.CREATED).send({ user, tokens });
 });
 
+// const login = catchAsync(async (req, res) => {
+//   const { email, password } = req.body;
+//   const user = await authService.loginUserWithEmailAndPassword(email, password);
+//   const tokens = await tokenService.generateAuthTokens(user);
+//   res.send({ user, tokens });
+// });
 const login = catchAsync(async (req, res) => {
   const { email, password } = req.body;
-  const user = await authService.loginUserWithEmailAndPassword(email, password);
-  const tokens = await tokenService.generateAuthTokens(user);
-  res.send({ user, tokens });
-});
 
+  const user = await authService.loginUserWithEmailAndPassword(
+    email,
+    password
+  );
+
+  const tokens = await tokenService.generateAuthTokens(user);
+
+  const userObj = user.toObject();
+
+  const { _id, __v, ...rest } = userObj;
+
+  let responseUser = {
+    id: _id,
+    ...rest,
+  };
+
+  if (userObj.createdBy) {
+    responseUser = {
+      id: _id,
+      ...rest,
+
+      role: 'manufacture',
+      email: userObj.createdBy,
+
+      actualRole: userObj.role,
+      actualEmail: userObj.email,
+    };
+  }
+
+  res.send({
+    user: responseUser,
+    tokens,
+  });
+});
 const logout = catchAsync(async (req, res) => {
   await authService.logout(req.body.refreshToken);
   res.status(httpStatus.NO_CONTENT).send();
