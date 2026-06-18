@@ -19,6 +19,7 @@ const { tokenTypes } = require('../config/tokens');
 //   }
 //   return user;
 // };
+// 
 const loginUserWithEmailAndPassword = async (email, password) => {
   const user = await userService.getUserByEmail(email);
 
@@ -28,9 +29,13 @@ const loginUserWithEmailAndPassword = async (email, password) => {
 
   const userObj = user.toObject();
 
+  const { _id, __v, ...rest } = userObj;
+
   if (userObj.createdBy) {
     return {
-      ...userObj,
+      id: _id,
+
+      ...rest,
 
       role: 'manufacture',
       email: userObj.createdBy,
@@ -40,7 +45,10 @@ const loginUserWithEmailAndPassword = async (email, password) => {
     };
   }
 
-  return userObj;
+  return {
+    id: _id,
+    ...rest,
+  };
 };
 /**
  * Logout
