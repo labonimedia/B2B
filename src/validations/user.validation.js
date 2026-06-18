@@ -8,7 +8,7 @@ const createUser = {
     fullName: Joi.string().required(),
     userCategory: Joi.string(),
     referralCode: Joi.string(),
-    mobileNumber : Joi.string(),
+    mobileNumber: Joi.string(),
     role: Joi.string().required().valid(
       'superadmin',
       'manufacture',
@@ -18,7 +18,6 @@ const createUser = {
       'shopKeeper',
       'masteradmin',
       'sales',
-
       // ✅ Staff Roles
       'rawMaterialManager',
       'finishedGoodsManager',
