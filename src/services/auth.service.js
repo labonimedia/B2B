@@ -12,14 +12,36 @@ const { tokenTypes } = require('../config/tokens');
  * @param {string} password
  * @returns {Promise<User>}
  */
+// const loginUserWithEmailAndPassword = async (email, password) => {
+//   const user = await userService.getUserByEmail(email);
+//   if (!user || !(await user.isPasswordMatch(password))) {
+//     throw new ApiError(httpStatus.UNAUTHORIZED, 'Incorrect email or password');
+//   }
+//   return user;
+// };
 const loginUserWithEmailAndPassword = async (email, password) => {
   const user = await userService.getUserByEmail(email);
+
   if (!user || !(await user.isPasswordMatch(password))) {
     throw new ApiError(httpStatus.UNAUTHORIZED, 'Incorrect email or password');
   }
-  return user;
-};
 
+  const userObj = user.toObject();
+
+  if (userObj.createdBy) {
+    return {
+      ...userObj,
+
+      role: 'manufacture',
+      email: userObj.createdBy,
+
+      actualRole: userObj.role,
+      actualEmail: userObj.email,
+    };
+  }
+
+  return userObj;
+};
 /**
  * Logout
  * @param {string} refreshToken
