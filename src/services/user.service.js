@@ -427,20 +427,30 @@ const updateUserByEmail = async (email, updateBody) => {
   return user;
 };
 
-/**
- * Delete user by id
- * @param {ObjectId} userId
- * @returns {Promise<User>}
- */
+// /**
+//  * Delete user by id
+//  * @param {ObjectId} userId
+//  * @returns {Promise<User>}
+//  */
+// const deleteUserById = async (userId) => {
+//   const user = await getUserById(userId);
+//   if (!user) {
+//     throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+//   }
+//   await user.remove();
+//   return user;
+// };
 const deleteUserById = async (userId) => {
-  const user = await getUserById(userId);
+  const user = await User.findById(userId);
+
   if (!user) {
     throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
   }
-  await user.remove();
+
+  await User.findByIdAndDelete(userId);
+
   return user;
 };
-
 const deleteUserByEmail = async (email) => {
   const user = await User.findOne({ email });
   if (!user) {
