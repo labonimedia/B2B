@@ -176,3 +176,4 @@ module.exports.printDesignService = require('./printDesign.service');
 module.exports.dyeingDesignService = require('./dyeingDesign.service');
 module.exports.surfaceEmbellishmentService = require('./surfaceEmbellishment.service');
 module.exports.patchworkDesignService = require('./patchworkDesign.service');
+module.exports.paymentService = require('./payment.service');

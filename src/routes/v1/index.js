@@ -165,6 +165,7 @@ const printDesignRoute = require('./print.design.route');
 const dyeingDesignRoute = require('./dyeing.design.route');
 const surfaceEmbellishmentRoute = require('./surface.embellishment.route');
 const patchworkDesignRoute = require('./patchwork.design.route');
+const paymentRoute = require('./payment.route');
 
 const router = express.Router();
 
@@ -772,6 +773,10 @@ const defaultRoutes = [
   {
     path: '/cp-wishlist',
     route: cpWishlistRoute,
+  },
+  {
+    path: '/payments',
+    route: paymentRoute,
   },
 ];
 

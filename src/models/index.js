@@ -189,3 +189,4 @@ module.exports.PrintDesign = require('./printDesign.model');
 module.exports.DyeingDesign = require('./dyeingDesign.model');
 module.exports.SurfaceEmbellishment = require('./surfaceEmbellishment.model');
 module.exports.PatchworkDesign = require('./patchWorkDesign.model');
+module.exports.Payment = require('./payment.model');
