@@ -80,8 +80,7 @@ const entitytypeRoute = require('./entity.type.route');
 const sizeSetRoute = require('./size.set.route');
 const layerCompressionRoute = require('./layer.compression.route');
 const waistBandRoute = require('./waistband.route');
-const subscriptionRoute = require('./subsription.route');
-const subscriptionPlanRoute = require('./subscription.plan.route');
+const subscriptionPlanRoute = require('./type2.routes/subcription.plan.route');
 const genderRoute = require('./gender.route');
 const countryCodeRoute = require('./country.code.route');
 const newCountryRoute = require('./new.country.route');
@@ -512,10 +511,10 @@ const defaultRoutes = [
     path: '/waistband',
     route: waistBandRoute,
   },
-  {
-    path: '/subscription',
-    route: subscriptionRoute,
-  },
+  // {
+  //   path: '/subscription',
+  //   route: subscriptionRoute,
+  // },
   {
     path: '/subscription-plan',
     route: subscriptionPlanRoute,
