@@ -215,7 +215,7 @@ const userSchema = mongoose.Schema(
         'rawMaterialManager',
         'finishedGoodsManager',
         'productManager',
-        'orderManager'
+        'orderManager',
       ],
       default: 'retailer',
     },
@@ -261,6 +261,25 @@ const userSchema = mongoose.Schema(
 
     referralCode: {
       type: String,
+    },
+    subscriptionId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'SubscriptionPlan',
+    },
+
+    subscriptionStatus: {
+      type: String,
+      enum: ['active', 'expired', 'cancelled'],
+      default: 'expired',
+    },
+
+    subscriptionStartDate: Date,
+
+    subscriptionExpiryDate: Date,
+
+    lastPaymentId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Payment',
     },
   },
   {

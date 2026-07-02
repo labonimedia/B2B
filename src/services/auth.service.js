@@ -19,7 +19,7 @@ const { tokenTypes } = require('../config/tokens');
 //   }
 //   return user;
 // };
-// 
+//
 
 const loginUserWithEmailAndPassword = async (email, password) => {
   const user = await userService.getUserByEmail(email);
