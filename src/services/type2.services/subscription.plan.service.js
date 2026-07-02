@@ -2,7 +2,6 @@ const httpStatus = require('http-status');
 const { SubscriptionPlan } = require('../../models');
 const ApiError = require('../../utils/ApiError');
 
-
 /**
  * Calculate Final Amount
  */
@@ -89,31 +88,13 @@ const updateSubscriptionPlanById = async (subscriptionPlanId, updateBody) => {
   }
 
   // Check duplicate plan name
-  if (
-    updateBody.planName &&
-    (await SubscriptionPlan.isPlanNameTaken(
-      updateBody.planName,
-      subscriptionPlanId
-    ))
-  ) {
-    throw new ApiError(
-      httpStatus.BAD_REQUEST,
-      'Plan Name already exists'
-    );
+  if (updateBody.planName && (await SubscriptionPlan.isPlanNameTaken(updateBody.planName, subscriptionPlanId))) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Plan Name already exists');
   }
 
   // Check duplicate plan code
-  if (
-    updateBody.planCode &&
-    (await SubscriptionPlan.isPlanCodeTaken(
-      updateBody.planCode,
-      subscriptionPlanId
-    ))
-  ) {
-    throw new ApiError(
-      httpStatus.BAD_REQUEST,
-      'Plan Code already exists'
-    );
+  if (updateBody.planCode && (await SubscriptionPlan.isPlanCodeTaken(updateBody.planCode, subscriptionPlanId))) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Plan Code already exists');
   }
 
   // Merge updated values
@@ -136,17 +117,11 @@ const updateSubscriptionPlanById = async (subscriptionPlanId, updateBody) => {
  * @param {ObjectId} subscriptionPlanId
  * @returns {Promise<SubscriptionPlan>}
  */
-const deleteSubscriptionPlanById = async (
-  subscriptionPlanId
-) => {
-  const subscription =
-    await getSubscriptionPlanById(subscriptionPlanId);
+const deleteSubscriptionPlanById = async (subscriptionPlanId) => {
+  const subscription = await getSubscriptionPlanById(subscriptionPlanId);
 
   if (!subscription) {
-    throw new ApiError(
-      httpStatus.NOT_FOUND,
-      'Subscription Plan not found'
-    );
+    throw new ApiError(httpStatus.NOT_FOUND, 'Subscription Plan not found');
   }
 
   subscription.isDeleted = true;
@@ -163,18 +138,11 @@ const deleteSubscriptionPlanById = async (
  * @param {String} status
  * @returns {Promise<SubscriptionPlan>}
  */
-const changeStatus = async (
-  subscriptionPlanId,
-  status
-) => {
-  const subscription =
-    await getSubscriptionPlanById(subscriptionPlanId);
+const changeStatus = async (subscriptionPlanId, status) => {
+  const subscription = await getSubscriptionPlanById(subscriptionPlanId);
 
   if (!subscription) {
-    throw new ApiError(
-      httpStatus.NOT_FOUND,
-      'Subscription Plan not found'
-    );
+    throw new ApiError(httpStatus.NOT_FOUND, 'Subscription Plan not found');
   }
 
   subscription.status = status;

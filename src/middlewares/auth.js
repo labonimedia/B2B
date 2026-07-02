@@ -1,7 +1,7 @@
 const passport = require('passport');
 const httpStatus = require('http-status');
 const ApiError = require('../utils/ApiError');
-const { MANUFACTURER_STAFF_ROLES } = require('../middlewares/roleGroup');
+const { MANUFACTURER_STAFF_ROLES } = require('./roleGroup');
 
 // const verifyCallback = (req, resolve, reject, requiredRights) => async (err, user, info) => {
 //   if (err || info || !user) {

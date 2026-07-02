@@ -109,12 +109,7 @@ const createUser = async (userBody, loggedInUser) => {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Email already taken');
   }
 
-  const staffRoles = [
-    'rawMaterialManager',
-    'finishedGoodsManager',
-    'productManager',
-    'orderManager',
-  ];
+  const staffRoles = ['rawMaterialManager', 'finishedGoodsManager', 'productManager', 'orderManager'];
 
   // =========================
   // STAFF CREATION
@@ -175,10 +170,7 @@ const createUser = async (userBody, loggedInUser) => {
 
     userBody.code = `${prefix}${String(counter.seq).padStart(4, '0')}`;
 
-    const createdUser = await User.create(
-      [userBody],
-      isReplicaSet ? { session } : {}
-    );
+    const createdUser = await User.create([userBody], isReplicaSet ? { session } : {});
 
     const data = {
       fullName: userBody.fullName,
