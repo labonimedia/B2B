@@ -165,6 +165,7 @@ const dyeingDesignRoute = require('./dyeing.design.route');
 const surfaceEmbellishmentRoute = require('./surface.embellishment.route');
 const patchworkDesignRoute = require('./patchwork.design.route');
 const paymentRoute = require('./payment.route');
+const referralCodeMasterRoute = require('./type2.routes/referralCodeMaster.route');
 
 const router = express.Router();
 
@@ -776,6 +777,10 @@ const defaultRoutes = [
   {
     path: '/payments',
     route: paymentRoute,
+  },
+  {
+    path: '/referral-code-master',
+    route: referralCodeMasterRoute
   },
 ];
 

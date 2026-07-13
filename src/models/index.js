@@ -191,3 +191,4 @@ module.exports.SurfaceEmbellishment = require('./surfaceEmbellishment.model');
 module.exports.PatchworkDesign = require('./patchWorkDesign.model');
 module.exports.Payment = require('./payment.model');
 module.exports.SubscriptionPlan = require('./type2.models/subcription.plan.model');
+module.exports.ReferralCodeMaster = require('./type2.models/referralCodeMaster.model');

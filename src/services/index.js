@@ -178,3 +178,4 @@ module.exports.surfaceEmbellishmentService = require('./surfaceEmbellishment.ser
 module.exports.patchworkDesignService = require('./patchworkDesign.service');
 module.exports.paymentService = require('./payment.service');
 module.exports.subscriptionPlanService = require('./type2.services/subscription.plan.service');
+module.exports.referralCodeMasterService = require('./type2.services/referralCodeMaster.service');
