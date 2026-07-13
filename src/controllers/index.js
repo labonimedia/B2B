@@ -173,3 +173,4 @@ module.exports.dyeingDesignController = require('./dyeingDesign.controller');
 module.exports.surfaceEmbellishmentController = require('./surfaceEmbellishment.controller');
 module.exports.patchworkDesignController = require('./patchworkDesign.controller');
 module.exports.paymentController = require('./payment.controller');
+module.exports.referralCodeMasterController = require('./type2.controller/referralCodeMaster.controller');
