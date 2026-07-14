@@ -112,6 +112,11 @@ const subscriptionPlanSchema = new mongoose.Schema(
       default: null,
     },
 
+    role: {
+      type: String,
+      default: null,
+    },
+    
     updatedBy: {
       type: String,
       default: null,
