@@ -69,6 +69,10 @@
 
 // module.exports = { io };
 
+require('dotenv').config();
+
+process.env.TZ = 'Asia/Kolkata';
+
 const mongoose = require('mongoose');
 const socketIo = require('socket.io');
 const http = require('http');
