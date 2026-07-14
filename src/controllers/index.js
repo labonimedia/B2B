@@ -174,3 +174,4 @@ module.exports.surfaceEmbellishmentController = require('./surfaceEmbellishment.
 module.exports.patchworkDesignController = require('./patchworkDesign.controller');
 module.exports.paymentController = require('./payment.controller');
 module.exports.referralCodeMasterController = require('./type2.controller/referralCodeMaster.controller');
+module.exports.referralCodeUsedController = require('./type2.controller/referralCodeUsed.controller');
