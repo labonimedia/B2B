@@ -1,3 +1,5 @@
+process.env.TZ = 'Asia/Kolkata';
+
 const express = require('express');
 const helmet = require('helmet');
 const xss = require('xss-clean');
