@@ -1,5 +1,3 @@
-process.env.TZ = 'Asia/Kolkata';
-
 const express = require('express');
 const helmet = require('helmet');
 const xss = require('xss-clean');
@@ -15,7 +13,7 @@ const { authLimiter } = require('./middlewares/rateLimiter');
 const routes = require('./routes/v1');
 const { errorConverter, errorHandler } = require('./middlewares/error');
 const ApiError = require('./utils/ApiError');
-require('./utils/worker');
+// require('./utils/worker');
 
 const app = express();
 

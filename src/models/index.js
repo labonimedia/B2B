@@ -193,3 +193,35 @@ module.exports.Payment = require('./payment.model');
 module.exports.SubscriptionPlan = require('./type2.models/subcription.plan.model');
 module.exports.ReferralCodeMaster = require('./type2.models/referralCodeMaster.model');
 module.exports.ReferralCodeUsed = require('./type2.models/referralCodeUsed.model');
+// Weaver Manufacture
+module.exports.WeaverManufacture = require('./weaver.manufacturer.model');
+//weaver master models
+module.exports.WeaverAcountMaster = require('./weaver/acount.master.model');
+module.exports.WeaverBookMaster = require('./weaver/book.master.model');
+module.exports.WeaverBrokerMaster = require('./weaver/broker.master.model');
+module.exports.WeaverTransporterMaster = require('./weaver/transporter.master');
+module.exports.WeaverMainGroupMaster = require('./weaver/main.group.master');
+module.exports.WeaverFirmMaster = require('./weaver/firm.master.model');
+module.exports.WeaverCityMaster = require('./weaver/city.master.model');
+module.exports.WeaverFirmChange = require('./weaver/firm.change.model');
+module.exports.WeaverYearChange = require('./weaver/year.change.master');
+
+// item master
+module.exports.WeaverItemMaster = require('./weaver/item.master.model');
+module.exports.WeaverItemGroupMaster = require('./weaver/item.group.master.model');
+module.exports.WeaverItemSubGroupMaster = require('./weaver/item.sub.group.master.model');
+module.exports.WeaverItemTypeMaster = require('./weaver/item.type.master.model');
+module.exports.WeaverItemStockTypeMaster = require('./weaver/item.stock.type.master.model');
+module.exports.WeaverItemColorShadeMaster = require('./weaver/item.color.shade.master.model');
+module.exports.WeaverItemLotDesignMaster = require('./weaver/item.lot.design.master.model');
+module.exports.WeaverItemPackingMaster = require('./weaver/item.packing.master.model');
+module.exports.WeaverItemCopsMaster = require('./weaver/item.cops.master.model');
+
+// jobwork master
+module.exports.WeaverJobworkMaster = require('./weaver/jobwork.master.model');  
+
+
+
+
+
+

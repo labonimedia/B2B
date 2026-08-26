@@ -18,6 +18,7 @@ const createUser = {
       'shopKeeper',
       'masteradmin',
       'sales',
+      'Weaving_Manufacturer',
       // ✅ Staff Roles
       'rawMaterialManager',
       'finishedGoodsManager',

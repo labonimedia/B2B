@@ -167,6 +167,10 @@ const patchworkDesignRoute = require('./patchwork.design.route');
 const paymentRoute = require('./payment.route');
 const referralCodeMasterRoute = require('./type2.routes/referralCodeMaster.route');
 const referralCodeUsedRoute = require('./type2.routes/referralCodeUsed.route');
+// weaver manufacturer route
+const weaverManufacturerRoute = require('./weaver.manufacturer.route');
+// weaver masters route path
+const weaverAcountMasterRoute = require('./weaver/acount.master.route');
 
 const router = express.Router();
 
@@ -786,6 +790,16 @@ const defaultRoutes = [
   {
     path: '/referral-code-used',
     route: referralCodeUsedRoute
+  },
+  // weaver routes path
+  {
+    path: '/weaver-manufacturer',
+    route: weaverManufacturerRoute,
+  },
+  // weaver masters path
+  {
+    path: '/weaver-account-master',
+    route: weaverAcountMasterRoute,
   },
 ];
 
