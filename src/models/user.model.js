@@ -70,6 +70,7 @@ const userSchema = mongoose.Schema(
         'shopKeeper',
         'masteradmin',
         'sales',
+        'Weaving_Manufacturer  ',
 
         // ✅ Staff Roles
         'rawMaterialManager',

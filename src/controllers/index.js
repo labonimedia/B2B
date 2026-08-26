@@ -175,3 +175,8 @@ module.exports.patchworkDesignController = require('./patchworkDesign.controller
 module.exports.paymentController = require('./payment.controller');
 module.exports.referralCodeMasterController = require('./type2.controller/referralCodeMaster.controller');
 module.exports.referralCodeUsedController = require('./type2.controller/referralCodeUsed.controller');
+// weaver manufacturer controller
+module.exports.weaverManufactureController = require('./weaver.manufacturer.controller');
+// weaver master controller
+module.exports.weaverAcountMasterController = require('./weaver/acount.master.controller');
+

@@ -180,3 +180,8 @@ module.exports.paymentService = require('./payment.service');
 module.exports.subscriptionPlanService = require('./type2.services/subscription.plan.service');
 module.exports.referralCodeMasterService = require('./type2.services/referralCodeMaster.service');
 module.exports.referralCodeUsedService = require('./type2.services/referralCodeUsed.service');
+// weaver manufacturer service
+module.exports.weaverManufacturerService = require('./weaver.manufacturer.service');
+// weaver master services
+module.exports.weaverAcountMasterService = require('./weaver/acount.master.service');
+
