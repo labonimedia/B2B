@@ -8,6 +8,28 @@ const masterSchema = mongoose.Schema(
       required: true,
       trim: true,
     },
+    contactNo: {
+      type: String,
+      trim: true,
+    },
+    district: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    address: {
+      type: String,
+      trim: true,
+    },
+    gstNo: {
+      type: String,
+      trim: true,
+      uppercase: true,
+    },
+    city: {
+      type: String,
+      trim: true,
+    },
     weaverId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'WeaverManufacture',
