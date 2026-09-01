@@ -8,6 +8,18 @@ const masterSchema = mongoose.Schema(
       required: true,
       trim: true,
     },
+    remark: {
+      type: String,
+      trim: true,
+    },
+    rate: {
+      type: Number,
+      trim: true,
+    },
+    code: {
+      type: String,
+      trim: true,
+    },
     weaverId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'WeaverManufacture',

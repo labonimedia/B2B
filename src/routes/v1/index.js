@@ -174,7 +174,15 @@ const weaverAcountMasterRoute = require('./weaver/acount.master.route');
 const weaverItemGroupMasterRoute = require('./weaver/item.group.master.route');
 const weaverBrokerMasterRoute = require('./weaver/broker.master.route');
 const weaverTransporterMasterRoute = require('./weaver/transporter.master.route');
-
+const weaverCityMasterRoute = require('./weaver/city.master.route');
+const weaverItemCopsMasterRoute = require('./weaver/item.cops.master.route');
+const weaverItemPackingMasterRoute = require('./weaver/item.packing.master.route');
+const weaverItemLotDesignMasterRoute = require('./weaver/item.lot.design.master.route');
+const weaverItemColorShadeMasterRoute = require('./weaver/item.color.shade.master.route');
+const weaverItemStockTypeMasterRoute = require('./weaver/item.stock.type.master.route');
+const weaverItemTypeMasterRoute = require('./weaver/item.type.master.route');
+const weaverItemSubGroupMasterRoute = require('./weaver/item.sub.group.master.route');
+const weaverItemMasterRoute = require('./weaver/item.master.route');
 
 
 const router = express.Router();
@@ -817,6 +825,42 @@ const defaultRoutes = [
   {
     path: '/weaver-transporter-master',
     route: weaverTransporterMasterRoute,
+  },
+  {
+    path: '/weaver-city-master',
+    route: weaverCityMasterRoute,
+  },
+  {
+    path: '/weaver-item-cops-master',
+    route: weaverItemCopsMasterRoute,
+  },
+  {
+    path: '/weaver-item-packing-master',
+    route: weaverItemPackingMasterRoute,
+  },
+  {
+    path: '/weaver-item-lot-design-master',
+    route: weaverItemLotDesignMasterRoute,
+  },
+  {
+    path: '/weaver-item-color-shade-master',
+    route: weaverItemColorShadeMasterRoute,
+  },
+  {
+    path: '/weaver-item-stock-type-master',
+    route: weaverItemStockTypeMasterRoute,
+  },
+  {
+    path: '/weaver-item-type-master',
+    route: weaverItemTypeMasterRoute,
+  },
+  {
+    path: '/weaver-item-sub-group-master',
+    route: weaverItemSubGroupMasterRoute,
+  },
+  {
+    path: '/weaver-item-master',
+    route: weaverItemMasterRoute,
   },
 ];
 

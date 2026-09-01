@@ -179,7 +179,17 @@ module.exports.referralCodeUsedController = require('./type2.controller/referral
 module.exports.weaverManufactureController = require('./weaver.manufacturer.controller');
 // weaver master controller
 module.exports.weaverAcountMasterController = require('./weaver/acount.master.controller');
-module.exports.weaverItemGroupMasterController = require('./weaver/item.group.master.controller');
 module.exports.weaverBrokerMasterController = require('./weaver/broker.master.controller');
 module.exports.weaverTransporterMasterController = require('./weaver/transporter.master.controller');
+module.exports.weaverCityMasterController = require('./weaver/city.master.controller');
+// item master
+module.exports.weaverItemMasterController = require('./weaver/item.master.controller');
+module.exports.weaverItemGroupMasterController = require('./weaver/item.group.master.controller');
+module.exports.weaverItemSubGroupMasterController = require('./weaver/item.sub.group.master.controller');
+module.exports.weaverItemTypeMasterController = require('./weaver/item.type.master.controller');
+module.exports.weaverItemStockTypeMasterController = require('./weaver/item.stock.type.master.controller');
+module.exports.weaverItemColorShadeMasterController = require('./weaver/item.color.shade.master.controller');
+module.exports.weaverItemLotDesignMasterController = require('./weaver/item.lot.design.master.controller');
+module.exports.weaverItemPackingMasterController = require('./weaver/item.packing.master.controller');
+module.exports.weaverItemCopsMasterController = require('./weaver/item.cops.master.controller');
 
