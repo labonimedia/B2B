@@ -8,6 +8,25 @@ const masterSchema = mongoose.Schema(
       required: true,
       trim: true,
     },
+    stateName: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    remark: {
+      type: String,
+      trim: true,
+    },
+    cityCode: {
+      type: Number,
+      required: true,
+      trim: true,
+    },
+    wholeSaleRate: {
+      type: Number,
+      required: true,
+      trim: true,
+    },
     weaverId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'WeaverManufacture',
