@@ -186,7 +186,9 @@ module.exports.weaverManufacturerService = require('./weaver.manufacturer.servic
 module.exports.weaverAcountMasterService = require('./weaver/acount.master.service');
 module.exports.weaverBrokerMasterService = require('./weaver/broker.master.service');
 module.exports.weaverTransporterMasterService = require('./weaver/transporter.master.service');
+module.exports.firmMasterService = require('./weaver/firm.master.service');
 module.exports.weaverCityMasterService = require('./weaver/city.master.service');
+module.exports.weaverMainGroupMasterService = require('./weaver/main.group.master.service');
 // item master 
 module.exports.weaverItemMasterService = require('./weaver/item.master.service');
 module.exports.weaverItemGroupMasterService = require('./weaver/item.group.master.service');
