@@ -183,7 +183,8 @@ const weaverItemStockTypeMasterRoute = require('./weaver/item.stock.type.master.
 const weaverItemTypeMasterRoute = require('./weaver/item.type.master.route');
 const weaverItemSubGroupMasterRoute = require('./weaver/item.sub.group.master.route');
 const weaverItemMasterRoute = require('./weaver/item.master.route');
-
+const weaverFirmMasterRoute = require('./weaver/firm.master.route');
+const weaverMainGroupMasterRoute = require('./weaver/main.group.master.route');
 
 const router = express.Router();
 
@@ -861,6 +862,14 @@ const defaultRoutes = [
   {
     path: '/weaver-item-master',
     route: weaverItemMasterRoute,
+  },
+  {
+    path: '/weaver-firm-master',
+    route: weaverFirmMasterRoute,
+  },
+  {
+    path: '/weaver-main-group-master',
+    route: weaverMainGroupMasterRoute,
   },
 ];
 

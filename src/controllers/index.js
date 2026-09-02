@@ -182,6 +182,8 @@ module.exports.weaverAcountMasterController = require('./weaver/acount.master.co
 module.exports.weaverBrokerMasterController = require('./weaver/broker.master.controller');
 module.exports.weaverTransporterMasterController = require('./weaver/transporter.master.controller');
 module.exports.weaverCityMasterController = require('./weaver/city.master.controller');
+module.exports.firmMasterController = require('./weaver/firm.master.controller');
+module.exports.weaverMainGroupMasterController = require('./weaver/main.group.master.controller');
 // item master
 module.exports.weaverItemMasterController = require('./weaver/item.master.controller');
 module.exports.weaverItemGroupMasterController = require('./weaver/item.group.master.controller');
