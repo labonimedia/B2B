@@ -185,6 +185,11 @@ const weaverItemSubGroupMasterRoute = require('./weaver/item.sub.group.master.ro
 const weaverItemMasterRoute = require('./weaver/item.master.route');
 const weaverFirmMasterRoute = require('./weaver/firm.master.route');
 const weaverMainGroupMasterRoute = require('./weaver/main.group.master.route');
+const weaverSalesPurchaseBookMasterRoute = require('./weaver/book.sales.purchase.master.route');
+const weaverCashBankBookMasterRoute = require('./weaver/book.cash.bank.book.master.route');
+const weaverFormulaMasterRoute = require('./weaver/book.weaver.formula.master.route');
+const weaverJobworkProcessMasterRoute = require('./weaver/jobwork.process.master.route');
+
 
 const router = express.Router();
 
@@ -870,6 +875,24 @@ const defaultRoutes = [
   {
     path: '/weaver-main-group-master',
     route: weaverMainGroupMasterRoute,
+  },
+  //book master
+  {
+    path: '/weaver-sales-purchase-book-master',
+    route:  weaverSalesPurchaseBookMasterRoute,
+  },
+  {
+    path: '/weaver-cash-bank-book-master',
+    route:  weaverCashBankBookMasterRoute,
+  },
+  {
+    path: '/weaver-formula-master',
+    route:  weaverFormulaMasterRoute,
+  },
+  // jobwork process master
+  {
+    path: '/weaver-jobwork-process-master',
+    route:  weaverJobworkProcessMasterRoute,
   },
 ];
 

@@ -199,6 +199,11 @@ module.exports.weaverItemColorShadeMasterService = require('./weaver/item.color.
 module.exports.weaverItemLotDesignMasterService = require('./weaver/item.lot.design.master.service');
 module.exports.weaverItemPackingMasterService = require('./weaver/item.packing.master.service');
 module.exports.weaverItemCopsMasterService = require('./weaver/item.cops.master.service');
-
+// book master service
+module.exports.weaverSalesPurchaseBookMasterService = require('./weaver/book.sales.purchase.master.service');
+module.exports.weaverCashBankBookMasterService = require('./weaver/book.cash.bank.book.master.service');
+module.exports.weaverFormulaMasterService = require('./weaver/book.weaver.formula.master.service');
+// jobwork master service
+module.exports.weaverJobworkProcessMasterService = require('./weaver/jobwork.process.master.service');
 
 

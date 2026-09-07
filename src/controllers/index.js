@@ -194,4 +194,10 @@ module.exports.weaverItemColorShadeMasterController = require('./weaver/item.col
 module.exports.weaverItemLotDesignMasterController = require('./weaver/item.lot.design.master.controller');
 module.exports.weaverItemPackingMasterController = require('./weaver/item.packing.master.controller');
 module.exports.weaverItemCopsMasterController = require('./weaver/item.cops.master.controller');
+// book master controller
+module.exports.weaverSalesPurchaseBookMasterController = require('./weaver/book.sales.purchase.master.controller');
+module.exports.weaverCashBankBookMasterController = require('./weaver/book.cash.bank.book.master.controller');
+module.exports.weaverFormulaMasterController = require('./weaver/book.weaver.formula.master.controller');
+// jobwork master controller
+module.exports.weaverJobworkProcessMasterController = require('./weaver/jobwork.process.master.controller');
 
