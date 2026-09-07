@@ -1,9 +1,6 @@
 const mongoose = require('mongoose');
 
-const {
-  paginate,
-  toJSON,
-} = require('../plugins');
+const { paginate, toJSON } = require('../plugins');
 
 const masterSchema = mongoose.Schema(
   {
@@ -364,9 +361,6 @@ masterSchema.index(
 masterSchema.plugin(toJSON);
 masterSchema.plugin(paginate);
 
-const WeaverAcountMaster = mongoose.model(
-  'WeaverAcountMaster',
-  masterSchema
-);
+const WeaverAcountMaster = mongoose.model('WeaverAcountMaster', masterSchema);
 
 module.exports = WeaverAcountMaster;

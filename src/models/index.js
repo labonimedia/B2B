@@ -197,7 +197,6 @@ module.exports.ReferralCodeUsed = require('./type2.models/referralCodeUsed.model
 module.exports.WeaverManufacture = require('./weaver.manufacturer.model');
 //weaver master models
 module.exports.WeaverAcountMaster = require('./weaver/acount.master.model');
-module.exports.WeaverBookMaster = require('./weaver/book.master.model');
 module.exports.WeaverBrokerMaster = require('./weaver/broker.master.model');
 module.exports.WeaverTransporterMaster = require('./weaver/transporter.master');
 module.exports.WeaverMainGroupMaster = require('./weaver/main.group.master');
@@ -217,8 +216,13 @@ module.exports.WeaverItemLotDesignMaster = require('./weaver/item.lot.design.mas
 module.exports.WeaverItemPackingMaster = require('./weaver/item.packing.master.model');
 module.exports.WeaverItemCopsMaster = require('./weaver/item.cops.master.model');
 
+// book master
+module.exports.WeaverSalesPurchaseBookMaster = require('./weaver/book.sales.purchase.master.model');
+module.exports.WeaverCashBankBookMaster = require('./weaver/book.cash.bank.book.master.model');
+module.exports.WeaverFormulaMaster = require('./weaver/book.formula.master.model');
 // jobwork master
-module.exports.WeaverJobworkMaster = require('./weaver/jobwork.master.model');  
+module.exports.WeaverJobworkProcessMaster = require('./weaver/jobwork.process.master.model');  
+
 
 
 
