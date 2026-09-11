@@ -26,6 +26,7 @@ const register = {
         'user',
         'channelPartner',
         'masteradmin',
+        'weaverManufacture',
         'sales',
         'shopKeeper'
       ) // Role validation to match the Mongoose enum
