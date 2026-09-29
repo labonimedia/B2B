@@ -398,6 +398,18 @@ const firmMasterSchema = mongoose.Schema(
       type: Boolean,
       default: true,
     },
+    
+    weaverId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'WeaverManufacture',
+      required: true,
+      index: true,
+    },
+    weaverEmail: {
+      type: String,
+      required: true,
+      trim: true,
+    },
   },
   {
     timestamps: true,

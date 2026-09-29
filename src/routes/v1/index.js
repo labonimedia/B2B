@@ -169,6 +169,8 @@ const referralCodeMasterRoute = require('./type2.routes/referralCodeMaster.route
 const referralCodeUsedRoute = require('./type2.routes/referralCodeUsed.route');
 // weaver manufacturer route
 const weaverManufacturerRoute = require('./weaver.manufacturer.route');
+const weaverBrandRoute = require('./weaver/brand.route');
+const weaverProductRoute = require('./weaver/weaverProduct.route');
 // weaver masters route path
 const weaverAcountMasterRoute = require('./weaver/acount.master.route');
 const weaverItemGroupMasterRoute = require('./weaver/item.group.master.route');
@@ -814,6 +816,14 @@ const defaultRoutes = [
   {
     path: '/weaver-manufacturer',
     route: weaverManufacturerRoute,
+  },
+  {
+    path: '/weaver-brand',
+    route: weaverBrandRoute,
+  },
+  {
+    path: '/weaver-product',
+    route: weaverProductRoute,
   },
   // weaver masters path
   {

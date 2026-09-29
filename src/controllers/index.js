@@ -177,6 +177,8 @@ module.exports.referralCodeMasterController = require('./type2.controller/referr
 module.exports.referralCodeUsedController = require('./type2.controller/referralCodeUsed.controller');
 // weaver manufacturer controller
 module.exports.weaverManufactureController = require('./weaver.manufacturer.controller');
+module.exports.weaverBrandController = require('./weaver/brand.controller');
+module.exports.weaverProductController = require('./weaver/weaverProduct.controller');
 // weaver master controller
 module.exports.weaverAcountMasterController = require('./weaver/acount.master.controller');
 module.exports.weaverBrokerMasterController = require('./weaver/broker.master.controller');

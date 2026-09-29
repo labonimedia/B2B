@@ -182,6 +182,8 @@ module.exports.referralCodeMasterService = require('./type2.services/referralCod
 module.exports.referralCodeUsedService = require('./type2.services/referralCodeUsed.service');
 // weaver manufacturer service
 module.exports.weaverManufacturerService = require('./weaver.manufacturer.service');
+module.exports.weaverBrandService = require('./weaver/brand.service');
+module.exports.weaverProductService = require('./weaver/weaverProduct.service');
 // weaver master services
 module.exports.weaverAcountMasterService = require('./weaver/acount.master.service');
 module.exports.weaverBrokerMasterService = require('./weaver/broker.master.service');

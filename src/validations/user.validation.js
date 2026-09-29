@@ -57,6 +57,12 @@ const updateUser = {
       password: Joi.string().custom(password),
       userCategory: Joi.string(),
       fullName: Joi.string(),
+      lastPaymentId: Joi.string(),
+      subscriptionExpiryDate: Joi.string(),
+      subscriptionId: Joi.string(),
+      subscriptionStartDate: Joi.string(),
+      subscriptionStatus: Joi.string(),
+
     })
     .min(1),
 };
