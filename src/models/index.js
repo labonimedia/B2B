@@ -126,6 +126,7 @@ module.exports.POWholesalerToManufacturer = require('./type2.models/po.wholesale
 // Performa Invoice
 module.exports.M2RPerformaInvoice = require('./type2.models/pi.manufacture.to.retailer.model');
 module.exports.M2WPerformaInvoice = require('./type2.models/pi.manufacture.to.wholesaler.model');
+module.exports.W2RPerformaInvoice = require('./type2.models/pi.wholesaler.to.retailer.model');
 // Invoice Generator Counter
 module.exports.M2RInvoiceCounter = require('./type2.models/m2r.invoicegenerator.model');
 module.exports.M2WInvoiceCounter = require('./type2.models/m2w.invoicegenerator.model');
@@ -145,6 +146,8 @@ module.exports.HsnGst = require('./type2.models/hsn.gst.data.model');
 module.exports.ReturnReason = require('./type2.models/return.reason.master.model');
 // return request
 module.exports.ReturnR2M = require('./type2.models/return.retailer.to.manufacture.model');
+module.exports.ReturnR2W = require('./type2.models/return.retailer.to.wholesaler.model');
+module.exports.ReturnW2M = require('./type2.models/return.wholesaler.to.manufacture.model');
 // wallet
 module.exports.MtoRWallet = require('./type2.models/wallet.m.to.r.model');
 module.exports.W2RWallet = require('./type2.models/wallet.w.to.r.model');
@@ -167,12 +170,7 @@ module.exports.ManufactureCommission = require('./type2.models/manufacture.commi
 module.exports.ManufactureRawMaterialInventory = require('./type2.models/manufacture.raw.material.inventory.logs.model');
 // wholesaler inventory logs
 module.exports.WholesalerInventoryLogs = require('./type2.models/wholesaler.inventory.logs.model');
-// wholesaler to retailer Performa Invoice
-module.exports.W2RPerformaInvoice = require('./type2.models/pi.wholesaler.to.retailer.model');
-// return request retailer to wholesaler
-module.exports.ReturnR2W = require('./type2.models/return.retailer.to.wholesaler.model');
-// return request wholesaler to manufacture
-module.exports.ReturnW2M = require('./type2.models/return.wholesaler.to.manufacture.model');
+
 // channel partner customers
 module.exports.ChannelPartnerCustomer = require('./channel.partner.customer.model');
 // channel partner customer wishlist
@@ -195,6 +193,8 @@ module.exports.ReferralCodeMaster = require('./type2.models/referralCodeMaster.m
 module.exports.ReferralCodeUsed = require('./type2.models/referralCodeUsed.model');
 // Weaver Manufacture
 module.exports.WeaverManufacture = require('./weaver.manufacturer.model');
+module.exports.WeaverBrand = require('./weaver/brand.model');
+module.exports.WeaverProduct = require('./weaver/weaverProduct.model');
 //weaver master models
 module.exports.WeaverAcountMaster = require('./weaver/acount.master.model');
 module.exports.WeaverBrokerMaster = require('./weaver/broker.master.model');
