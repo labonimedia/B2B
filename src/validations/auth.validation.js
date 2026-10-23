@@ -7,6 +7,7 @@ const register = {
       .required()
       .email() // Validates that the email format is correct
       .lowercase(), // Ensures the email is lowercase (similar to the Mongoose schema)
+      
     referralCode: Joi.string(),
     
     password: Joi.string()
@@ -18,6 +19,7 @@ const register = {
 
     companyName: Joi.string().optional(), // Company name is optional
 
+
     role: Joi.string()
       .valid(
         'superadmin',
@@ -28,7 +30,7 @@ const register = {
         'channelPartner',
         'masteradmin',
         'sales',
-        
+
         'shopKeeper',
       // ✅ Staff Roles
       'rawMaterialManager',
