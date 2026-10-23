@@ -22,29 +22,57 @@ const {
 /**
  * Calculate Expiry Date
  */
-const calculateExpiryDate = (validity, validityType) => {
-  const expiry = new Date();
+// const calculateExpiryDate = (validity, validityType) => {
+//   const expiry = new Date();
+
+//   switch (validityType) {
+//     case 'days':
+//       expiry.setDate(expiry.getDate() + validity);
+//       break;
+
+//     case 'months':
+//       expiry.setMonth(expiry.getMonth() + validity);
+//       break;
+
+//     case 'years':
+//       expiry.setFullYear(expiry.getFullYear() + validity);
+//       break;
+
+//     default:
+//       expiry.setDate(expiry.getDate() + validity);
+//   }
+
+//   return expiry;
+// };
+  const calculateExpiryDate = (startDate, validity, validityType) => {
+  const expiryDate = new Date(startDate);
 
   switch (validityType) {
+    case 'minutes':
+      expiryDate.setMinutes(expiryDate.getMinutes() + validity);
+      break;
+
     case 'days':
-      expiry.setDate(expiry.getDate() + validity);
+      expiryDate.setDate(expiryDate.getDate() + validity);
       break;
 
     case 'months':
-      expiry.setMonth(expiry.getMonth() + validity);
+      expiryDate.setMonth(expiryDate.getMonth() + validity);
       break;
 
     case 'years':
-      expiry.setFullYear(expiry.getFullYear() + validity);
+      expiryDate.setFullYear(expiryDate.getFullYear() + validity);
       break;
 
     default:
-      expiry.setDate(expiry.getDate() + validity);
+      throw new ApiError(
+        httpStatus.BAD_REQUEST,
+        'Invalid subscription validity type'
+      );
   }
 
-  return expiry;
+  return expiryDate;
 };
-
 const createOrder = async (body, loggedInUser) => {
   return createRazorpayOrder(body, loggedInUser);
 };
@@ -416,9 +444,15 @@ const verifyPayment = async (body) => {
   payment.gatewayResponse = razorpayPayment;
 
   // Subscription Dates
-  const startDate = new Date();
-  const expiryDate = calculateExpiryDate(payment.validity, payment.validityType);
+  // const startDate = new Date();
+  // const expiryDate = calculateExpiryDate(payment.validity, payment.validityType);
+const startDate = new Date();
 
+const expiryDate = calculateExpiryDate(
+  startDate,
+  payment.validity,
+  payment.validityType
+);
   payment.subscriptionStartDate = startDate;
   payment.subscriptionExpiryDate = expiryDate;
 

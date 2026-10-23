@@ -39,12 +39,16 @@ const paymentSchema = new mongoose.Schema(
       required: true,
     },
 
+    // validityType: {
+    //   type: String,
+    //   enum: ['days', 'months', 'years'],
+    //   required: true,
+    // },
     validityType: {
       type: String,
-      enum: ['days', 'months', 'years'],
+      enum: ['minutes', 'days', 'months', 'years'],
       required: true,
     },
-
     // Amount Details
     amount: {
       type: Number,

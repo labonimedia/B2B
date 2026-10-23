@@ -6,13 +6,13 @@ const router = express.Router();
 
 router
   .route('/')
-  .post(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), genderController.createGender)
+  .post(auth('superadmin', 'manufacture', 'wholesaler', 'retailer', 'weaverManufacture'), genderController.createGender)
   .get(genderController.queryGender);
 
 router
   .route('/:id')
   .get(genderController.getGenderById)
-  .patch(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), genderController.updateGenderById)
-  .delete(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), genderController.deleteGenderById);
+  .patch(auth('superadmin', 'manufacture', 'wholesaler', 'retailer', 'weaverManufacture'), genderController.updateGenderById)
+  .delete(auth('superadmin', 'manufacture', 'wholesaler', 'retailer', 'weaverManufacture'), genderController.deleteGenderById);
 
 module.exports = router;

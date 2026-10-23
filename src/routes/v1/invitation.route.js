@@ -12,28 +12,28 @@ const router = express.Router();
 const upload = multer({ dest: uploadsFolder });
 router.post(
   '/bulk-upload',
-  auth('superadmin', 'manufacture', 'wholesaler'),
+  auth('superadmin', 'manufacture', 'wholesaler', 'retailer', 'weaverManufacture'),
   upload.single('file'),
   invitationController.bulkUploadFile
 );
-router.post('/array-upload', auth('superadmin', 'manufacture', 'wholesaler'), invitationController.arrayInvitations);
+router.post('/array-upload', auth('superadmin', 'manufacture', 'wholesaler', 'retailer', 'weaverManufacture'), invitationController.arrayInvitations);
 
 router
   .route('/')
-  .post(auth('superadmin', 'manufacture', 'wholesaler'), invitationController.createInvitation)
+  .post(auth('superadmin', 'manufacture', 'wholesaler', 'retailer', 'weaverManufacture'), invitationController.createInvitation)
   .get(invitationController.queryInvitation); // auth('superadmin', 'manufacture', 'wholesaler'),
 
 router
   .route('/:email')
   .get(invitationController.getInvitationById)
-  .patch(auth('superadmin', 'manufacture', 'wholesaler'), invitationController.updateInvitationById)
-  .delete(auth('superadmin', 'manufacture', 'wholesaler'), invitationController.deleteInvitationById);
+  .patch(auth('superadmin', 'manufacture', 'wholesaler', 'retailer', 'weaverManufacture'), invitationController.updateInvitationById)
+  .delete(auth('superadmin', 'manufacture', 'wholesaler', 'retailer', 'weaverManufacture'), invitationController.deleteInvitationById);
 
 router
   .route('/re-invitation/:email')
-  .get(auth('superadmin', 'manufacture', 'wholesaler'), invitationController.sendReInvitation);
+  .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer', 'weaverManufacture'), invitationController.sendReInvitation);
 
 router
   .route('/bulk/re-invitation/array')
-  .post(auth('superadmin', 'manufacture', 'wholesaler'), invitationController.sendReInvitationBulk);
+  .post(auth('superadmin', 'manufacture', 'wholesaler', 'retailer', 'weaverManufacture'), invitationController.sendReInvitationBulk);
 module.exports = router;

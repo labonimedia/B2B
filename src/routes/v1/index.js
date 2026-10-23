@@ -167,6 +167,31 @@ const patchworkDesignRoute = require('./patchwork.design.route');
 const paymentRoute = require('./payment.route');
 const referralCodeMasterRoute = require('./type2.routes/referralCodeMaster.route');
 const referralCodeUsedRoute = require('./type2.routes/referralCodeUsed.route');
+// weaver manufacturer route
+const weaverManufacturerRoute = require('./weaver.manufacturer.route');
+const weaverBrandRoute = require('./weaver/brand.route');
+const weaverProductRoute = require('./weaver/weaverProduct.route');
+// weaver masters route path
+const weaverAcountMasterRoute = require('./weaver/acount.master.route');
+const weaverItemGroupMasterRoute = require('./weaver/item.group.master.route');
+const weaverBrokerMasterRoute = require('./weaver/broker.master.route');
+const weaverTransporterMasterRoute = require('./weaver/transporter.master.route');
+const weaverCityMasterRoute = require('./weaver/city.master.route');
+const weaverItemCopsMasterRoute = require('./weaver/item.cops.master.route');
+const weaverItemPackingMasterRoute = require('./weaver/item.packing.master.route');
+const weaverItemLotDesignMasterRoute = require('./weaver/item.lot.design.master.route');
+const weaverItemColorShadeMasterRoute = require('./weaver/item.color.shade.master.route');
+const weaverItemStockTypeMasterRoute = require('./weaver/item.stock.type.master.route');
+const weaverItemTypeMasterRoute = require('./weaver/item.type.master.route');
+const weaverItemSubGroupMasterRoute = require('./weaver/item.sub.group.master.route');
+const weaverItemMasterRoute = require('./weaver/item.master.route');
+const weaverFirmMasterRoute = require('./weaver/firm.master.route');
+const weaverMainGroupMasterRoute = require('./weaver/main.group.master.route');
+const weaverSalesPurchaseBookMasterRoute = require('./weaver/book.sales.purchase.master.route');
+const weaverCashBankBookMasterRoute = require('./weaver/book.cash.bank.book.master.route');
+const weaverFormulaMasterRoute = require('./weaver/book.weaver.formula.master.route');
+const weaverJobworkProcessMasterRoute = require('./weaver/jobwork.process.master.route');
+
 
 const router = express.Router();
 
@@ -786,6 +811,98 @@ const defaultRoutes = [
   {
     path: '/referral-code-used',
     route: referralCodeUsedRoute
+  },
+  // weaver routes path
+  {
+    path: '/weaver-manufacturer',
+    route: weaverManufacturerRoute,
+  },
+  {
+    path: '/weaver-brand',
+    route: weaverBrandRoute,
+  },
+  {
+    path: '/weaver-product',
+    route: weaverProductRoute,
+  },
+  // weaver masters path
+  {
+    path: '/weaver-account-master',
+    route: weaverAcountMasterRoute,
+  },
+  {
+    path: '/weaver-item-group-master',
+    route: weaverItemGroupMasterRoute,
+  },
+  {
+    path: '/weaver-broker-master',
+    route: weaverBrokerMasterRoute,
+  },
+  {
+    path: '/weaver-transporter-master',
+    route: weaverTransporterMasterRoute,
+  },
+  {
+    path: '/weaver-city-master',
+    route: weaverCityMasterRoute,
+  },
+  {
+    path: '/weaver-item-cops-master',
+    route: weaverItemCopsMasterRoute,
+  },
+  {
+    path: '/weaver-item-packing-master',
+    route: weaverItemPackingMasterRoute,
+  },
+  {
+    path: '/weaver-item-lot-design-master',
+    route: weaverItemLotDesignMasterRoute,
+  },
+  {
+    path: '/weaver-item-color-shade-master',
+    route: weaverItemColorShadeMasterRoute,
+  },
+  {
+    path: '/weaver-item-stock-type-master',
+    route: weaverItemStockTypeMasterRoute,
+  },
+  {
+    path: '/weaver-item-type-master',
+    route: weaverItemTypeMasterRoute,
+  },
+  {
+    path: '/weaver-item-sub-group-master',
+    route: weaverItemSubGroupMasterRoute,
+  },
+  {
+    path: '/weaver-item-master',
+    route: weaverItemMasterRoute,
+  },
+  {
+    path: '/weaver-firm-master',
+    route: weaverFirmMasterRoute,
+  },
+  {
+    path: '/weaver-main-group-master',
+    route: weaverMainGroupMasterRoute,
+  },
+  //book master
+  {
+    path: '/weaver-sales-purchase-book-master',
+    route:  weaverSalesPurchaseBookMasterRoute,
+  },
+  {
+    path: '/weaver-cash-bank-book-master',
+    route:  weaverCashBankBookMasterRoute,
+  },
+  {
+    path: '/weaver-formula-master',
+    route:  weaverFormulaMasterRoute,
+  },
+  // jobwork process master
+  {
+    path: '/weaver-jobwork-process-master',
+    route:  weaverJobworkProcessMasterRoute,
   },
 ];
 

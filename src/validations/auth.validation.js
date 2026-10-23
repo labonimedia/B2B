@@ -33,6 +33,16 @@ const register = {
       'finishedGoodsManager',
       'productManager',
       'orderManager'
+        'superadmin',
+        'manufacture',
+        'wholesaler',
+        'retailer',
+        'user',
+        'channelPartner',
+        'masteradmin',
+        'weaverManufacture',
+        'sales',
+        'shopKeeper'
       ) // Role validation to match the Mongoose enum
       .default('user') // Default role is 'user'
       .required(),

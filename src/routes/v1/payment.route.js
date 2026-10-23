@@ -11,7 +11,7 @@ const router = express.Router();
  */
 router.post(
   '/create-order',
-  auth('superadmin', 'manufacture', 'wholesaler', 'retailer', 'channelPartner'),
+  auth('superadmin', 'manufacture', 'wholesaler', 'retailer', 'channelPartner', 'weaverManufacture'),
   validate(paymentValidation.createOrder),
   paymentController.createOrder
 );
@@ -21,7 +21,7 @@ router.post(
  */
 router.post(
   '/verify-payment',
-  auth('superadmin', 'manufacture', 'wholesaler', 'retailer', 'channelPartner'),
+  auth('superadmin', 'manufacture', 'wholesaler', 'retailer', 'channelPartner', 'weaverManufacture'),
   validate(paymentValidation.verifyPayment),
   paymentController.verifyPayment
 );
@@ -32,7 +32,7 @@ router.post(
  */
 router.post(
   '/payment-failed',
-  auth('superadmin', 'manufacture', 'wholesaler', 'retailer', 'channelPartner'),
+  auth('superadmin', 'manufacture', 'wholesaler', 'retailer', 'channelPartner', 'weaverManufacture'),
   validate(paymentValidation.paymentFailed),
   paymentController.paymentFailed
 );
@@ -53,7 +53,7 @@ router.get('/', validate(paymentValidation.getPayments), paymentController.getPa
  */
 router.get(
   '/my-payments',
-  auth('superadmin', 'manufacture', 'wholesaler', 'retailer', 'channelPartner'),
+  auth('superadmin', 'manufacture', 'wholesaler', 'retailer', 'channelPartner', 'weaverManufacture'),
   paymentController.getMyPayments
 );
 
@@ -62,7 +62,7 @@ router.get(
  */
 router.get(
   '/:paymentId',
-  auth('superadmin', 'manufacture', 'wholesaler', 'retailer', 'channelPartner'),
+  auth('superadmin', 'manufacture', 'wholesaler', 'retailer', 'channelPartner', 'weaverManufacture'),
   validate(paymentValidation.getPayment),
   paymentController.getPayment
 );
@@ -72,7 +72,7 @@ router.get(
  */
 router.post(
   '/retry/:paymentId',
-  auth('superadmin', 'manufacture', 'wholesaler', 'retailer', 'channelPartner'),
+  auth('superadmin', 'manufacture', 'wholesaler', 'retailer', 'channelPartner', 'weaverManufacture'),
   validate(paymentValidation.retryPayment),
   paymentController.retryPayment
 );
