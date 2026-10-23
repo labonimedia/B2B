@@ -59,12 +59,16 @@ const subscriptionPlanSchema = new mongoose.Schema(
       default: 30,
     },
 
+    // validityType: {
+    //   type: String,
+    //   enum: ['days', 'months', 'years'],
+    //   default: 'days',
+    // },
     validityType: {
       type: String,
-      enum: ['days', 'months', 'years'],
+      enum: ['minutes', 'days', 'months', 'years'],
       default: 'days',
     },
-
     features: [
       {
         type: String,
@@ -108,6 +112,11 @@ const subscriptionPlanSchema = new mongoose.Schema(
       default: null,
     },
 
+    role: {
+      type: String,
+      default: null,
+    },
+    
     updatedBy: {
       type: String,
       default: null,

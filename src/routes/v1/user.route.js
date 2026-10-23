@@ -9,12 +9,12 @@ const router = express.Router();
 router
   .route('/')
   .post(
-    auth('superadmin', 'manufacture', 'wholesaler', 'retailer', 'channelPartner'),
+    auth('superadmin', 'manufacture', 'wholesaler', 'retailer', 'channelPartner', 'weaverManufacture'),
     validate(userValidation.createUser),
     userController.createUser
   )
   .get(
-    auth('superadmin', 'manufacture', 'wholesaler', 'retailer', 'channelPartner'),
+    auth('superadmin', 'manufacture', 'wholesaler', 'retailer', 'channelPartner', 'weaverManufacture'),
     validate(userValidation.getUsers),
     userController.getUsers
   );
@@ -25,17 +25,17 @@ router.route('/delete-unwanted-user').delete(userController.deleteUserByEmail);
 router
   .route('/:userId')
   .get(
-    auth('superadmin', 'manufacture', 'wholesaler', 'retailer', 'channelPartner'),
+    auth('superadmin', 'manufacture', 'wholesaler', 'retailer', 'channelPartner', 'weaverManufacture'),
     validate(userValidation.getUser),
     userController.getUser
   )
   .patch(
-    auth('superadmin', 'manufacture', 'wholesaler', 'retailer', 'channelPartner'),
+    auth('superadmin', 'manufacture', 'wholesaler', 'retailer', 'channelPartner', 'weaverManufacture'),
     validate(userValidation.updateUser),
     userController.updateUser
   )
   .delete(
-    auth('superadmin', 'manufacture', 'wholesaler', 'retailer', 'channelPartner'),
+    auth('superadmin', 'manufacture', 'wholesaler', 'retailer', 'channelPartner', 'weaverManufacture'),
     validate(userValidation.deleteUser),
     userController.deleteUser
   );

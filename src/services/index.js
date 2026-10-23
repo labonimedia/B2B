@@ -180,3 +180,32 @@ module.exports.paymentService = require('./payment.service');
 module.exports.subscriptionPlanService = require('./type2.services/subscription.plan.service');
 module.exports.referralCodeMasterService = require('./type2.services/referralCodeMaster.service');
 module.exports.referralCodeUsedService = require('./type2.services/referralCodeUsed.service');
+// weaver manufacturer service
+module.exports.weaverManufacturerService = require('./weaver.manufacturer.service');
+module.exports.weaverBrandService = require('./weaver/brand.service');
+module.exports.weaverProductService = require('./weaver/weaverProduct.service');
+// weaver master services
+module.exports.weaverAcountMasterService = require('./weaver/acount.master.service');
+module.exports.weaverBrokerMasterService = require('./weaver/broker.master.service');
+module.exports.weaverTransporterMasterService = require('./weaver/transporter.master.service');
+module.exports.firmMasterService = require('./weaver/firm.master.service');
+module.exports.weaverCityMasterService = require('./weaver/city.master.service');
+module.exports.weaverMainGroupMasterService = require('./weaver/main.group.master.service');
+// item master 
+module.exports.weaverItemMasterService = require('./weaver/item.master.service');
+module.exports.weaverItemGroupMasterService = require('./weaver/item.group.master.service');
+module.exports.weaverItemSubGroupMasterService = require('./weaver/item.sub.group.master.service');
+module.exports.weaverItemTypeMasterService = require('./weaver/item.type.master.service');
+module.exports.weaverItemStockTypeMasterService = require('./weaver/item.stock.type.master.service');
+module.exports.weaverItemColorShadeMasterService = require('./weaver/item.color.shade.master.service');
+module.exports.weaverItemLotDesignMasterService = require('./weaver/item.lot.design.master.service');
+module.exports.weaverItemPackingMasterService = require('./weaver/item.packing.master.service');
+module.exports.weaverItemCopsMasterService = require('./weaver/item.cops.master.service');
+// book master service
+module.exports.weaverSalesPurchaseBookMasterService = require('./weaver/book.sales.purchase.master.service');
+module.exports.weaverCashBankBookMasterService = require('./weaver/book.cash.bank.book.master.service');
+module.exports.weaverFormulaMasterService = require('./weaver/book.weaver.formula.master.service');
+// jobwork master service
+module.exports.weaverJobworkProcessMasterService = require('./weaver/jobwork.process.master.service');
+
+
