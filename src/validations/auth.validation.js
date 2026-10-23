@@ -8,6 +8,7 @@ const register = {
       .email() // Validates that the email format is correct
       .lowercase(), // Ensures the email is lowercase (similar to the Mongoose schema)
     referralCode: Joi.string(),
+
     password: Joi.string()
       .min(8) // Password should be at least 8 characters (from Mongoose schema)
       .pattern(/^[a-zA-Z0-9]+$/) // Ensures password contains at least one letter and one number
@@ -19,15 +20,19 @@ const register = {
 
     role: Joi.string()
       .valid(
-        'superadmin',
-        'manufacture',
-        'wholesaler',
-        'retailer',
-        'user',
-        'channelPartner',
-        'masteradmin',
-        'sales',
-        'shopKeeper'
+       'superadmin',
+      'manufacture',
+      'wholesaler',
+      'retailer',
+      'channelPartner',
+      'shopKeeper',
+      'masteradmin',
+      'sales',
+      // ✅ Staff Roles
+      'rawMaterialManager',
+      'finishedGoodsManager',
+      'productManager',
+      'orderManager'
       ) // Role validation to match the Mongoose enum
       .default('user') // Default role is 'user'
       .required(),
