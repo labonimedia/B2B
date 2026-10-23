@@ -28,6 +28,7 @@ const register = {
         'channelPartner',
         'masteradmin',
         'sales',
+        
         'shopKeeper',
       // ✅ Staff Roles
       'rawMaterialManager',
