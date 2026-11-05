@@ -14,6 +14,7 @@
 //  * @returns {Promise<User>}
 //  */
 
+
 // // const createUser = async (userBody) => {
 // //   // Check if the email is already taken
 // //   if (await User.isEmailTaken(userBody.email)) {
@@ -1092,6 +1093,10 @@ const updateUserByEmail = async (
   return user;
 };
 
+// /**
+
+const deleteUserById = async (userId) => {
+  const user = await User.findById(userId);
 
 /**
  * Delete user by ID

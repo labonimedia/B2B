@@ -1,80 +1,92 @@
-const httpStatus = require('http-status');
-const razorpay = require('../../../config/razorpay');
-const ApiError = require('../../../utils/ApiError');
-const { addPaymentHistory } = require('./payment.audit.helper');
-const { Payment, SubscriptionPlan, User } = require('../../../models');
+// const httpStatus = require('http-status');
+// const razorpay = require('../../../config/razorpay');
+// const ApiError = require('../../../utils/ApiError');
+// const { addPaymentHistory } = require('./payment.audit.helper');
+// const { Payment, SubscriptionPlan, User } = require('../../../models');
 
-/**
- * Create Razorpay Order
- * @param {Object} body
- * @param {Object} loggedInUser
- * @returns {Promise<Object>}
- */
+// /**
+//  * Create Razorpay Order
+//  * @param {Object} body
+//  * @param {Object} loggedInUser
+//  * @returns {Promise<Object>}
+//  */
+
 // const createRazorpayOrder = async (body, loggedInUser) => {
 //   const { subscriptionId } = body;
 
-//   // Check Subscription
+//   /*
+//   |--------------------------------------------------------------------------
+//   | Find Subscription
+//   |--------------------------------------------------------------------------
+//   */
+
 //   const subscription = await SubscriptionPlan.findById(subscriptionId);
 
 //   if (!subscription) {
-//     throw new ApiError(httpStatus.NOT_FOUND, 'Subscription plan not found');
+//     throw new ApiError(
+//       httpStatus.NOT_FOUND,
+//       'Subscription plan not found'
+//     );
 //   }
 
-//   if (subscription.status !== 'active' || subscription.isDeleted) {
-//     throw new ApiError(httpStatus.BAD_REQUEST, 'Subscription plan is inactive');
+//   if (subscription.isDeleted || subscription.status !== 'active') {
+//     throw new ApiError(
+//       httpStatus.BAD_REQUEST,
+//       'Subscription plan is inactive'
+//     );
 //   }
 
-//   // Check User
+//   /*
+//   |--------------------------------------------------------------------------
+//   | Find User
+//   |--------------------------------------------------------------------------
+//   */
+
 //   const user = await User.findById(loggedInUser._id);
 
 //   if (!user) {
-//     throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+//     throw new ApiError(
+//       httpStatus.NOT_FOUND,
+//       'User not found'
+//     );
 //   }
 
-//   // Final Amount (Paise)
-//   const payableAmount = subscription.finalAmount * 100;
+//   /*
+//   |--------------------------------------------------------------------------
+//   | Validate Amount
+//   |--------------------------------------------------------------------------
+//   */
 
-//   if (payableAmount < 100) {
-//     throw new ApiError(httpStatus.BAD_REQUEST, 'Minimum payable amount should be ₹1');
+//   const payableAmount = subscription.finalAmount;
+
+//   if (payableAmount < 1) {
+//     throw new ApiError(
+//       httpStatus.BAD_REQUEST,
+//       'Minimum payable amount should be ₹1'
+//     );
 //   }
+
+//   /*
+//   |--------------------------------------------------------------------------
+//   | Create Razorpay Order
+//   |--------------------------------------------------------------------------
+//   */
 
 //   const receipt = `SUB_${Date.now()}`;
 
-//   // Razorpay Order
 //   const razorpayOrder = await razorpay.orders.create({
-//     amount: payableAmount,
+//     amount: payableAmount * 100,
 //     currency: subscription.currency,
 //     receipt,
 //   });
 
-//   // Save Payment Record
-//   // const payment = await Payment.create({
-//   //   userId: user._id,
-//   //   userEmail: user.email,
+//   /*
+//   |--------------------------------------------------------------------------
+//   | Save Payment
+//   |--------------------------------------------------------------------------
+//   */
 
-//   //   subscriptionId: subscription._id,
-
-//   //   planName: subscription.planName,
-//   //   planCode: subscription.planCode,
-
-//   //   validity: subscription.validity,
-//   //   validityType: subscription.validityType,
-
-//   //   amount: subscription.amount,
-
-//   //   discount: subscription.discountValue,
-
-//   //   payableAmount: subscription.finalAmount,
-
-//   //   currency: subscription.currency,
-
-//   //   razorpayOrderId: razorpayOrder.id,
-
-//   //   receipt,
-
-//   //   status: 'created',
-//   // });
-//   const payment = await Payment.create({
+//   const payment = new Payment({
 //     userId: user._id,
 //     userEmail: user.email,
 
@@ -90,7 +102,7 @@ const { Payment, SubscriptionPlan, User } = require('../../../models');
 
 //     discount: subscription.discountValue,
 
-//     payableAmount: subscription.finalAmount,
+//     payableAmount,
 
 //     currency: subscription.currency,
 
@@ -99,111 +111,134 @@ const { Payment, SubscriptionPlan, User } = require('../../../models');
 //     receipt,
 
 //     status: 'created',
-
-//     history: [
-//       {
-//         event: 'order.created',
-//         status: 'created',
-//         message: 'Razorpay order created successfully',
-//         payload: {
-//           orderId: razorpayOrder.id,
-//           receipt,
-//           amount: subscription.finalAmount,
-//           currency: subscription.currency,
-//         },
-//       },
-//     ],
 //   });
+
+//   /*
+//   |--------------------------------------------------------------------------
+//   | Payment History
+//   |--------------------------------------------------------------------------
+//   */
+
+//   addPaymentHistory(
+//     payment,
+//     'order.created',
+//     'created',
+//     'Razorpay order created successfully',
+//     {
+//       orderId: razorpayOrder.id,
+//       receipt,
+//       amount: payableAmount,
+//       currency: subscription.currency,
+//     }
+//   );
+
+//   await payment.save();
+
+//   /*
+//   |--------------------------------------------------------------------------
+//   | Response
+//   |--------------------------------------------------------------------------
+//   */
+
 //   return {
 //     paymentId: payment._id,
-
 //     subscriptionId: subscription._id,
-
 //     planName: subscription.planName,
-
-//     amount: subscription.finalAmount,
-
+//     amount: payableAmount,
 //     currency: subscription.currency,
-
 //     razorpayOrderId: razorpayOrder.id,
-
 //     receipt,
 //   };
 // };
-const createRazorpayOrder = async (body, loggedInUser) => {
-  const { subscriptionId } = body;
 
-  /*
-  |--------------------------------------------------------------------------
-  | Find Subscription
-  |--------------------------------------------------------------------------
-  */
+// module.exports = {
+//   createRazorpayOrder,
+// };
+
+const httpStatus = require('http-status');
+const razorpay = require('../../../config/razorpay');
+const ApiError = require('../../../utils/ApiError');
+
+const {
+  Payment,
+  SubscriptionPlan,
+  User,
+  SalesRegistration,
+} = require('../../../models');
+
+const { addPaymentHistory } = require('./payment.audit.helper');
+
+const roundMoney = (value) =>
+  Math.round((value + Number.EPSILON) * 100) / 100;
+
+const createRazorpayOrder = async (body, loggedInUser) => {
+  const { subscriptionId, salesRegistrationId } = body;
 
   const subscription = await SubscriptionPlan.findById(subscriptionId);
 
-  if (!subscription) {
-    throw new ApiError(
-      httpStatus.NOT_FOUND,
-      'Subscription plan not found'
-    );
+  if (!subscription || subscription.isDeleted || subscription.status !== 'active') {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Active subscription plan not found');
   }
-
-  if (subscription.isDeleted || subscription.status !== 'active') {
-    throw new ApiError(
-      httpStatus.BAD_REQUEST,
-      'Subscription plan is inactive'
-    );
-  }
-
-  /*
-  |--------------------------------------------------------------------------
-  | Find User
-  |--------------------------------------------------------------------------
-  */
 
   const user = await User.findById(loggedInUser._id);
 
   if (!user) {
-    throw new ApiError(
-      httpStatus.NOT_FOUND,
-      'User not found'
-    );
+    throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
   }
 
-  /*
-  |--------------------------------------------------------------------------
-  | Validate Amount
-  |--------------------------------------------------------------------------
-  */
+  const originalAmount = roundMoney(subscription.finalAmount);
 
-  const payableAmount = subscription.finalAmount;
+  let payableAmount = originalAmount;
+  let discountAmount = 0;
+  let discountValue = 0;
+  let discountType = null;
+  let salesRegistration = null;
+
+  // Apply salesman discount only when explicitly linked
+  if (salesRegistrationId) {
+    salesRegistration = await SalesRegistration.findOne({
+      _id: salesRegistrationId,
+      customerId: user._id,
+      subscriptionId: subscription._id,
+      isDeleted: false,
+      status: 'active',
+      $expr: {
+        $lt: ['$discountUsedCount', '$discountMaxUses'],
+      },
+    });
+
+    if (!salesRegistration) {
+      throw new ApiError(
+        httpStatus.BAD_REQUEST,
+        'Sales discount is invalid or already exhausted'
+      );
+    }
+
+    discountType = salesRegistration.discountType;
+    discountValue = salesRegistration.discountValue;
+    discountAmount = salesRegistration.discountAmount;
+    payableAmount = salesRegistration.discountedAmount;
+
+    // Do not silently accept a stale or modified price snapshot.
+    if (salesRegistration.originalAmount !== originalAmount) {
+      throw new ApiError(
+        httpStatus.CONFLICT,
+        'Subscription price has changed. Please refresh the registration.'
+      );
+    }
+  }
 
   if (payableAmount < 1) {
-    throw new ApiError(
-      httpStatus.BAD_REQUEST,
-      'Minimum payable amount should be ₹1'
-    );
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Minimum payable amount should be ₹1');
   }
-
-  /*
-  |--------------------------------------------------------------------------
-  | Create Razorpay Order
-  |--------------------------------------------------------------------------
-  */
 
   const receipt = `SUB_${Date.now()}`;
 
   const razorpayOrder = await razorpay.orders.create({
-    amount: payableAmount * 100,
+    amount: Math.round(payableAmount * 100),
     currency: subscription.currency,
     receipt,
   });
-
-  /*
-  |--------------------------------------------------------------------------
-  | Save Payment
-  |--------------------------------------------------------------------------
-  */
 
   const payment = new Payment({
     userId: user._id,
@@ -217,26 +252,24 @@ const createRazorpayOrder = async (body, loggedInUser) => {
     validity: subscription.validity,
     validityType: subscription.validityType,
 
-    amount: subscription.amount,
-
-    discount: subscription.discountValue,
-
+    amount: originalAmount,
+    discount: discountAmount,
     payableAmount,
 
     currency: subscription.currency,
 
     razorpayOrderId: razorpayOrder.id,
-
     receipt,
-
     status: 'created',
-  });
 
-  /*
-  |--------------------------------------------------------------------------
-  | Payment History
-  |--------------------------------------------------------------------------
-  */
+    salesRegistrationId: salesRegistration?._id || null,
+    salesmanId: salesRegistration?.salesmanId || null,
+
+    discountType,
+    discountValue,
+    discountAmount,
+    discountApplied: false,
+  });
 
   addPaymentHistory(
     payment,
@@ -247,26 +280,32 @@ const createRazorpayOrder = async (body, loggedInUser) => {
       orderId: razorpayOrder.id,
       receipt,
       amount: payableAmount,
-      currency: subscription.currency,
+      originalAmount,
+      discountAmount,
+      salesRegistrationId: salesRegistration?._id || null,
     }
   );
 
   await payment.save();
 
-  /*
-  |--------------------------------------------------------------------------
-  | Response
-  |--------------------------------------------------------------------------
-  */
-
   return {
     paymentId: payment._id,
     subscriptionId: subscription._id,
     planName: subscription.planName,
-    amount: payableAmount,
+
+    originalAmount,
+    discountType,
+    discountValue,
+    discountAmount,
+    payableAmount,
+
     currency: subscription.currency,
     razorpayOrderId: razorpayOrder.id,
     receipt,
+
+    discountRemainingUses: salesRegistration
+      ? salesRegistration.discountMaxUses - salesRegistration.discountUsedCount
+      : 0,
   };
 };
 

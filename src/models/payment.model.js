@@ -186,7 +186,45 @@ const paymentSchema = new mongoose.Schema(
       trim: true,
       default: '',
     },
+    // Salesman discount tracking
+    salesRegistrationId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'SalesRegistration',
+      default: null,
+      index: true,
+    },
 
+    salesmanId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      default: null,
+      index: true,
+    },
+
+    discountType: {
+      type: String,
+      enum: ['percentage', 'fixed'],
+      default: null,
+    },
+
+    discountValue: {
+      type: Number,
+      default: 0,
+    },
+
+    discountAmount: {
+      type: Number,
+      default: 0,
+    },
+    discountReservationStatus: {
+      type: String,
+      enum: ['none', 'reserved', 'consumed', 'released'],
+      default: 'none',
+    },
+    discountApplied: {
+      type: Boolean,
+      default: false,
+    },
     isDeleted: {
       type: Boolean,
       default: false,
