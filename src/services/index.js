@@ -180,3 +180,5 @@ module.exports.paymentService = require('./payment.service');
 module.exports.subscriptionPlanService = require('./type2.services/subscription.plan.service');
 module.exports.referralCodeMasterService = require('./type2.services/referralCodeMaster.service');
 module.exports.referralCodeUsedService = require('./type2.services/referralCodeUsed.service');
+//
+module.exports.salesRegistrationService = require('./type2.services/salesRegistration.service');

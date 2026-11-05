@@ -167,6 +167,7 @@ const patchworkDesignRoute = require('./patchwork.design.route');
 const paymentRoute = require('./payment.route');
 const referralCodeMasterRoute = require('./type2.routes/referralCodeMaster.route');
 const referralCodeUsedRoute = require('./type2.routes/referralCodeUsed.route');
+const salesRegistrationRoute = require('./type2.routes/salesRegistration.route');
 
 const router = express.Router();
 
@@ -786,6 +787,10 @@ const defaultRoutes = [
   {
     path: '/referral-code-used',
     route: referralCodeUsedRoute
+  },
+  {
+    path: '/sales-registrations',
+    route: salesRegistrationRoute
   },
 ];
 

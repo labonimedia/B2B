@@ -1,107 +1,109 @@
-  const Joi = require('joi');
-  const { objectId } = require('./custom.validation');
+const Joi = require('joi');
+const { objectId } = require('./custom.validation');
 
-  /**
-   * Create Razorpay Order
-   */
-  const createOrder = {
-    body: Joi.object().keys({
-      subscriptionId: Joi.string().required().custom(objectId),
-    }),
-  };
+/**
+ * Create Razorpay Order
+ */
+const createOrder = {
+  body: Joi.object().keys({
+    subscriptionId: Joi.string().required().custom(objectId),
 
-  /**
-   * Verify Razorpay Payment
-   */
-  const verifyPayment = {
-    body: Joi.object().keys({
-      razorpay_order_id: Joi.string().required(),
+    salesRegistrationId: Joi.string().optional().custom(objectId),
+  }),
+};
 
-      razorpay_payment_id: Joi.string().required(),
+/**
+ * Verify Razorpay Payment
+ */
+const verifyPayment = {
+  body: Joi.object().keys({
+    razorpay_order_id: Joi.string().required(),
 
-      razorpay_signature: Joi.string().required(),
-    }),
-  };
+    razorpay_payment_id: Joi.string().required(),
 
-  /**
-   * Get Payment By Id
-   */
-  const getPayment = {
-    params: Joi.object().keys({
-      paymentId: Joi.string().required().custom(objectId),
-    }),
-  };
+    razorpay_signature: Joi.string().required(),
+  }),
+};
 
-  /**
-   * Get All Payments
-   */
-  const getPayments = {
-    query: Joi.object().keys({
-      userEmail: Joi.string().email(),
+/**
+ * Get Payment By Id
+ */
+const getPayment = {
+  params: Joi.object().keys({
+    paymentId: Joi.string().required().custom(objectId),
+  }),
+};
 
-      status: Joi.string().valid('created', 'pending', 'paid', 'failed', 'cancelled', 'expired', 'refunded'),
+/**
+ * Get All Payments
+ */
+const getPayments = {
+  query: Joi.object().keys({
+    userEmail: Joi.string().email(),
 
-      subscriptionId: Joi.string().custom(objectId),
+    status: Joi.string().valid('created', 'pending', 'paid', 'failed', 'cancelled', 'expired', 'refunded'),
 
-      paymentMethod: Joi.string(),
+    subscriptionId: Joi.string().custom(objectId),
 
-      sortBy: Joi.string(),
+    paymentMethod: Joi.string(),
 
-      limit: Joi.number().integer(),
+    sortBy: Joi.string(),
 
-      page: Joi.number().integer(),
-    }),
-  };
+    limit: Joi.number().integer(),
 
-  /**
-   * Payment Failed API
-   */
-  const paymentFailed = {
-    body: Joi.object().keys({
-      razorpayOrderId: Joi.string().required(),
+    page: Joi.number().integer(),
+  }),
+};
 
-      failureReason: Joi.string().required(),
+/**
+ * Payment Failed API
+ */
+const paymentFailed = {
+  body: Joi.object().keys({
+    razorpayOrderId: Joi.string().required(),
 
-      failureCode: Joi.string().allow('', null),
+    failureReason: Joi.string().required(),
 
-      gatewayResponse: Joi.object().optional(),
-    }),
-  };
+    failureCode: Joi.string().allow('', null),
 
-  /**
-   * Retry Payment
-   */
-  const retryPayment = {
-    params: Joi.object().keys({
-      paymentId: Joi.string().required().custom(objectId),
-    }),
-  };
+    gatewayResponse: Joi.object().optional(),
+  }),
+};
 
-  /**
-   * Refund Request
-   */
-  const refundPayment = {
-    params: Joi.object().keys({
-      paymentId: Joi.string().custom(objectId),
-    }),
+/**
+ * Retry Payment
+ */
+const retryPayment = {
+  params: Joi.object().keys({
+    paymentId: Joi.string().required().custom(objectId),
+  }),
+};
 
-    body: Joi.object().keys({
-      refundAmount: Joi.number().min(1).optional(),
-    }),
-  };
-  const getLatestPayment = {
-    params: Joi.object().keys({
-      userId: Joi.string().custom(objectId),
-    }),
-  };
+/**
+ * Refund Request
+ */
+const refundPayment = {
+  params: Joi.object().keys({
+    paymentId: Joi.string().custom(objectId),
+  }),
 
-  module.exports = {
-    createOrder,
-    verifyPayment,
-    getPayment,
-    getPayments,
-    paymentFailed,
-    retryPayment,
-    refundPayment,
-    getLatestPayment,
-  };
+  body: Joi.object().keys({
+    refundAmount: Joi.number().min(1).optional(),
+  }),
+};
+const getLatestPayment = {
+  params: Joi.object().keys({
+    userId: Joi.string().custom(objectId),
+  }),
+};
+
+module.exports = {
+  createOrder,
+  verifyPayment,
+  getPayment,
+  getPayments,
+  paymentFailed,
+  retryPayment,
+  refundPayment,
+  getLatestPayment,
+};

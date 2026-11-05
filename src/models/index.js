@@ -193,3 +193,5 @@ module.exports.Payment = require('./payment.model');
 module.exports.SubscriptionPlan = require('./type2.models/subcription.plan.model');
 module.exports.ReferralCodeMaster = require('./type2.models/referralCodeMaster.model');
 module.exports.ReferralCodeUsed = require('./type2.models/referralCodeUsed.model');
+//
+module.exports.SalesRegistration = require('./type2.models/salesRegistration.model');
