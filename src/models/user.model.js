@@ -70,6 +70,7 @@ const userSchema = mongoose.Schema(
         'shopKeeper',
         'masteradmin',
         'sales',
+        'weaverManufacture',
 
         // ✅ Staff Roles
         'rawMaterialManager',
@@ -172,6 +173,11 @@ userSchema.pre('save', async function (next) {
 
 // index
 userSchema.index({ refByEmail: 1 });
+
+userSchema.index({
+  subscriptionStatus: 1,
+  subscriptionExpiryDate: 1,
+});
 
 const User = mongoose.model('User', userSchema);
 

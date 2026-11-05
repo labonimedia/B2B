@@ -6,13 +6,13 @@ const router = express.Router();
 
 router
   .route('/')
-  .post(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), countryCodeController.createCountryCode)
+  .post(auth('superadmin', 'manufacture', 'wholesaler', 'retailer', 'weaverManufacture'), countryCodeController.createCountryCode)
   .get(countryCodeController.queryCountryCode);
 
 router
   .route('/:id')
-  .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), countryCodeController.getCountryCodeById)
-  .patch(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), countryCodeController.updateCountryCodeById)
-  .delete(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), countryCodeController.deleteCountryCodeById);
+  .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer', 'weaverManufacture'), countryCodeController.getCountryCodeById)
+  .patch(auth('superadmin', 'manufacture', 'wholesaler', 'retailer', 'weaverManufacture'), countryCodeController.updateCountryCodeById)
+  .delete(auth('superadmin', 'manufacture', 'wholesaler', 'retailer', 'weaverManufacture'), countryCodeController.deleteCountryCodeById);
 
 module.exports = router;

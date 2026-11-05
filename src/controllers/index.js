@@ -175,3 +175,33 @@ module.exports.patchworkDesignController = require('./patchworkDesign.controller
 module.exports.paymentController = require('./payment.controller');
 module.exports.referralCodeMasterController = require('./type2.controller/referralCodeMaster.controller');
 module.exports.referralCodeUsedController = require('./type2.controller/referralCodeUsed.controller');
+
+// weaver manufacturer controller
+module.exports.weaverManufactureController = require('./weaver.manufacturer.controller');
+module.exports.weaverBrandController = require('./weaver/brand.controller');
+module.exports.weaverProductController = require('./weaver/weaverProduct.controller');
+// weaver master controller
+module.exports.weaverAcountMasterController = require('./weaver/acount.master.controller');
+module.exports.weaverBrokerMasterController = require('./weaver/broker.master.controller');
+module.exports.weaverTransporterMasterController = require('./weaver/transporter.master.controller');
+module.exports.weaverCityMasterController = require('./weaver/city.master.controller');
+module.exports.firmMasterController = require('./weaver/firm.master.controller');
+module.exports.weaverMainGroupMasterController = require('./weaver/main.group.master.controller');
+// item master
+module.exports.weaverItemMasterController = require('./weaver/item.master.controller');
+module.exports.weaverItemGroupMasterController = require('./weaver/item.group.master.controller');
+module.exports.weaverItemSubGroupMasterController = require('./weaver/item.sub.group.master.controller');
+module.exports.weaverItemTypeMasterController = require('./weaver/item.type.master.controller');
+module.exports.weaverItemStockTypeMasterController = require('./weaver/item.stock.type.master.controller');
+module.exports.weaverItemColorShadeMasterController = require('./weaver/item.color.shade.master.controller');
+module.exports.weaverItemLotDesignMasterController = require('./weaver/item.lot.design.master.controller');
+module.exports.weaverItemPackingMasterController = require('./weaver/item.packing.master.controller');
+module.exports.weaverItemCopsMasterController = require('./weaver/item.cops.master.controller');
+// book master controller
+module.exports.weaverSalesPurchaseBookMasterController = require('./weaver/book.sales.purchase.master.controller');
+module.exports.weaverCashBankBookMasterController = require('./weaver/book.cash.bank.book.master.controller');
+module.exports.weaverFormulaMasterController = require('./weaver/book.weaver.formula.master.controller');
+// jobwork master controller
+module.exports.weaverJobworkProcessMasterController = require('./weaver/jobwork.process.master.controller');
+
+

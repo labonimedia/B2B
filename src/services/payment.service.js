@@ -23,6 +23,30 @@
 // /**
 //  * Calculate Expiry Date
 //  */
+const httpStatus = require('http-status');
+const razorpay = require('../config/razorpay');
+const ApiError = require('../utils/ApiError');
+const { Payment } = require('../models');
+const { activateSubscription } = require('./type2.services/helper/payment.helper');
+const { verifySignature } = require('./type2.services/helper/payment.validation.helper');
+const { createRazorpayOrder } = require('./type2.services/helper/payment.order.helper');
+const { processWebhook } = require('./type2.services/helper/payment.webhook.helper');
+const { processRefund } = require('./type2.services/helper/payment.refund.helper');
+const { addPaymentHistory } = require('./type2.services/helper/payment.audit.helper');
+
+const {
+  getPaymentById: getPaymentByIdHelper,
+  getPayments: getPaymentsHelper,
+  getMyPayments: getMyPaymentsHelper,
+  getPaymentByOrderId: getPaymentByOrderIdHelper,
+  getPaymentByPaymentId: getPaymentByPaymentIdHelper,
+  getLatestSuccessfulPayment: getLatestSuccessfulPaymentHelper,
+  getPaymentStats: getPaymentStatsHelper,
+} = require('./type2.services/helper/payment.history.helper');
+
+/**
+ * Calculate Expiry Date
+ */
 // const calculateExpiryDate = (validity, validityType) => {
 //   const expiry = new Date();
 
@@ -49,6 +73,41 @@
 // const createOrder = async (body, loggedInUser) => {
 //   return createRazorpayOrder(body, loggedInUser);
 // };
+
+//   return expiry;
+// };
+  const calculateExpiryDate = (startDate, validity, validityType) => {
+  const expiryDate = new Date(startDate);
+
+  switch (validityType) {
+    case 'minutes':
+      expiryDate.setMinutes(expiryDate.getMinutes() + validity);
+      break;
+
+    case 'days':
+      expiryDate.setDate(expiryDate.getDate() + validity);
+      break;
+
+    case 'months':
+      expiryDate.setMonth(expiryDate.getMonth() + validity);
+      break;
+
+    case 'years':
+      expiryDate.setFullYear(expiryDate.getFullYear() + validity);
+      break;
+
+    default:
+      throw new ApiError(
+        httpStatus.BAD_REQUEST,
+        'Invalid subscription validity type'
+      );
+  }
+
+  return expiryDate;
+};
+const createOrder = async (body, loggedInUser) => {
+  return createRazorpayOrder(body, loggedInUser);
+};
 
 // const verifyPayment = async (body) => {
 //   const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = body;
@@ -552,6 +611,16 @@ const verifyPayment = async (body) => {
     payment.validityType
   );
 
+  // Subscription Dates
+  // const startDate = new Date();
+  // const expiryDate = calculateExpiryDate(payment.validity, payment.validityType);
+const startDate = new Date();
+
+const expiryDate = calculateExpiryDate(
+  startDate,
+  payment.validity,
+  payment.validityType
+);
   payment.subscriptionStartDate = startDate;
   payment.subscriptionExpiryDate = expiryDate;
 

@@ -6,16 +6,16 @@ const router = express.Router();
 
 router
   .route('/')
-  .post(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), cityController.createCity)
-  .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), cityController.queryCity);
+  .post(auth('superadmin', 'manufacture', 'wholesaler', 'retailer', 'weaverManufacture'), cityController.createCity)
+  .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer', 'weaverManufacture'), cityController.queryCity);
 
 router
   .route('/searchby/country/state')
-  .post(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), cityController.getCities);
+  .post(auth('superadmin', 'manufacture', 'wholesaler', 'retailer', 'weaverManufacture'), cityController.getCities);
 router
   .route('/:id')
-  .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), cityController.getCityById)
-  .patch(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), cityController.updateCityById)
-  .delete(auth('superadmin', 'manufacture', 'wholesaler', 'retailer'), cityController.deleteCityById);
+  .get(auth('superadmin', 'manufacture', 'wholesaler', 'retailer', 'weaverManufacture'), cityController.getCityById)
+  .patch(auth('superadmin', 'manufacture', 'wholesaler', 'retailer', 'weaverManufacture'), cityController.updateCityById)
+  .delete(auth('superadmin', 'manufacture', 'wholesaler', 'retailer', 'weaverManufacture'), cityController.deleteCityById);
 
 module.exports = router;
