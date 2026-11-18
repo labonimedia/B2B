@@ -44,8 +44,24 @@ const getSalesDashboard = catchAsync(async (req, res) => {
   });
 });
 
+const getMySalesOffer = catchAsync(async (req, res) => {
+  const result = await salesRegistrationService.getMySalesOffer(
+    req.user
+  );
+
+  res.status(httpStatus.OK).send({
+    success: true,
+    message: result
+      ? 'Sales registration found successfully'
+      : 'No salesman discount registration found',
+    data: result,
+  });
+});
+
+
 module.exports = {
   createSalesRegistration,
   getSalesRegistrations,
   getSalesDashboard,
+  getMySalesOffer,
 };
