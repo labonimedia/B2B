@@ -246,7 +246,7 @@ const getSalesDashboard = async (loggedInUser) => {
  */
 const getMySalesOffer = async (loggedInUser) => {
   const registration = await SalesRegistration.findOne({
-    customerId: loggedInUser._id,
+    customerId: loggedInUser.id,
     isDeleted: false,
   })
     .sort({ createdAt: -1 })
