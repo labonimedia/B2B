@@ -38,7 +38,7 @@ router.get(
   controller.getSalesDashboard
 );
 
-router.get(
+router.post(
   '/my-offer',
   controller.getMySalesOffer
 );
