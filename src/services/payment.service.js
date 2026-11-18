@@ -432,32 +432,101 @@ const {
 } = require('./type2.services/helper/payment.history.helper');
 
 
-/**
- * Calculate Expiry Date
- */
-const calculateExpiryDate = (validity, validityType) => {
-  const expiry = new Date();
+// /**
+//  * Calculate Expiry Date
+//  */
+// const calculateExpiryDate = (validity, validityType) => {
+//   const expiry = new Date();
 
-  switch (validityType) {
+//   switch (validityType) {
+//     case 'days':
+//       expiry.setDate(expiry.getDate() + validity);
+//       break;
+
+//     case 'months':
+//       expiry.setMonth(expiry.getMonth() + validity);
+//       break;
+
+//     case 'years':
+//       expiry.setFullYear(expiry.getFullYear() + validity);
+//       break;
+
+//     default:
+//       expiry.setDate(expiry.getDate() + validity);
+//   }
+
+//   return expiry;
+// };
+
+
+const calculateExpiryDate = (startDate, validity, validityType) => {
+  const expiryDate = new Date(startDate);
+
+  const duration = Number(validity);
+
+  if (
+    Number.isNaN(expiryDate.getTime()) ||
+    !Number.isFinite(duration) ||
+    duration <= 0
+  ) {
+    throw new ApiError(
+      httpStatus.BAD_REQUEST,
+      'Invalid subscription start date or validity'
+    );
+  }
+
+  const type = String(validityType || '')
+    .trim()
+    .toLowerCase();
+
+  switch (type) {
+    case 'minute':
+    case 'minutes':
+      expiryDate.setMinutes(
+        expiryDate.getMinutes() + duration
+      );
+      break;
+
+    case 'day':
     case 'days':
-      expiry.setDate(expiry.getDate() + validity);
+    case 'daily':
+      expiryDate.setDate(
+        expiryDate.getDate() + duration
+      );
       break;
 
+    case 'month':
     case 'months':
-      expiry.setMonth(expiry.getMonth() + validity);
+    case 'monthly':
+      expiryDate.setMonth(
+        expiryDate.getMonth() + duration
+      );
       break;
 
+    case 'year':
     case 'years':
-      expiry.setFullYear(expiry.getFullYear() + validity);
+    case 'yearly':
+      expiryDate.setFullYear(
+        expiryDate.getFullYear() + duration
+      );
       break;
 
     default:
-      expiry.setDate(expiry.getDate() + validity);
+      throw new ApiError(
+        httpStatus.BAD_REQUEST,
+        `Invalid subscription validity type: ${type}`
+      );
   }
 
-  return expiry;
-};
+  if (Number.isNaN(expiryDate.getTime())) {
+    throw new ApiError(
+      httpStatus.BAD_REQUEST,
+      'Subscription expiry date calculation failed'
+    );
+  }
 
+  return expiryDate;
+};
 
 /**
  * Create Razorpay Order
@@ -604,25 +673,60 @@ const verifyPayment = async (body) => {
   |--------------------------------------------------------------------------
   */
 
-  // const startDate = new Date();
 
-  // const expiryDate = calculateExpiryDate(
-  //   payment.validity,
-  //   payment.validityType
-  // );
+// const startDate = new Date();
 
-  // Subscription Dates
-  // const startDate = new Date();
-  // const expiryDate = calculateExpiryDate(payment.validity, payment.validityType);
+// const expiryDate = calculateExpiryDate(
+//   startDate,
+//   payment.validity,
+//   payment.validityType
+// );
+//   payment.subscriptionStartDate = startDate;
+//   payment.subscriptionExpiryDate = expiryDate;
+
 const startDate = new Date();
+
+if (
+  payment.validity === undefined ||
+  payment.validity === null ||
+  !payment.validityType
+) {
+  throw new ApiError(
+    httpStatus.BAD_REQUEST,
+    'Payment subscription validity information is missing'
+  );
+}
 
 const expiryDate = calculateExpiryDate(
   startDate,
   payment.validity,
   payment.validityType
 );
-  payment.subscriptionStartDate = startDate;
-  payment.subscriptionExpiryDate = expiryDate;
+
+// Final validation
+if (
+  !(expiryDate instanceof Date) ||
+  Number.isNaN(expiryDate.getTime())
+) {
+  throw new ApiError(
+    httpStatus.BAD_REQUEST,
+    'Invalid subscription expiry date'
+  );
+}
+
+payment.subscriptionStartDate = startDate;
+payment.subscriptionExpiryDate = expiryDate;
+
+// Now mark payment as verified
+payment.status = 'paid';
+payment.verified = true;
+payment.verifiedAt = new Date();
+
+payment.razorpayPaymentId = razorpay_payment_id;
+payment.razorpaySignature = razorpay_signature;
+
+payment.paymentMethod = razorpayPayment.method;
+payment.gatewayResponse = razorpayPayment;
 
   /*
   |--------------------------------------------------------------------------
