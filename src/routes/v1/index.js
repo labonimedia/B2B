@@ -816,6 +816,7 @@ const defaultRoutes = [
   {
     path: '/sales-registrations',
     route: salesRegistrationRoute
+  },
   // weaver routes path
   {
     path: '/weaver-manufacturer',

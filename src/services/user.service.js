@@ -1095,9 +1095,9 @@ const updateUserByEmail = async (
 
 // /**
 
-const deleteUserById = async (userId) => {
-  const user = await User.findById(userId);
-
+// const deleteUserById = async (userId) => {
+//   const user = await User.findById(userId);
+// };
 /**
  * Delete user by ID
  *
