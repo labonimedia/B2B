@@ -201,11 +201,11 @@ const paymentSchema = new mongoose.Schema(
       index: true,
     },
 
-    discountType: {
-      type: String,
-      enum: ['percentage', 'fixed'],
-      default: null,
-    },
+   discountType: {
+  type: String,
+  enum: ['percentage', 'fixed', null],
+  default: null,
+},
 
     discountValue: {
       type: Number,

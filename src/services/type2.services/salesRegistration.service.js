@@ -241,8 +241,103 @@ const getSalesDashboard = async (loggedInUser) => {
   };
 };
 
+/**
+ * Get logged-in customer's salesman registration and assigned plan
+ */
+const getMySalesOffer = async (loggedInUser) => {
+  const registration = await SalesRegistration.findOne({
+    customerId: loggedInUser._id,
+    isDeleted: false,
+  })
+    .sort({ createdAt: -1 })
+    .populate('subscriptionId');
+
+  if (!registration) {
+    return null;
+  }
+
+  const subscription = registration.subscriptionId;
+
+  if (!subscription) {
+    throw new ApiError(
+      httpStatus.NOT_FOUND,
+      'Assigned subscription plan not found'
+    );
+  }
+
+  const originalAmount = Number(
+    subscription.amount
+  );
+
+  const discountUsedCount = Number(
+    registration.discountUsedCount || 0
+  );
+
+  const discountMaxUses = Number(
+    registration.discountMaxUses || 0
+  );
+
+  const remainingUses = Math.max(
+    discountMaxUses - discountUsedCount,
+    0
+  );
+
+  const discountAvailable = remainingUses > 0;
+
+  let discountAmount = 0;
+
+  if (discountAvailable) {
+    if (registration.discountType === 'percentage') {
+      discountAmount =
+        (originalAmount * registration.discountValue) / 100;
+    } else if (registration.discountType === 'fixed') {
+      discountAmount = Number(registration.discountValue);
+    }
+  }
+
+  // Never allow discount greater than plan price
+  discountAmount = Math.min(
+    Math.max(discountAmount, 0),
+    originalAmount
+  );
+
+  const payableAmount = Math.max(
+    originalAmount - discountAmount,
+    0
+  );
+
+  return {
+    salesRegistration: {
+      _id: registration._id,
+      salesmanId: registration.salesmanId,
+      customerId: registration.customerId,
+      customerEmail: registration.customerEmail,
+      discountType: registration.discountType,
+      discountValue: registration.discountValue,
+      discountMaxUses,
+      discountUsedCount,
+      remainingUses,
+      status: registration.status,
+    },
+
+    subscription,
+
+    pricing: {
+      originalAmount,
+      discountType: registration.discountType,
+      discountValue: registration.discountValue,
+      discountAmount,
+      payableAmount,
+      discountAvailable,
+      remainingUses,
+    },
+  };
+};
+
+
 module.exports = {
   createSalesRegistration,
   getSalesRegistrations,
   getSalesDashboard,
+  getMySalesOffer,
 };

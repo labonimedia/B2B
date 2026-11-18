@@ -38,4 +38,8 @@ router.get(
   controller.getSalesDashboard
 );
 
+router.get(
+  '/my-offer',
+  controller.getMySalesOffer
+);
 module.exports = router;
