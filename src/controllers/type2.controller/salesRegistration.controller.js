@@ -45,8 +45,17 @@ const getSalesDashboard = catchAsync(async (req, res) => {
 });
 
 const getMySalesOffer = catchAsync(async (req, res) => {
+  const { customerId } = req.body;
+
+  if (!customerId) {
+    throw new ApiError(
+      httpStatus.BAD_REQUEST,
+      'Customer ID is required'
+    );
+  }
+
   const result = await salesRegistrationService.getMySalesOffer(
-    req.user
+    customerId
   );
 
   res.status(httpStatus.OK).send({
@@ -57,7 +66,6 @@ const getMySalesOffer = catchAsync(async (req, res) => {
     data: result,
   });
 });
-
 
 module.exports = {
   createSalesRegistration,

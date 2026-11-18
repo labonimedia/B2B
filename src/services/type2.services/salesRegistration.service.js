@@ -242,11 +242,11 @@ const getSalesDashboard = async (loggedInUser) => {
 };
 
 /**
- * Get logged-in customer's salesman registration and assigned plan
+ * Get customer's salesman registration and assigned plan
  */
-const getMySalesOffer = async (loggedInUser) => {
+const getMySalesOffer = async (customerId) => {
   const registration = await SalesRegistration.findOne({
-    customerId: loggedInUser.id,
+    customerId,
     isDeleted: false,
   })
     .sort({ createdAt: -1 })
@@ -265,9 +265,7 @@ const getMySalesOffer = async (loggedInUser) => {
     );
   }
 
-  const originalAmount = Number(
-    subscription.amount
-  );
+  const originalAmount = Number(subscription.amount);
 
   const discountUsedCount = Number(
     registration.discountUsedCount || 0
@@ -295,7 +293,6 @@ const getMySalesOffer = async (loggedInUser) => {
     }
   }
 
-  // Never allow discount greater than plan price
   discountAmount = Math.min(
     Math.max(discountAmount, 0),
     originalAmount
