@@ -58,6 +58,20 @@ const deleteUserByEmail = catchAsync(async (req, res) => {
   }
   res.send(user);
 });
+/**
+ * Get User Counts By Roles
+ * Only Superadmin
+ */
+const getUserRoleCounts = catchAsync(async (req, res) => {
+  const result = await userService.getUserRoleCounts();
+
+  res.status(httpStatus.OK).send({
+    status: true,
+    message: 'User role counts fetched successfully',
+    data: result,
+  });
+});
+
 module.exports = {
   createUser,
   getUsers,
@@ -67,4 +81,5 @@ module.exports = {
   deleteUser,
   getUserByEmail,
   deleteUserByEmail,
+  getUserRoleCounts,
 };
