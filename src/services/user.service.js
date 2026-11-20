@@ -1219,6 +1219,59 @@ const deleteUserByEmail = async (
   };
 };
 
+/**
+ * Get Total Users Count By Roles
+ */
+const getUserRoleCounts = async () => {
+  const roles = [
+    'superadmin',
+    'manufacture',
+    'wholesaler',
+    'retailer',
+    'channelPartner',
+    'shopKeeper',
+    'masteradmin',
+    'sales',
+    'weaverManufacture',
+    'rawMaterialManager',
+    'finishedGoodsManager',
+    'productManager',
+    'orderManager',
+  ];
+
+  const result = await User.aggregate([
+    {
+      $group: {
+        _id: '$role',
+        count: { $sum: 1 },
+      },
+    },
+  ]);
+
+  // Initialize all roles with zero
+  const roleCounts = {};
+
+  roles.forEach((role) => {
+    roleCounts[role] = 0;
+  });
+
+  // Assign actual counts
+  result.forEach((item) => {
+    if (roleCounts[item._id] !== undefined) {
+      roleCounts[item._id] = item.count;
+    }
+  });
+
+  const totalUsers = Object.values(roleCounts).reduce(
+    (total, count) => total + count,
+    0
+  );
+
+  return {
+    totalUsers,
+    roleCounts,
+  };
+};
 
 module.exports = {
   createUser,
@@ -1229,4 +1282,5 @@ module.exports = {
   updateUserById,
   deleteUserById,
   deleteUserByEmail,
+  getUserRoleCounts,
 };

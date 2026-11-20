@@ -45,6 +45,12 @@ router.route('/registered-user/:email').get(
   userController.getUserByEmail
 );
 
+router.get(
+  '/role-counts',
+  auth('superadmin'),
+  userController.getUserRoleCounts
+);
+
 module.exports = router;
 
 /**
