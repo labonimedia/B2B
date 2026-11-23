@@ -84,6 +84,16 @@ const deleteUser = {
   }),
 };
 
+const updateSalesStatus = {
+  params: Joi.object().keys({
+    userId: Joi.string().required(),
+  }),
+
+  body: Joi.object().keys({
+    isActive: Joi.boolean().required(),
+  }),
+};
+
 module.exports = {
   createUser,
   getUsers,
@@ -91,4 +101,5 @@ module.exports = {
   updateUser,
   updateUserByEmail,
   deleteUser,
+  updateSalesStatus,
 };
