@@ -51,6 +51,13 @@ router.get(
   userController.getUserRoleCounts
 );
 
+router.patch(
+  '/:userId/sales-status',
+  auth('superadmin'),
+  validate(userValidation.updateSalesStatus),
+  userController.updateSalesUserStatus
+);
+
 module.exports = router;
 
 /**

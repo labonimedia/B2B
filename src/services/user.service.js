@@ -560,29 +560,52 @@ const createUser = async (userBody, loggedInUser) => {
     return createdUser;
   }
 
-  // =========================
-  // ROLE PREFIX
-  // =========================
+  // // =========================
+  // // ROLE PREFIX
+  // // =========================
 
-  let prefix;
+  // let prefix;
 
-  if (userBody.role === 'manufacture') {
-    prefix = 'MAN';
-  } else if (userBody.role === 'weaverManufacture') {
-    prefix = 'WVM';
-  } else if (userBody.role === 'wholesaler') {
-    prefix = 'WHO';
-  } else if (userBody.role === 'retailer') {
-    prefix = 'RET';
-  } else if (userBody.role === 'channelPartner') {
-    prefix = 'CP';
-  } else {
-    throw new ApiError(
-      httpStatus.BAD_REQUEST,
-      'Invalid user role'
-    );
-  }
+  // if (userBody.role === 'manufacture') {
+  //   prefix = 'MAN';
+  // } else if (userBody.role === 'weaverManufacture') {
+  //   prefix = 'WVM';
+  // } else if (userBody.role === 'wholesaler') {
+  //   prefix = 'WHO';
+  // } else if (userBody.role === 'retailer') {
+  //   prefix = 'RET';
+  // } else if (userBody.role === 'channelPartner') {
+  //   prefix = 'CP';
+  // } else {
+  //   throw new ApiError(
+  //     httpStatus.BAD_REQUEST,
+  //     'Invalid user role'
+  //   );
+  // }
+// =========================
+// ROLE PREFIX
+// =========================
 
+let prefix = null;
+
+if (userBody.role === 'manufacture') {
+  prefix = 'MAN';
+} else if (userBody.role === 'weaverManufacture') {
+  prefix = 'WVM';
+} else if (userBody.role === 'wholesaler') {
+  prefix = 'WHO';
+} else if (userBody.role === 'retailer') {
+  prefix = 'RET';
+} else if (userBody.role === 'channelPartner') {
+  prefix = 'CP';
+} else if (userBody.role === 'sales') {
+  prefix = null;
+} else {
+  throw new ApiError(
+    httpStatus.BAD_REQUEST,
+    'Invalid user role'
+  );
+}
   const session = await mongoose.startSession();
 
   let isReplicaSet = false;
@@ -626,10 +649,14 @@ const createUser = async (userBody, loggedInUser) => {
       }
     );
 
-    userBody.code = `${prefix}${String(
-      counter.seq
-    ).padStart(4, '0')}`;
-
+    // userBody.code = `${prefix}${String(
+    //   counter.seq
+    // ).padStart(4, '0')}`;
+if (prefix) {
+  userBody.code = `${prefix}${String(
+    counter.seq
+  ).padStart(4, '0')}`;
+}
     // =========================
     // CREATE USER
     // =========================
@@ -1273,6 +1300,33 @@ const getUserRoleCounts = async () => {
   };
 };
 
+/**
+ * Activate / Deactivate Sales User
+ *
+ * @param {ObjectId} userId
+ * @param {Boolean} isActive
+ * @returns {Promise<User>}
+ */
+const updateSalesUserStatus = async (userId, isActive) => {
+  const user = await User.findOne({
+    _id: userId,
+    role: 'sales',
+  });
+
+  if (!user) {
+    throw new ApiError(
+      httpStatus.NOT_FOUND,
+      'Sales user not found'
+    );
+  }
+
+  user.isActive = isActive;
+
+  await user.save();
+
+  return user;
+};
+
 module.exports = {
   createUser,
   queryUsers,
@@ -1283,4 +1337,5 @@ module.exports = {
   deleteUserById,
   deleteUserByEmail,
   getUserRoleCounts,
+  updateSalesUserStatus,
 };

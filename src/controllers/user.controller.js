@@ -72,6 +72,26 @@ const getUserRoleCounts = catchAsync(async (req, res) => {
   });
 });
 
+/**
+ * Update Sales User Active Status
+ */
+const updateSalesUserStatus = catchAsync(
+  async (req, res) => {
+    const user = await userService.updateSalesUserStatus(
+      req.params.userId,
+      req.body.isActive
+    );
+
+    res.status(httpStatus.OK).send({
+      success: true,
+      message: req.body.isActive
+        ? 'Sales user activated successfully'
+        : 'Sales user deactivated successfully',
+      data: user,
+    });
+  }
+);
+
 module.exports = {
   createUser,
   getUsers,
@@ -82,4 +102,5 @@ module.exports = {
   getUserByEmail,
   deleteUserByEmail,
   getUserRoleCounts,
+  updateSalesUserStatus,
 };
