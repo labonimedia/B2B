@@ -128,6 +128,7 @@ const userSchema = mongoose.Schema(
     referralCode: {
       type: String,
     },
+    
     subscriptionId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'SubscriptionPlan',

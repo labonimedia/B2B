@@ -58,6 +58,13 @@ router.patch(
   userController.updateSalesUserStatus
 );
 
+router.patch(
+  '/:email/status',
+  auth('superadmin'),
+ // validate(userValidation.updateSalesStatus),
+  userController.updateUserStatus
+);
+
 module.exports = router;
 
 /**

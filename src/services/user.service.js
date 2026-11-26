@@ -1327,6 +1327,32 @@ const updateSalesUserStatus = async (userId, isActive) => {
   return user;
 };
 
+/**
+ * Activate / Deactivate Sales User
+ *
+ * @param {ObjectId} userId
+ * @param {Boolean} isActive
+ * @returns {Promise<User>}
+ */
+const updateUserStatus = async (email, isActive) => {
+  const user =  await User.findOne({
+    email,
+  });
+
+  if (!user) {
+    throw new ApiError(
+      httpStatus.NOT_FOUND,
+      'User not found'
+    );
+  }
+
+  user.isActive = isActive;
+
+  await user.save();
+
+  return user;
+};
+
 module.exports = {
   createUser,
   queryUsers,
@@ -1338,4 +1364,5 @@ module.exports = {
   deleteUserByEmail,
   getUserRoleCounts,
   updateSalesUserStatus,
+  updateUserStatus,
 };
