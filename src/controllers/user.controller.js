@@ -13,13 +13,53 @@ const createUser = catchAsync(async (req, res) => {
   res.status(httpStatus.CREATED).send(user);
 });
 
+// const getUsers = catchAsync(async (req, res) => {
+//   const filter = pick(req.query, ['fullName', 'role', 'refByEmail', 'createdBy']);
+//   const options = pick(req.query, ['sortBy', 'limit', 'page']);
+//   const result = await userService.queryUsers(filter, options);
+//   res.send(result);
+// });
+/**
+ * Query users
+ */
 const getUsers = catchAsync(async (req, res) => {
-  const filter = pick(req.query, ['fullName', 'role', 'refByEmail', 'createdBy']);
-  const options = pick(req.query, ['sortBy', 'limit', 'page']);
+  const filter = pick(req.query, [
+    'fullName',
+    'role',
+    'refByEmail',
+    'createdBy',
+  ]);
+
+  // Global search across multiple fields
+  if (req.query.search && req.query.search.trim()) {
+    const searchValue = req.query.search.trim();
+
+    // Escape regex special characters
+    const escapedSearch = searchValue.replace(
+      /[.*+?^${}()|[\]\\]/g,
+      '\\$&'
+    );
+
+    const regex = new RegExp(escapedSearch, 'i');
+
+    filter.$or = [
+      { fullName: regex },
+      { companyName: regex },
+      { email: regex },
+      { mobileNumber: regex },
+    ];
+  }
+
+  const options = pick(req.query, [
+    'sortBy',
+    'limit',
+    'page',
+  ]);
+
   const result = await userService.queryUsers(filter, options);
+
   res.send(result);
 });
-
 const getUser = catchAsync(async (req, res) => {
   const user = await userService.getUserById(req.params.userId);
   if (!user) {
