@@ -15,7 +15,7 @@ router
   )
   .get(
     auth('superadmin', 'manufacture', 'wholesaler', 'retailer', 'channelPartner', 'weaverManufacture'),
-    validate(userValidation.getUsers),
+   // validate(userValidation.getUsers),
     userController.getUsers
   );
 
