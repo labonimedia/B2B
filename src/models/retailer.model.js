@@ -32,6 +32,9 @@ const retailerSchema = mongoose.Schema(
     file: {
       type: String,
     },
+    promoCode: {
+      type: String,
+    },
     fileName: {
       type: String,
     },

@@ -54,6 +54,9 @@ const manufactureSchema = mongoose.Schema(
     introduction: {
       type: String,
     },
+    promoCode: {
+      type: String,
+    },
     city: {
       type: String,
     },
@@ -147,6 +150,7 @@ const manufactureSchema = mongoose.Schema(
       default: true,
     },
     visibilitySettings: {
+      promoCode: { type: Boolean, default: true },
       logo: { type: Boolean, default: true },
       file: { type: Boolean, default: true },
       fileName: { type: Boolean, default: true },

@@ -681,6 +681,7 @@ if (prefix) {
       userCode: userBody.code,
       contryCode: userBody.contryCode,
       referralCode: userBody.referralCode,
+      promoCode: userBody.promoCode,
     };
 
     // =========================

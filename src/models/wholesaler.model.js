@@ -35,6 +35,9 @@ const wholesalerSchema = mongoose.Schema(
     altCode: {
       type: String,
     },
+    promoCode: {
+      type: String,
+    },
     profileImg: {
       type: String,
     },
