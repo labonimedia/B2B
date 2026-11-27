@@ -235,7 +235,7 @@ const updateVisibilitySettings = async (manufactureId, payload) => {
 
   // Map the payload fields to the visibilitySettings structure
   const visibilitySettings = {
-
+    promoCode: payload.promoCode !== undefined ? payload.promoCode : manufacture.visibilitySettings.promoCode,
     kycVerified: payload.kycVerified !== undefined ? payload.kycVerified : manufacture.visibilitySettings.kycVerified,
     leagalStatusOfFirm: payload.leagalStatusOfFirm !== undefined ? payload.leagalStatusOfFirm : manufacture.visibilitySettings.leagalStatusOfFirm,
     logo: payload.logo !== undefined ? payload.logo : manufacture.visibilitySettings.logo,

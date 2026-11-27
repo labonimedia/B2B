@@ -48,7 +48,9 @@ const salesRegistrationSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-
+    promoCode: {
+      type: String,
+    },
     customerRole: {
       type: String,
       enum: ['manufacture', 'wholesaler', 'retailer', 'channelPartner'],

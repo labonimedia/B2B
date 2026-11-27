@@ -4,6 +4,7 @@ const { objectId, password } = require('./custom.validation');
 
 const createSalesRegistration = {
   body: Joi.object({
+     promoCode: Joi.string().optional(),
     subscriptionId: Joi.string()
       .required()
       .custom(objectId),

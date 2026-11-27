@@ -39,7 +39,7 @@ const register = {
       .required(),
 
     code: Joi.string().optional(), // Optional code
-
+     promoCode: Joi.string().optional(),// Optional promo code
     contryCode: Joi.string().optional(), // Optional country code
 
     userCategory: Joi.string()

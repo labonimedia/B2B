@@ -96,7 +96,9 @@ const userSchema = mongoose.Schema(
     code: {
       type: String,
     },
-
+    promoCode: {
+      type: String,
+    },
     contryCode: {
       type: String,
     },
