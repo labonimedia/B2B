@@ -192,7 +192,7 @@ const weaverSalesPurchaseBookMasterRoute = require('./weaver/book.sales.purchase
 const weaverCashBankBookMasterRoute = require('./weaver/book.cash.bank.book.master.route');
 const weaverFormulaMasterRoute = require('./weaver/book.weaver.formula.master.route');
 const weaverJobworkProcessMasterRoute = require('./weaver/jobwork.process.master.route');
-
+const salesAdminDashboardRoute = require('./type2.routes/salesAdminDashboard.route');
 
 const router = express.Router();
 
@@ -908,6 +908,11 @@ const defaultRoutes = [
   {
     path: '/weaver-jobwork-process-master',
     route:  weaverJobworkProcessMasterRoute,
+  },
+  //
+  {
+    path: '/sales-admin/dashboard',
+    route: salesAdminDashboardRoute,
   },
 ];
 
