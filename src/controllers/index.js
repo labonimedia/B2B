@@ -203,5 +203,7 @@ module.exports.weaverCashBankBookMasterController = require('./weaver/book.cash.
 module.exports.weaverFormulaMasterController = require('./weaver/book.weaver.formula.master.controller');
 // jobwork master controller
 module.exports.weaverJobworkProcessMasterController = require('./weaver/jobwork.process.master.controller');
+//
+module.exports.salesAdminDashboardController = require('./type2.controller/salesAdminDashboard.controller');
 
 

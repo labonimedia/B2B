@@ -210,4 +210,5 @@ module.exports.weaverFormulaMasterService = require('./weaver/book.weaver.formul
 // jobwork master service
 module.exports.weaverJobworkProcessMasterService = require('./weaver/jobwork.process.master.service');
 
-
+//
+module.exports.salesAdminDashboardService = require('./type2.services/salesAdminDashboard.service');
